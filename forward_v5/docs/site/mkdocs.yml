@@ -1,0 +1,70 @@
+site_name: Forward V5 Mission Control
+site_description: Trading System Status & Documentation
+site_url: https://pecz.pages.dev
+repo_url: https://github.com/dpxyz/pecz
+copyright: Copyright &copy; 2026
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    logo: material/rocket-launch
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
+  - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Mission Control: index.md
+  - Phases: phases.md
+  - Architecture:
+    - Overview: architecture/index.md
+  - Runbooks:
+    - Overview: runbooks/index.md
+  - Strategy Lab:
+    - Overview: strategy-lab/index.md
+  - Test Reports: test-reports.md
+  - Economics: economics.md
+  - Changelog: changelog.md
+
+extra:
+  generator: false
+
+docs_dir: .
+site_dir: ./site
