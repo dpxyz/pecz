@@ -65,6 +65,3 @@ nav:
 
 extra:
   generator: false
-
-docs_dir: .
-site_dir: ./site
