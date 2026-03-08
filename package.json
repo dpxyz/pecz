@@ -1,0 +1,14 @@
+{
+  "name": "forward-v5",
+  "version": "2.0.0",
+  "description": "Forward V5 Trading System - Core Reliability",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test",
+    "test:event-store": "node --test tests/event_store.test.js",
+    "test:watch": "node --test --watch"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
