@@ -105,29 +105,29 @@ forward_v5/                 # New (active)
 
 ### Deliverables
 
-#### Event Store
-- [ ] `src/event_store.js`
-- [ ] Append-only events table
-- [ ] Query interface
-- [ ] **Tests:** Unit tests >80% coverage
+#### Block 1: Event Store ✅ COMPLETE
+- [x] `src/event_store.js`
+- [x] Append-only events table with sequence
+- [x] Query interface
+- [x] **Tests:** 17/17 passing
 
-#### State Projection
-- [ ] `src/state_projection.js`
-- [ ] Single source of truth
-- [ ] Rebuild from events
-- [ ] **Tests:** Rebuild test (projection == live)
+#### Block 2: State Projection ✅ COMPLETE
+- [x] `src/state_projection.js`
+- [x] Single source of truth
+- [x] Rebuild from events (deterministic sequence ordering)
+- [x] **Tests:** 19/19 passing
 
-#### Risk Engine
-- [ ] `src/risk_engine.js`
-- [ ] Pre-trade validation
-- [ ] All safety gates
-- [ ] **Tests:** All gates tested
+#### Block 3: Risk Engine ✅ COMPLETE
+- [x] `src/risk_engine.js`
+- [x] Pre-trade validation
+- [x] 6 Safety/Observability gates
+- [x] **Tests:** 39/39 passing
 
-#### Reconcile
+#### Block 4: Reconcile 🔄 IN PROGRESS
 - [ ] `src/reconcile.js`
-- [ ] Position sync (mock)
-- [ ] Mismatch detection
-- [ ] **Tests:** Sync tests
+- [ ] Position sync (paper/mock)
+- [ ] Mismatch detection (Ghost, Unmanaged, Size, Side)
+- [ ] **Tests:** TBD
 
 ### Key Features
 

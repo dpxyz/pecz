@@ -16,6 +16,7 @@ title: Mission Control
 | Paper Trading | ✅ **ALLOWED** |
 | Mainnet | ⛔ **DISABLED** |
 | Aktuelle Phase | **Phase 2** — Core Reliability 🔄 |
+| Aktiver Block | **Block 4** — Reconcile Engine |
 
 ---
 
@@ -24,7 +25,7 @@ title: Mission Control
 ```
 PHASE 0  ✅ Complete ........ Freeze & Archive
 PHASE 1  ✅ Complete ........ Skeleton & ADRs
-PHASE 2  🔄 In Progress ..... Core Reliability
+PHASE 2  🔄 In Progress ..... Core Reliability (Blocks 1-3 ✅, Block 4 🔄)
 PHASE 3  ⬜ Pending ......... Observability
 PHASE 4  ⬜ Pending ......... System Boundaries
 PHASE 5  ⬜ Pending ......... Operations
@@ -51,23 +52,44 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
+## 📈 Test Status
+
+| Modul | Tests | Status | Coverage |
+|-------|-------|--------|----------|
+| Event Store (Block 1) | 17 | ✅ **17/17** | Core: 100% |
+| State Projection (Block 2) | 19 | ✅ **19/19** | Core: 100% |
+| Risk Engine (Block 3) | 39 | ✅ **39/39** | Gates: 100% |
+| **Phase 2 Total** | **75** | ✅ **75/75** | **Passing** |
+
+---
+
 ## 🎯 Phase 2 — Core Reliability Aufgaben
 
-1. **Event Store**
-   - [ ] `src/event_store.js` — Append-only events
-   - Owner: @assistant
+1. **Event Store (Block 1)** ✅ *COMPLETE 2026-03-08*
+   - [x] `src/event_store.js` — Append-only events with sequence
+   - [x] Idempotent append with ON CONFLICT
+   - [x] Deterministic ordering via sequence
+   - [x] **Tests: 17/17 passing**
 
-2. **State Projection**
-   - [ ] `src/state_projection.js` — Rebuild from events
-   - Owner: @assistant
+2. **State Projection (Block 2)** ✅ *COMPLETE 2026-03-08*
+   - [x] `src/state_projection.js` — 27 Event Reducers
+   - [x] Rebuild from events (deterministic)
+   - [x] Incremental updates
+   - [x] **Tests: 19/19 passing**
 
-3. **Risk Engine**
-   - [ ] `src/risk_engine.js` — Pre-trade validation
-   - Owner: @assistant
+3. **Risk Engine (Block 3)** ✅ *COMPLETE 2026-03-08*
+   - [x] `src/risk_engine.js` — 6 Gates (Safety + Observability)
+   - [x] Sizing, Hyperliquid Rules, Whitelist, Watchdog, Reconcile, Unmanaged
+   - [x] BLOCK vs WARN classification
+   - [x] **Tests: 39/39 passing**
 
-4. **Reconcile**
-   - [ ] `src/reconcile.js` — Position sync
-   - Owner: @assistant
+4. **Reconcile (Block 4)** 🔄 *IN PROGRESS*
+   - [ ] `src/reconcile.js` — Position comparison engine
+   - [ ] Ghost Position detection
+   - [ ] Unmanaged Position detection
+   - [ ] Size/Side Mismatch detection
+   - [ ] Tests: TBD
+---
 
 ---
 
@@ -95,4 +117,4 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-*Last updated: 2026-03-08 11:19 UTC*
+*Last updated: 2026-03-08 12:46 UTC*
