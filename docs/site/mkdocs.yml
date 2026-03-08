@@ -55,10 +55,6 @@ nav:
   - Phases: phases.md
   - Architecture:
     - Overview: architecture/index.md
-    - ADR-001: architecture/adr-001.md
-    - ADR-002: architecture/adr-002.md
-    - ADR-003: architecture/adr-003.md
-    - ADR-004: architecture/adr-004.md
   - Runbooks:
     - Overview: runbooks/index.md
   - Strategy Lab:
@@ -69,6 +65,3 @@ nav:
 
 extra:
   generator: false
-
-docs_dir: .
-site_dir: ./site
