@@ -15,8 +15,8 @@ title: Mission Control
 | Live Trading | ⛔ **BLOCKED** until Phase 9 + sign-off |
 | Paper Trading | ✅ **ALLOWED** |
 | Mainnet | ⛔ **DISABLED** |
-| Aktuelle Phase | **Phase 2** — Core Reliability 🔄 |
-| Aktiver Block | **Block 4** — Reconcile Engine |
+| Aktuelle Phase | **Phase 2** — Core Reliability ✅ COMPLETE |
+| Phase 3 | 🔄 **IN PROGRESS** — Observability |
 
 ---
 
@@ -25,8 +25,8 @@ title: Mission Control
 ```
 PHASE 0  ✅ Complete ........ Freeze & Archive
 PHASE 1  ✅ Complete ........ Skeleton & ADRs
-PHASE 2  🔄 In Progress ..... Core Reliability (Blocks 1-3 ✅, Block 4 🔄)
-PHASE 3  ⬜ Pending ......... Observability
+PHASE 2  ✅ Complete ........ Core Reliability (Blocks 1-4: 103/103 tests)
+PHASE 3  🔄 In Progress ..... Observability
 PHASE 4  ⬜ Pending ......... System Boundaries
 PHASE 5  ⬜ Pending ......... Operations
 PHASE 6  ⬜ Pending ......... Test Strategy
@@ -41,8 +41,8 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 |-------|------|--------|---------|
 | 0 | Freeze & Archive | ✅ Complete | — |
 | 1 | Skeleton & ADRs | ✅ **COMPLETE** | — |
-| 2 | Core Reliability | 🔄 **STARTED** | Phase 1 |
-| 3 | Observability | ⬜ Pending | Phase 2 |
+| 2 | Core Reliability | ✅ **COMPLETE** | 103/103 Tests |
+| 3 | Observability | 🔄 **STARTED** | Phase 2 |
 | 4 | System Boundaries | ⬜ Pending | Phase 3 |
 | 5 | Operations | ⬜ Pending | Phase 4 |
 | 6 | Test Strategy | ⬜ Pending | Phase 5 |
@@ -52,18 +52,19 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-## 📈 Test Status
+## 📈 Test Status: Phase 2 COMPLETE ✅
 
 | Modul | Tests | Status | Coverage |
 |-------|-------|--------|----------|
 | Event Store (Block 1) | 17 | ✅ **17/17** | Core: 100% |
 | State Projection (Block 2) | 19 | ✅ **19/19** | Core: 100% |
 | Risk Engine (Block 3) | 39 | ✅ **39/39** | Gates: 100% |
-| **Phase 2 Total** | **75** | ✅ **75/75** | **Passing** |
+| Reconcile (Block 4) | 28 | ✅ **28/28** | Detectors: 100% |
+| **Phase 2 Total** | **103** | ✅ **103/103** | **COMPLETE** |
 
 ---
 
-## 🎯 Phase 2 — Core Reliability Aufgaben
+## 🎯 Phase 2 — Core Reliability ✅ COMPLETE
 
 1. **Event Store (Block 1)** ✅ *COMPLETE 2026-03-08*
    - [x] `src/event_store.js` — Append-only events with sequence
@@ -83,12 +84,11 @@ PHASE 9  ⬜ Pending ......... Review & Gate
    - [x] BLOCK vs WARN classification
    - [x] **Tests: 39/39 passing**
 
-4. **Reconcile (Block 4)** 🔄 *IN PROGRESS*
-   - [ ] `src/reconcile.js` — Position comparison engine
-   - [ ] Ghost Position detection
-   - [ ] Unmanaged Position detection
-   - [ ] Size/Side Mismatch detection
-   - [ ] Tests: TBD
+4. **Reconcile (Block 4)** ✅ *COMPLETE 2026-03-08*
+   - [x] `src/reconcile.js` — 4 Detectors
+   - [x] Ghost, Unmanaged, Size, Side mismatch detection
+   - [x] Tolerance-based severity (BLOCK vs WARN)
+   - [x] **Tests: 28/28 passing**
 ---
 
 ---
