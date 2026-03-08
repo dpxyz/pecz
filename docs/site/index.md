@@ -15,7 +15,7 @@ title: Mission Control
 | Live Trading | ⛔ **BLOCKED** until Phase 9 + sign-off |
 | Paper Trading | ✅ **ALLOWED** |
 | Mainnet | ⛔ **DISABLED** |
-| Aktuelle Phase | **Phase 1** — Skeleton & ADRs |
+| Aktuelle Phase | **Phase 2** — Core Reliability 🔄 |
 
 ---
 
@@ -23,8 +23,8 @@ title: Mission Control
 
 ```
 PHASE 0  ✅ Complete ........ Freeze & Archive
-PHASE 1  🔄 In Progress ..... Skeleton & ADRs
-PHASE 2  ⬜ Pending ......... Core Reliability
+PHASE 1  ✅ Complete ........ Skeleton & ADRs
+PHASE 2  🔄 In Progress ..... Core Reliability
 PHASE 3  ⬜ Pending ......... Observability
 PHASE 4  ⬜ Pending ......... System Boundaries
 PHASE 5  ⬜ Pending ......... Operations
@@ -39,8 +39,8 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 | Phase | Name | Status | Blocker |
 |-------|------|--------|---------|
 | 0 | Freeze & Archive | ✅ Complete | — |
-| 1 | Skeleton & ADRs | 🔄 In Progress | Phase 0 |
-| 2 | Core Reliability | ⬜ Pending | Phase 1 |
+| 1 | Skeleton & ADRs | ✅ **COMPLETE** | — |
+| 2 | Core Reliability | 🔄 **STARTED** | Phase 1 |
 | 3 | Observability | ⬜ Pending | Phase 2 |
 | 4 | System Boundaries | ⬜ Pending | Phase 3 |
 | 5 | Operations | ⬜ Pending | Phase 4 |
@@ -51,20 +51,22 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-## 🎯 Nächste 3 Aufgaben
+## 🎯 Phase 2 — Core Reliability Aufgaben
 
-1. **PHASE 1 — ADR-003 + ADR-004**
-   - [ ] ADR-003: State Model
-   - [ ] ADR-004: Risk Controls
+1. **Event Store**
+   - [ ] `src/event_store.js` — Append-only events
    - Owner: @assistant
 
-2. **PHASE 1 — Systemd Templates**
-   - [ ] `forward-v5.service`
-   - [ ] `forward-v5-report.service`
+2. **State Projection**
+   - [ ] `src/state_projection.js` — Rebuild from events
    - Owner: @assistant
 
-3. **PHASE 1 — Control CLI Skeleton**
-   - [ ] `cli.js start/stop/status`
+3. **Risk Engine**
+   - [ ] `src/risk_engine.js` — Pre-trade validation
+   - Owner: @assistant
+
+4. **Reconcile**
+   - [ ] `src/reconcile.js` — Position sync
    - Owner: @assistant
 
 ---
@@ -73,9 +75,9 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 | ID | Blocker | Status | Owner |
 |----|---------|--------|-------|
-| B1 | ADR-003/004 incomplete | 🔄 In Progress | @assistant |
-| B2 | No systemd templates | ⬜ Pending | @assistant |
-| B3 | Strategy Lab not started | ⏳ Waiting | @user |
+| ~~B1~~ | ~~ADR-003/004 incomplete~~ | ✅ **RESOLVED** | @assistant |
+| B2 | Systemd templates needed | ⬜ Pending | @assistant |
+| B3 | Strategy Lab not started | ⏳ Phase 7 | @user |
 
 ---
 
@@ -93,4 +95,4 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-*Last updated: 2026-03-06 13:07 UTC*
+*Last updated: 2026-03-08 11:19 UTC*
