@@ -90,14 +90,17 @@ forward_v5/                 # New (active)
 
 | Blocker | Status | Impact |
 |---------|--------|--------|
-| ADR-003/004 incomplete | ✅ Resolved | Phase 2 ready to start |
+| ADR-003/004 incomplete | ✅ Resolved | Phase 2 started |
+| Event Store Design | 🔄 In Progress | Blocks Block 2 |
+| State Projection Tests | ⬜ Pending | Blocks Block 3 |
 
 ---
 
-## Phase 2: Core Reliability 🔄 STARTED
+## Phase 2: Core Reliability 🔄 IN PROGRESS
 
-**Status:** Not started  
-**Depends:** Phase 1 COMPLETE  
+**Status:** Started  
+**Started:** 2026-03-08  
+**Plan:** `docs/phase2_plan.md`  
 **Priority:** HIGH
 
 ### Deliverables
