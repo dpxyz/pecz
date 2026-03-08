@@ -52,20 +52,20 @@ forward_v5/                 # New (active)
 
 ---
 
-## Phase 1: Skeleton & ADRs 🔄 IN PROGRESS
+## Phase 1: Skeleton & ADRs ✅ COMPLETE
 
-**Status:** 40% complete  
+**Status:** 100% complete  
 **Started:** 2026-03-06  
-**ETA:** 2026-03-07
+**Completed:** 2026-03-08
 
 ### Deliverables
 
 #### Architecture Decision Records
 - [x] ADR-001: Target Architecture
 - [x] ADR-002: Hyperliquid Integration
-- [ ] ADR-003: State Model
-- [ ] ADR-004: Risk Controls
-- [ ] ADR-005: Observability Boundaries
+- [x] ADR-003: State Model
+- [x] ADR-004: Risk Controls
+- [ ] ADR-005: Observability Boundaries (verschoben zu Phase 3)
 
 #### Directory Structure
 - [x] `docs/`
@@ -90,11 +90,11 @@ forward_v5/                 # New (active)
 
 | Blocker | Status | Impact |
 |---------|--------|--------|
-| ADR-003/004 incomplete | 🔄 In Progress | Blocks Phase 2 start |
+| ADR-003/004 incomplete | ✅ Resolved | Phase 2 ready to start |
 
 ---
 
-## Phase 2: Core Reliability ⬜ PENDING
+## Phase 2: Core Reliability 🔄 STARTED
 
 **Status:** Not started  
 **Depends:** Phase 1 COMPLETE  

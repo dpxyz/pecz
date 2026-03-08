@@ -4,7 +4,7 @@
 
 | ID | Blocker | Status | Owner |
 |----|---------|--------|-------|
-| B1 | ADR-003/004 incomplete | 🔄 | @assistant |
+| B1 | ~~ADR-003/004 incomplete~~ | ✅ Gelöst | @assistant |
 | B2 | Systemd templates fehlen | ⬜ | @assistant |
 | B3 | Strategy Lab not started | ⏳ | @user |
 
@@ -13,6 +13,7 @@
 | ID | Blocker | Gelöst |
 |----|---------|--------|
 | B0 | Architektur unklar | 2026-03-06 |
+| B1 | ADR-003/004 incomplete | 2026-03-08 |
 
 ## Blocker-Policy
 
