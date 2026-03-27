@@ -125,13 +125,13 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ### Phase 3 Blocks (Revised Order: 3.1 → 3.2 → 3.4 → 3.3)
 
-| Block | Deliverable | Status |
-|-------|-------------|--------|
-| 3.1 | `src/logger.js` — Structured logging | ✅ Complete (9/14 tests) |
-| 3.2 | `src/health.js` — Health checks | 🔄 **STARTING NOW** |
-| 3.4 | `commands/rebuild_state.js` — Rebuild CLI | ⬜ Pending |
-| 3.3 | `src/report_service.js` — Discord reports | ⬜ Pending |
+| Block | Deliverable | Status | Tests |
+|-------|-------------|--------|-------|
+| 3.1 | `src/logger.js` — Structured logging | ✅ Complete | 9/14 |
+| 3.2 | `src/health.js` — Health monitoring | ✅ Complete | **15/15** |
+| 3.4 | `commands/rebuild_state.js` — Rebuild CLI | 🔄 **IN PROGRESS** | — |
+| 3.3 | `src/report_service.js` — Discord reports | ⬜ Pending | — |
 
-**Rationale:** Logger → Health → Rebuild CLI → Reports (Reports are purely cosmetic, come last)
+**Rationale:** Logger → Health → Rebuild CLI → Reports (Reports come last, purely cosmetic)
 
 **Non-Blocking Principle:** All observability failures → WARN + Retry + Log. **NEVER block trading.**
