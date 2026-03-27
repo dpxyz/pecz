@@ -130,15 +130,14 @@ function confirmReset() {
     return false;
   }
 
-  // Prüfe alle SAFETY-Checks
+  // Prüfe Health-Status: isPaused muss false sein
   const healthStatus = Health.getStatus ? Health.getStatus() : null;
-  const safetyChecks = healthStatus?.safety || [];
-  const allSafetyOk = safetyChecks.every(c => c.status === 'OK');
+  const allSafetyOk = healthStatus && healthStatus.isPaused === false;
 
   if (!allSafetyOk) {
     Logger.warn('confirmReset() blocked: SAFETY checks not all OK', { 
       module: 'circuit_breaker',
-      safetyChecks
+      isPaused: healthStatus?.isPaused
     });
     return false;
   }
