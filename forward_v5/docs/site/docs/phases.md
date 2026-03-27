@@ -124,11 +124,11 @@ forward_v5/                 # New (active)
 - [x] 6 Safety/Observability gates
 - [x] **Tests:** 39/39 passing
 
-#### Block 4: Reconcile 🔄 IN PROGRESS
-- [ ] `src/reconcile.js`
-- [ ] Position sync (paper/mock)
-- [ ] Mismatch detection (Ghost, Unmanaged, Size, Side)
-- [ ] **Tests:** TBD
+#### Block 4: Reconcile ✅ COMPLETE
+- [x] `src/reconcile.js`
+- [x] Position sync (paper/mock)
+- [x] Mismatch detection (Ghost, Unmanaged, Size, Side)
+- [x] **Tests:** 28/28 passing
 
 ### Key Features
 
@@ -144,22 +144,105 @@ forward_v5/                 # New (active)
 ## Phase 3: Observability 🔄 IN PROGRESS
 
 **Status:** Started  
-**Started:** 2026-03-08  
+**Started:** 2026-03-27  
 **Depends:** Phase 2 COMPLETE ✅
+**Baseline:** Commit `472a2ff`
 
-### Deliverables
+### Blocks
 
-- [ ] `src/report_service.js`
-- [ ] `src/health.js`
-- [ ] `src/logger.js`
-- [ ] `commands/rebuild_state.js`
+| Block | Deliverable | Tests | Status |
+|-------|-------------|-------|--------|
+| 3.1 | `src/logger.js` | 10+ | ⬜ Not started |
+| 3.2 | `src/health.js` | 15+ | ⬜ Not started |
+| 3.3 | `src/report_service.js` | 12+ | ⬜ Not started |
+| 3.4 | `commands/rebuild_state.js` | 8+ | ⬜ Not started |
 
-### Non-Blocking Principle
+---
 
+### Block 3.1: Logger ⬜ NOT STARTED
+
+**Purpose:** Structured logging with levels, correlation IDs, and rotation.
+
+**Deliverables:**
+- [ ] `src/logger.js` — Winston/pino-based logger
+- [ ] Log levels: DEBUG, INFO, WARN, ERROR, FATAL
+- [ ] Correlation ID injection from events
+- [ ] Structured JSON output for parsing
+- [ ] Log rotation (daily, keep 7 days)
+- [ ] **Tests:** 10+ unit tests
+
+**Non-Blocking:** Logger failures never block trading.
+
+---
+
+### Block 3.2: Health Service ⬜ NOT STARTED
+
+**Purpose:** Continuous health checks with Discord/webhook alerts.
+
+**Deliverables:**
+- [ ] `src/health.js` — Health check orchestrator
+- [ ] Checks: Event Store, State Projection, Risk Engine
+- [ ] Watchdog: Stale tick detection (>30s)
+- [ ] Reconcile: Position mismatch detection
+- [ ] Alert channels: Discord webhook, file log
+- [ ] Severity: CRITICAL → BLOCK, WARN → Log
+- [ ] **Tests:** 15+ unit tests
+
+**Key Rule:** Health check failures → Alerts, NEVER block trades directly.
+
+---
+
+### Block 3.3: Report Service ⬜ NOT STARTED
+
+**Purpose:** Periodic reports to Discord with trade summaries.
+
+**Deliverables:**
+- [ ] `src/report_service.js` — Report generator
+- [ ] Hourly summary: Positions, PnL, trades
+- [ ] Daily report: Full session recap
+- [ ] Error report: Failed operations
+- [ ] Discord webhook integration
+- [ ] Non-blocking: Queue + retry on failure
+- [ ] **Tests:** 12+ unit tests
+
+**Non-Blocking Principle:**
 ```
 Discord down → WARN + Retry + Log
              → NEVER block trading
 ```
+
+---
+
+### Block 3.4: Rebuild Command ⬜ NOT STARTED
+
+**Purpose:** CLI tool to rebuild state from Event Store.
+
+**Deliverables:**
+- [ ] `commands/rebuild_state.js` — CLI script
+- [ ] Full rebuild from events table
+- [ ] Validation: Rebuild == Live State
+- [ ] Dry-run mode (show diff, don't apply)
+- [ ] Force mode (overwrite current state)
+- [ ] **Tests:** 8+ integration tests
+
+**Usage:**
+```bash
+./cli.js rebuild --dry-run    # Show diff
+./cli.js rebuild --force      # Apply rebuild
+```
+
+---
+
+### Phase 3 Acceptance Criteria
+
+| # | Criteria | Block |
+|---|----------|-------|
+| A1 | Logger outputs valid JSON | 3.1 |
+| A2 | Health checks run every 30s | 3.2 |
+| A3 | Discord alerts on health failure | 3.2 |
+| A4 | Reports generated hourly | 3.3 |
+| A5 | Rebuild produces identical state | 3.4 |
+| A6 | All failures are WARN (never BLOCK) | All |
 
 ---
 
