@@ -1,5 +1,52 @@
 # Changelog
 
+## [v5.0.0-phase3-complete] - 2026-03-27
+
+### ✅ Phase 3 COMPLETE — Observability (68/68 Tests)
+
+**Phase 3 Summary:**
+| Block | Deliverable | Tests |
+|-------|-------------|-------|
+| Block 3.1 | Logger (structured JSON) | 14/14 ✅ |
+| Block 3.2 | Health Service + Boundary | 30/30 ✅ |
+| Block 3.4 | Rebuild CLI | 10/10 ✅ |
+| Block 3.3 | Report Service | 14/14 ✅ |
+| **Total** | | **68/68** ✅ |
+
+**Block 3.1: Logger**
+- 5 log levels: DEBUG, INFO, WARN, ERROR, FATAL
+- Structured JSON output with correlation IDs
+- Size-based rotation with retention
+- Console fallback on file errors
+- Never throws (fail-safe)
+
+**Block 3.2: Health Service**
+- Continuous health monitoring (30s interval)
+- SAFETY/OBSERVABILITY strict boundary
+- SAFETY failure → BLOCK/PAUSE + Event + Log
+- OBSERVABILITY failure → WARN + Log (never blocks)
+- Discord webhook integration
+- isPaused tracking with resumeTrading()
+
+**Block 3.4: Rebuild CLI**
+- `rebuild_state.js` CLI tool
+- `--dry-run` mode (show diff)
+- `--force` mode (apply with backup)
+- State validation: Rebuild == Live
+- Automatic backup before force
+
+**Block 3.3: Report Service**
+- Hourly reports: Positions, PnL, Trades, Health
+- Daily session recaps
+- Queue on Discord failure
+- Retry with exponential backoff (5s, 15s, 30s, 60s)
+- Dedup against spam (5 min cooldown)
+- Health pause visibility
+
+**Tag:** `v5-phase3-complete`
+
+---
+
 ## [v5.0.0-phase2-complete] - 2026-03-08
 
 ### ✅ Phase 2 COMPLETE — Core Reliability (103/103 Tests)

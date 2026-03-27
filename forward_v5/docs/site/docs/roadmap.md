@@ -4,12 +4,16 @@
 
 **Phase 1: Skeleton & ADRs — ✅ COMPLETE**  
 **Phase 2: Core Reliability — ✅ COMPLETE (103 Tests)**  
-**Phase 3: Observability — 🔄 IN PROGRESS**
+**Phase 3: Observability — ✅ COMPLETE (68 Tests)**
 
 - Block 1 (Event Store) — ✅ COMPLETE (17/17 Tests)  
 - Block 2 (State Projection) — ✅ COMPLETE (19/19 Tests)  
 - Block 3 (Risk Engine) — ✅ COMPLETE (39/39 Tests)  
 - Block 4 (Reconcile) — ✅ COMPLETE (28/28 Tests)
+- Block 3.1 (Logger) — ✅ COMPLETE (14/14 Tests)
+- Block 3.2 (Health Service) — ✅ COMPLETE (30/30 Tests)
+- Block 3.4 (Rebuild CLI) — ✅ COMPLETE (10/10 Tests)
+- Block 3.3 (Report Service) — ✅ COMPLETE (14/14 Tests)
 
 ## Phase 2 COMPLETE (2026-03-08)
 
