@@ -117,4 +117,19 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-*Last updated: 2026-03-08 12:46 UTC*
+*Last updated: 2026-03-27 10:55 UTC*
+
+---
+
+## 🚧 Phase 3 — Observability 🔄 IN PROGRESS
+
+### Phase 3 Blocks
+
+| Block | Deliverable | Status |
+|-------|-------------|--------|
+| 3.1 | `src/logger.js` — Structured logging | ⬜ Not started |
+| 3.2 | `src/health.js` — Health checks | ⬜ Not started |
+| 3.3 | `src/report_service.js` — Discord reports | ⬜ Not started |
+| 3.4 | `commands/rebuild_state.js` — Rebuild CLI | ⬜ Not started |
+
+**Non-Blocking Principle:** All observability failures → WARN + Retry + Log. **NEVER block trading.**
