@@ -294,25 +294,31 @@ Discord down → WARN + Retry + Log
 
 ---
 
-## Phase 4: System Boundaries ⬜ PENDING
+## Phase 4: System Boundaries ✅ COMPLETE
 
-**Status:** Not started  
-**Depends:** Phase 3 COMPLETE
+**Status:** COMPLETE  
+**Started:** 2026-03-27  
+**Completed:** 2026-03-27 12:00 UTC  
+**Depends:** Phase 3 COMPLETE ✅  
+**Commit:** `9d51e4e`
 
 ### Deliverables
 
-- [ ] `docs/safety_boundary.md`
-- [ ] `docs/observability_boundary.md`
-- [ ] `docs/incident_response.md`
+- [x] `docs/safety_boundary.md` — SAFETY checks matrix
+- [x] `docs/observability_boundary.md` — OBSERVABILITY checks matrix
+- [x] `docs/incident_response.md` — Runbooks
+- [x] `src/circuit_breaker.js` — Breaker implementation
+- [x] Integration tests 10/10 passing
 
-### Boundaries Matrix
+### Blocks
 
-| Domain | Examples | Fail Mode |
-|--------|----------|-----------|
-| **SAFETY** | sizing, reconcile, watchdog | **BLOCK** |
-| **SAFETY** | leverage, unmanaged | **BLOCK** |
-| **OBSERVABILITY** | discord, reports | **WARN** |
-| **OBSERVABILITY** | scheduler restart | **RETRY** |
+| Block | Deliverable | Tests | Status |
+|-------|-------------|-------|--------|
+| 4.1 | `docs/safety_boundary.md` | — | ✅ **COMPLETE** |
+| 4.2 | `docs/observability_boundary.md` | — | ✅ **COMPLETE** |
+| 4.3 | `docs/incident_response.md` | — | ✅ **COMPLETE** |
+| 4.4 | `src/circuit_breaker.js` | 10 | ✅ **COMPLETE** |
+| 4.5 | `tests/system_boundaries_integration.test.js` | 10 | ✅ **COMPLETE** |
 
 ---
 
