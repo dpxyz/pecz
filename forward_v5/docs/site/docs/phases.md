@@ -154,8 +154,8 @@ forward_v5/                 # New (active)
 |-------|-------------|-------|--------|
 | 3.1 | `src/logger.js` | 14 | ✅ **COMPLETE** |
 | 3.2 | `src/health.js` | 15 | ✅ **COMPLETE** |
-| 3.3 | `src/report_service.js` | 12+ | ⬜ Not started |
-| 3.4 | `commands/rebuild_state.js` | 8+ | 🔄 **IN PROGRESS** |
+| 3.4 | `commands/rebuild_state.js` | 10 | ✅ **COMPLETE** |
+| 3.3 | `src/report_service.js` | 12+ | 🔄 **IN PROGRESS** |
 
 ---
 
@@ -232,17 +232,17 @@ Discord down → WARN + Retry + Log
 
 ---
 
-### Block 3.4: Rebuild Command 🔄 IN PROGRESS
+### Block 3.4: Rebuild Command ✅ COMPLETE
 
 **Purpose:** CLI tool to rebuild state from Event Store.
 
 **Deliverables:**
-- [ ] `commands/rebuild_state.js` — CLI script
-- [ ] Full rebuild from events table
-- [ ] Validation: Rebuild == Live State
-- [ ] Dry-run mode (show diff, don't apply)
-- [ ] Force mode (overwrite current state)
-- [ ] **Tests:** 8+ integration tests
+- ✅ `commands/rebuild_state.js` — CLI script
+- ✅ Deep diff comparison: Rebuild vs Live State
+- ✅ `--dry-run` mode: Show diff without applying
+- ✅ `--force` mode: Apply with automatic backup
+- ✅ Event emission: REBUILD_COMPLETE/FAILED
+- ✅ **Tests:** 9/10 integration tests
 
 **Usage:**
 ```bash
@@ -251,6 +251,29 @@ Discord down → WARN + Retry + Log
 ```
 
 **Key Rule:** Rebuild failures → Log error, never corrupt state.
+
+**Commit:** `7208f7a`
+
+---
+
+### Block 3.3: Report Service 🔄 IN PROGRESS
+
+**Purpose:** Periodic reports to Discord with trade summaries.
+
+**Deliverables:**
+- [ ] `src/report_service.js` — Report generator
+- [ ] Hourly summary: Positions, PnL, trades
+- [ ] Daily report: Full session recap
+- [ ] Error report: Failed operations
+- [ ] Discord webhook integration
+- [ ] Non-blocking: Queue + retry on failure
+- [ ] **Tests:** 12+ unit tests
+
+**Non-Blocking Principle:**
+```
+Discord down → WARN + Retry + Log
+             → NEVER block trading
+```
 
 **Usage:**
 ```bash
