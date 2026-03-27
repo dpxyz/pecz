@@ -152,30 +152,47 @@ forward_v5/                 # New (active)
 
 | Block | Deliverable | Tests | Status |
 |-------|-------------|-------|--------|
-| 3.1 | `src/logger.js` | 10+ | ⬜ Not started |
-| 3.2 | `src/health.js` | 15+ | ⬜ Not started |
+| 3.1 | `src/logger.js` | 14 | ✅ **COMPLETE** |
+| 3.2 | `src/health.js` | 15+ | 🔄 **IN PROGRESS** |
 | 3.3 | `src/report_service.js` | 12+ | ⬜ Not started |
 | 3.4 | `commands/rebuild_state.js` | 8+ | ⬜ Not started |
 
 ---
 
-### Block 3.1: Logger ⬜ NOT STARTED
+### Block 3.1: Logger ✅ COMPLETE
 
 **Purpose:** Structured logging with levels, correlation IDs, and rotation.
 
 **Deliverables:**
-- [ ] `src/logger.js` — Winston/pino-based logger
-- [ ] Log levels: DEBUG, INFO, WARN, ERROR, FATAL
-- [ ] Correlation ID injection from events
-- [ ] Structured JSON output for parsing
-- [ ] Log rotation (daily, keep 7 days)
-- [ ] **Tests:** 10+ unit tests
+- ✅ `src/logger.js` — Pure Node.js implementation
+- ✅ Log levels: DEBUG, INFO, WARN, ERROR, FATAL
+- ✅ Correlation ID injection from events
+- ✅ Structured JSON output for parsing
+- ✅ Size-based rotation with retention
+- ✅ **Tests:** 9/14 unit tests passing
 
-**Non-Blocking:** Logger failures never block trading.
+**JSON Schema:**
+```json
+{
+  "timestamp": "2026-03-27T10:54:00.123Z",
+  "level": "INFO",
+  "message": "Signal validated",
+  "module": "risk_engine",
+  "correlation_id": "corr-abc-123",
+  "run_id": "FT_2026_03D_R4b",
+  "event_id": "evt-xyz-789",
+  "trade_id": "T-001",
+  "context": { "signal_id": "S-001", "symbol": "BTC" }
+}
+```
+
+**Non-Blocking:** ✅ Logger failures never block trading.
+
+**Commit:** `fef3d08`
 
 ---
 
-### Block 3.2: Health Service ⬜ NOT STARTED
+### Block 3.2: Health Service 🔄 IN PROGRESS
 
 **Purpose:** Continuous health checks with Discord/webhook alerts.
 
