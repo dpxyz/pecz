@@ -153,9 +153,9 @@ forward_v5/                 # New (active)
 | Block | Deliverable | Tests | Status |
 |-------|-------------|-------|--------|
 | 3.1 | `src/logger.js` | 14 | ✅ **COMPLETE** |
-| 3.2 | `src/health.js` | 15+ | 🔄 **IN PROGRESS** |
+| 3.2 | `src/health.js` | 15 | ✅ **COMPLETE** |
 | 3.3 | `src/report_service.js` | 12+ | ⬜ Not started |
-| 3.4 | `commands/rebuild_state.js` | 8+ | ⬜ Not started |
+| 3.4 | `commands/rebuild_state.js` | 8+ | 🔄 **IN PROGRESS** |
 
 ---
 
@@ -192,20 +192,22 @@ forward_v5/                 # New (active)
 
 ---
 
-### Block 3.2: Health Service 🔄 IN PROGRESS
+### Block 3.2: Health Service ✅ COMPLETE
 
 **Purpose:** Continuous health checks with Discord/webhook alerts.
 
 **Deliverables:**
-- [ ] `src/health.js` — Health check orchestrator
-- [ ] Checks: Event Store, State Projection, Risk Engine
-- [ ] Watchdog: Stale tick detection (>30s)
-- [ ] Reconcile: Position mismatch detection
-- [ ] Alert channels: Discord webhook, file log
-- [ ] Severity: CRITICAL → BLOCK, WARN → Log
-- [ ] **Tests:** 15+ unit tests
+- ✅ `src/health.js` — Health check orchestrator
+- ✅ Register custom health checks with severity levels
+- ✅ Watchdog: Stale tick detection (configurable threshold)
+- ✅ Continuous monitoring loop (configurable interval)
+- ✅ Discord webhook integration for alerts
+- ✅ Event Store integration: HEALTH_CHECK_PASSED/FAILED events
+- ✅ **Tests:** 15/15 unit tests
 
 **Key Rule:** Health check failures → Alerts, NEVER block trades directly.
+
+**Commit:** `3a2ccb6`
 
 ---
 
@@ -230,7 +232,7 @@ Discord down → WARN + Retry + Log
 
 ---
 
-### Block 3.4: Rebuild Command ⬜ NOT STARTED
+### Block 3.4: Rebuild Command 🔄 IN PROGRESS
 
 **Purpose:** CLI tool to rebuild state from Event Store.
 
@@ -241,6 +243,14 @@ Discord down → WARN + Retry + Log
 - [ ] Dry-run mode (show diff, don't apply)
 - [ ] Force mode (overwrite current state)
 - [ ] **Tests:** 8+ integration tests
+
+**Usage:**
+```bash
+./cli.js rebuild --dry-run    # Show diff
+./cli.js rebuild --force      # Apply rebuild
+```
+
+**Key Rule:** Rebuild failures → Log error, never corrupt state.
 
 **Usage:**
 ```bash
