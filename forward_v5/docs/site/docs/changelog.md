@@ -1,5 +1,41 @@
 # Changelog
 
+## [v5.0.0-phase4-complete] - 2026-03-27
+
+### ✅ Phase 4 COMPLETE — System Boundaries (10/10 Tests)
+
+**Phase 4 Summary:**
+| Block | Deliverable | Tests |
+|-------|-------------|-------|
+| Block 4.1 | Safety Boundary docs | — |
+| Block 4.2 | Observability Boundary docs | — |
+| Block 4.3 | Incident Response runbooks | — |
+| Block 4.4 | Circuit Breaker MVP | 10/10 ✅ |
+| Block 4.5 | Integration Tests | 10/10 ✅ |
+| **Total** | | **10/10** ✅ |
+
+**Circuit Breaker States:**
+- CLOSED → Normal operation, trading allowed
+- OPEN → SAFETY failure, trading BLOCKED
+- HALF_OPEN → Recovery validation
+
+**Key Guarantees:**
+- SAFETY failures → Circuit Breaker OPEN (trading halts)
+- OBSERVABILITY failures → Log only (NEVER blocks)
+- Manual reset required: `attemptReset()` → `confirmReset()`
+- All mutations via explicit events
+
+**Integration Tests:**
+- IT1-10: Full end-to-end SAFETY/OBSERVABILITY boundary
+- Event chain verified
+- Documentation matches runtime behavior
+
+**Tags:**
+- `v5-phase4-complete`
+- `freeze/phase4`
+
+---
+
 ## [v5.0.0-phase3-complete] - 2026-03-27
 
 ### ✅ Phase 3 COMPLETE — Observability (68/68 Tests)
