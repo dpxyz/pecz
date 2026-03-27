@@ -155,7 +155,7 @@ forward_v5/                 # New (active)
 | 3.1 | `src/logger.js` | 14 | ✅ **COMPLETE** |
 | 3.2 | `src/health.js` | 15 | ✅ **COMPLETE** |
 | 3.4 | `commands/rebuild_state.js` | 10 | ✅ **COMPLETE** |
-| 3.3 | `src/report_service.js` | 12+ | 🔄 **IN PROGRESS** |
+| 3.3 | `src/report_service.js` | 14 | ✅ **COMPLETE** |
 
 ---
 
@@ -256,18 +256,19 @@ Discord down → WARN + Retry + Log
 
 ---
 
-### Block 3.3: Report Service 🔄 IN PROGRESS
+### Block 3.3: Report Service ✅ COMPLETE
 
 **Purpose:** Periodic reports to Discord with trade summaries.
 
 **Deliverables:**
-- [ ] `src/report_service.js` — Report generator
-- [ ] Hourly summary: Positions, PnL, trades
-- [ ] Daily report: Full session recap
-- [ ] Error report: Failed operations
-- [ ] Discord webhook integration
-- [ ] Non-blocking: Queue + retry on failure
-- [ ] **Tests:** 12+ unit tests
+- ✅ `src/report_service.js` — Report generator
+- ✅ Hourly summary: Positions, PnL, trades, Health pause status
+- ✅ Daily report: Full session recap, total trades, errors
+- ✅ Error report: Failed operations
+- ✅ Discord webhook integration with queue
+- ✅ Retry with exponential backoff (5s, 15s, 30s, 60s)
+- ✅ Dedup against spam (5 min cooldown)
+- ✅ **Tests:** 14/14 unit tests
 
 **Non-Blocking Principle:**
 ```
@@ -275,11 +276,7 @@ Discord down → WARN + Retry + Log
              → NEVER block trading
 ```
 
-**Usage:**
-```bash
-./cli.js rebuild --dry-run    # Show diff
-./cli.js rebuild --force      # Apply rebuild
-```
+**Commit:** `a4016b8`
 
 ---
 
