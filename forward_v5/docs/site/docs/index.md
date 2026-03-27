@@ -15,8 +15,8 @@ title: Mission Control
 | Live Trading | ⛔ **BLOCKED** until Phase 9 + sign-off |
 | Paper Trading | ✅ **ALLOWED** |
 | Mainnet | ⛔ **DISABLED** |
-| Aktuelle Phase | **Phase 3** — Observability ✅ COMPLETE |
-| Phase 4 | 🔄 **STARTING** — System Boundaries |
+| Aktuelle Phase | **Phase 4** — System Boundaries ✅ COMPLETE |
+| Phase 5 | 🔄 **STARTING** — Operations |
 
 ---
 
@@ -27,8 +27,8 @@ PHASE 0  ✅ Complete ........ Freeze & Archive
 PHASE 1  ✅ Complete ........ Skeleton & ADRs
 PHASE 2  ✅ Complete ........ Core Reliability (103/103 tests)
 PHASE 3  ✅ Complete ........ Observability (68/68 tests)
-PHASE 4  🔄 Starting ........ System Boundaries
-PHASE 5  ⬜ Pending ......... Operations
+PHASE 4  ✅ Complete ........ System Boundaries (10/10 tests)
+PHASE 5  🔄 Starting ......... Operations
 PHASE 6  ⬜ Pending ......... Test Strategy
 PHASE 7  ⭐ MANDATORY ....... Strategy Lab ← BLOCKS LIVE!
 PHASE 8  ⬜ Pending ......... Economics
@@ -43,7 +43,7 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 | 1 | Skeleton & ADRs | ✅ **COMPLETE** | — |
 | 2 | Core Reliability | ✅ **COMPLETE** | 103/103 Tests |
 | 3 | Observability | ✅ **COMPLETE** | 68/68 Tests |
-| 4 | System Boundaries | 🔄 **STARTED** | Phase 3 |
+| 4 | System Boundaries | ✅ **COMPLETE** | 10/10 Tests |
 | 5 | Operations | ⬜ Pending | Phase 4 |
 | 6 | Test Strategy | ⬜ Pending | Phase 5 |
 | 7 | **Strategy Lab** ⭐ | ⬜ Pending | Phase 6 |
