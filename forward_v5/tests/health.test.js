@@ -119,11 +119,12 @@ test('T5: Overall status calculation', async (t) => {
   // Register mix of checks
   Health.register('healthy_check', async () => ({ status: 'healthy' }));
   Health.register('warn_check', async () => ({ status: 'degraded', severity: 'WARN' }));
-  Health.register('critical_check', async () => ({ status: 'failed', severity: 'CRITICAL' }));
+  Health.register('critical_check', async () => ({ status: 'failed', severity: 'CRITICAL' }), { domain: Health.DOMAIN.SAFETY });
   
   const report = await Health.runChecks();
   
-  assert.strictEqual(report.overallStatus, 'critical', 'Should be critical with CRITICAL check');
+  // SAFETY failure sets isPaused => overallStatus = 'paused'
+  assert.strictEqual(report.overallStatus, 'paused', 'Should be paused with SAFETY CRITICAL check');
   assert.strictEqual(report.summary.critical, 1, 'Should count 1 critical');
   assert.strictEqual(report.summary.degraded, 1, 'Should count 1 degraded');
   assert.strictEqual(report.summary.healthy, 1, 'Should count 1 healthy');
