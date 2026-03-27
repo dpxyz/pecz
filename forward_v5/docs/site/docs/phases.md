@@ -96,7 +96,7 @@ forward_v5/                 # New (active)
 
 ---
 
-## Phase 2: Core Reliability 🔄 IN PROGRESS
+## Phase 2: Core Reliability ✅ COMPLETE
 
 **Status:** ✅ **COMPLETE**  
 **Started:** 2026-03-08  
@@ -141,10 +141,11 @@ forward_v5/                 # New (active)
 
 ---
 
-## Phase 3: Observability 🔄 IN PROGRESS
+## Phase 3: Observability ✅ COMPLETE
 
-**Status:** Started  
+**Status:** COMPLETE  
 **Started:** 2026-03-27  
+**Completed:** 2026-03-27 11:45 UTC  
 **Depends:** Phase 2 COMPLETE ✅
 **Baseline:** Commit `472a2ff`
 
@@ -153,7 +154,7 @@ forward_v5/                 # New (active)
 | Block | Deliverable | Tests | Status |
 |-------|-------------|-------|--------|
 | 3.1 | `src/logger.js` | 14 | ✅ **COMPLETE** |
-| 3.2 | `src/health.js` | 15 | ✅ **COMPLETE** |
+| 3.2 | `src/health.js` | 30 | ✅ **COMPLETE** |
 | 3.4 | `commands/rebuild_state.js` | 10 | ✅ **COMPLETE** |
 | 3.3 | `src/report_service.js` | 14 | ✅ **COMPLETE** |
 
