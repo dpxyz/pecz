@@ -50,7 +50,7 @@ Production-like runtime validation noch OFFEN.
 | 2 | Core Reliability | ✅ **COMPLETE** | 103/103 Tests |
 | 3 | Observability | ✅ **COMPLETE** | 68/68 Tests |
 | 4 | System Boundaries | ✅ **COMPLETE** ✅ FREEZE | 191/191 Tests |
-| 5 | Operations | 🟡 **ACTIVE** | Block 5.0: Runtime Validation (Pflicht) |
+| 5 | Operations | 🟡 **ACTIVE** | Block 5.0: 48h Runtime Validation (Design final) |
 | 6 | Test Strategy | ⬜ Pending | Phase 5 |
 | 7 | **Strategy Lab** ⭐ | ⬜ Pending | Phase 6 |
 | 8 | Economics | ⬜ Pending | Phase 7 |
@@ -123,7 +123,7 @@ Production-like runtime validation noch OFFEN.
 
 ---
 
-*Last updated: 2026-03-28 12:15 UTC*
+*Last updated: 2026-03-28 12:19 UTC*
 
 ---
 
@@ -147,17 +147,35 @@ Production-like runtime validation noch OFFEN.
 
 **Block 5.0 muss zuerst erfolgreich sein.**
 
-### Block 5.0: Runtime Validation (24-48h)
+### Block 5.0: Runtime Validation (48h fest)
 
-**Design:** [RUNTIME_VALIDATION_DESIGN.md](RUNTIME_VALIDATION_DESIGN.md)
+**Design:** [RUNTIME_VALIDATION_DESIGN.md](RUNTIME_VALIDATION_DESIGN.md) — ✅ **FINAL v1.0**
 
-**Pflicht-Kriterien:**
-1. Heartbeat stabil (alle 30min)
-2. Health Checks regelmäßig (alle 5min)
-3. Keine ungeklärten CRITICAL Events
-4. Keine stillen Ausfälle
-5. Memory stabil (keine Leaks)
-6. Circuit Breaker Events dokumentiert
+**Konfiguration (final):**
+| Parameter | Wert |
+|-----------|------|
+| **Run-Dauer** | 48 Stunden (fest, keine Abkürzung) |
+| **Heartbeat** | Alle 60 Sekunden |
+| **Heartbeat-Toleranz** | 5 Minuten (dann Alert) |
+| **Health-Check** | Alle 5 Minuten |
+
+**Pflicht-Kriterien (Go/No-Go):**
+| # | Kriterium | Schwellwert |
+|---|-----------|-------------|
+| 1 | Dauer erreicht | 48h vollständig |
+| 2 | Heartbeat vollständig | ≥95% (2765 von 2880) |
+| 3 | Keine Lücken >5min | 0 Ausfälle |
+| 4 | Health Checks OK | ≥95% erfolgreich |
+| 5 | Keine ungeklärten CRITICAL | 0 Events |
+| 6 | Keine ungeklärten PAUSE | 0 Events |
+| 7 | Memory stabil | Wachstum <10% |
+| 8 | Speicher OK | Nie >90% |
+| 9 | Logs rotiert | <1GB/Tag |
+| 10 | System am Ende OK | Finaler Check: OK |
+
+**Fortsetzung bei Unterbrechung:**
+- <60 Minuten: Run fortsetzen
+- >60 Minuten: Neuer Run starten
 
 **Erst dann:** Production-Deploy-Vorbereitung (Blocks 5.1-5.5)
 
@@ -176,11 +194,15 @@ Production-like runtime validation noch OFFEN.
 
 ## Nächste Schritte
 
-1. 📝 [Runtime Validation Design](RUNTIME_VALIDATION_DESIGN.md) review
-2. 🚀 48h Paper/Testnet-Run starten
-3. 📊 Monitoring + Heartbeat aktivieren
-4. ✅ Acceptance-Kriterien prüfen
-5. 🎯 Go/No-Go Entscheidung Block 5.0
+✅ **Design final, Implementierung kann starten.**
+
+1. 🔧 Heartbeat Service implementieren (`src/heartbeat_service.js`)
+2. 🔧 Health Checker implementieren (`src/health_checker.js`)
+3. 🔧 Start/Stop Scripts erstellen
+4. 🚀 48h Paper/Testnet-Run starten
+5. 📊 Monitoring während des Runs
+6. ✅ Acceptance-Kriterien prüfen
+7. 🎯 Go/No-Go Entscheidung Block 5.0
 
 ---
 
