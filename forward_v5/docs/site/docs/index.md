@@ -15,10 +15,10 @@ title: Mission Control
 | Live Trading | ⛔ **BLOCKED** until Phase 9 + sign-off |
 | Paper Trading | ✅ **ALLOWED** |
 | Mainnet | ⛔ **DISABLED** |
-| **Freeze Status** | ⏸️ **PHASE 4 FREEZE** — T+0h / Ends 2026-03-28 12:11 UTC |
+| **Freeze Status** | ✅ **PHASE 4 COMPLETE** — Freeze ended 2026-03-28 12:11 UTC |
 | Tests | **191/191 passing** ✅ |
 | Git Status | **Clean** ✅ |
-| Phase 5 | ⏸️ **PENDING** — Nach Freeze-Validation |
+| Phase 5 | 🟢 **ACTIVE** — Production Readiness |
 
 ---
 
@@ -29,9 +29,8 @@ PHASE 0  ✅ Complete ........ Freeze & Archive
 PHASE 1  ✅ Complete ........ Skeleton & ADRs
 PHASE 2  ✅ Complete ........ Core Reliability (103/103 tests)
 PHASE 3  ✅ Complete ........ Observability (68/68 tests)
-PHASE 4  ✅ Complete ........ System Boundaries (10/10 tests) ⏸️ FREEZE aktiv
-PHASE 5  ⏸️ PENDING ........ Warte auf Freeze-Ende (T+24h)
-PHASE 6  ⬜ Pending ......... Test Strategy
+PHASE 4  ✅ Complete ........ System Boundaries (10/10 tests) ✅ FREEZE complete
+PHASE 5  🟢 ACTIVE .......... Operations — Production Readiness
 PHASE 6  ⬜ Pending ......... Test Strategy
 PHASE 7  ⭐ MANDATORY ....... Strategy Lab ← BLOCKS LIVE!
 PHASE 8  ⬜ Pending ......... Economics
@@ -46,8 +45,8 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 | 1 | Skeleton & ADRs | ✅ **COMPLETE** | — |
 | 2 | Core Reliability | ✅ **COMPLETE** | 103/103 Tests |
 | 3 | Observability | ✅ **COMPLETE** | 68/68 Tests |
-| 4 | System Boundaries | ✅ **COMPLETE** ⏸️ FREEZE | 191/191 Tests |
-| 5 | Operations | ⏸️ **PENDING** | Freeze-Ende T+24h |
+| 4 | System Boundaries | ✅ **COMPLETE** ✅ FREEZE | 191/191 Tests |
+| 5 | Operations | 🟢 **ACTIVE** | Production Readiness |
 | 6 | Test Strategy | ⬜ Pending | Phase 5 |
 | 7 | **Strategy Lab** ⭐ | ⬜ Pending | Phase 6 |
 | 8 | Economics | ⬜ Pending | Phase 7 |
@@ -120,7 +119,7 @@ PHASE 9  ⬜ Pending ......... Review & Gate
 
 ---
 
-*Last updated: 2026-03-27 11:45 UTC*
+*Last updated: 2026-03-28 12:07 UTC*
 
 ---
 
