@@ -3,191 +3,206 @@
 **Status:** 🟢 **ACTIVE**  
 **Started:** 2026-03-28 12:11 UTC  
 **Previous Phase:** Phase 4 — System Boundaries (Frozen)  
-**Tag:** `v5-phase4-frozen` → `v5-phase5-ops`  
+**Tag:** `v5-phase4-frozen` → `v5-phase5-runtime-validation`  
+
+---
+
+## ⚠️ WICHTIGER HINWEIS
+
+> **Production-like runtime validation ist NOCH OFFEN.**
+> 
+> Der 24h Phase-4-Freeze war ein erfolgreicher **Code Freeze** (keine Änderungen, 191/191 Tests passing), 
+> aber **KEIN Nachweis für 24h Runtime-Stabilität**. Das System lief nicht durchgehend über 24 Stunden.
+> 
+> Phase 5 beginnt daher mit Pflicht-Block **5.0: Runtime Validation** — ein echter 24-48h Paper/Testnet-Run 
+> mit aktivem Monitoring, bevor wir zur Production-Deploy übergehen.
 
 ---
 
 ## Objective
 
-Transition the system from "Frozen/Stable" to "Production-Ready" through integration testing, documentation finalization, and go/no-go validation.
+Transition vom "Frozen Code" zu "Production-Ready Runtime" durch:
+1. **Echte Runtime-Validierung** (24-48h Paper/Testnet-Run)
+2. Nach erfolgreicher Validation: Production-Deploy-Vorbereitung
+
+---
 
 ## Entry Criteria (✅ All Met)
 
 | Criterion | Status | Evidence |
 |-----------|--------|----------|
-| Phase 4 Complete | ✅ | FREEZE.md, FINAL_FREEZE_REPORT.md |
-| 24h Freeze Passed | ✅ | No critical incidents |
-| 191/191 Tests Passing | ✅ | Test run at T+24h |
-| Git Clean | ✅ | Tag `v5-phase4-frozen` ready |
+| Phase 4 Code Complete | ✅ | FREEZE.md, FINAL_FREEZE_REPORT.md |
+| Code Freeze Passed | ✅ | Keine Änderungen 24h, 191 Tests passing |
+| Git Clean | ✅ | Tag `v5-phase4-frozen` |
 
 ---
 
-## Phase 5 Work Streams
+## Phase 5 Blocks (REVISED — Reihenfolge wichtig!)
 
-### Stream A: Final Integration Testing
+### ⭐ BLOCK 5.0: Runtime Validation (Pflicht — BLOCKIERT ALLES WEITERE)
 
-**Goal:** Validate end-to-end system integration under realistic conditions.
+**Ziel:** Nachweis für 24-48h Runtime-Stabilität unter realistischen Bedingungen.
 
-#### Tasks
+**Dauer:** 24-48 Stunden (keine Abkürzung)
 
-- [ ] A1: End-to-End Trade Flow Test
-  - Simulated market data → Signal generation → Entry → Monitoring → Exit
-  - Verify all components communicate correctly
-  
-- [ ] A2: Error Injection Tests
-  - Feed disconnects
-  - API timeouts (simulated)
-  - Clock drift scenarios
-  - Memory pressure situations
+**Setup:**
+- [ ] Paper Trading oder Testnet-Modus
+- [ ] Heartbeat aktiv (alle 30 Min)
+- [ ] Periodische Health Checks (automatisch)
+- [ ] Circuit-Breaker-Events überwachen
+- [ ] Logs und Alerts sammeln
 
-- [ ] A3: Circuit Breaker Integration Test
-  - SAFETY violation triggers circuit
-  - Recovery workflow completes
-  - State transitions logged correctly
+**Runtime Monitoring:**
+- [ ] Heartbeat Service läuft (PID-Datei)
+- [ ] Health Checks alle X Minuten
+- [ ] Log-Aggregation aktiv
+- [ ] Discord/Webhook Alerts bei CRITICAL/PAUSE
 
-- [ ] A4: State Reconstruction Under Load
-  - Rebuild state after 1000+ simulated events
-  - Verify position consistency
-  - Check report accuracy
+**Abschlusskriterien (ALL müssen pass):**
 
-**Success Criteria:**
-- All E2E tests pass
-- No unhandled exceptions
-- Circuit breaker responds correctly to all scenarios
+| Kriterium | Definition | Pflicht |
+|-----------|------------|---------|
+| **Heartbeat stabil** | Keine fehlenden Heartbeats >60s | ✅ Ja |
+| **Keine stillen Ausfälle** | System reagiert auf Checks | ✅ Ja |
+| **Keine ungeklärten CRITICAL Events** | Alle FATAL/ERROR erklärt | ✅ Ja |
+| **Keine ungeklärten PAUSE Events** | Alle Circuit-Breaker-Trigger erklärt | ✅ Ja |
+| **Health Checks regelmäßig** | Checks laufen alle X Min | ✅ Ja |
+| **Circuit Breaker stabil** | Nur erwartete state transitions | ✅ Ja |
+| **Speicher stabil** | Keine Memory Leaks >10% | ✅ Ja |
+| **Log-Größe kontrolliert** | Rotation funktioniert | ✅ Ja |
 
----
-
-### Stream B: Documentation & Runbooks
-
-**Goal:** Ensure operational readiness for production.
-
-#### Tasks
-
-- [ ] B1: Deployment Runbook
-  - Step-by-step production deployment
-  - Rollback procedures
-  - Environment variables checklist
-
-- [ ] B2: Monitoring Runbook
-  - How to read health status
-  - When to escalate
-  - Circuit breaker reset procedures
-
-- [ ] B3: Incident Response Guide
-  - SAFETY violation response
-  - Feed gap response
-  - Position reconciliation failure response
-
-- [ ] B4: On-Call Quick Reference
-  - Common issues and solutions
-  - Log location and interpretation
-  - Emergency contacts
+**Go/No-Go nach Block 5.0:**
+- ✅ **GO:** Alle Kriterien erfüllt → Weiter zu Block 5.1
+- ❌ **NO-GO:** Ein Kriterium FAIL → Fix, Neustart Runtime Validation
 
 ---
 
-### Stream C: Production Environment
+### BLOCK 5.1: Systemd Integration
 
-**Goal:** Prepare and validate production infrastructure.
+**Ziel:** Production-ready Service-Management.
 
-#### Tasks
+**Voraussetzung:** Block 5.0 ✅ GO
 
-- [ ] C1: Environment Configuration
-  - Production secrets management
-  - Log aggregation setup
-  - Health check endpoints exposed
-
-- [ ] C2: Monitoring Setup
-  - Health endpoint monitoring
-  - Alert thresholds configured
-  - Dashboard operational
-
-- [ ] C3: Backup & Recovery
-  - State backup strategy
-  - Recovery time objective (RTO) defined
-  - Recovery procedure tested
+- [ ] Systemd service file erstellen
+- [ ] Auto-restart on failure
+- [ ] Dependency management (DB, Netzwerk)
+- [ ] Service status monitoring
+- [ ] Logging to journald
 
 ---
 
-### Stream D: Go/No-Go Validation
+### BLOCK 5.2: Control API / CLI
 
-**Goal:** Make final decision on production readiness.
+**Ziel:** Operational control ohne Code-Änderungen.
 
-#### Checklist
+**Voraussetzung:** Block 5.0 ✅ GO
 
-**Technical Readiness:**
-- [ ] All tests passing (191 + E2E)
-- [ ] No open critical/blocker bugs
-- [ ] Performance benchmarks met
-- [ ] Security review complete
+- [ ] Health status endpoint
+- [ ] Circuit breaker control (manual open/close für Wartung)
+- [ ] Log level adjustment
+- [ ] Graceful shutdown
+- [ ] Metrics endpoint (/metrics für Prometheus)
 
-**Operational Readiness:**
-- [ ] Runbooks reviewed and approved
-- [ ] Monitoring in place
-- [ ] On-call schedule established
-- [ ] Rollback plan tested
+---
 
-**Documentation:**
-- [ ] API documentation complete
-- [ ] Architecture docs current
-- [ ] ADRs up to date
-- [ ] Handoff notes prepared
+### BLOCK 5.3: Log Rotation & Retention
+
+**Ziel:** Produktions-taugliches Log-Management.
+
+**Voraussetzung:** Block 5.0 ✅ GO
+
+- [ ] Logrotate config für forward-v5 logs
+- [ ] Retention policy (z.B. 7 Tage, komprimiert)
+- [ ] Error log separation
+- [ ] Archive/Migration zu externem Storage (optional)
+
+---
+
+### BLOCK 5.4: Deployment Automatisierung
+
+**Ziel:** Reproduzierbare Deployments.
+
+**Voraussetzung:** Block 5.0 ✅ GO
+
+- [ ] Deployment script (deploy.sh)
+- [ ] Config management (env vars, secrets)
+- [ ] Pre-deploy health check
+- [ ] Post-deploy validation
+- [ ] Rollback procedure
+
+---
+
+### BLOCK 5.5: Go/No-Go Final Review
+
+**Ziel:** Production Go-Live Entscheidung.
+
+**Voraussetzung:** Alle vorherigen Blocks ✅
+
+- [ ] Runtime Validation Report review
+- [ ] Alle Blocks abgeschlossen
+- [ ] Security review
+- [ ] On-call playbook ready
+- [ ] Manual sign-off
 
 ---
 
 ## Phase 5 Exit Criteria
 
-| Item | Criteria | Status |
-|------|----------|--------|
-| E2E Tests | All passing | ⏳ |
-| Documentation | Complete and reviewed | ⏳ |
-| Production Config | Validated and ready | ⏳ |
-| Go/No-Go Decision | Approved by Tech Lead | ⏳ |
+| Phase | Item | Criteria | Status |
+|-------|------|----------|--------|
+| 5.0 | **Runtime Validation** | 24-48h Paper Run, alle Kriterien grün | ⏳ **OFFEN** |
+| 5.1 | Systemd Service | Service file deployed, auto-restart tested | ⏳ |
+| 5.2 | Control API | Health endpoint, CB control, graceful shutdown | ⏳ |
+| 5.3 | Log Rotation | Rotating logs, retention policy active | ⏳ |
+| 5.4 | Deployment | Automated deploy + rollback tested | ⏳ |
+| 5.5 | Go/No-Go | Manual sign-off | ⏳ |
 
 ---
 
-## Timeline
+## Risiken & Mitigationen
 
-| Stream | Estimated Duration | Owner |
-|--------|-------------------|-------|
-| A: Integration Testing | 2-3 days | Dave |
-| B: Documentation | 1-2 days | Dave/Pecz |
-| C: Production Environment | 1-2 days | Dave |
-| D: Go/No-Go | 1 day | Dave |
-
-**Phase 5 Target Completion:** 2026-04-01  
-**Production Go-Live Target:** TBD (after Go/No-Go)
+| Risiko | Wahrscheinlichkeit | Impact | Mitigation |
+|--------|-------------------|--------|------------|
+| Runtime Validation FAIL | Medium | High | Bufferzeit eingebaut, kann wiederholt werden |
+| Memory Leak im Langzeitlauf | Low | High | Monitoring + 48h statt 24h für mehr Sicherheit |
+| Heartbeat selbst instabil | Low | Medium | Einfacher Code, robustes Logging |
+| Block 5.x hängt von 5.0 ab | — | — | Akzeptiert — Runtime Validation zuerst |
 
 ---
 
-## Risk Assessment
+## Timeline (REVISED)
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| E2E test failures | Low | High | Buffer time built in |
-| Documentation gaps | Medium | Medium | Checklist-driven review |
-| Environment issues | Low | Medium | Pre-validation before Phase 5 |
-| Timeline slip | Medium | Low | Scope can be reduced if needed |
+| Block | Dauer | Abhängigkeit | Target |
+|-------|-------|--------------|--------|
+| **5.0:** Runtime Validation | 48h (fix) | — | 2026-03-30 |
+| **5.1:** Systemd | 1 Tag | 5.0 GO | 2026-03-31 |
+| **5.2:** Control API | 1-2 Tage | 5.0 GO | 2026-04-01 |
+| **5.3:** Log Rotation | 1 Tag | 5.0 GO | 2026-04-01 |
+| **5.4:** Deployment | 1-2 Tage | 5.0 GO | 2026-04-02 |
+| **5.5:** Go/No-Go | 0.5 Tage | Alle GO | 2026-04-02 |
+
+**Neuer Target:** 2026-04-02 (plus Puffer für mögliche Runtime Validation Wiederholung)
 
 ---
 
-## Decision Log
+## Entscheidungslog
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| 2026-03-28 | Phase 5 GO | Freeze completed successfully, 191 tests passing, no incidents |
-| | | |
+| Datum | Entscheidung | Begründung |
+|-------|--------------|------------|
+| 2026-03-28 | Phase 5 GO | Code Freeze erfolgreich |
+| 2026-03-28 | Block 5.0 als Pflicht-Prerequisite | Kein 24h Runtime-Nachweis vorhanden |
+| 2026-03-28 | Alle andere Blocks nach 5.0 | Keine Production-Deploy ohne Runtime-Validation |
 
 ---
 
 ## References
 
 - [Phase 4 Freeze Report](./FINAL_FREEZE_REPORT.md)
-- [Phase 4 Deliverables](./FREEZE.md)
+- [Runtime Validation Design](./RUNTIME_VALIDATION_DESIGN.md) (folgt)
 - [Safety Boundary](./docs/safety_boundary.md)
 - [Observability Boundary](./docs/observability_boundary.md)
-- [Incident Response](./docs/incident_response.md)
 
 ---
 
-*Phase 5 commenced: 2026-03-28 12:11 UTC*  
-*Last updated: 2026-03-28 12:07 CET*
+*Phase 5.0 Runtime Validation startet: 2026-03-28 12:15 UTC*  
+*Letztes Update: 2026-03-28 12:15 UTC*
