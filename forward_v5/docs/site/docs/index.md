@@ -1,1082 +1,518 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw — Strategic Project Cockpit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --color-bg: #f8f9fa;
-            --color-surface: #ffffff;
-            --color-surface-elevated: #f1f3f5;
-            --color-text-primary: #1a1d21;
-            --color-text-secondary: #5a636d;
-            --color-text-tertiary: #8a929d;
-            --color-border: #e3e7eb;
-            --color-border-light: #eef1f4;
-            --color-accent: #3b6df6;
-            --color-accent-light: #e8f0fe;
-            --color-success: #0d9e56;
-            --color-warning: #e89005;
-            --color-error: #dc2626;
-            --color-phase-0: #94a3b8;
-            --color-phase-active: #3b6df6;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--color-bg);
-            color: var(--color-text-primary);
-            line-height: 1.6;
-            font-size: 15px;
-        }
-
-        /* Header */
-        .header {
-            background: var(--color-surface);
-            border-bottom: 1px solid var(--color-border);
-            padding: 20px 40px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--color-text-primary);
-        }
-
-        .logo span {
-            color: var(--color-accent);
-        }
-
-        .last-updated {
-            font-size: 13px;
-            color: var(--color-text-tertiary);
-            font-family: 'SF Mono', monospace;
-        }
-
-        /* Main Layout */
-        .main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-
-        /* Section Styling */
-        section {
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--color-text-tertiary);
-            margin-bottom: 24px;
-        }
-
-        /* 1. THE VISION */
-        .vision-card {
-            background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
-            border: 1px solid #d1e0fd;
-            border-radius: var(--radius-lg);
-            padding: 48px;
-            margin-bottom: 20px;
-        }
-
-        .vision-title {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            color: var(--color-text-primary);
-        }
-
-        .vision-description {
-            font-size: 18px;
-            line-height: 1.7;
-            color: var(--color-text-secondary);
-            max-width: 900px;
-        }
-
-        .vision-description p {
-            margin-bottom: 16px;
-        }
-
-        .vision-pillars {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 32px;
-        }
-
-        .pillar {
-            background: var(--color-surface);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .pillar-number {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--color-accent);
-            margin-bottom: 8px;
-        }
-
-        .pillar-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .pillar-text {
-            font-size: 14px;
-            color: var(--color-text-secondary);
-            line-height: 1.5;
-        }
-
-        /* 2. THE TIMELINE - Heart of the Dashboard */
-        .timeline-container {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .timeline-title {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .timeline-legend {
-            display: flex;
-            gap: 24px;
-            font-size: 13px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--color-text-secondary);
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.complete { background: var(--color-success); }
-        .legend-dot.active { background: var(--color-accent); }
-        .legend-dot.planned { background: var(--color-border); border: 2px solid var(--color-text-tertiary); }
-
-        .timeline {
-            display: flex;
-            gap: 16px;
-            position: relative;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 24px;
-            left: 80px;
-            right: 40px;
-            height: 4px;
-            background: linear-gradient(90deg, 
-                var(--color-success) 0%, 
-                var(--color-success) 45%,
-                var(--color-accent) 45%,
-                var(--color-accent) 55%,
-                var(--color-border) 55%,
-                var(--color-border) 100%);
-            border-radius: 2px;
-            z-index: 0;
-        }
-
-        .phase-card {
-            flex: 1;
-            min-width: 0;
-            background: var(--color-surface-elevated);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
-        }
-
-        .phase-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .phase-card.complete {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .phase-card.active {
-            background: var(--color-accent-light);
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(59, 109, 246, 0.1);
-        }
-
-        .phase-card.blocked {
-            opacity: 0.7;
-        }
-
-        .phase-indicator {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .phase-card.complete .phase-indicator {
-            background: var(--color-success);
-            color: white;
-        }
-
-        .phase-card.active .phase-indicator {
-            background: var(--color-accent);
-            color: white;
-        }
-
-        .phase-card.planned .phase-indicator {
-            background: var(--color-surface);
-            color: var(--color-text-tertiary);
-            border: 2px solid var(--color-border);
-        }
-
-        .phase-name {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .phase-description {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .phase-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .phase-status.complete {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .phase-status.active {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .phase-status.planned {
-            background: var(--color-border-light);
-            color: var(--color-text-tertiary);
-        }
-
-        .phase-status.blocked {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* Dependency Arrow */
-        .dependency-note {
-            margin-top: 32px;
-            padding: 20px;
-            background: #fef3c7;
-            border-radius: var(--radius-md);
-            border-left: 4px solid var(--color-warning);
-            font-size: 14px;
-            color: var(--color-text-secondary);
-        }
-
-        .dependency-note strong {
-            color: var(--color-text-primary);
-        }
-
-        /* 3. CURRENT STATUS */
-        .current-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .current-main {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .current-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .current-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--color-accent);
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        .current-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .current-title {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-        }
-
-        .current-subtitle {
-            font-size: 15px;
-            color: var(--color-text-secondary);
-        }
-
-        .workstream-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .workstream-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            padding: 16px;
-            background: var(--color-surface-elevated);
-            border-radius: var(--radius-md);
-            border-left: 3px solid transparent;
-        }
-
-        .workstream-item.blocked {
-            border-left-color: var(--color-error);
-        }
-
-        .workstream-item.ready {
-            border-left-color: var(--color-success);
-        }
-
-        .workstream-item.waiting {
-            border-left-color: var(--color-text-tertiary);
-        }
-
-        .workstream-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .workstream-icon.blocked { background: #fee2e2; }
-        .workstream-icon.ready { background: #dcfce7; }
-        .workstream-icon.waiting { background: var(--color-border-light); }
-
-        .workstream-content {
-            flex: 1;
-        }
-
-        .workstream-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .workstream-desc {
-            font-size: 13px;
-            color: var(--color-text-secondary);
-        }
-
-        .current-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .sidebar-card {
-            background: var(--color-surface);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .sidebar-title {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-text-tertiary);
-            margin-bottom: 12px;
-        }
-
-        .sidebar-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--color-text-primary);
-            margin-bottom: 4px;
-        }
-
-        .sidebar-label {
-            font-size: 13px;
-            color: var(--color-text-secondary);
-        }
-
-        /* 4. THE ARCHIVE */
-        .archive-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .archive-card {
-            background: var(--color-surface);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .archive-card.success { border-top: 3px solid var(--color-success); }
-        .archive-card.learning { border-top: 3px solid var(--color-warning); }
-
-        .archive-date {
-            font-size: 12px;
-            color: var(--color-text-tertiary);
-            margin-bottom: 8px;
-        }
-
-        .archive-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .archive-desc {
-            font-size: 14px;
-            color: var(--color-text-secondary);
-            line-height: 1.5;
-        }
-
-        .archive-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-            margin-top: 12px;
-        }
-
-        .archive-tag.success { background: #dcfce7; color: #166534; }
-        .archive-tag.learning { background: #fef3c7; color: #92400e; }
-
-        /* 5. DEEP DIVE */
-        .deep-dive {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        .deep-dive-header {
-            padding: 24px 32px;
-            background: var(--color-surface-elevated);
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .deep-dive-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .deep-dive-toggle {
-            font-size: 20px;
-            color: var(--color-text-tertiary);
-            transition: transform 0.2s ease;
-        }
-
-        .deep-dive.expanded .deep-dive-toggle {
-            transform: rotate(180deg);
-        }
-
-        .deep-dive-body {
-            display: none;
-            padding: 32px;
-        }
-
-        .deep-dive.expanded .deep-dive-body {
-            display: block;
-        }
-
-        .detail-section {
-            margin-bottom: 32px;
-        }
-
-        .detail-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-section-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--color-text-primary);
-        }
-
-        .detail-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .detail-table th {
-            text-align: left;
-            padding: 12px;
-            font-weight: 500;
-            color: var(--color-text-tertiary);
-            border-bottom: 1px solid var(--color-border);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .detail-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--color-border-light);
-            color: var(--color-text-secondary);
-        }
-
-        .detail-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .status-badge.pass { background: #dcfce7; color: #166534; }
-        .status-badge.fail { background: #fee2e2; color: #991b1b; }
-        .status-badge.active { background: #dbeafe; color: #1e40af; }
-
-        .link-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .link-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            background: var(--color-surface-elevated);
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: var(--color-text-primary);
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .link-item:hover {
-            background: var(--color-accent-light);
-            color: var(--color-accent);
-        }
-
-        .link-icon {
-            font-size: 16px;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .timeline {
-                overflow-x: auto;
-                padding-bottom: 20px;
-            }
-            
-            .phase-card {
-                min-width: 180px;
-            }
-            
-            .current-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .archive-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main { padding: 20px; }
-            .vision-pillars { grid-template-columns: 1fr; }
-            .link-list { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-
-<header class="header">
-    <div class="header-content">
-        <div class="logo">Open<span>Claw</span> Strategic Cockpit</div>
-        <div class="last-updated">Updated: 2026-03-30</div>
+---
+title: Strategic Dashboard
+---
+
+<style>
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.timeline-container {
+  grid-column: 1 / -1;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.phase-track {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+
+.phase-track::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  right: 40px;
+  height: 4px;
+  background: linear-gradient(90deg,
+    #00d26a 0%, #00d26a 45%,
+    #3b6df6 45%, #3b6df6 55%,
+    var(--md-default-fg-color--lightest) 55%, var(--md-default-fg-color--lightest) 100%);
+  border-radius: 2px;
+}
+
+.phase-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.phase-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.phase-item.complete .phase-dot {
+  background: #00d26a;
+  color: white;
+}
+
+.phase-item.active .phase-dot {
+  background: #3b6df6;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(59, 109, 246, 0.2);
+}
+
+.phase-item.pending .phase-dot {
+  background: var(--md-default-bg-color);
+  border: 2px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--light);
+}
+
+.phase-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.phase-status {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+}
+
+.phase-item.active .phase-status {
+  color: #3b6df6;
+  font-weight: bold;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.status-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.25rem;
+  border-left: 4px solid var(--md-default-fg-color--lightest);
+}
+
+.status-card.warning { border-left-color: #e89005; }
+.status-card.info { border-left-color: #3b6df6; }
+.status-card.success { border-left-color: #00d26a; }
+
+.status-value {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.status-value.warning { color: #e89005; }
+.status-value.info { color: #3b6df6; }
+.status-value.success { color: #00d26a; }
+
+.status-label {
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.status-meta {
+  font-size: 0.7rem;
+  color: var(--md-default-fg-color--lighter);
+  margin-top: 0.5rem;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.panel-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-default-fg-color--light);
+}
+
+.activity-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.activity-icon.success { background: #dcfce7; color: #166534; }
+.activity-icon.warning { background: #fef3c7; color: #92400e; }
+.activity-icon.info { background: #dbeafe; color: #1e40af; }
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.activity-desc {
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--md-code-bg-color);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid transparent;
+}
+
+.action-item.blocked { border-left-color: #e89005; }
+.action-item.ready { border-left-color: #00d26a; }
+
+.action-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+
+.action-item.ready .action-checkbox {
+  background: #00d26a;
+  border-color: #00d26a;
+  color: white;
+}
+
+.action-text {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.action-meta {
+  font-size: 0.7rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.action-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.action-badge.blocked {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.action-badge.ready {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.deep-dive {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+.deep-dive summary {
+  cursor: pointer;
+  padding: 1rem;
+  background: var(--md-code-bg-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .phase-track::before { display: none; }
+}
+</style>
+
+# Strategic Dashboard
+
+**Vision:** Build a reliable, autonomous trading infrastructure with minimal human intervention. By Phase 9: production-ready reliability through 48+ hours continuous validated runtime. *Current focus: Operations (Phase 5)*
+
+---
+
+## Project Timeline
+
+<div class="timeline-container">
+  <div class="timeline-header">
+    <h2>Phase 0 → 9 Progress</h2>
+  </div>
+  
+  <div class="phase-track">
+    <div class="phase-item complete">
+      <div class="phase-dot">0</div>
+      <div class="phase-name">Freeze</div>
+      <div class="phase-status">Done</div>
     </div>
-</header>
+    <div class="phase-item complete">
+      <div class="phase-dot">1</div>
+      <div class="phase-name">Skeleton</div>
+      <div class="phase-status">Done</div>
+    </div>
+    <div class="phase-item complete">
+      <div class="phase-dot">2</div>
+      <div class="phase-name">Core</div>
+      <div class="phase-status">Done</div>
+    </div>
+    <div class="phase-item complete">
+      <div class="phase-dot">3</div>
+      <div class="phase-name">Observe</div>
+      <div class="phase-status">Done</div>
+    </div>
+    <div class="phase-item complete">
+      <div class="phase-dot">4</div>
+      <div class="phase-name">Boundaries</div>
+      <div class="phase-status">Done</div>
+    </div>
+    <div class="phase-item active">
+      <div class="phase-dot">5</div>
+      <div class="phase-name">Operations</div>
+      <div class="phase-status">Active</div>
+    </div>
+    <div class="phase-item pending">
+      <div class="phase-dot">6</div>
+      <div class="phase-name">Testing</div>
+      <div class="phase-status">Blocked</div>
+    </div>
+    <div class="phase-item pending">
+      <div class="phase-dot">7</div>
+      <div class="phase-name">Strategy</div>
+      <div class="phase-status">Blocked</div>
+    </div>
+    <div class="phase-item pending">
+      <div class="phase-dot">8</div>
+      <div class="phase-name">Economics</div>
+      <div class="phase-status">Blocked</div>
+    </div>
+    <div class="phase-item pending">
+      <div class="phase-dot">9</div>
+      <div class="phase-name">Review</div>
+      <div class="phase-status">Blocked</div>
+    </div>
+  </div>
+</div>
 
-<main class="main">
+---
 
-    <!-- 1. THE VISION -->
-    <section id="vision">
-        <div class="section-title">The Vision</div>
-        
-        <div class="vision-card">
-            <h1 class="vision-title">Building a Reliable, Autonomous Trading Infrastructure</h1>
-            
-            <div class="vision-description">
-                <p>OpenClaw is a systematic trading infrastructure designed to operate with minimal human intervention while maintaining rigorous safety standards. The long-term goal is a fully autonomous system that can detect opportunities, execute trades, manage risk, and maintain operational continuity without requiring constant oversight.</p>
-                
-                <p>By Phase 9, OpenClaw will demonstrate production-ready reliability through 48+ hours of continuous validated runtime, comprehensive safety systems, and battle-tested operational procedures.</p>
-            </div>
-            
-            <div class="vision-pillars">
-                <div class="pillar">
-                    <div class="pillar-number">01</div>
-                    <div class="pillar-title">Reliability First</div>
-                    <div class="pillar-text">Every component designed for fault tolerance and graceful degradation</div>
-                </div>
-                <div class="pillar">
-                    <div class="pillar-number">02</div>
-                    <div class="pillar-title">Safety by Design</div>
-                    <div class="pillar-text">Multiple independent safety layers prevent catastrophic failures</div>
-                </div>
-                <div class="pillar">
-                    <div class="pillar-number">03</div>
-                    <div class="pillar-title">Operational Excellence</div>
-                    <div class="pillar-text">Clear procedures, monitoring, and recovery mechanisms for every scenario</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="dashboard-grid">
 
-    <!-- 2. THE TIMELINE -->
-    <section id="timeline">
-        <div class="section-title">The Timeline</div>
-        
-        <div class="timeline-container">
-            <div class="timeline-header">
-                <h2 class="timeline-title">Project Roadmap: Phase 0 → Phase 9</h2>
-                <div class="timeline-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot complete"></div>
-                        <span>Complete</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot active"></div>
-                        <span>Active</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot planned"></div>
-                        <span>Planned</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="timeline">
-                <div class="phase-card complete">
-                    <div class="phase-indicator">0</div>
-                    <div class="phase-name">Freeze & Archive</div>
-                    <div class="phase-description">Legacy system archived and documented</div>
-                    <span class="phase-status complete">✓ Complete</span>
-                </div>
-                
-                <div class="phase-card complete">
-                    <div class="phase-indicator">1</div>
-                    <div class="phase-name">Skeleton & ADRs</div>
-                    <div class="phase-description">Architecture decisions documented</div>
-                    <span class="phase-status complete">✓ Complete</span>
-                </div>
-                
-                <div class="phase-card complete">
-                    <div class="phase-indicator">2</div>
-                    <div class="phase-name">Core Reliability</div>
-                    <div class="phase-description">Event Store, State Projection, Risk Engine</div>
-                    <span class="phase-status complete">✓ Complete</span>
-                </div>
-                
-                <div class="phase-card complete">
-                    <div class="phase-indicator">3</div>
-                    <div class="phase-name">Observability</div>
-                    <div class="phase-description">Logging, Health Monitoring, Reporting</div>
-                    <span class="phase-status complete">✓ Complete</span>
-                </div>
-                
-                <div class="phase-card complete">
-                    <div class="phase-indicator">4</div>
-                    <div class="phase-name">System Boundaries</div>
-                    <div class="phase-description">SAFETY/OBSERVABILITY separation defined</div>
-                    <span class="phase-status complete">✓ Complete</span>
-                </div>
-                
-                <div class="phase-card active">
-                    <div class="phase-indicator">5</div>
-                    <div class="phase-name">Operations</div>
-                    <div class="phase-description">Runtime Validation, Systemd, Deployment</div>
-                    <span class="phase-status active">● Active</span>
-                </div>
-                
-                <div class="phase-card blocked">
-                    <div class="phase-indicator">6</div>
-                    <div class="phase-name">Test Strategy</div>
-                    <div class="phase-description">Integration testing, scenario coverage</div>
-                    <span class="phase-status planned">Blocked by P5</span>
-                </div>
-                
-                <div class="phase-card blocked">
-                    <div class="phase-indicator">7</div>
-                    <div class="phase-name">Strategy Lab ⭐</div>
-                    <div class="phase-description">Trading algorithms and signal generation</div>
-                    <span class="phase-status planned">Blocked by P6</span>
-                </div>
-                
-                <div class="phase-card blocked">
-                    <div class="phase-indicator">8</div>
-                    <div class="phase-name">Economics</div>
-                    <div class="phase-description">Market analysis and profitability modeling</div>
-                    <span class="phase-status planned">Blocked by P7</span>
-                </div>
-                
-                <div class="phase-card blocked">
-                    <div class="phase-indicator">9</div>
-                    <div class="phase-name">Review & Gate</div>
-                    <div class="phase-description">Final validation and production approval</div>
-                    <span class="phase-status planned">Blocked by P8</span>
-                </div>
-            </div>
-            
-            <div class="dependency-note">
-                <strong>Phase 5 blocks all subsequent phases.</strong> The current 48h Runtime Validation (Block 5.0) must succeed before work can begin on Phases 6–9. Phase 7 (Strategy Lab) is the critical path to first live trading.
-            </div>
-        </div>
-    </section>
+<!-- Main Column -->
+<div class="main-content">
 
-    <!-- 3. CURRENT STATUS -->
-    <section id="current">
-        <div class="section-title">Current Status</div>
-        
-        <div class="current-grid">
-            <div class="current-main">
-                <div class="current-header">
-                    <div>
-                        <div class="current-badge">Phase 5.0 Active</div>
-                        <h2 class="current-title">Runtime Validation — Re-Run Required</h2>
-                        <p class="current-subtitle">The initial 48h validation run concluded with NO-GO status. Fixes have been implemented; a new run is ready to begin.</p>
-                    </div>
-                </div>
-                
-                <div class="workstream-list">
-                    <div class="workstream-item blocked">
-                        <div class="workstream-icon blocked">⏸</div>
-                        <div class="workstream-content">
-                            <div class="workstream-name">Block 5.0a: Runtime Validation Re-Run</div>
-                            <div class="workstream-desc">Fixes for memory growth detection and event store persistence complete. Awaiting 48h validation run to confirm GO status.</div>
-                        </div>
-                    </div>
-                    
-                    <div class="workstream-item waiting">
-                        <div class="workstream-icon waiting">⏳</div>
-                        <div class="workstream-content">
-                            <div class="workstream-name">Blocks 5.1–5.4: Operations</div>
-                            <div class="workstream-desc">Systemd integration, Control API, Log rotation, and Deployment automation ready to proceed after 5.0 GO.</div>
-                        </div>
-                    </div>
-                    
-                    <div class="workstream-item ready">
-                        <div class="workstream-icon ready">✓</div>
-                        <div class="workstream-content">
-                            <div class="workstream-name">Phase 7: Strategy Lab MVP</div>
-                            <div class="workstream-desc">Core signal generation and backtesting framework complete. Waiting for operational infrastructure (Phases 5–6).</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="current-sidebar">
-                <div class="sidebar-card">
-                    <div class="sidebar-title">Project Progress</div>
-                    <div class="sidebar-value">48%</div>
-                    <div class="sidebar-label">4 of 9 phases complete</div>
-                </div>
-                
-                <div class="sidebar-card">
-                    <div class="sidebar-title">Test Coverage</div>
-                    <div class="sidebar-value">191</div>
-                    <div class="sidebar-label">tests passing</div>
-                </div>
-                
-                <div class="sidebar-card">
-                    <div class="sidebar-title">Last Milestone</div>
-                    <div class="sidebar-value" style="font-size: 18px;">Phase 4 Complete</div>
-                    <div class="sidebar-label">System Boundaries frozen</div>
-                </div>
-            </div>
-        </div>
-    </section>
+### Current Status — Phase 5.0
 
-    <!-- 4. THE ARCHIVE -->
-    <section id="archive">
-        <div class="section-title">The Archive</div>
-        
-        <div class="archive-container">
-            <div class="archive-card success">
-                <div class="archive-date">March 2026</div>
-                <div class="archive-title">Phase 4 Completed — Code Freeze Achieved</div>
-                <div class="archive-desc">Successfully froze the codebase after 191 passing tests. The SAFETY/OBSERVABILITY boundary architecture was validated and documented.</div>
-                <span class="archive-tag success">✓ Milestone</span>
-            </div>
-            
-            <div class="archive-card learning">
-                <div class="archive-date">March 2026</div>
-                <div class="archive-title">Phase 5.0 Runtime Validation — Learning</div>
-                <div class="archive-desc">The initial 48h run revealed that in-memory event storage causes false-positive memory alerts. This led to critical fixes: persistent event store requirement and improved trend detection.</div>
-                <span class="archive-tag learning">⚡ Learning</span>
-            </div>
-            
-            <div class="archive-card success">
-                <div class="archive-date">February–March 2026</div>
-                <div class="archive-title">Core Architecture Validated</div>
-                <div class="archive-desc">Event Store, State Projection, Risk Engine, and Reconcile modules completed with comprehensive test coverage. All SAFETY-critical paths covered.</div>
-                <span class="archive-tag success">✓ Milestone</span>
-            </div>
-            
-            <div class="archive-card learning">
-                <div class="archive-date">February 2026</div>
-                <div class="archive-title">Legacy System Archived</div>
-                <div class="archive-desc">Previous iteration archived after learning that runtime validation must be designed in from the start, not retrofitted.</div>
-                <span class="archive-tag learning">📚 Foundation</span>
-            </div>
-        </div>
-    </section>
+<div class="status-grid">
+  <div class="status-card warning">
+    <div class="status-value warning">NO-GO</div>
+    <div class="status-label">48h Runtime Result</div>
+    <div class="status-meta">Memory 25% > 10% limit</div>
+  </div>
+  
+  <div class="status-card info">
+    <div class="status-value info">5.0a</div>
+    <div class="status-label">Fixes Complete</div>
+    <div class="status-meta">P0–P3 implemented</div>
+  </div>
+  
+  <div class="status-card success">
+    <div class="status-value success">191</div>
+    <div class="status-label">Tests Passing</div>
+    <div class="status-meta">All green</div>
+  </div>
+  
+  <div class="status-card success">
+    <div class="status-value success">48%</div>
+    <div class="status-label">Project Progress</div>
+    <div class="status-meta">4 of 9 phases</div>
+  </div>
+</div>
 
-    <!-- 5. DEEP DIVE -->
-    <section id="deep-dive">
-        <div class="section-title">Deep Dive</div>
-        
-        <div class="deep-dive" id="deepDivePanel">
-            <div class="deep-dive-header" onclick="document.getElementById('deepDivePanel').classList.toggle('expanded')">
-                <div class="deep-dive-title">Technical Details, Acceptance Criteria & Documentation</div>
-                <div class="deep-dive-toggle">▼</div>
-            </div>
-            
-            <div class="deep-dive-body">
-                
-                <div class="detail-section">
-                    <div class="detail-section-title">Phase 5.0 Runtime Validation Criteria</div>
-                    <table class="detail-table">
-                        <thead>
-                            <tr>
-                                <th>Criterion</th>
-                                <th>Initial Run</th>
-                                <th>Target</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Duration</td>
-                                <td>48h ✓</td>
-                                <td>48h</td>
-                                <td><span class="status-badge pass">PASS</span></td>
-                            </tr>
-                            <tr>
-                                <td>Heartbeat Completeness</td>
-                                <td>100% ✓</td>
-                                <td>≥95%</td>
-                                <td><span class="status-badge pass">PASS</span></td>
-                            </tr>
-                            <tr>
-                                <td>Health Check Success</td>
-                                <td>0% ✗</td>
-                                <td>≥95%</td>
-                                <td><span class="status-badge fail">FAIL</span></td>
-                            </tr>
-                            <tr>
-                                <td>Memory Growth</td>
-                                <td>25% ✗</td>
-                                <td>&lt;10%</td>
-                                <td><span class="status-badge fail">FAIL</span></td>
-                            </tr>
-                            <tr>
-                                <td>No Gaps &gt;5min</td>
-                                <td>0 ✓</td>
-                                <td>0</td>
-                                <td><span class="status-badge pass">PASS</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="detail-section">
-                    <div class="detail-section-title">Fixes Implemented (5.0a)</div>
-                    <table class="detail-table">
-                        <thead>
-                            <tr>
-                                <th>Priority</th>
-                                <th>Fix</th>
-                                <th>Impact</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>P0</td>
-                                <td>EVENT_STORE_PATH mandatory</td>
-                                <td>Eliminates in-memory false positives</td>
-                            </tr>
-                            <tr>
-                                <td>P1</td>
-                                <td>Memory trend algorithm (6h window)</td>
-                                <td>Filters GC oscillations from growth calculation</td>
-                            </tr>
-                            <tr>
-                                <td>P2</td>
-                                <td>Health check tracking fix</td>
-                                <td>Accurate pass/fail rate reporting</td>
-                            </tr>
-                            <tr>
-                                <td>P3</td>
-                                <td>Remove in-memory fallback</td>
-                                <td>Hard fail if persistence unavailable</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="detail-section">
-                    <div class="detail-section-title">Documentation & Resources</div>
-                    <div class="link-list">
-                        <a href="architecture/" class="link-item">
-                            <span class="link-icon">📐</span>
-                            <span>Architecture (ADRs)</span>
-                        </a>
-                        <a href="runbooks/" class="link-item">
-                            <span class="link-icon">📋</span>
-                            <span>Runbooks</span>
-                        </a>
-                        <a href="test-reports.md" class="link-item">
-                            <span class="link-icon">📊</span>
-                            <span>Test Reports</span>
-                        </a>
-                        <a href="economics.md" class="link-item">
-                            <span class="link-icon">💰</span>
-                            <span>Economics</span>
-                        </a>
-                        <a href="strategy-lab/" class="link-item">
-                            <span class="link-icon">🧪</span>
-                            <span>Strategy Lab</span>
-                        </a>
-                        <a href="changelog.md" class="link-item">
-                            <span class="link-icon">📝</span>
-                            <span>Changelog</span>
-                        </a>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </section>
+### Blockers
 
-</main>
+<div class="panel-card">
+  <div class="activity-item">
+    <div class="activity-icon warning">⏸</div>
+    <div class="activity-content">
+      <div class="activity-title">Block 5.0: Runtime Validation</div>
+      <div class="activity-desc">Re-Run required after fixes complete</div>
+    </div>
+  </div>
+  
+  <div class="activity-item">
+    <div class="activity-icon info">⏳</div>
+    <div class="activity-content">
+      <div class="activity-title">Phases 6–9</div>
+      <div class="activity-desc">Waiting for Phase 5 GO signal</div>
+    </div>
+  </div>
+</div>
 
-<script>
-    // Auto-expand on first visit (optional)
-    if (!localStorage.getItem('hasVisited')) {
-        localStorage.setItem('hasVisited', 'true');
-    }
-</script>
+### Next Steps
 
-</body>
-</html>
+<div class="panel-card">
+  <div class="action-item blocked">
+    <div class="action-checkbox"></div>
+    <div class="action-text">
+      <strong>Start 48h Re-Run</strong>
+      <div class="action-meta">With fixes 5.0a applied</div>
+    </div>
+    <div class="action-badge blocked">Blocked</div>
+  </div>
+  
+  <div class="action-item ready">
+    <div class="action-checkbox">✓</div>
+    <div class="action-text">
+      <strong>Review Systemd Integration</strong>
+      <div class="action-meta">Ready for implementation</div>
+    </div>
+    <div class="action-badge ready">Ready</div>
+  </div>
+  
+  <div class="action-item ready">
+    <div class="action-checkbox">✓</div>
+    <div class="action-text">
+      <strong>Strategy Lab MVP Review</strong>
+      <div class="action-meta">Framework complete</div>
+    </div>
+    <div class="action-badge ready">Ready</div>
+  </div>
+</div>
+
+</div>
+
+<!-- Sidebar -->
+<div class="side-panel">
+
+### Recent Activity
+
+<div class="panel-card">
+  <div class="activity-item">
+    <div class="activity-icon success">✓</div>
+    <div class="activity-content">
+      <div class="activity-title">Fix 5.0a Complete</div>
+      <div class="activity-desc">Memory algorithm updated</div>
+    </div>
+  </div>
+  
+  <div class="activity-item">
+    <div class="activity-icon warning">⚡</div>
+    <div class="activity-content">
+      <div class="activity-title">Runtime NO-GO</div>
+      <div class="activity-desc">48h run concluded</div>
+    </div>
+  </div>
+  
+  <div class="activity-item">
+    <div class="activity-icon info">●</div>
+    <div class="activity-content">
+      <div class="activity-title">Phase 4 Complete</div>
+      <div class="activity-desc">System Boundaries frozen</div>
+    </div>
+  </div>
+</div>
+
+### Resources
+
+<div class="panel-card">
+- [📐 Architecture](architecture/)
+- [📋 Runbooks](runbooks/)
+- [📊 Test Reports](test-reports.md)
+- [🧪 Strategy Lab](strategy-lab/)
+- [💰 Economics](economics.md)
+</div>
+
+</div>
+
+</div>
+
+---
+
+<div class="deep-dive">
+<details>
+  <summary>Deep Dive — Technical Details & Acceptance Criteria</summary>
+
+  ### Phase 5.0 Runtime Validation Results
+
+  | Criterion | Result | Target | Status |
+  |-----------|--------|--------|--------|
+  | Duration | 48h ✓ | 48h | ✅ Pass |
+  | Heartbeat | 100% ✓ | ≥95% | ✅ Pass |
+  | Health Checks | 0% ✗ | ≥95% | ❌ Fail |
+  | Memory Growth | 25% ✗ | <10% | ❌ Fail |
+  | No Gaps &gt;5min | 0 ✓ | 0 | ✅ Pass |
+
+  ### Fixes 5.0a
+
+  | Priority | Fix | Status |
+  |----------|-----|--------|
+  | P0 | EVENT_STORE_PATH mandatory | ✅ Done |
+  | P1 | Memory trend algorithm (6h window) | ✅ Done |
+  | P2 | Health check tracking fix | ✅ Done |
+  | P3 | Remove in-memory fallback | ✅ Done |
+
+</details>
+</div>
+
+---
+
+*Last updated: 2026-03-30 14:35 CET*
