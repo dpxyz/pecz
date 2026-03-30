@@ -133,8 +133,9 @@ async function checkCircuitBreaker() {
 }
 
 /**
- * Check memory usage with trend analysis (P1 Fix)
- * Uses moving window to calculate growth trend, filtering out GC cycles
+ * Check memory usage with trend analysis (P1 Fix v2 - 5.0b)
+ * Uses linear regression on filtered samples to calculate true trend,
+ * filtering out GC spikes and startup artifacts
  */
 async function checkMemory() {
   try {
@@ -143,16 +144,17 @@ async function checkMemory() {
     const heapTotal = memUsage.heapTotal / 1024 / 1024;
     const percentUsed = (memUsage.heapUsed / memUsage.heapTotal) * 100;
     const rss = memUsage.rss / 1024 / 1024;
+    const now = Date.now();
     
     // Add to history (P1 Fix)
     memoryHistory.push({
-      timestamp: Date.now(),
+      timestamp: now,
       percentUsed: Math.round(percentUsed * 10) / 10,
       heapUsed: Math.round(heapUsed * 10) / 10
     });
     
     // Keep only samples from last 6 hours
-    const cutoffTime = Date.now() - (6 * 60 * 60 * 1000); // 6 hours ago
+    const cutoffTime = now - (6 * 60 * 60 * 1000); // 6 hours ago
     while (memoryHistory.length > 0 && memoryHistory[0].timestamp < cutoffTime) {
       memoryHistory.shift();
     }
@@ -162,26 +164,56 @@ async function checkMemory() {
       memoryHistory.shift();
     }
     
-    // Calculate growth trend using linear regression on samples
-    let growthPercent = 0;
-    if (memoryHistory.length >= 12) { // Need at least 1 hour of data
-      const firstHalf = memoryHistory.slice(0, Math.floor(memoryHistory.length / 2));
-      const secondHalf = memoryHistory.slice(Math.floor(memoryHistory.length / 2));
-      
-      const firstAvg = firstHalf.reduce((sum, s) => sum + s.percentUsed, 0) / firstHalf.length;
-      const secondAvg = secondHalf.reduce((sum, s) => sum + s.percentUsed, 0) / secondHalf.length;
-      
-      growthPercent = secondAvg - firstAvg;
+    // P1 Fix v2 (5.0b): Filter GC spikes - only keep samples >5min apart
+    const filteredSamples = [];
+    let lastSampleTime = 0;
+    for (let i = memoryHistory.length - 1; i >= 0; i--) {
+      const sample = memoryHistory[i];
+      if (filteredSamples.length === 0 || (lastSampleTime - sample.timestamp) >= CONFIG.HEALTH_CHECK_INTERVAL_MS) {
+        filteredSamples.unshift(sample);
+        lastSampleTime = sample.timestamp;
+      }
     }
     
-    // Determine status based on trend, not instantaneous value (P1 Fix)
+    // Calculate growth trend using linear regression (proper method)
+    let growthPercent = 0;
+    let trendReliability = 'insufficient_data';
+    
+    if (filteredSamples.length >= 12) { // Need at least 1 hour of filtered data
+      // Linear regression: y = mx + b
+      // x = time in hours (relative to first sample)
+      // y = percentUsed
+      const n = filteredSamples.length;
+      const firstTime = filteredSamples[0].timestamp;
+      
+      let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+      for (let i = 0; i < n; i++) {
+        const sample = filteredSamples[i];
+        const x = (sample.timestamp - firstTime) / (1000 * 60 * 60); // hours
+        const y = sample.percentUsed;
+        sumX += x;
+        sumY += y;
+        sumXY += x * y;
+        sumXX += x * x;
+      }
+      
+      const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+      growthPercent = slope * 6; // Convert to 6-hour growth
+      trendReliability = 'sufficient';
+    }
+    
+    // P1 Fix v2 (5.0b): Determine status with startup delay (first 30 min no trend alerts)
+    const uptimeMinutes = process.uptime() / 60;
+    const startupPeriod = uptimeMinutes < 30;
+    
     let status = 'OK';
     if (percentUsed > CONFIG.MEMORY_THRESHOLD_ERROR) {
       status = 'CRITICAL';
     } else if (percentUsed > CONFIG.MEMORY_THRESHOLD_WARN) {
       status = 'WARN';
-    } else if (Math.abs(growthPercent) >= CONFIG.MEMORY_ALERT_THRESHOLD_PERCENT) {
-      // Only alert on sustained growth, not GC fluctuations
+    } else if (!startupPeriod && trendReliability === 'sufficient' && 
+               Math.abs(growthPercent) >= CONFIG.MEMORY_ALERT_THRESHOLD_PERCENT) {
+      // P1 Fix v2: Only alert on sustained trend after startup period
       status = growthPercent > 0 ? 'CRITICAL' : 'WARN';
     }
     
