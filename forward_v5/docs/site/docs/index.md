@@ -56,7 +56,7 @@ title: OpenClaw Strategic Cockpit
   border-bottom: 1px solid var(--color-border);
 }
 
-/* ===== TIMELINE (Main Focus) ===== */
+/* ===== TIMELINE (Hauptfokus) ===== */
 .timeline-section {
   margin-bottom: 40px;
 }
@@ -503,9 +503,9 @@ title: OpenClaw Strategic Cockpit
 <div class="cockpit-header">
   <h1>OpenClaw Strategic Cockpit</h1>
   <p class="vision-statement">
-    <strong>The Goal:</strong> A reliable, autonomous trading infrastructure that runs for 48+ hours 
-    without human intervention. By Phase 9: production-ready with validated runtime, 
-    proven safety controls, and a clear path to autonomous operations.
+    <strong>Das Ziel:</strong> Eine zuverlässige, autonome Trading-Infrastruktur, die 
+    über 48 Stunden ohne menschliches Eingreifen läuft. Abgeschlossen mit Phase 9: 
+    produktionsreife Zuverlässigkeit, validierte Laufzeit und bewährte Safety Controls.
   </p>
 </div>
 
@@ -513,7 +513,7 @@ title: OpenClaw Strategic Cockpit
 
 <!-- ===== 2. TIMELINE (Das Herzstück) ===== -->
 <div class="timeline-section">
-  <div class="section-title">The Roadmap — From Concept to Production</div>
+  <div class="section-title">Die Roadmap — Von der Idee zum Live-Betrieb</div>
   
   <div class="timeline-roadmap">
     <!-- P0 -->
@@ -523,8 +523,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Foundation</div>
-      <div class="phase-goal">Freeze codebase, archive legacy</div>
-      <div class="phase-why">Establishes clean starting point</div>
+      <div class="phase-goal">Code Freeze, Legacy-Archivierung</div>
+      <div class="phase-why">Sauberer Startpunkt festlegen</div>
     </div>
     
     <!-- P1 -->
@@ -534,8 +534,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Structure</div>
-      <div class="phase-goal">ADRs, architecture docs</div>
-      <div class="phase-why">Decisions documented before code</div>
+      <div class="phase-goal">ADRs, Architektur-Dokumentation</div>
+      <div class="phase-why">Entscheidungen vor dem Code festhalten</div>
     </div>
     
     <!-- P2 -->
@@ -545,8 +545,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Core</div>
-      <div class="phase-goal">Event store, feed, circuit breaker</div>
-      <div class="phase-why">Reliable foundation components</div>
+      <div class="phase-goal">Event Store, Feed Handler, Circuit Breaker</div>
+      <div class="phase-why">Zuverlässige Basis-Komponenten</div>
     </div>
     
     <!-- P3 -->
@@ -556,8 +556,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Observability</div>
-      <div class="phase-goal">Logging, metrics, health checks</div>
-      <div class="phase-why">We can see what's happening</div>
+      <div class="phase-goal">Logging, Metriken, Health Checks</div>
+      <div class="phase-why">Wir können sehen, was passiert</div>
     </div>
     
     <!-- P4 -->
@@ -567,8 +567,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Boundaries</div>
-      <div class="phase-goal">Code freeze, system limits defined</div>
-      <div class="phase-why">No new features, stabilize only</div>
+      <div class="phase-goal">Code Freeze, System-Limits definiert</div>
+      <div class="phase-why">Keine neuen Features, nur Stabilität</div>
     </div>
     
     <!-- P5 ACTIVE -->
@@ -578,8 +578,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Active</div>
       </div>
       <div class="phase-title">Operations</div>
-      <div class="phase-goal">48+ hour validated runtime</div>
-      <div class="phase-why">Proof the system runs reliably</div>
+      <div class="phase-goal">48+ Stunden validierte Laufzeit</div>
+      <div class="phase-why">Beweis, dass das System stabil läuft</div>
     </div>
     
     <!-- P6 BLOCKED -->
@@ -589,8 +589,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Blocked</div>
       </div>
       <div class="phase-title">Testing</div>
-      <div class="phase-goal">Comprehensive test coverage</div>
-      <div class="phase-why">Need stable runtime first</div>
+      <div class="phase-goal">Umfassende Test-Abdeckung</div>
+      <div class="phase-why">Erst nach stabiler Runtime</div>
     </div>
     
     <!-- P7 BLOCKED -->
@@ -600,8 +600,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Blocked</div>
       </div>
       <div class="phase-title">Strategy Lab</div>
-      <div class="phase-goal">Backtesting, strategy validation</div>
-      <div class="phase-why">Need reliable base system</div>
+      <div class="phase-goal">Backtesting, Strategie-Validierung</div>
+      <div class="phase-why">Braucht zuverlässiges Basissystem</div>
     </div>
     
     <!-- P8 BLOCKED -->
@@ -611,8 +611,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Blocked</div>
       </div>
       <div class="phase-title">Economics</div>
-      <div class="phase-goal">Paper trading, performance validation</div>
-      <div class="phase-why">Need strategies + stable system</div>
+      <div class="phase-goal">Paper Trading, Performance-Validierung</div>
+      <div class="phase-why">Braucht Strategien + stabiles System</div>
     </div>
     
     <!-- P9 BLOCKED -->
@@ -621,49 +621,53 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-number">9</div>
         <div class="phase-status-badge">Blocked</div>
       </div>
-      <div class="phase-title">Review & Go-Live</div>
-      <div class="phase-goal">Final validation, launch readiness</div>
-      <div class="phase-why">Everything must be proven first</div>
+      <div class="phase-title">Go-Live</div>
+      <div class="phase-goal">Finale Validierung, Launch-Readiness</div>
+      <div class="phase-why">Alles muss vorher bewiesen sein</div>
     </div>
   </div>
   
   <div class="dependency-notice">
-    <strong>⚠ The Blocker:</strong> Phase 5 must achieve a GO rating (48+ hours stable runtime) before Phases 6-8 can begin. 
-    Phase 6 (Testing), 7 (Strategies), and 8 (Economics) all depend on Phase 5's proven reliability. 
-    Currently: Phase 5 received NO-GO due to memory growth issues. Fixes applied, re-run scheduled.
+    <strong>⚠ Der Blocker:</strong> Phase 5 muss ein GO erreichen (48+ Stunden stabile Laufzeit), 
+    bevor Phase 6-8 beginnen können. Phase 6 (Testing), 7 (Strategies) und 8 (Economics) 
+    hängen alle von der bewiesenen Zuverlässigkeit in Phase 5 ab. 
+    Aktuell: Phase 5 hat NO-GO wegen Memory-Growth-Problemen. Fixes eingespielt, Re-Run geplant.
   </div>
 </div>
 
 ---
 
 <!-- ===== 3. CURRENT STATUS ===== -->
-<div class="section-title">Current Situation — What's Happening Now?</div>
+<div class="section-title">Aktuelle Situation — Was passiert gerade?</div>
 
 <div class="status-grid">
   <div class="status-panel highlight">
-    <div class="status-panel-title">🚨 Active Challenge</div>
+    <div class="status-panel-title">🚨 Aktuelle Herausforderung</div>
     <div class="status-main warning">Phase 5.0 NO-GO</div>
     <div class="status-desc">
-      The 48-hour runtime validation failed — memory grew 25% over the test period, exceeding the 10% acceptance threshold. 
-      System remained stable but failed memory efficiency criteria. First run completed: T+48h, health checks passed, but memory leak detected.
+      Die 48-Stunden-Runtime Validation ist fehlgeschlagen — der Speicher wuchs um 25% über den Testzeitraum, 
+      was über dem 10%-Akzeptanzkriterium liegt. Das System blieb stabil, erfüllte aber nicht die 
+      Memory-Effizienz-Kriterien. Erster Lauf abgeschlossen: T+48h durchgelaufen, Health Checks bestanden, 
+      aber Memory Leak erkannt.
     </div>
   </div>
   
   <div class="status-panel">
-    <div class="status-panel-title">✅ Response Ready</div>
+    <div class="status-panel-title">✅ Reaktion Bereit</div>
     <div class="status-main success">Fixes 5.0a Ready</div>
     <div class="status-desc">
-      Four priority fixes implemented: persistent event store (P0), improved memory tracking (P1), health check fixes (P2), 
-      removed in-memory fallback (P3). New 48-hour validation run prepared and ready to execute.
+      Vier Prioritäts-Fixes implementiert: Persistenter Event Store (P0), verbessertes Memory-Tracking (P1), 
+      Health-Check-Fixes (P2), In-Memory-Fallback entfernt (P3). Neue 48-Stunden-Validation vorbereitet 
+      und bereit zur Ausführung.
     </div>
   </div>
   
   <div class="status-panel">
-    <div class="status-panel-title">📊 Baseline Health</div>
+    <div class="status-panel-title">📊 Basis-System gesund</div>
     <div class="status-main info">191 Tests Pass</div>
     <div class="status-desc">
-      Core functionality verified. Event store working, circuit breaker stable, feed connections reliable. 
-      Unit test coverage green. System ready for validation re-run.
+      Kernfunktionalität verifiziert. Event Store funktioniert, Circuit Breaker stabil, 
+      Feed-Verbindungen zuverlässig. Unit Test Coverage grün. System bereit für Re-Run.
     </div>
   </div>
 </div>
@@ -673,14 +677,14 @@ title: OpenClaw Strategic Cockpit
 <div class="content-split">
   <!-- Left: Archive -->
   <div class="archive-section">
-    <div class="section-title">The Archive — Key Milestones & Learnings</div>
+    <div class="section-title">Das Archiv — Meilensteine & Learnings</div>
     
     <div class="milestone-list">
       <div class="milestone-item">
         <div class="milestone-icon complete">🏁</div>
         <div class="milestone-content">
           <h4>Phase 4 Complete — System Boundaries Frozen</h4>
-          <p>March 2026: Code freeze enacted. No new features, only stability fixes. Architecture finalized, interfaces defined.</p>
+          <p>März 2026: Code Freeze verhängt. Keine neuen Features, nur Stabilitäts-Fixes. Architektur finalisiert, Schnittstellen definiert.</p>
         </div>
       </div>
       
@@ -688,7 +692,7 @@ title: OpenClaw Strategic Cockpit
         <div class="milestone-icon learning">💡</div>
         <div class="milestone-content">
           <h4>Learning: Event Store Path Default</h4>
-          <p>March 2026: Missing EVENT_STORE_PATH caused silent fallback to in-memory storage → 25% memory growth over 48h. Lesson: Required environment variables must fail fast, never default silently.</p>
+          <p>März 2026: Fehlende EVENT_STORE_PATH verursachte Fallback auf In-Memory-Speicher → 25% Memory-Wachstum über 48h. Lektion: Pflicht-Variablen müssen sofort fehlschlagen, niemals stillschweigend defaulten.</p>
         </div>
       </div>
       
@@ -696,15 +700,15 @@ title: OpenClaw Strategic Cockpit
         <div class="milestone-icon complete">🏗️</div>
         <div class="milestone-content">
           <h4>Core Architecture Validated</h4>
-          <p>Phases 2-3: Circuit breaker, event store, feed handlers, and observability stack all operational. System design proven sound.</p>
+          <p>Phasen 2-3: Circuit Breaker, Event Store, Feed Handler und Observability Stack alle operational. System-Design bewiesen funktionsfähig.</p>
         </div>
       </div>
       
       <div class="milestone-item learning">
         <div class="milestone-icon learning">⏱️</div>
         <div class="milestone-content">
-          <h4>Learning: The 48h Validation Threshold</h4>
-          <p>First validation run revealed that short-term tests (<12h) miss memory accumulation issues. 48h minimum now enforced for all reliability gates.</p>
+          <h4>Learning: Die 48h Validation Schwelle</h4>
+          <p>Erster Validation-Lauf zeigte, dass Kurzzeit-Tests (<12h) Memory-Akkumulationsprobleme übersehen. 48h Minimum jetzt Pflicht für alle Reliability Gates.</p>
         </div>
       </div>
     </div>
@@ -712,43 +716,43 @@ title: OpenClaw Strategic Cockpit
   
   <!-- Right: What's Next -->
   <div>
-    <div class="section-title">What's Next — The Path Forward</div>
+    <div class="section-title">Nächste Schritte — Der Weg nach vorn</div>
     
     <div class="next-section">
       <div class="next-item blocked">
         <div class="next-check"></div>
         <div class="next-text">
-          <strong>Execute 48h Validation Re-Run</strong>
-          <span class="next-meta">With fixes 5.0a applied, targeting GO rating</span>
+          <strong>48h Validation Re-Run starten</strong>
+          <span class="next-meta">Mit Fixes 5.0a, Ziel: GO-Bewertung</span>
         </div>
-        <div class="next-badge blocked">Blocked</div>
+        <div class="next-badge blocked">Blockiert</div>
       </div>
       
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
-          <strong>Finalize Systemd Integration</strong>
-          <span class="next-meta">Auto-restart configs, logging setup</span>
+          <strong>Systemd Integration finalisieren</strong>
+          <span class="next-meta">Auto-Restart Configs, Logging-Setup</span>
         </div>
-        <div class="next-badge ready">Ready</div>
+        <div class="next-badge ready">Bereit</div>
       </div>
       
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
           <strong>Strategy Lab Framework Review</strong>
-          <span class="next-meta">Backtesting tools, strategy templates</span>
+          <span class="next-meta">Backtesting Tools, Strategie-Templates</span>
         </div>
-        <div class="next-badge ready">Ready</div>
+        <div class="next-badge ready">Bereit</div>
       </div>
       
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
-          <strong>Update Mission Control Dashboard</strong>
-          <span class="next-meta">This page — strategic view complete</span>
+          <strong>Mission Control Dashboard aktualisieren</strong>
+          <span class="next-meta">Diese Seite — Strategische Ansicht komplett</span>
         </div>
-        <div class="next-badge ready">Ready</div>
+        <div class="next-badge ready">Bereit</div>
       </div>
     </div>
   </div>
@@ -756,41 +760,42 @@ title: OpenClaw Strategic Cockpit
 
 ---
 
-<!-- ===== 5. DEEP DIVE (Collapsed) ===== -->
+<!-- ===== 5. DEEP DIVE (Eingeklappt) ===== -->
 <div class="deep-dive-section">
   <div class="deep-dive-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
-    <span class="deep-dive-title">🔬 Deep Dive — Technical Metrics, Test Results, Documentation</span>
-    <span class="deep-dive-indicator">Click to expand →</span>
+    <span class="deep-dive-title">🔬 Deep Dive — Technische Metriken, Test-Ergebnisse, Dokumentation</span>
+    <span class="deep-dive-indicator">Zum Öffnen klicken →</span>
   </div>
   
   <div class="deep-dive-content">
     <div class="tech-grid">
       <!-- Card 1: Runtime Results -->
       <div class="tech-card">
-        <h4>Phase 5.0 Runtime Validation Results</h4>
+        <h4>Phase 5.0 Runtime Validation Ergebnisse</h4>
+        
         <table class="tech-table">
           <tr>
-            <td>Test Duration</td>
-            <td>48 hours ✓</td>
+            <td>Test-Dauer</td>
+            <td>48 Stunden ✓</td>
           </tr>
           <tr>
-            <td>Heartbeat Reliability</td>
+            <td>Heartbeat Zuverlässigkeit</td>
             <td><span class="status-dot pass">100%</span></td>
           </tr>
           <tr>
-            <td>Health Check Pass Rate</td>
-            <td><span class="status-dot fail">0%</span> (Target: ≥95%)</td>
+            <td>Health Check Erfolgsrate</td>
+            <td><span class="status-dot fail">0%</span> (Ziel: ≥95%)</td>
           </tr>
           <tr>
-            <td>Memory Growth</td>
+            <td>Memory-Wachstum</td>
             <td><span class="status-dot fail">25%</span> (Limit: <10%)</td>
           </tr>
           <tr>
-            <td>Major Feed Gaps</td>
+            <td>Feed Gaps &gt;5min</td>
             <td><span class="status-dot pass">0</span> (Limit: 0)</td>
           </tr>
           <tr>
-            <td>Overall Result</td>
+            <td>Gesamt-Ergebnis</td>
             <td><span class="status-dot fail">NO-GO</span></td>
           </tr>
         </table>
@@ -798,53 +803,56 @@ title: OpenClaw Strategic Cockpit
       
       <!-- Card 2: Fixes 5.0a -->
       <div class="tech-card">
-        <h4>Fixes Applied (Version 5.0a)</h4>
+        <h4>Angewendete Fixes (Version 5.0a)</h4>
+        
         <table class="tech-table">
           <tr>
             <td>P0</td>
-            <td>EVENT_STORE_PATH required, no fallback</td>
+            <td>EVENT_STORE_PATH Pflicht, kein Fallback</td>
           </tr>
           <tr>
             <td>P1</td>
-            <td>Memory trend: 6h window vs 30min peak</td>
+            <td>Memory-Trend: 6h Fenster statt 30min Peak</td>
           </tr>
           <tr>
             <td>P2</td>
-            <td>Health check tracking in event log</td>
+            <td>Health-Check-Tracking im Event Log</td>
           </tr>
           <tr>
             <td>P3</td>
-            <td>Removed in-memory store fallback</td>
+            <td>In-Memory Store Fallback entfernt</td>
           </tr>
           <tr>
-            <td>Verified</td>
-            <td>5.3% trend vs previous 25%</td>
+            <td>Verifiziert</td>
+            <td>5.3% Trend vs vorher 25%</td>
           </tr>
         </table>
       </div>
       
       <!-- Card 3: System Metrics -->
       <div class="tech-card">
-        <h4>Current System Metrics</h4>
+        <h4>Aktuelle System-Metriken</h4>
+        
         <table class="tech-table">
-          <tr><td>Code Coverage</td><td>~78% (target: >80%)</td></tr>
+          <tr><td>Code Coverage</td><td>~78% (Ziel: >80%)</td></tr>
           <tr><td>Unit Tests</td><td>191 passing</td></tr>
           <tr><td>Integration Tests</td><td>12 passing</td><tr>
-          <tr><td>Event Store Latency</td><td><5ms p99</td></tr>
-          <tr><td>Feed Latency</td><td><100ms avg</td></tr>
-          <tr><td>Circuit Breaker</td><td>CLOSED (nominal)</td></tr>
+          <tr><td>Event Store Latenz</td><td><5ms p99</td></tr>
+          <tr><td>Feed Latenz</td><td><100ms Durchschnitt</td></tr>
+          <tr><td>Circuit Breaker</td><td>CLOSED (normal)</td></tr>
         </table>
       </div>
       
       <!-- Card 4: Links -->
       <div class="tech-card">
-        <h4>Documentation & Resources</h4>
+        <h4>Dokumentation & Ressourcen</h4>
+        
         <table class="tech-table">
-          <tr><td>📐 Architecture</td><td><a href="architecture/">View →</a></td></tr>
-          <tr><td>📋 Runbooks</td><td><a href="runbooks/">View →</a></td></tr>
-          <tr><td>📊 Test Reports</td><td><a href="test-reports.md">View →</a></td></tr>
-          <tr><td>🧪 Strategy Lab</td><td><a href="strategy-lab/">View →</a></td></tr>
-          <tr><td>💰 Economics</td><td><a href="economics.md">View →</a></td></tr>
+          <tr><td>📐 Architecture</td><td><a href="architecture/">Ansehen →</a></td></tr>
+          <tr><td>📋 Runbooks</td><td><a href="runbooks/">Ansehen →</a></td></tr>
+          <tr><td>📊 Test Reports</td><td><a href="test-reports.md">Ansehen →</a></td></tr>
+          <tr><td>🧪 Strategy Lab</td><td><a href="strategy-lab/">Ansehen →</a></td></tr>
+          <tr><td>💰 Economics</td><td><a href="economics.md">Ansehen →</a></td></tr>
           <tr><td>📈 Dashboard Git</td><td><a href="https://github.com/dpxyz/pecz">GitHub →</a></td></tr>
         </table>
       </div>
@@ -854,4 +862,4 @@ title: OpenClaw Strategic Cockpit
 
 ---
 
-*Updated: 2026-03-30 14:55 CET · Pecz Strategic Cockpit v2.0*
+*Aktualisiert: 2026-03-30 15:05 CET · Pecz Strategic Cockpit v2.1*
