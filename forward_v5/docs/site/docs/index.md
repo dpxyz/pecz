@@ -1,224 +1,309 @@
 ---
-title: Mission Control
+title: Executive Mission Control
 ---
 
-# Forward V5 Mission Control
+<style>
+.status-bar {
+  display: flex;
+  gap: 2px;
+  margin: 20px 0;
+  height: 4px;
+}
+.status-segment {
+  flex: 1;
+  border-radius: 2px;
+}
+.status-complete { background: #00d26a; }
+.status-active { background: #ffa502; }
+.status-pending { background: #2a2a35; }
 
-**Platform:** Hyperliquid | **Mode:** Paper/Mock | **Live:** ⛔ BLOCKED
+.primary-card {
+  background: linear-gradient(145deg, #12121a 0%, #1a1a24 100%);
+  border: 1px solid #252530;
+  border-radius: 16px;
+  padding: 28px;
+  margin: 24px 0;
+  position: relative;
+  border-top: 3px solid #ffa502;
+}
 
----
+.at-risk { border-top-color: #ffa502; }
+.go { border-top-color: #00d26a; }
+.no-go { border-top-color: #ff4757; }
 
-## 🚦 System Status
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
 
-| Bereich | Status |
-|---------|--------|
-| Live Trading | ⛔ **BLOCKED** until Phase 9 + sign-off |
-| Paper Trading | ✅ **ALLOWED** |
-| Mainnet | ⛔ **DISABLED** |
-| **Freeze Status** | ✅ **PHASE 4 COMPLETE** — Code Freeze ended 2026-03-28 12:11 UTC |
-| Tests | **191/191 passing** ✅ |
-| Git Status | **Clean** ✅ |
-| Phase 5 | 🟢 **ACTIVE** — Production Readiness |
+.metric-box {
+  background: #12121a;
+  border: 1px solid #252530;
+  border-radius: 12px;
+  padding: 20px;
+}
 
----
+.metric-box.blocker {
+  border-color: #ffa502;
+  background: linear-gradient(145deg, #12121a 0%, rgba(255, 165, 2, 0.05) 100%);
+}
 
-## 📊 Phasenplan 0–9
+.metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a5a66;
+  margin-bottom: 8px;
+}
 
-```
-PHASE 0  ✅ Complete .......... Freeze & Archive
-PHASE 1  ✅ Complete .......... Skeleton & ADRs
-PHASE 2  ✅ Complete .......... Core Reliability (103/103 tests)
-PHASE 3  ✅ Complete .......... Observability (68/68 tests)
-PHASE 4  ✅ Complete .......... System Boundaries (10/10 tests) ✅ FREEZE
-PHASE 5  🟡 ACTIVE ............. Operations — Block 5.0: Runtime Validation
-PHASE 6  ⬜ Pending .............. Future
-PHASE 7  ⭐ MANDATORY ........ Strategy Lab ← BLOCKS LIVE!
-PHASE 8  ⬜ Pending .............. Economics
-PHASE 9  ⬜ Pending .............. Review & Gate
-                               ↓
-                        Manuelle Live-Freigabe
+.metric-value {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
 
-⚠️  **PHASE 5.0: Runtime Validation erforderlich**
-24-48h Paper-Run mit aktivem Monitoring, bevor Production-Deploy.
-Production-like runtime validation noch OFFEN.
-```
+.metric-sublabel {
+  font-size: 13px;
+  color: #8a8a96;
+}
 
-| Phase | Name | Status | Blocker |
-|-------|------|--------|---------|
-| 0 | Freeze & Archive | ✅ Complete | — |
-| 1 | Skeleton & ADRs | ✅ **COMPLETE** | — |
-| 2 | Core Reliability | ✅ **COMPLETE** | 103/103 Tests |
-| 3 | Observability | ✅ **COMPLETE** | 68/68 Tests |
-| 4 | System Boundaries | ✅ **COMPLETE** ✅ FREEZE | 191/191 Tests |
-| 5 | Operations | 🟡 **ACTIVE** | Block 5.0: 48h Runtime Validation (Design final) |
-| 6 | Test Strategy | ⬜ Pending | Phase 5 |
-| 7 | **Strategy Lab** ⭐ | ⬜ Pending | Phase 6 |
-| 8 | Economics | ⬜ Pending | Phase 7 |
-| 9 | Review & Gate | ⬜ Pending | Phase 8 |
+.progress-container {
+  background: #12121a;
+  border: 1px solid #252530;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
 
----
+.progress-bar {
+  height: 8px;
+  background: #1a1a24;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 12px 0;
+}
 
-## 📈 Test Status: Phase 2 COMPLETE ✅
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffa502 0%, #ffa502 100%);
+  border-radius: 4px;
+  width: 48%;
+}
 
-| Modul | Tests | Status | Coverage |
-|-------|-------|--------|----------|
-| Event Store (Block 1) | 17 | ✅ **17/17** | Core: 100% |
-| State Projection (Block 2) | 19 | ✅ **19/19** | Core: 100% |
-| Risk Engine (Block 3) | 39 | ✅ **39/39** | Gates: 100% |
-| Reconcile (Block 4) | 28 | ✅ **28/28** | Detectors: 100% |
-| **Phase 2 Total** | **103** | ✅ **103/103** | **COMPLETE** |
+.action-panel {
+  background: #1a1a24;
+  border: 1px solid #252530;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
 
----
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #252530;
+}
 
-## 🎯 Phase 2 — Core Reliability ✅ COMPLETE
+.action-item:last-child {
+  border-bottom: none;
+}
 
-1. **Event Store (Block 1)** ✅ *COMPLETE 2026-03-08*
-   - [x] `src/event_store.js` — Append-only events with sequence
-   - [x] Idempotent append with ON CONFLICT
-   - [x] Deterministic ordering via sequence
-   - [x] **Tests: 17/17 passing**
+.action-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
 
-2. **State Projection (Block 2)** ✅ *COMPLETE 2026-03-08*
-   - [x] `src/state_projection.js` — 27 Event Reducers
-   - [x] Rebuild from events (deterministic)
-   - [x] Incremental updates
-   - [x] **Tests: 19/19 passing**
+.icon-blocked { background: rgba(255, 165, 2, 0.15); color: #ffa502; }
+.icon-ready { background: rgba(0, 210, 106, 0.15); color: #00d26a; }
 
-3. **Risk Engine (Block 3)** ✅ *COMPLETE 2026-03-08*
-   - [x] `src/risk_engine.js` — 6 Gates (Safety + Observability)
-   - [x] Sizing, Hyperliquid Rules, Whitelist, Watchdog, Reconcile, Unmanaged
-   - [x] BLOCK vs WARN classification
-   - [x] **Tests: 39/39 passing**
+.timestamp {
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  color: #8a8a96;
+  text-align: right;
+  margin-bottom: 20px;
+}
 
-4. **Reconcile (Block 4)** ✅ *COMPLETE 2026-03-08*
-   - [x] `src/reconcile.js` — 4 Detectors
-   - [x] Ghost, Unmanaged, Size, Side mismatch detection
-   - [x] Tolerance-based severity (BLOCK vs WARN)
-   - [x] **Tests: 28/28 passing**
----
+.status-amber { color: #ffa502; }
+.status-green { color: #00d26a; }
+.status-red { color: #ff4757; }
+</style>
 
----
-
-## 🚧 Offene Blocker
-
-| ID | Blocker | Status | Owner |
-|----|---------|--------|-------|
-| ~~B1~~ | ~~ADR-003/004 incomplete~~ | ✅ **RESOLVED** | @assistant |
-| B2 | Systemd templates needed | ⬜ Pending | @assistant |
-| B3 | Strategy Lab not started | ⏳ Phase 7 | @user |
-
----
-
-## 📂 Weitere Dokumentation
-
-| Bereich | Link |
-|---------|------|
-| **Test Reports** | [test-reports.md](test-reports.md) |
-| **Architecture** | [architecture/](architecture/) |
-| **Runbooks** | [runbooks/](runbooks/) |
-| **Strategy Lab** | [strategy-lab/](strategy-lab/) |
-| **M6 Paper Canary** | [milestones/m6.md](milestones/m6.md) |
-| **Economics** | [economics.md](economics.md) |
-| **Changelog** | [changelog.md](changelog.md) |
-
----
-
-*Last updated: 2026-03-28 12:19 UTC*
-
----
-
-## ⚠️ Aktueller Status: Phase 5.0 — Runtime Validation Required
-
-### Phase 4 Recap (Code Freeze)
-- ✅ Code Freeze erfolgreich (24h keine Änderungen)
-- ✅ 191/191 Tests passing
-- ❌ **KEIN 24h Runtime-Nachweis**
-
-### Phase 5 — Neue Struktur
-
-| Block | Name | Status | Pflicht |
-|-------|------|--------|---------|
-| **5.0** | ⭐ **Runtime Validation** | ⏳ **PENDING** | ✅ **BLOCKIERT ALLES** |
-| 5.1 | Systemd Integration | ⏳ | Abhängig von 5.0 |
-| 5.2 | Control API / CLI | ⏳ | Abhängig von 5.0 |
-| 5.3 | Log Rotation | ⏳ | Abhängig von 5.0 |
-| 5.4 | Deployment Automatisierung | ⏳ | Abhängig von 5.0 |
-| 5.5 | Go/No-Go Final | ⏳ | Abhängig von allen |
-
-**Block 5.0 muss zuerst erfolgreich sein.**
-
-### Block 5.0: Runtime Validation (48h fest)
-
-**Design:** [RUNTIME_VALIDATION_DESIGN.md](RUNTIME_VALIDATION_DESIGN.md) — ✅ **FINAL v1.0**
-
-**Konfiguration (final):**
-| Parameter | Wert |
-|-----------|------|
-| **Run-Dauer** | 48 Stunden (fest, keine Abkürzung) |
-| **Heartbeat** | Alle 60 Sekunden |
-| **Heartbeat-Toleranz** | 5 Minuten (dann Alert) |
-| **Health-Check** | Alle 5 Minuten |
-
-**Pflicht-Kriterien (Go/No-Go):**
-| # | Kriterium | Schwellwert |
-|---|-----------|-------------|
-| 1 | Dauer erreicht | 48h vollständig |
-| 2 | Heartbeat vollständig | ≥95% (2765 von 2880) |
-| 3 | Keine Lücken >5min | 0 Ausfälle |
-| 4 | Health Checks OK | ≥95% erfolgreich |
-| 5 | Keine ungeklärten CRITICAL | 0 Events |
-| 6 | Keine ungeklärten PAUSE | 0 Events |
-| 7 | Memory stabil | Wachstum <10% |
-| 8 | Speicher OK | Nie >90% |
-| 9 | Logs rotiert | <1GB/Tag |
-| 10 | System am Ende OK | Finaler Check: OK |
-
-**Fortsetzung bei Unterbrechung:**
-- <60 Minuten: Run fortsetzen
-- >60 Minuten: Neuer Run starten
-
-**Erst dann:** Production-Deploy-Vorbereitung (Blocks 5.1-5.5)
+<div class="timestamp">Last updated: 2026-03-30 13:30 CET</div>
 
 ---
 
-## 🚨 Production-Readiness Status
+# Executive Mission Control
 
-| Bereich | Status | Hinweis |
-|---------|--------|---------|
-| Code Quality | ✅ Ready | 191 Tests passing |
-| Documentation | ✅ Ready | Vollständig |
-| **Runtime Stabilität** | ❌ **OFFEN** | 24-48h Run ausstehend |
-| Production Deploy | ⛔ **BLOCKED** | Warte auf 5.0 |
+## Primary Status
+
+<div class="primary-card at-risk">
+
+### <span class="status-amber">▓ PHASE 5.0 RUNTIME VALIDATION — NO-GO</span>
+
+Der 48h-Lauf wurde aufgrund von Memory-Growth-Überschreitung (25% > 10%) als NO-GO klassifiziert. 
+Fixes 5.0a implementiert. Re-Run erforderlich.
+
+</div>
+
+## Key Metrics
+
+<div class="metrics-grid">
+
+<div class="metric-box blocker">
+<div class="metric-label">Aktiver Blocker</div>
+<div class="metric-value status-amber">B5.0a</div>
+<div class="metric-sublabel">Runtime Fixes Required</div>
+</div>
+
+<div class="metric-box">
+<div class="metric-label">Nächster Schritt</div>
+<div class="metric-value status-green">48h Re-Run</div>
+<div class="metric-sublabel">Nach 5.0a-Verifikation</div>
+</div>
+
+<div class="metric-box">
+<div class="metric-label">Fortschritt bis Live</div>
+<div class="metric-value status-amber">48%</div>
+<div class="metric-sublabel">4 von 9 Phasen complete</div>
+</div>
+
+</div>
+
+## Progress to Production
+
+<div class="progress-container">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<strong>Progress to Live</strong>
+<span class="metric-value status-amber" style="font-size: 20px;">48%</span>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
+
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #8a8a96; margin-top: 8px;">
+<span>P0</span>
+<span>P3</span>
+<span class="status-amber">P5</span>
+<span>P7</span>
+<span>P9</span>
+</div>
+
+</div>
+
+## Phase Timeline
+
+<div class="status-bar">
+<div class="status-segment status-complete" title="P0: Freeze"></div>
+<div class="status-segment status-complete" title="P1: Skeleton"></div>
+<div class="status-segment status-complete" title="P2: Core"></div>
+<div class="status-segment status-complete" title="P3: Observability"></div>
+<div class="status-segment status-complete" title="P4: Boundaries"></div>
+<div class="status-segment status-active" title="P5: Operations"></div>
+<div class="status-segment status-pending" title="P6: Testing"></div>
+<div class="status-segment status-pending" title="P7: Strategy"></div>
+<div class="status-segment status-pending" title="P8: Economics"></div>
+<div class="status-segment status-pending" title="P9: Review"></div>
+</div>
+
+## Required Actions
+
+<div class="action-panel">
+
+<div class="action-item">
+<div class="action-icon icon-blocked">⏸</div>
+<div>
+<strong>Phase 5.0 Runtime Validation</strong><br>
+<span style="font-size: 13px; color: #8a8a96;">48h Re-Run pending — GO/NO-GO bei Abschluss</span>
+</div>
+</div>
+
+<div class="action-item">
+<div class="action-icon icon-ready">✓</div>
+<div>
+<strong>Phase 5.1–5.4</strong><br>
+<span style="font-size: 13px; color: #8a8a96;">Bereit — wartet auf 5.0 GO</span>
+</div>
+</div>
+
+<div class="action-item">
+<div class="action-icon icon-ready">✓</div>
+<div>
+<strong>Phase 7 Strategy Lab</strong><br>
+<span style="font-size: 13px; color: #8a8a96;">MVP complete — wartet auf 5.x</span>
+</div>
+</div>
+
+</div>
 
 ---
 
-## Nächste Schritte
+## Details
 
-✅ **Design final, Implementierung kann starten.**
+<details>
+<summary><strong>Phase 5.0 Runtime Validation Detail</strong> <span style="color: #ffa502;">(AT RISK)</span></summary>
 
-1. 🔧 Heartbeat Service implementieren (`src/heartbeat_service.js`)
-2. 🔧 Health Checker implementieren (`src/health_checker.js`)
-3. 🔧 Start/Stop Scripts erstellen
-4. 🚀 48h Paper/Testnet-Run starten
-5. 📊 Monitoring während des Runs
-6. ✅ Acceptance-Kriterien prüfen
-7. 🎯 Go/No-Go Entscheidung Block 5.0
+**Status:** NO-GO nach 48h-Lauf (rv-2026-03-28-j3xxec)  
+**Grund:** Memory Growth 25% > Limit 10% (False-Positive durch in-memory Event Store)  
+**Fix 5.0a:** Implementiert — P0 (persistenter Store), P1 (Trend-Algorithmus), P2 (Health-Tracking), P3 (no In-Memory)  
+**Nächster Schritt:** 48h Re-Run mit neuer Run-ID
+
+| Kriterium | Ist | Soll | Status |
+|-----------|-----|------|--------|
+| Dauer | 48h | 48h | ✅ PASS |
+| Heartbeat Rate | 100% | ≥95% | ✅ PASS |
+| Health Checks | 0% | ≥95% | ❌ FAIL |
+| Memory Growth | 25% | <10% | ❌ FAIL |
+
+</details>
+
+<details>
+<summary><strong>Historical Phases</strong> (4 complete)</summary>
+
+| Phase | Name | Status | Tests |
+|-------|------|--------|-------|
+| P0 | Freeze & Archive | ✅ Complete | — |
+| P1 | Skeleton & ADRs | ✅ Complete | — |
+| P2 | Core Reliability | ✅ Complete | 103/103 |
+| P3 | Observability | ✅ Complete | 68/68 |
+| P4 | System Boundaries | ✅ Complete | 20/20 |
+
+</details>
+
+<details>
+<summary><strong>Pending Phases</strong> (4 pending)</summary>
+
+| Phase | Name | Blocked by |
+|-------|------|------------|
+| P6 | Test Strategy | Phase 5 Complete |
+| P7 | Strategy Lab ⭐ | Phase 6 Complete |
+| P8 | Economics | Phase 7 Complete |
+| P9 | Review & Gate | Phase 8 Complete |
+
+</details>
+
+<details>
+<summary><strong>Documentation</strong></summary>
+
+- [Architecture ADRs](architecture/)
+- [Runbooks](runbooks/)
+- [Test Reports](test-reports/)
+- [Economics](economics/)
+
+</details>
 
 ---
 
-## 🚧 Phase 3 — Observability ✅ COMPLETE
-
-### Phase 3 Blocks (Revised Order: 3.1 → 3.2 → 3.4 → 3.3)
-
-| Block | Deliverable | Status | Tests |
-|-------|-------------|--------|-------|
-| 3.1 | `src/logger.js` — Structured logging | ✅ Complete | 14/14 |
-| 3.2 | `src/health.js` — Health monitoring + Boundary | ✅ Complete | 30/30 |
-| 3.4 | `commands/rebuild_state.js` — Rebuild CLI | ✅ Complete | 10/10 |
-| 3.3 | `src/report_service.js` — Discord reports | ✅ Complete | **14/14** |
-
-**Phase 3: ALL BLOCKS COMPLETE** 🎉
-
-All observability components implemented with strict non-blocking guarantees.
-
-**Non-Blocking Principle:** All observability failures → WARN + Retry + Log. **NEVER block trading.**
+*Executive Mission Control v2.0 | Forward V5 | Platform: Hyperliquid (Paper)*
