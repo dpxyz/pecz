@@ -503,9 +503,9 @@ title: OpenClaw Strategic Cockpit
 <div class="cockpit-header">
   <h1>OpenClaw Strategic Cockpit</h1>
   <p class="vision-statement">
-    <strong>Das Ziel:</strong> Eine zuverlässige, autonome Trading-Infrastruktur, die 
-    über 48 Stunden ohne menschliches Eingreifen läuft. Abgeschlossen mit Phase 9: 
-    produktionsreife Zuverlässigkeit, validierte Laufzeit und bewährte Safety Controls.
+    <strong>Das Ziel:</strong> Ein vollautomatisiertes Trading-System, das eigenständig 
+    analysiert, entscheidet und handelt — mit minimaler menschlicher Intervention. 
+    Phase 9 markiert den Übergang zu produktionsreifer Autonomie.
   </p>
 </div>
 
@@ -578,8 +578,8 @@ title: OpenClaw Strategic Cockpit
         <div class="phase-status-badge">Active</div>
       </div>
       <div class="phase-title">Operations</div>
-      <div class="phase-goal">48+ Stunden validierte Laufzeit</div>
-      <div class="phase-why">Beweis, dass das System stabil läuft</div>
+      <div class="phase-goal">Nachweis der 48h-Stabilität für Autonomie</div>
+      <div class="phase-why">Validierungsschritt, kein Endziel</div>
     </div>
     
     <!-- P6 BLOCKED -->
