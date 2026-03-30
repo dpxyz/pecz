@@ -133,9 +133,9 @@ export RUNTIME_VALIDATION_DURATION=$DURATION
 RUNNER_SCRIPT=$(cat << 'EOF'
 const path = require('path');
 
-// Load services
-const heartbeat = require('./src/heartbeat_service');
-const healthChecker = require('./src/health_checker');
+// Load services (runner is in runtime_validation/, so paths are ../)
+const heartbeat = require('../src/heartbeat_service');
+const healthChecker = require('../src/health_checker');
 
 console.log('');
 console.log('===================================================================');

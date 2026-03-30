@@ -11,7 +11,9 @@ let sqlite;
 try {
   sqlite = require('node:sqlite');
 } catch (e) {
-  console.log('node:sqlite not available, using in-memory implementation');
+  console.error('CRITICAL: node:sqlite not available');
+  console.error('Event Store requires SQLite - cannot run in in-memory mode');
+  throw new Error('node:sqlite module required but not available');
 }
 
 const EventStore = {
@@ -22,12 +24,19 @@ const EventStore = {
 
   /**
    * Initialize the event store
+   * P0 Fix: Requires persistent path via EVENT_STORE_PATH env var
    * @param {string} dbPath - Path to SQLite database file
    */
-  init(dbPath = 'runtime/event_store.db') {
+  init(dbPath = null) {
     if (this.db) return;
     
-    this.dbPath = dbPath;
+    // P0 Fix: Use environment variable or throw
+    const finalDbPath = dbPath || process.env.EVENT_STORE_PATH;
+    if (!finalDbPath) {
+      throw new Error('EVENT_STORE_PATH environment variable required - persistent event store mandatory for validation');
+    }
+    
+    this.dbPath = finalDbPath;
     
     if (!sqlite) {
       this._initMemory();
@@ -83,10 +92,8 @@ const EventStore = {
   },
 
   _initMemory() {
-    this.isMemory = true;
-    this._memoryStore = [];
-    this._sequenceCounter = 0;
-    console.log('Using in-memory event store for testing');
+    // P3 Fix: In-memory mode is not allowed for validation runs
+    throw new Error('In-memory event store not allowed - configure EVENT_STORE_PATH environment variable');
   },
 
   _getNextSequence() {

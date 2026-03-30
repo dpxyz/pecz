@@ -21,13 +21,27 @@ const CONFIG = {
   MEMORY_THRESHOLD_ERROR: 90,                // %
   LOG_SIZE_THRESHOLD_MB: 1000,               // 1GB per day
   LOG_DIR: './logs',
-  EVENT_STORE_PATH: './data/events.db' // Adjust as needed
+  EVENT_STORE_PATH: process.env.EVENT_STORE_PATH || './runtime/event_store.db',
+  MEMORY_HISTORY_MINUTES: 60,                // Track memory for trend calculation
+  MEMORY_ALERT_THRESHOLD_PERCENT: 10         // Max 10% growth over 6h window
 };
 
 // Store reference to heartbeat service for callbacks
 let heartbeatService = null;
 let checkTimer = null;
 let isRunning = false;
+
+// Memory history for trend calculation (P1 Fix)
+const memoryHistory = [];
+const MAX_HISTORY_SAMPLES = 72; // 6 hours of samples every 5 min
+
+// Health check counter (P2 Fix)
+const healthCheckStats = {
+  total: 0,
+  passed: 0,
+  failed: 0,
+  lastCheckTime: null
+};
 
 /**
  * Set the heartbeat service reference
@@ -38,18 +52,27 @@ function setHeartbeatService(service) {
 
 /**
  * Check Event Store connectivity
+ * P0: Enforce persistent event store
  */
 async function checkEventStore() {
   try {
+    // P0 Fix: Check EVENT_STORE_PATH is configured
+    if (!process.env.EVENT_STORE_PATH) {
+      return {
+        name: 'event_store',
+        status: 'CRITICAL',
+        details: 'EVENT_STORE_PATH not set - in-memory mode not allowed for validation'
+      };
+    }
+    
     // Check if event store file exists and is writable
-    // This is a placeholder - actual implementation would connect to real Event Store
     const dbExists = fs.existsSync(CONFIG.EVENT_STORE_PATH);
     
     if (!dbExists) {
       return {
         name: 'event_store',
-        status: 'WARN',
-        details: 'Event store path not found (may be using in-memory)'
+        status: 'CRITICAL',
+        details: 'Event store path not found - persistent store required'
       };
     }
     
@@ -110,7 +133,8 @@ async function checkCircuitBreaker() {
 }
 
 /**
- * Check memory usage
+ * Check memory usage with trend analysis (P1 Fix)
+ * Uses moving window to calculate growth trend, filtering out GC cycles
  */
 async function checkMemory() {
   try {
@@ -120,11 +144,45 @@ async function checkMemory() {
     const percentUsed = (memUsage.heapUsed / memUsage.heapTotal) * 100;
     const rss = memUsage.rss / 1024 / 1024;
     
+    // Add to history (P1 Fix)
+    memoryHistory.push({
+      timestamp: Date.now(),
+      percentUsed: Math.round(percentUsed * 10) / 10,
+      heapUsed: Math.round(heapUsed * 10) / 10
+    });
+    
+    // Keep only samples from last 6 hours
+    const cutoffTime = Date.now() - (6 * 60 * 60 * 1000); // 6 hours ago
+    while (memoryHistory.length > 0 && memoryHistory[0].timestamp < cutoffTime) {
+      memoryHistory.shift();
+    }
+    
+    // Trim to max samples
+    while (memoryHistory.length > MAX_HISTORY_SAMPLES) {
+      memoryHistory.shift();
+    }
+    
+    // Calculate growth trend using linear regression on samples
+    let growthPercent = 0;
+    if (memoryHistory.length >= 12) { // Need at least 1 hour of data
+      const firstHalf = memoryHistory.slice(0, Math.floor(memoryHistory.length / 2));
+      const secondHalf = memoryHistory.slice(Math.floor(memoryHistory.length / 2));
+      
+      const firstAvg = firstHalf.reduce((sum, s) => sum + s.percentUsed, 0) / firstHalf.length;
+      const secondAvg = secondHalf.reduce((sum, s) => sum + s.percentUsed, 0) / secondHalf.length;
+      
+      growthPercent = secondAvg - firstAvg;
+    }
+    
+    // Determine status based on trend, not instantaneous value (P1 Fix)
     let status = 'OK';
     if (percentUsed > CONFIG.MEMORY_THRESHOLD_ERROR) {
       status = 'CRITICAL';
     } else if (percentUsed > CONFIG.MEMORY_THRESHOLD_WARN) {
       status = 'WARN';
+    } else if (Math.abs(growthPercent) >= CONFIG.MEMORY_ALERT_THRESHOLD_PERCENT) {
+      // Only alert on sustained growth, not GC fluctuations
+      status = growthPercent > 0 ? 'CRITICAL' : 'WARN';
     }
     
     return {
@@ -134,7 +192,9 @@ async function checkMemory() {
       heap_total_mb: Math.round(heapTotal),
       percent_used: Math.round(percentUsed * 10) / 10,
       rss_mb: Math.round(rss),
-      details: `Heap: ${heapUsed.toFixed(1)}/${heapTotal.toFixed(1)} MB (${percentUsed.toFixed(1)}%)`
+      growth_percent: Math.round(growthPercent * 10) / 10,
+      samples_count: memoryHistory.length,
+      details: `Heap: ${heapUsed.toFixed(1)}/${heapTotal.toFixed(1)} MB (${percentUsed.toFixed(1)}%), Trend: ${growthPercent > 0 ? '+' : ''}${growthPercent.toFixed(1)}% over 6h`
     };
   } catch (err) {
     return {
@@ -222,6 +282,7 @@ async function checkUptime() {
 
 /**
  * Perform single health check
+ * P2 Fix: Track health check statistics correctly
  */
 async function performHealthCheck() {
   const results = {
@@ -252,6 +313,15 @@ async function performHealthCheck() {
     results.overall = 'ERROR';
   } else if (hasWarn) {
     results.overall = 'WARN';
+  }
+  
+  // P2 Fix: Update health check statistics
+  healthCheckStats.total++;
+  healthCheckStats.lastCheckTime = Date.now();
+  if (results.overall === 'OK') {
+    healthCheckStats.passed++;
+  } else {
+    healthCheckStats.failed++;
   }
   
   // Report to heartbeat service if available
@@ -290,12 +360,54 @@ function healthCheckLoop() {
 }
 
 /**
+ * Get health check statistics (P2 Fix)
+ */
+function getHealthCheckStats() {
+  return {
+    ...healthCheckStats,
+    passRate: healthCheckStats.total > 0 
+      ? Math.round((healthCheckStats.passed / healthCheckStats.total) * 100 * 10) / 10 
+      : 0
+  };
+}
+
+/**
+ * Reset health check statistics
+ */
+function resetHealthCheckStats() {
+  healthCheckStats.total = 0;
+  healthCheckStats.passed = 0;
+  healthCheckStats.failed = 0;
+  healthCheckStats.lastCheckTime = null;
+  memoryHistory.length = 0;
+}
+
+/**
  * Start the health checker
+ * P0 Fix: Pre-flight check for EVENT_STORE_PATH
  */
 function start(service = null) {
   if (isRunning) {
     console.log('Health checker already running');
     return;
+  }
+  
+  // P0 Fix: Pre-flight check - EVENT_STORE_PATH must be set and writable
+  if (!process.env.EVENT_STORE_PATH) {
+    console.error('CRITICAL: EVENT_STORE_PATH environment variable not set');
+    console.error('Persistent event store is required for validation runs');
+    throw new Error('EVENT_STORE_PATH not configured');
+  }
+  
+  const eventStoreDir = path.dirname(CONFIG.EVENT_STORE_PATH);
+  if (!fs.existsSync(eventStoreDir)) {
+    try {
+      fs.mkdirSync(eventStoreDir, { recursive: true });
+      console.log(`Created event store directory: ${eventStoreDir}`);
+    } catch (err) {
+      console.error(`CRITICAL: Cannot create event store directory: ${eventStoreDir}`);
+      throw new Error(`EVENT_STORE_PATH not writable: ${err.message}`);
+    }
   }
   
   if (service) {
@@ -304,10 +416,14 @@ function start(service = null) {
   
   isRunning = true;
   
-  // Start loop
-  healthCheckLoop();
+  // Reset stats on start (P2 Fix)
+  resetHealthCheckStats();
   
   console.log('Health checker started');
+  console.log(`Event Store: ${CONFIG.EVENT_STORE_PATH}`);
+  
+  // Start loop
+  healthCheckLoop();
   
   // Also run immediate check
   performHealthCheck();
@@ -341,12 +457,15 @@ module.exports = {
   setHeartbeatService,
   performHealthCheck,
   getHealthStatus,
+  getHealthCheckStats,
+  resetHealthCheckStats,
   checkEventStore,
   checkCircuitBreaker,
   checkMemory,
   checkLogs,
   checkUptime,
-  CONFIG
+  CONFIG,
+  memoryHistory
 };
 
 // Auto-start if called directly with service passed
