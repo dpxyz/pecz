@@ -14,6 +14,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// Fix 5.0d: Absolute threshold monitoring
+const monitoringConfig = require('./config/monitoring');
+
 // Configuration - Final Spec v1.0
 const CONFIG = {
   HEARTBEAT_INTERVAL_MS: 60 * 1000,        // 1 minute
@@ -29,6 +32,19 @@ const CONFIG = {
   STATE_FILE: './runtime_validation/state.json',
   HEARTBEAT_LOG: './logs/heartbeat.log',
   RUNTIME_DIR: './runtime_validation'
+};
+
+// Fix 5.0d: Sustained memory state
+const sustainedState = {
+  critical: {
+    firstAboveThreshold: null,
+    alerted: false,
+  },
+  warn: {
+    firstAboveThreshold: null,
+    alerted: false,
+  },
+  lastSample: null,
 };
 
 // State management
@@ -444,39 +460,88 @@ ${state.cb_events.map(e => `| ${e.timestamp} | ${e.from} | ${e.to} | ${e.reason}
 }
 
 /**
- * Update metrics from health checker results
+ * Update metrics from health checker results — FIX 5.0d
+ * Absolute sustained thresholds, keine Berechnungen
  */
 function updateMetrics(healthResults) {
   if (!state) return;
   
-  // Update memory metrics
+  // Basic memory update
   const memUsage = process.memoryUsage();
-  state.metrics.memory_current_mb = Math.round(memUsage.heapUsed / 1024 / 1024);
-  if (state.metrics.memory_current_mb > state.metrics.memory_peak_mb) {
-    state.metrics.memory_peak_mb = state.metrics.memory_current_mb;
+  const currentMB = Math.round(memUsage.heapUsed / 1024 / 1024);
+  state.metrics.memory_current_mb = currentMB;
+  if (currentMB > state.metrics.memory_peak_mb) {
+    state.metrics.memory_peak_mb = currentMB;
   }
   
-  const memGrowth = ((state.metrics.memory_current_mb - state.metrics.memory_start_mb) 
-    / state.metrics.memory_start_mb) * 100;
-  state.metrics.memory_growth_percent = parseFloat(memGrowth.toFixed(2));
-  
-  // Check memory thresholds
-  const memPercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
-  if (memPercent > CONFIG.MEMORY_THRESHOLD_ERROR) {
-    sendAlert('CRITICAL', 'Memory Usage Critical', `${memPercent.toFixed(1)}% > ${CONFIG.MEMORY_THRESHOLD_ERROR}%`);
-    logEvent('MEMORY_CRITICAL', `${memPercent.toFixed(1)}%`, 'CRITICAL');
-  } else if (memPercent > CONFIG.MEMORY_THRESHOLD_WARN) {
-    sendAlert('WARN', 'Memory Usage High', `${memPercent.toFixed(1)}% > ${CONFIG.MEMORY_THRESHOLD_WARN}%`);
-    logEvent('MEMORY_WARN', `${memPercent.toFixed(1)}%`, 'WARN');
-  }
-  
-  // Check memory leak
-  if (state.metrics.memory_growth_percent > CONFIG.MEMORY_LEAK_THRESHOLD) {
-    sendAlert('CRITICAL', 'Memory Leak Detected', 
-      `Growth: ${state.metrics.memory_growth_percent.toFixed(1)}% > ${CONFIG.MEMORY_LEAK_THRESHOLD}%`);
-  }
+  // Fix 5.0d: Sustained threshold check
+  checkMemorySustained();
   
   persistState();
+}
+
+/**
+ * Fix 5.0d: Sustained memory threshold check
+ * WARN: >80% für >60min | CRITICAL: >90% für >15min
+ */
+function checkMemorySustained() {
+  const memUsage = process.memoryUsage();
+  const percent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
+  const now = Date.now();
+  const { memory, hysteresis } = monitoringConfig;
+  
+  sustainedState.lastSample = { timestamp: now, percent };
+  
+  // ═══════════════════════════════════════════════════════
+  // CRITICAL: >90% für >15 Min
+  // ═══════════════════════════════════════════════════════
+  if (percent >= memory.critical.percent) {
+    if (!sustainedState.critical.firstAboveThreshold) {
+      sustainedState.critical.firstAboveThreshold = now;
+      logEvent('MEMORY', `Above ${memory.critical.percent}%: ${percent.toFixed(1)}% [timer start]`, 'INFO');
+    } else {
+      const durationMinutes = (now - sustainedState.critical.firstAboveThreshold) / 60000;
+      
+      if (durationMinutes >= memory.critical.durationMinutes && !sustainedState.critical.alerted) {
+        sendAlert('CRITICAL', 'Memory Critical Sustained', 
+          `${percent.toFixed(1)}% for ${Math.floor(durationMinutes)}min > threshold ${memory.critical.durationMinutes}min`);
+        sustainedState.critical.alerted = true;
+      }
+    }
+  } else if (percent <= hysteresis.criticalReset) {
+    if (sustainedState.critical.firstAboveThreshold) {
+      logEvent('MEMORY', `Recovered below ${hysteresis.criticalReset}%: ${percent.toFixed(1)}% [timer reset]`, 'INFO');
+    }
+    sustainedState.critical.firstAboveThreshold = null;
+    sustainedState.critical.alerted = false;
+  }
+  
+  // ═══════════════════════════════════════════════════════
+  // WARN: >80% für >60 Min
+  // ═══════════════════════════════════════════════════════
+  if (percent >= memory.warn.percent) {
+    if (!sustainedState.warn.firstAboveThreshold) {
+      sustainedState.warn.firstAboveThreshold = now;
+      logEvent('MEMORY', `Above ${memory.warn.percent}%: ${percent.toFixed(1)}% [timer start]`, 'INFO');
+    } else {
+      const durationMinutes = (now - sustainedState.warn.firstAboveThreshold) / 60000;
+      
+      if (durationMinutes >= memory.warn.durationMinutes && !sustainedState.warn.alerted) {
+        sendAlert('WARN', 'Memory High Sustained', 
+          `${percent.toFixed(1)}% for ${Math.floor(durationMinutes)}min > threshold ${memory.warn.durationMinutes}min`);
+        sustainedState.warn.alerted = true;
+      }
+    }
+  } else if (percent <= hysteresis.warnReset) {
+    if (sustainedState.warn.firstAboveThreshold) {
+      logEvent('MEMORY', `Recovered below ${hysteresis.warnReset}%: ${percent.toFixed(1)}% [timer reset]`, 'INFO');
+    }
+    sustainedState.warn.firstAboveThreshold = null;
+    sustainedState.warn.alerted = false;
+  }
+  
+  // Store percent in state for persistence
+  state.metrics.memory_percent = percent.toFixed(1);
 }
 
 /**

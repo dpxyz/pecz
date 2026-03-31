@@ -1,0 +1,2052 @@
+
+===================================================================
+Runtime Validation Services Starting
+===================================================================
+
+Pre-flight checks...
+✓ EVENT_STORE_PATH: ./runtime/event_store.db
+Heartbeat service started. Run ID: rv-2026-03-30-g3gcm2
+Runs for 48 hours until 2026-04-01T13:45:20.868Z
+Health checker started
+Event Store: ./runtime/event_store.db
+
+Services started successfully
+Press Ctrl+C to stop gracefully
+
+[2026-03-30T13:45:20.872Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 7416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":4,"heap_total_mb":5,"percent_used":81.5,"rss_mb":45,"growth_percent":0,"samples_count":1,"details":"Heap: 4.4/5.3 MB (81.5%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":0,"uptime_hours":0,"details":"Process running for 0.00 hours"},{"name":"logs","status":"OK","total_size_mb":1.53,"large_files":0,"details":"Total: 1.5MB"}]
+[2026-03-30T13:45:20.873Z] WARN: ALERT - [WARN] Memory Usage High: 82.3% > 80%
+[2026-03-30T13:45:20.873Z] WARN: MEMORY_WARN - 82.3%
+[2026-03-30T13:45:20.874Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 7416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":4,"heap_total_mb":5,"percent_used":81.6,"rss_mb":45,"growth_percent":0,"samples_count":2,"details":"Heap: 4.4/5.3 MB (81.6%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":0,"uptime_hours":0,"details":"Process running for 0.00 hours"},{"name":"logs","status":"OK","total_size_mb":1.53,"large_files":0,"details":"Total: 1.5MB"}]
+[2026-03-30T13:45:20.874Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-30T13:45:20.874Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-30T13:45:20.874Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T13:50:20.871Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 7716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":5,"percent_used":86,"rss_mb":46,"growth_percent":0,"samples_count":3,"details":"Heap: 4.6/5.3 MB (86.0%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":300,"uptime_hours":0.08,"details":"Process running for 0.08 hours"},{"name":"logs","status":"OK","total_size_mb":1.54,"large_files":0,"details":"Total: 1.5MB"}]
+[2026-03-30T13:50:20.871Z] WARN: ALERT - [WARN] Memory Usage High: 86.5% > 80%
+[2026-03-30T13:50:20.871Z] WARN: MEMORY_WARN - 86.5%
+[2026-03-30T13:50:20.872Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T13:50:20.872Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T13:55:20.872Z] Health Check: OK
+[2026-03-30T14:00:20.873Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 8316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":4,"heap_total_mb":5,"percent_used":82.4,"rss_mb":46,"growth_percent":0,"samples_count":5,"details":"Heap: 4.4/5.3 MB (82.4%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":900,"uptime_hours":0.25,"details":"Process running for 0.25 hours"},{"name":"logs","status":"OK","total_size_mb":1.55,"large_files":0,"details":"Total: 1.5MB"}]
+[2026-03-30T14:00:20.873Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-30T14:00:20.873Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-30T14:00:20.874Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T14:05:20.873Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 8616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":5,"percent_used":85.5,"rss_mb":52,"growth_percent":0,"samples_count":6,"details":"Heap: 4.6/5.3 MB (85.5%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":1200,"uptime_hours":0.33,"details":"Process running for 0.33 hours"},{"name":"logs","status":"OK","total_size_mb":1.55,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T14:05:20.874Z] WARN: ALERT - [WARN] Memory Usage High: 85.9% > 80%
+[2026-03-30T14:05:20.874Z] WARN: MEMORY_WARN - 85.9%
+[2026-03-30T14:05:20.874Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T14:05:20.874Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T14:10:20.874Z] Health Check: OK
+[2026-03-30T14:15:20.875Z] Health Check: OK
+[2026-03-30T14:20:20.876Z] Health Check: OK
+[2026-03-30T14:25:20.875Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T14:25:20.876Z] Health Check: OK
+[2026-03-30T14:30:20.876Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 10116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.1,"rss_mb":52,"growth_percent":0,"samples_count":11,"details":"Heap: 4.7/5.8 MB (80.1%), Trend: 0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":2700,"uptime_hours":0.75,"details":"Process running for 0.75 hours"},{"name":"logs","status":"OK","total_size_mb":1.57,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T14:30:20.877Z] WARN: ALERT - [WARN] Memory Usage High: 80.3% > 80%
+[2026-03-30T14:30:20.877Z] WARN: MEMORY_WARN - 80.3%
+[2026-03-30T14:30:20.877Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T14:30:20.877Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T14:35:20.878Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 10416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.3,"rss_mb":53,"growth_percent":-6.9,"samples_count":12,"details":"Heap: 4.8/5.8 MB (82.3%), Trend: -6.9% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":3000,"uptime_hours":0.83,"details":"Process running for 0.83 hours"},{"name":"logs","status":"OK","total_size_mb":1.57,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T14:35:20.878Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-30T14:35:20.878Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-30T14:35:20.878Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T14:35:20.879Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T14:40:20.879Z] Health Check: OK
+[2026-03-30T14:45:20.879Z] Health Check: OK
+[2026-03-30T14:50:20.881Z] Health Check: OK
+[2026-03-30T14:55:20.880Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T14:55:20.881Z] Health Check: OK
+[2026-03-30T15:00:20.882Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:00:20.883Z] Health Check: OK
+[2026-03-30T15:05:20.882Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 12216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.8,"rss_mb":54,"growth_percent":-1.8,"samples_count":18,"details":"Heap: 4.7/5.8 MB (80.8%), Trend: -1.8% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":4800,"uptime_hours":1.33,"details":"Process running for 1.33 hours"},{"name":"logs","status":"OK","total_size_mb":1.59,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T15:05:20.883Z] WARN: ALERT - [WARN] Memory Usage High: 81.0% > 80%
+[2026-03-30T15:05:20.883Z] WARN: MEMORY_WARN - 81.0%
+[2026-03-30T15:05:20.883Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:05:20.884Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T15:10:20.882Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 12516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.9,"rss_mb":54,"growth_percent":-1.3,"samples_count":19,"details":"Heap: 4.8/5.8 MB (82.9%), Trend: -1.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":5100,"uptime_hours":1.42,"details":"Process running for 1.42 hours"},{"name":"logs","status":"OK","total_size_mb":1.59,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T15:10:20.883Z] WARN: ALERT - [WARN] Memory Usage High: 83.2% > 80%
+[2026-03-30T15:10:20.883Z] WARN: MEMORY_WARN - 83.2%
+[2026-03-30T15:10:20.883Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:10:20.884Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T15:15:20.884Z] Health Check: OK
+[2026-03-30T15:20:20.885Z] Health Check: OK
+[2026-03-30T15:25:20.885Z] Health Check: OK
+[2026-03-30T15:30:20.886Z] Health Check: OK
+[2026-03-30T15:35:20.886Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:35:20.887Z] Health Check: OK
+[2026-03-30T15:40:20.887Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 14316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.4,"rss_mb":54,"growth_percent":-2.9,"samples_count":25,"details":"Heap: 4.7/5.8 MB (80.4%), Trend: -2.9% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":6900,"uptime_hours":1.92,"details":"Process running for 1.92 hours"},{"name":"logs","status":"OK","total_size_mb":1.62,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T15:40:20.887Z] WARN: ALERT - [WARN] Memory Usage High: 80.7% > 80%
+[2026-03-30T15:40:20.887Z] WARN: MEMORY_WARN - 80.7%
+[2026-03-30T15:40:20.888Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:40:20.889Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T15:45:20.889Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 14616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.6,"rss_mb":54,"growth_percent":-1.4,"samples_count":26,"details":"Heap: 4.8/5.8 MB (82.6%), Trend: -1.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":7200,"uptime_hours":2,"details":"Process running for 2.00 hours"},{"name":"logs","status":"OK","total_size_mb":1.63,"large_files":0,"details":"Total: 1.6MB"}]
+[2026-03-30T15:45:20.889Z] WARN: ALERT - [WARN] Memory Usage High: 82.9% > 80%
+[2026-03-30T15:45:20.889Z] WARN: MEMORY_WARN - 82.9%
+[2026-03-30T15:45:20.890Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T15:45:20.890Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T15:50:20.890Z] Health Check: OK
+[2026-03-30T15:55:20.891Z] Health Check: OK
+[2026-03-30T16:00:20.892Z] Health Check: OK
+[2026-03-30T16:05:20.892Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:05:20.893Z] Health Check: OK
+[2026-03-30T16:10:20.893Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:10:20.894Z] Health Check: OK
+[2026-03-30T16:15:20.895Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 16416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81,"rss_mb":54,"growth_percent":-0.7,"samples_count":32,"details":"Heap: 4.7/5.8 MB (81.0%), Trend: -0.7% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":9000,"uptime_hours":2.5,"details":"Process running for 2.50 hours"},{"name":"logs","status":"OK","total_size_mb":1.65,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T16:15:20.895Z] WARN: ALERT - [WARN] Memory Usage High: 81.3% > 80%
+[2026-03-30T16:15:20.895Z] WARN: MEMORY_WARN - 81.3%
+[2026-03-30T16:15:20.895Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:15:20.896Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T16:20:20.896Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 16716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.2,"rss_mb":54,"growth_percent":-0.4,"samples_count":33,"details":"Heap: 4.9/5.8 MB (83.2%), Trend: -0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":9300,"uptime_hours":2.58,"details":"Process running for 2.58 hours"},{"name":"logs","status":"OK","total_size_mb":1.66,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T16:20:20.896Z] WARN: ALERT - [WARN] Memory Usage High: 83.4% > 80%
+[2026-03-30T16:20:20.896Z] WARN: MEMORY_WARN - 83.4%
+[2026-03-30T16:20:20.897Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:20:20.897Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T16:25:20.897Z] Health Check: OK
+[2026-03-30T16:30:20.898Z] Health Check: OK
+[2026-03-30T16:35:20.899Z] Health Check: OK
+[2026-03-30T16:40:20.899Z] Health Check: OK
+[2026-03-30T16:45:20.900Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:45:20.901Z] Health Check: OK
+[2026-03-30T16:50:20.901Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 18516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.5,"rss_mb":54,"growth_percent":-1.9,"samples_count":39,"details":"Heap: 4.7/5.8 MB (80.5%), Trend: -1.9% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":11100,"uptime_hours":3.08,"details":"Process running for 3.08 hours"},{"name":"logs","status":"OK","total_size_mb":1.68,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T16:50:20.901Z] WARN: ALERT - [WARN] Memory Usage High: 80.8% > 80%
+[2026-03-30T16:50:20.901Z] WARN: MEMORY_WARN - 80.8%
+[2026-03-30T16:50:20.902Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:50:20.902Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T16:55:20.900Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 18816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.7,"rss_mb":54,"growth_percent":-0.9,"samples_count":40,"details":"Heap: 4.8/5.8 MB (82.7%), Trend: -0.9% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":11400,"uptime_hours":3.17,"details":"Process running for 3.17 hours"},{"name":"logs","status":"OK","total_size_mb":1.69,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T16:55:20.901Z] WARN: ALERT - [WARN] Memory Usage High: 83.0% > 80%
+[2026-03-30T16:55:20.901Z] WARN: MEMORY_WARN - 83.0%
+[2026-03-30T16:55:20.901Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T16:55:20.902Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T17:00:20.902Z] Health Check: OK
+[2026-03-30T17:05:20.903Z] Health Check: OK
+[2026-03-30T17:10:20.902Z] Health Check: OK
+[2026-03-30T17:15:20.903Z] Health Check: OK
+[2026-03-30T17:20:20.904Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T17:20:20.904Z] Health Check: OK
+[2026-03-30T17:25:20.904Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 20616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.5,"rss_mb":54,"growth_percent":-0.5,"samples_count":46,"details":"Heap: 4.7/5.8 MB (80.5%), Trend: -0.5% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":13200,"uptime_hours":3.67,"details":"Process running for 3.67 hours"},{"name":"logs","status":"OK","total_size_mb":1.71,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T17:25:20.905Z] WARN: ALERT - [WARN] Memory Usage High: 80.8% > 80%
+[2026-03-30T17:25:20.905Z] WARN: MEMORY_WARN - 80.8%
+[2026-03-30T17:25:20.905Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T17:25:20.906Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T17:30:20.905Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 20916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.7,"rss_mb":54,"growth_percent":-0.3,"samples_count":47,"details":"Heap: 4.8/5.8 MB (82.7%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":13500,"uptime_hours":3.75,"details":"Process running for 3.75 hours"},{"name":"logs","status":"OK","total_size_mb":1.72,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T17:30:20.906Z] WARN: ALERT - [WARN] Memory Usage High: 83.0% > 80%
+[2026-03-30T17:30:20.906Z] WARN: MEMORY_WARN - 83.0%
+[2026-03-30T17:30:20.906Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T17:30:20.907Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T17:35:20.907Z] Health Check: OK
+[2026-03-30T17:40:20.908Z] Health Check: OK
+[2026-03-30T17:45:20.910Z] Health Check: OK
+[2026-03-30T17:50:20.911Z] Health Check: OK
+[2026-03-30T17:55:20.910Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T17:55:20.911Z] Health Check: OK
+[2026-03-30T18:00:20.912Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 22716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.6,"rss_mb":54,"growth_percent":-1.3,"samples_count":53,"details":"Heap: 4.7/5.8 MB (80.6%), Trend: -1.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":15300,"uptime_hours":4.25,"details":"Process running for 4.25 hours"},{"name":"logs","status":"OK","total_size_mb":1.74,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T18:00:20.912Z] WARN: ALERT - [WARN] Memory Usage High: 80.9% > 80%
+[2026-03-30T18:00:20.912Z] WARN: MEMORY_WARN - 80.9%
+[2026-03-30T18:00:20.913Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:00:20.913Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T18:05:20.913Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 23016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.8,"rss_mb":54,"growth_percent":-0.6,"samples_count":54,"details":"Heap: 4.8/5.8 MB (82.8%), Trend: -0.6% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":15600,"uptime_hours":4.33,"details":"Process running for 4.33 hours"},{"name":"logs","status":"OK","total_size_mb":1.75,"large_files":0,"details":"Total: 1.7MB"}]
+[2026-03-30T18:05:20.913Z] WARN: ALERT - [WARN] Memory Usage High: 83.1% > 80%
+[2026-03-30T18:05:20.913Z] WARN: MEMORY_WARN - 83.1%
+[2026-03-30T18:05:20.914Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:05:20.914Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T18:10:20.915Z] Health Check: OK
+[2026-03-30T18:15:20.915Z] Health Check: OK
+[2026-03-30T18:20:20.916Z] Health Check: OK
+[2026-03-30T18:25:20.916Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:25:20.917Z] Health Check: OK
+[2026-03-30T18:30:20.918Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:30:20.919Z] Health Check: OK
+[2026-03-30T18:35:20.919Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 24816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.7,"rss_mb":54,"growth_percent":-0.4,"samples_count":60,"details":"Heap: 4.7/5.8 MB (80.7%), Trend: -0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":17400,"uptime_hours":4.83,"details":"Process running for 4.83 hours"},{"name":"logs","status":"OK","total_size_mb":1.77,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T18:35:20.919Z] WARN: ALERT - [WARN] Memory Usage High: 81.0% > 80%
+[2026-03-30T18:35:20.919Z] WARN: MEMORY_WARN - 81.0%
+[2026-03-30T18:35:20.920Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:35:20.920Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T18:40:20.919Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 25116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.9,"rss_mb":54,"growth_percent":-0.3,"samples_count":61,"details":"Heap: 4.8/5.8 MB (82.9%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":17700,"uptime_hours":4.92,"details":"Process running for 4.92 hours"},{"name":"logs","status":"OK","total_size_mb":1.78,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T18:40:20.920Z] WARN: ALERT - [WARN] Memory Usage High: 83.2% > 80%
+[2026-03-30T18:40:20.920Z] WARN: MEMORY_WARN - 83.2%
+[2026-03-30T18:40:20.920Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T18:40:20.921Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T18:45:20.920Z] Health Check: OK
+[2026-03-30T18:50:20.920Z] Health Check: OK
+[2026-03-30T18:55:20.921Z] Health Check: OK
+[2026-03-30T19:00:20.922Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:00:20.923Z] Health Check: OK
+[2026-03-30T19:05:20.923Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:05:20.924Z] Health Check: OK
+[2026-03-30T19:10:20.924Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 26916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.3,"rss_mb":54,"growth_percent":-1,"samples_count":67,"details":"Heap: 4.8/5.8 MB (81.3%), Trend: -1.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":19500,"uptime_hours":5.42,"details":"Process running for 5.42 hours"},{"name":"logs","status":"OK","total_size_mb":1.81,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T19:10:20.924Z] WARN: ALERT - [WARN] Memory Usage High: 81.6% > 80%
+[2026-03-30T19:10:20.924Z] WARN: MEMORY_WARN - 81.6%
+[2026-03-30T19:10:20.925Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:10:20.925Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T19:15:20.925Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 27216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.5,"rss_mb":54,"growth_percent":-0.5,"samples_count":68,"details":"Heap: 4.9/5.8 MB (83.5%), Trend: -0.5% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":19800,"uptime_hours":5.5,"details":"Process running for 5.50 hours"},{"name":"logs","status":"OK","total_size_mb":1.81,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T19:15:20.925Z] WARN: ALERT - [WARN] Memory Usage High: 83.8% > 80%
+[2026-03-30T19:15:20.925Z] WARN: MEMORY_WARN - 83.8%
+[2026-03-30T19:15:20.925Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:15:20.926Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T19:20:20.926Z] Health Check: OK
+[2026-03-30T19:25:20.927Z] Health Check: OK
+[2026-03-30T19:30:20.927Z] Health Check: OK
+[2026-03-30T19:35:20.928Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:35:20.928Z] Health Check: OK
+[2026-03-30T19:40:20.929Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:40:20.930Z] Health Check: OK
+[2026-03-30T19:45:20.930Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 29016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.8,"rss_mb":54,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.8%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":21600,"uptime_hours":6,"details":"Process running for 6.00 hours"},{"name":"logs","status":"OK","total_size_mb":1.84,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T19:45:20.931Z] WARN: ALERT - [WARN] Memory Usage High: 81.1% > 80%
+[2026-03-30T19:45:20.931Z] WARN: MEMORY_WARN - 81.1%
+[2026-03-30T19:45:20.931Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:45:20.932Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T19:50:20.931Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 29316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83,"rss_mb":54,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.0%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":21900,"uptime_hours":6.08,"details":"Process running for 6.08 hours"},{"name":"logs","status":"OK","total_size_mb":1.84,"large_files":0,"details":"Total: 1.8MB"}]
+[2026-03-30T19:50:20.931Z] WARN: ALERT - [WARN] Memory Usage High: 83.3% > 80%
+[2026-03-30T19:50:20.931Z] WARN: MEMORY_WARN - 83.3%
+[2026-03-30T19:50:20.931Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T19:50:20.932Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T19:55:20.931Z] Health Check: OK
+[2026-03-30T20:00:20.932Z] Health Check: OK
+[2026-03-30T20:05:20.933Z] Health Check: OK
+[2026-03-30T20:10:20.934Z] Health Check: OK
+[2026-03-30T20:15:20.934Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T20:15:20.935Z] Health Check: OK
+[2026-03-30T20:20:20.937Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 31116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.3,"rss_mb":54,"growth_percent":0.2,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.3%), Trend: +0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":23700,"uptime_hours":6.58,"details":"Process running for 6.58 hours"},{"name":"logs","status":"OK","total_size_mb":1.87,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T20:20:20.937Z] WARN: ALERT - [WARN] Memory Usage High: 80.6% > 80%
+[2026-03-30T20:20:20.938Z] WARN: MEMORY_WARN - 80.6%
+[2026-03-30T20:20:20.938Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T20:20:20.939Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T20:25:20.938Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 31416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.4,"rss_mb":54,"growth_percent":0.2,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.4%), Trend: +0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":24000,"uptime_hours":6.67,"details":"Process running for 6.67 hours"},{"name":"logs","status":"OK","total_size_mb":1.88,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T20:25:20.939Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-30T20:25:20.939Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-30T20:25:20.939Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T20:25:20.940Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T20:30:20.940Z] Health Check: OK
+[2026-03-30T20:35:20.941Z] Health Check: OK
+[2026-03-30T20:40:20.942Z] Health Check: OK
+[2026-03-30T20:45:20.943Z] Health Check: OK
+[2026-03-30T20:50:20.944Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T20:50:20.945Z] Health Check: OK
+[2026-03-30T20:55:20.945Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T20:55:20.946Z] Health Check: OK
+[2026-03-30T21:00:20.946Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 33516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.5,"rss_mb":54,"growth_percent":0,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.5%), Trend: +0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":26100,"uptime_hours":7.25,"details":"Process running for 7.25 hours"},{"name":"logs","status":"OK","total_size_mb":1.9,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T21:00:20.947Z] WARN: ALERT - [WARN] Memory Usage High: 81.8% > 80%
+[2026-03-30T21:00:20.947Z] WARN: MEMORY_WARN - 81.8%
+[2026-03-30T21:00:20.947Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:00:20.948Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T21:05:20.948Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 33816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.6,"rss_mb":54,"growth_percent":0,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.6%), Trend: -0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":26400,"uptime_hours":7.33,"details":"Process running for 7.33 hours"},{"name":"logs","status":"OK","total_size_mb":1.9,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T21:05:20.948Z] WARN: ALERT - [WARN] Memory Usage High: 83.8% > 80%
+[2026-03-30T21:05:20.948Z] WARN: MEMORY_WARN - 83.8%
+[2026-03-30T21:05:20.949Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:05:20.949Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T21:10:20.949Z] Health Check: OK
+[2026-03-30T21:15:20.949Z] Health Check: OK
+[2026-03-30T21:20:20.951Z] Health Check: OK
+[2026-03-30T21:25:20.950Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:25:20.950Z] Health Check: OK
+[2026-03-30T21:30:20.950Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:30:20.952Z] Health Check: OK
+[2026-03-30T21:35:20.951Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 35616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.9,"rss_mb":54,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.9%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":28200,"uptime_hours":7.83,"details":"Process running for 7.83 hours"},{"name":"logs","status":"OK","total_size_mb":1.92,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T21:35:20.952Z] WARN: ALERT - [WARN] Memory Usage High: 81.2% > 80%
+[2026-03-30T21:35:20.952Z] WARN: MEMORY_WARN - 81.2%
+[2026-03-30T21:35:20.952Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:35:20.952Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T21:40:20.952Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 35916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83,"rss_mb":54,"growth_percent":0,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.0%), Trend: +0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":28500,"uptime_hours":7.92,"details":"Process running for 7.92 hours"},{"name":"logs","status":"OK","total_size_mb":1.93,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T21:40:20.953Z] WARN: ALERT - [WARN] Memory Usage High: 83.2% > 80%
+[2026-03-30T21:40:20.953Z] WARN: MEMORY_WARN - 83.2%
+[2026-03-30T21:40:20.953Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T21:40:20.953Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T21:45:20.955Z] Health Check: OK
+[2026-03-30T21:50:20.954Z] Health Check: OK
+[2026-03-30T21:55:20.955Z] Health Check: OK
+[2026-03-30T22:00:20.956Z] Health Check: OK
+[2026-03-30T22:05:20.957Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:05:20.957Z] Health Check: OK
+[2026-03-30T22:10:20.958Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 37716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.3,"rss_mb":54,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.3%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":30300,"uptime_hours":8.42,"details":"Process running for 8.42 hours"},{"name":"logs","status":"OK","total_size_mb":1.95,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T22:10:20.959Z] WARN: ALERT - [WARN] Memory Usage High: 80.6% > 80%
+[2026-03-30T22:10:20.959Z] WARN: MEMORY_WARN - 80.6%
+[2026-03-30T22:10:20.959Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:10:20.959Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T22:15:20.959Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 38016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.3,"rss_mb":54,"growth_percent":-0.2,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.3%), Trend: -0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":30600,"uptime_hours":8.5,"details":"Process running for 8.50 hours"},{"name":"logs","status":"OK","total_size_mb":1.95,"large_files":0,"details":"Total: 1.9MB"}]
+[2026-03-30T22:15:20.959Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-30T22:15:20.959Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-30T22:15:20.959Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:15:20.960Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T22:20:20.960Z] Health Check: OK
+[2026-03-30T22:25:20.961Z] Health Check: OK
+[2026-03-30T22:30:20.963Z] Health Check: OK
+[2026-03-30T22:35:20.962Z] Health Check: OK
+[2026-03-30T22:40:20.962Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:40:20.963Z] Health Check: OK
+[2026-03-30T22:45:20.963Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 39816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.2,"rss_mb":54,"growth_percent":-0.2,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.2%), Trend: -0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":32400,"uptime_hours":9,"details":"Process running for 9.00 hours"},{"name":"logs","status":"OK","total_size_mb":1.97,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-30T22:45:20.964Z] WARN: ALERT - [WARN] Memory Usage High: 80.5% > 80%
+[2026-03-30T22:45:20.964Z] WARN: MEMORY_WARN - 80.5%
+[2026-03-30T22:45:20.964Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:45:20.965Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T22:50:20.963Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 40116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.2,"rss_mb":54,"growth_percent":-0.3,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.2%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":32700,"uptime_hours":9.08,"details":"Process running for 9.08 hours"},{"name":"logs","status":"OK","total_size_mb":1.97,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-30T22:50:20.964Z] WARN: ALERT - [WARN] Memory Usage High: 82.5% > 80%
+[2026-03-30T22:50:20.964Z] WARN: MEMORY_WARN - 82.5%
+[2026-03-30T22:50:20.964Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T22:50:20.965Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T22:55:20.964Z] Health Check: OK
+[2026-03-30T23:00:20.965Z] Health Check: OK
+[2026-03-30T23:05:20.966Z] Health Check: OK
+[2026-03-30T23:10:20.968Z] Health Check: OK
+[2026-03-30T23:15:20.967Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:15:20.968Z] Health Check: OK
+[2026-03-30T23:20:20.968Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 41916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.7,"rss_mb":54,"growth_percent":-0.3,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.7%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":34500,"uptime_hours":9.58,"details":"Process running for 9.58 hours"},{"name":"logs","status":"OK","total_size_mb":1.99,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-30T23:20:20.968Z] WARN: ALERT - [WARN] Memory Usage High: 81.0% > 80%
+[2026-03-30T23:20:20.968Z] WARN: MEMORY_WARN - 81.0%
+[2026-03-30T23:20:20.968Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:20:20.969Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T23:25:20.968Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 42216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.9,"rss_mb":54,"growth_percent":-0.3,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.9%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":34800,"uptime_hours":9.67,"details":"Process running for 9.67 hours"},{"name":"logs","status":"OK","total_size_mb":1.99,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-30T23:25:20.968Z] WARN: ALERT - [WARN] Memory Usage High: 83.2% > 80%
+[2026-03-30T23:25:20.968Z] WARN: MEMORY_WARN - 83.2%
+[2026-03-30T23:25:20.969Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:25:20.969Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-30T23:30:20.969Z] Health Check: OK
+[2026-03-30T23:35:20.970Z] Health Check: OK
+[2026-03-30T23:40:20.971Z] Health Check: OK
+[2026-03-30T23:45:20.971Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:45:20.972Z] Health Check: OK
+[2026-03-30T23:50:20.972Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:50:20.973Z] Health Check: OK
+[2026-03-30T23:55:20.971Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 44016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.7,"rss_mb":55,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.7%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":36600,"uptime_hours":10.17,"details":"Process running for 10.17 hours"},{"name":"logs","status":"OK","total_size_mb":2.01,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-30T23:55:20.972Z] WARN: ALERT - [WARN] Memory Usage High: 82.0% > 80%
+[2026-03-30T23:55:20.972Z] WARN: MEMORY_WARN - 82.0%
+[2026-03-30T23:55:20.972Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-30T23:55:20.973Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T00:00:20.972Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 44316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":84.3,"rss_mb":55,"growth_percent":0.2,"samples_count":72,"details":"Heap: 4.9/5.8 MB (84.3%), Trend: +0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":36900,"uptime_hours":10.25,"details":"Process running for 10.25 hours"},{"name":"logs","status":"OK","total_size_mb":2.02,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-31T00:00:20.973Z] WARN: ALERT - [WARN] Memory Usage High: 84.5% > 80%
+[2026-03-31T00:00:20.973Z] WARN: MEMORY_WARN - 84.5%
+[2026-03-31T00:00:20.973Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:00:20.973Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T00:05:20.974Z] Health Check: OK
+[2026-03-31T00:10:20.975Z] Health Check: OK
+[2026-03-31T00:15:20.974Z] Health Check: OK
+[2026-03-31T00:20:20.976Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:20:20.977Z] Health Check: OK
+[2026-03-31T00:25:20.976Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:25:20.977Z] Health Check: OK
+[2026-03-31T00:30:20.976Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 46116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.6,"rss_mb":55,"growth_percent":0.2,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.6%), Trend: +0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":38700,"uptime_hours":10.75,"details":"Process running for 10.75 hours"},{"name":"logs","status":"OK","total_size_mb":2.04,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-31T00:30:20.977Z] WARN: ALERT - [WARN] Memory Usage High: 81.8% > 80%
+[2026-03-31T00:30:20.977Z] WARN: MEMORY_WARN - 81.8%
+[2026-03-31T00:30:20.977Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:30:20.978Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T00:35:20.978Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 46416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.6,"rss_mb":55,"growth_percent":0.2,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.6%), Trend: +0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":39000,"uptime_hours":10.83,"details":"Process running for 10.83 hours"},{"name":"logs","status":"OK","total_size_mb":2.04,"large_files":0,"details":"Total: 2.0MB"}]
+[2026-03-31T00:35:20.978Z] WARN: ALERT - [WARN] Memory Usage High: 83.8% > 80%
+[2026-03-31T00:35:20.978Z] WARN: MEMORY_WARN - 83.8%
+[2026-03-31T00:35:20.979Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:35:20.979Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T00:40:20.978Z] Health Check: OK
+[2026-03-31T00:45:20.979Z] Health Check: OK
+[2026-03-31T00:50:20.980Z] Health Check: OK
+[2026-03-31T00:55:20.980Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T00:55:20.980Z] Health Check: OK
+[2026-03-31T01:00:20.982Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:00:20.982Z] Health Check: OK
+[2026-03-31T01:05:20.982Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 48216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.4,"rss_mb":55,"growth_percent":0.4,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.4%), Trend: +0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":40800,"uptime_hours":11.33,"details":"Process running for 11.33 hours"},{"name":"logs","status":"OK","total_size_mb":2.06,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T01:05:20.982Z] WARN: ALERT - [WARN] Memory Usage High: 81.6% > 80%
+[2026-03-31T01:05:20.983Z] WARN: MEMORY_WARN - 81.6%
+[2026-03-31T01:05:20.983Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:05:20.983Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T01:10:20.982Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 48516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.4,"rss_mb":55,"growth_percent":0.6,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.4%), Trend: +0.6% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":41100,"uptime_hours":11.42,"details":"Process running for 11.42 hours"},{"name":"logs","status":"OK","total_size_mb":2.06,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T01:10:20.983Z] WARN: ALERT - [WARN] Memory Usage High: 83.7% > 80%
+[2026-03-31T01:10:20.983Z] WARN: MEMORY_WARN - 83.7%
+[2026-03-31T01:10:20.983Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:10:20.984Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T01:15:20.985Z] Health Check: OK
+[2026-03-31T01:20:20.984Z] Health Check: OK
+[2026-03-31T01:25:20.984Z] Health Check: OK
+[2026-03-31T01:30:20.985Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:30:20.986Z] Health Check: OK
+[2026-03-31T01:35:20.985Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:35:20.986Z] Health Check: OK
+[2026-03-31T01:40:20.985Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 50316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.2,"rss_mb":55,"growth_percent":0.7,"samples_count":72,"details":"Heap: 4.7/5.8 MB (81.2%), Trend: +0.7% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":42900,"uptime_hours":11.92,"details":"Process running for 11.92 hours"},{"name":"logs","status":"OK","total_size_mb":2.08,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T01:40:20.985Z] WARN: ALERT - [WARN] Memory Usage High: 81.4% > 80%
+[2026-03-31T01:40:20.987Z] WARN: MEMORY_WARN - 81.4%
+[2026-03-31T01:40:20.987Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:40:20.987Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T01:45:20.986Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 50616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.2,"rss_mb":55,"growth_percent":0.8,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.2%), Trend: +0.8% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":43200,"uptime_hours":12,"details":"Process running for 12.00 hours"},{"name":"logs","status":"OK","total_size_mb":2.09,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T01:45:20.986Z] WARN: ALERT - [WARN] Memory Usage High: 83.4% > 80%
+[2026-03-31T01:45:20.987Z] WARN: MEMORY_WARN - 83.4%
+[2026-03-31T01:45:20.987Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T01:45:20.987Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T01:50:20.988Z] Health Check: OK
+[2026-03-31T01:55:20.987Z] Health Check: OK
+[2026-03-31T02:00:20.988Z] Health Check: OK
+[2026-03-31T02:05:20.989Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:05:20.989Z] Health Check: OK
+[2026-03-31T02:10:20.987Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:10:20.988Z] Health Check: OK
+[2026-03-31T02:15:20.989Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 52416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81,"rss_mb":55,"growth_percent":1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (81.0%), Trend: +1.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":45000,"uptime_hours":12.5,"details":"Process running for 12.50 hours"},{"name":"logs","status":"OK","total_size_mb":2.11,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T02:15:20.989Z] WARN: ALERT - [WARN] Memory Usage High: 81.3% > 80%
+[2026-03-31T02:15:20.989Z] WARN: MEMORY_WARN - 81.3%
+[2026-03-31T02:15:20.990Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:15:20.990Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T02:20:20.989Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 52716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.1,"rss_mb":55,"growth_percent":1.1,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.1%), Trend: +1.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":45300,"uptime_hours":12.58,"details":"Process running for 12.58 hours"},{"name":"logs","status":"OK","total_size_mb":2.11,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T02:20:20.990Z] WARN: ALERT - [WARN] Memory Usage High: 83.3% > 80%
+[2026-03-31T02:20:20.990Z] WARN: MEMORY_WARN - 83.3%
+[2026-03-31T02:20:20.991Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:20:20.991Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T02:25:20.991Z] Health Check: OK
+[2026-03-31T02:30:20.992Z] Health Check: OK
+[2026-03-31T02:35:20.994Z] Health Check: OK
+[2026-03-31T02:40:20.995Z] Health Check: OK
+[2026-03-31T02:45:20.996Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:45:20.996Z] Health Check: OK
+[2026-03-31T02:50:20.997Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 54516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.2,"rss_mb":55,"growth_percent":0.6,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.2%), Trend: +0.6% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":47100,"uptime_hours":13.08,"details":"Process running for 13.08 hours"},{"name":"logs","status":"OK","total_size_mb":2.13,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T02:50:20.998Z] WARN: ALERT - [WARN] Memory Usage High: 80.5% > 80%
+[2026-03-31T02:50:20.998Z] WARN: MEMORY_WARN - 80.5%
+[2026-03-31T02:50:20.998Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:50:20.998Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T02:55:20.998Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 54816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.2,"rss_mb":55,"growth_percent":0.6,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.2%), Trend: +0.6% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":47400,"uptime_hours":13.17,"details":"Process running for 13.17 hours"},{"name":"logs","status":"OK","total_size_mb":2.13,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T02:55:20.998Z] WARN: ALERT - [WARN] Memory Usage High: 82.5% > 80%
+[2026-03-31T02:55:20.998Z] WARN: MEMORY_WARN - 82.5%
+[2026-03-31T02:55:20.998Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T02:55:20.999Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T03:00:21.000Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 55116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":84.3,"rss_mb":55,"growth_percent":0.5,"samples_count":72,"details":"Heap: 4.9/5.8 MB (84.3%), Trend: +0.5% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":47700,"uptime_hours":13.25,"details":"Process running for 13.25 hours"},{"name":"logs","status":"OK","total_size_mb":2.14,"large_files":0,"details":"Total: 2.1MB"}]
+[2026-03-31T03:00:21.000Z] WARN: ALERT - [WARN] Memory Usage High: 84.5% > 80%
+[2026-03-31T03:00:21.000Z] WARN: MEMORY_WARN - 84.5%
+[2026-03-31T03:00:21.001Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:00:21.005Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T03:05:21.001Z] Health Check: OK
+[2026-03-31T03:10:21.001Z] Health Check: OK
+[2026-03-31T03:15:21.002Z] Health Check: OK
+[2026-03-31T03:20:21.003Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:20:21.004Z] Health Check: OK
+[2026-03-31T03:25:21.004Z] WARN: ALERT - [WARN] Memory Usage High: 80.1% > 80%
+[2026-03-31T03:25:21.004Z] WARN: MEMORY_WARN - 80.1%
+[2026-03-31T03:25:21.004Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:25:21.005Z] Health Check: OK
+[2026-03-31T03:30:21.005Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 56916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.9,"rss_mb":55,"growth_percent":0.5,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.9%), Trend: +0.5% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":49500,"uptime_hours":13.75,"details":"Process running for 13.75 hours"},{"name":"logs","status":"OK","total_size_mb":2.16,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T03:30:21.006Z] WARN: ALERT - [WARN] Memory Usage High: 82.1% > 80%
+[2026-03-31T03:30:21.006Z] WARN: MEMORY_WARN - 82.1%
+[2026-03-31T03:30:21.007Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:30:21.007Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T03:35:21.006Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 57216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.9,"rss_mb":55,"growth_percent":0.4,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.9%), Trend: +0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":49800,"uptime_hours":13.83,"details":"Process running for 13.83 hours"},{"name":"logs","status":"OK","total_size_mb":2.16,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T03:35:21.006Z] WARN: ALERT - [WARN] Memory Usage High: 84.1% > 80%
+[2026-03-31T03:35:21.006Z] WARN: MEMORY_WARN - 84.1%
+[2026-03-31T03:35:21.006Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:35:21.007Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T03:40:21.006Z] Health Check: OK
+[2026-03-31T03:45:21.008Z] Health Check: OK
+[2026-03-31T03:50:21.008Z] Health Check: OK
+[2026-03-31T03:55:21.008Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T03:55:21.008Z] Health Check: OK
+[2026-03-31T04:00:21.009Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:00:21.009Z] Health Check: OK
+[2026-03-31T04:05:21.010Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 59016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.7,"rss_mb":55,"growth_percent":0.3,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.7%), Trend: +0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":51600,"uptime_hours":14.33,"details":"Process running for 14.33 hours"},{"name":"logs","status":"OK","total_size_mb":2.18,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T04:05:21.011Z] WARN: ALERT - [WARN] Memory Usage High: 81.9% > 80%
+[2026-03-31T04:05:21.011Z] WARN: MEMORY_WARN - 81.9%
+[2026-03-31T04:05:21.011Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:05:21.012Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T04:10:21.011Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 59316s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.7,"rss_mb":55,"growth_percent":0.3,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.7%), Trend: +0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":51900,"uptime_hours":14.42,"details":"Process running for 14.42 hours"},{"name":"logs","status":"OK","total_size_mb":2.18,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T04:10:21.011Z] WARN: ALERT - [WARN] Memory Usage High: 83.9% > 80%
+[2026-03-31T04:10:21.011Z] WARN: MEMORY_WARN - 83.9%
+[2026-03-31T04:10:21.011Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:10:21.012Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T04:15:21.013Z] Health Check: OK
+[2026-03-31T04:20:21.013Z] Health Check: OK
+[2026-03-31T04:25:21.013Z] Health Check: OK
+[2026-03-31T04:30:21.014Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:30:21.015Z] Health Check: OK
+[2026-03-31T04:35:21.015Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:35:21.016Z] Health Check: OK
+[2026-03-31T04:40:21.015Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 61116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.9,"rss_mb":55,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.9%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":53700,"uptime_hours":14.92,"details":"Process running for 14.92 hours"},{"name":"logs","status":"OK","total_size_mb":2.2,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T04:40:21.015Z] WARN: ALERT - [WARN] Memory Usage High: 81.2% > 80%
+[2026-03-31T04:40:21.016Z] WARN: MEMORY_WARN - 81.2%
+[2026-03-31T04:40:21.016Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:40:21.016Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T04:45:21.016Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 61416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83,"rss_mb":55,"growth_percent":0,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.0%), Trend: +0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":54000,"uptime_hours":15,"details":"Process running for 15.00 hours"},{"name":"logs","status":"OK","total_size_mb":2.21,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T04:45:21.017Z] WARN: ALERT - [WARN] Memory Usage High: 83.2% > 80%
+[2026-03-31T04:45:21.017Z] WARN: MEMORY_WARN - 83.2%
+[2026-03-31T04:45:21.017Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T04:45:21.017Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T04:50:21.021Z] Health Check: OK
+[2026-03-31T04:55:21.019Z] Health Check: OK
+[2026-03-31T05:00:21.021Z] Health Check: OK
+[2026-03-31T05:05:21.026Z] Health Check: OK
+[2026-03-31T05:10:21.021Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:10:21.022Z] Health Check: OK
+[2026-03-31T05:15:21.023Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 63216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.1,"rss_mb":55,"growth_percent":-0.2,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.1%), Trend: -0.2% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":55800,"uptime_hours":15.5,"details":"Process running for 15.50 hours"},{"name":"logs","status":"OK","total_size_mb":2.23,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T05:15:21.023Z] WARN: ALERT - [WARN] Memory Usage High: 80.4% > 80%
+[2026-03-31T05:15:21.023Z] WARN: MEMORY_WARN - 80.4%
+[2026-03-31T05:15:21.024Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:15:21.024Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T05:20:21.024Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 63516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.1,"rss_mb":55,"growth_percent":-0.3,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.1%), Trend: -0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":56100,"uptime_hours":15.58,"details":"Process running for 15.58 hours"},{"name":"logs","status":"OK","total_size_mb":2.23,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T05:20:21.024Z] WARN: ALERT - [WARN] Memory Usage High: 82.4% > 80%
+[2026-03-31T05:20:21.024Z] WARN: MEMORY_WARN - 82.4%
+[2026-03-31T05:20:21.025Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:20:21.026Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T05:25:21.025Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 63816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":84.2,"rss_mb":55,"growth_percent":0.4,"samples_count":72,"details":"Heap: 4.9/5.8 MB (84.2%), Trend: +0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":56400,"uptime_hours":15.67,"details":"Process running for 15.67 hours"},{"name":"logs","status":"OK","total_size_mb":2.24,"large_files":0,"details":"Total: 2.2MB"}]
+[2026-03-31T05:25:21.025Z] WARN: ALERT - [WARN] Memory Usage High: 84.4% > 80%
+[2026-03-31T05:25:21.025Z] WARN: MEMORY_WARN - 84.4%
+[2026-03-31T05:25:21.026Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:25:21.026Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T05:30:21.026Z] Health Check: OK
+[2026-03-31T05:35:21.026Z] Health Check: OK
+[2026-03-31T05:40:21.026Z] Health Check: OK
+[2026-03-31T05:45:21.027Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:45:21.028Z] Health Check: OK
+[2026-03-31T05:50:21.027Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:50:21.028Z] Health Check: OK
+[2026-03-31T05:55:21.028Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 65616s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.3,"rss_mb":55,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.8/5.8 MB (81.3%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":58200,"uptime_hours":16.17,"details":"Process running for 16.17 hours"},{"name":"logs","status":"OK","total_size_mb":2.26,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T05:55:21.028Z] WARN: ALERT - [WARN] Memory Usage High: 81.6% > 80%
+[2026-03-31T05:55:21.029Z] WARN: MEMORY_WARN - 81.6%
+[2026-03-31T05:55:21.029Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T05:55:21.029Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T06:00:21.029Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 65916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.4,"rss_mb":55,"growth_percent":0.1,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.4%), Trend: +0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":58500,"uptime_hours":16.25,"details":"Process running for 16.25 hours"},{"name":"logs","status":"OK","total_size_mb":2.26,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T06:00:21.029Z] WARN: ALERT - [WARN] Memory Usage High: 83.6% > 80%
+[2026-03-31T06:00:21.030Z] WARN: MEMORY_WARN - 83.6%
+[2026-03-31T06:00:21.030Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T06:00:21.030Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T06:05:21.031Z] Health Check: OK
+[2026-03-31T06:10:21.031Z] Health Check: OK
+[2026-03-31T06:15:21.033Z] Health Check: OK
+[2026-03-31T06:20:21.033Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T06:20:21.034Z] Health Check: OK
+[2026-03-31T06:25:21.034Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T06:25:21.035Z] Health Check: OK
+[2026-03-31T06:30:21.036Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 67716s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":81.1,"rss_mb":55,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (81.1%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":60300,"uptime_hours":16.75,"details":"Process running for 16.75 hours"},{"name":"logs","status":"OK","total_size_mb":2.28,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T06:30:21.036Z] WARN: ALERT - [WARN] Memory Usage High: 81.4% > 80%
+[2026-03-31T06:30:21.037Z] WARN: MEMORY_WARN - 81.4%
+[2026-03-31T06:30:21.037Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T06:30:21.037Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T06:35:21.036Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 68016s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":83.1,"rss_mb":55,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.9/5.8 MB (83.1%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":60600,"uptime_hours":16.83,"details":"Process running for 16.83 hours"},{"name":"logs","status":"OK","total_size_mb":2.28,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T06:35:21.037Z] WARN: ALERT - [WARN] Memory Usage High: 83.4% > 80%
+[2026-03-31T06:35:21.037Z] WARN: MEMORY_WARN - 83.4%
+[2026-03-31T06:35:21.037Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T06:35:21.038Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T06:40:21.037Z] Health Check: OK
+[2026-03-31T06:45:21.040Z] Health Check: OK
+[2026-03-31T06:50:21.041Z] Health Check: OK
+[2026-03-31T06:55:21.041Z] Health Check: OK
+[2026-03-31T07:00:21.041Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:00:21.042Z] Health Check: OK
+[2026-03-31T07:05:21.041Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 69816s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.4,"rss_mb":55,"growth_percent":-0.4,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.4%), Trend: -0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":62400,"uptime_hours":17.33,"details":"Process running for 17.33 hours"},{"name":"logs","status":"OK","total_size_mb":2.3,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:05:21.042Z] WARN: ALERT - [WARN] Memory Usage High: 80.6% > 80%
+[2026-03-31T07:05:21.042Z] WARN: MEMORY_WARN - 80.6%
+[2026-03-31T07:05:21.043Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:05:21.043Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:10:21.043Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 70116s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.4,"rss_mb":55,"growth_percent":-0.4,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.4%), Trend: -0.4% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":62700,"uptime_hours":17.42,"details":"Process running for 17.42 hours"},{"name":"logs","status":"OK","total_size_mb":2.31,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:10:21.043Z] WARN: ALERT - [WARN] Memory Usage High: 82.6% > 80%
+[2026-03-31T07:10:21.043Z] WARN: MEMORY_WARN - 82.6%
+[2026-03-31T07:10:21.044Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:10:21.044Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:15:21.043Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 70416s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":84.4,"rss_mb":55,"growth_percent":0,"samples_count":72,"details":"Heap: 4.9/5.8 MB (84.4%), Trend: -0.0% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":63000,"uptime_hours":17.5,"details":"Process running for 17.50 hours"},{"name":"logs","status":"OK","total_size_mb":2.31,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:15:21.044Z] WARN: ALERT - [WARN] Memory Usage High: 84.7% > 80%
+[2026-03-31T07:15:21.044Z] WARN: MEMORY_WARN - 84.7%
+[2026-03-31T07:15:21.044Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:15:21.045Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:20:21.045Z] Health Check: OK
+[2026-03-31T07:25:21.045Z] Health Check: OK
+[2026-03-31T07:30:21.045Z] Health Check: OK
+[2026-03-31T07:35:21.045Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:35:21.046Z] Health Check: OK
+[2026-03-31T07:40:21.045Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 71916s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":80.2,"rss_mb":55,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.7/5.8 MB (80.2%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":64500,"uptime_hours":17.92,"details":"Process running for 17.92 hours"},{"name":"logs","status":"OK","total_size_mb":2.33,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:40:21.046Z] WARN: ALERT - [WARN] Memory Usage High: 80.4% > 80%
+[2026-03-31T07:40:21.046Z] WARN: MEMORY_WARN - 80.4%
+[2026-03-31T07:40:21.046Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:40:21.047Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:45:21.046Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 72216s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":82.2,"rss_mb":55,"growth_percent":-0.1,"samples_count":72,"details":"Heap: 4.8/5.8 MB (82.2%), Trend: -0.1% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":64800,"uptime_hours":18,"details":"Process running for 18.00 hours"},{"name":"logs","status":"OK","total_size_mb":2.33,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:45:21.046Z] WARN: ALERT - [WARN] Memory Usage High: 82.4% > 80%
+[2026-03-31T07:45:21.046Z] WARN: MEMORY_WARN - 82.4%
+[2026-03-31T07:45:21.046Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:45:21.047Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:50:21.046Z] WARN: ALERT - [WARN] Health Check Warning: [{"name":"event_store","status":"OK","details":"DB exists, last modified 72516s ago"},{"name":"circuit_breaker","status":"OK","state":"CLOSED","details":"Circuit Breaker is CLOSED"},{"name":"memory","status":"WARN","heap_used_mb":5,"heap_total_mb":6,"percent_used":84.2,"rss_mb":55,"growth_percent":0.3,"samples_count":72,"details":"Heap: 4.9/5.8 MB (84.2%), Trend: +0.3% over 6h"},{"name":"uptime","status":"OK","uptime_seconds":65100,"uptime_hours":18.08,"details":"Process running for 18.08 hours"},{"name":"logs","status":"OK","total_size_mb":2.33,"large_files":0,"details":"Total: 2.3MB"}]
+[2026-03-31T07:50:21.047Z] WARN: ALERT - [WARN] Memory Usage High: 84.4% > 80%
+[2026-03-31T07:50:21.047Z] WARN: MEMORY_WARN - 84.4%
+[2026-03-31T07:50:21.047Z] CRITICAL: ALERT - [CRITICAL] Memory Leak Detected: Growth: 25.0% > 20%
+[2026-03-31T07:50:21.048Z] Health Check: WARN
+  Details: [
+  {
+    "name": "event_store",
+    "status": "OK"
+  },
+  {
+    "name": "circuit_breaker",
+    "status": "OK"
+  },
+  {
+    "name": "memory",
+    "status": "WARN"
+  },
+  {
+    "name": "uptime",
+    "status": "OK"
+  },
+  {
+    "name": "logs",
+    "status": "OK"
+  }
+]
+[2026-03-31T07:55:21.046Z] Health Check: OK

@@ -1,0 +1,30 @@
+{
+  "run_id": "rv-2026-03-30-g3gcm2",
+  "version": "1.0",
+  "start_time": "2026-03-30T13:45:20.867Z",
+  "planned_end_time": "2026-04-01T13:45:20.868Z",
+  "status": "RUNNING",
+  "last_heartbeat": "2026-03-31T07:55:21.784Z",
+  "last_health_check": "2026-03-31T07:55:21.045Z",
+  "counters": {
+    "heartbeats_expected": 1090,
+    "heartbeats_received": 1091,
+    "heartbeats_missed": 0,
+    "health_checks_total": 220,
+    "health_checks_passed": 151,
+    "health_checks_failed": 69,
+    "alerts_fatal": 0,
+    "alerts_critical": 113,
+    "alerts_error": 0,
+    "alerts_warn": 139
+  },
+  "events": [],
+  "cb_events": [],
+  "metrics": {
+    "memory_start_mb": 4,
+    "memory_current_mb": 4,
+    "memory_peak_mb": 5,
+    "memory_growth_percent": 0
+  },
+  "result": null
+}

@@ -1,0 +1,213 @@
+{
+  "run_id": "rv-2026-03-28-j3xxec",
+  "version": "1.0",
+  "start_time": "2026-03-28T11:31:56.546Z",
+  "planned_end_time": "2026-03-30T11:31:56.546Z",
+  "status": "COMPLETED",
+  "last_heartbeat": "2026-03-30T11:30:59.206Z",
+  "last_health_check": "2026-03-30T13:41:56.952Z",
+  "counters": {
+    "heartbeats_expected": 2879,
+    "heartbeats_received": 2880,
+    "heartbeats_missed": 26,
+    "health_checks_total": 604,
+    "health_checks_passed": 0,
+    "health_checks_failed": 604,
+    "alerts_fatal": 0,
+    "alerts_critical": 298,
+    "alerts_error": 26,
+    "alerts_warn": 774
+  },
+  "events": [
+    {
+      "timestamp": "2026-03-30T11:36:56.933Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 5.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T11:41:56.935Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 10.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T11:46:56.936Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 15.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T11:51:56.937Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 20.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T11:56:56.937Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 25.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:01:56.938Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 30.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:06:56.940Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 35.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:11:56.941Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 40.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:16:56.942Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 45.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:21:56.942Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 50.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:26:56.944Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 55.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:31:56.943Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 60.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:36:56.947Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 65.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:41:56.947Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 70.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:46:56.948Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 75.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:51:56.948Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 80.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T12:56:56.949Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 85.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:01:56.951Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 90.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:06:56.951Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 95.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:11:56.951Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 100.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:16:56.950Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 105.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:21:56.952Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 110.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:26:56.952Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 115.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:31:56.953Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 120.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:36:56.955Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 125.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:41:56.954Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 130.96,
+      "level": "ERROR"
+    }
+  ],
+  "cb_events": [],
+  "metrics": {
+    "memory_start_mb": 4,
+    "memory_current_mb": 5,
+    "memory_peak_mb": 5,
+    "memory_growth_percent": 25
+  },
+  "result": {
+    "completed_at": "2026-03-30T11:31:59.217Z",
+    "duration_hours": 48,
+    "criteria_met": [
+      "Duration: 48h reached",
+      "Heartbeat completeness: 100.0% (≥95%)",
+      "No gaps >5 minutes",
+      "No unexplained CRITICAL events",
+      "No unexplained PAUSE events",
+      "Memory never exceeded 90%",
+      "Log rotation: assumed OK",
+      "System OK at end"
+    ],
+    "criteria_failed": [
+      "Health checks: 0.0% (<95%)",
+      "Memory growth: 25.0% (≥10%)"
+    ],
+    "go_no_go": "NO-GO",
+    "summary": {
+      "run_id": "rv-2026-03-28-j3xxec",
+      "duration_hours": 48,
+      "heartbeats": "2880/2879",
+      "health_checks": "0/578",
+      "critical_events": 282,
+      "memory_growth": "25.0%"
+    }
+  }
+}
