@@ -1,30 +1,31 @@
 {
-  "run_id": "rv-2026-03-30-g3gcm2",
+  "run_id": "rv-2026-03-31-2pv6s2",
   "version": "1.0",
-  "start_time": "2026-03-30T13:45:20.867Z",
-  "planned_end_time": "2026-04-01T13:45:20.868Z",
+  "start_time": "2026-03-31T07:57:07.043Z",
+  "planned_end_time": "2026-04-02T07:57:07.050Z",
   "status": "RUNNING",
-  "last_heartbeat": "2026-03-31T07:55:21.784Z",
-  "last_health_check": "2026-03-31T07:55:21.045Z",
+  "last_heartbeat": "2026-04-01T07:07:08.182Z",
+  "last_health_check": "2026-04-01T07:07:07.242Z",
   "counters": {
-    "heartbeats_expected": 1090,
-    "heartbeats_received": 1091,
+    "heartbeats_expected": 1390,
+    "heartbeats_received": 1391,
     "heartbeats_missed": 0,
-    "health_checks_total": 220,
-    "health_checks_passed": 151,
-    "health_checks_failed": 69,
+    "health_checks_total": 280,
+    "health_checks_passed": 161,
+    "health_checks_failed": 119,
     "alerts_fatal": 0,
-    "alerts_critical": 113,
+    "alerts_critical": 24,
     "alerts_error": 0,
-    "alerts_warn": 139
+    "alerts_warn": 95
   },
   "events": [],
   "cb_events": [],
   "metrics": {
     "memory_start_mb": 4,
-    "memory_current_mb": 4,
+    "memory_current_mb": 5,
     "memory_peak_mb": 5,
-    "memory_growth_percent": 0
+    "memory_growth_percent": 0,
+    "memory_percent": "83.0"
   },
   "result": null
 }

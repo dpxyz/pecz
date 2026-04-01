@@ -5,18 +5,18 @@
   "planned_end_time": "2026-03-30T11:31:56.546Z",
   "status": "COMPLETED",
   "last_heartbeat": "2026-03-30T11:30:59.206Z",
-  "last_health_check": "2026-03-30T13:41:56.952Z",
+  "last_health_check": "2026-03-31T07:56:57.084Z",
   "counters": {
     "heartbeats_expected": 2879,
     "heartbeats_received": 2880,
-    "heartbeats_missed": 26,
-    "health_checks_total": 604,
+    "heartbeats_missed": 245,
+    "health_checks_total": 823,
     "health_checks_passed": 0,
-    "health_checks_failed": 604,
+    "health_checks_failed": 823,
     "alerts_fatal": 0,
-    "alerts_critical": 298,
-    "alerts_error": 26,
-    "alerts_warn": 774
+    "alerts_critical": 455,
+    "alerts_error": 245,
+    "alerts_warn": 1073
   },
   "events": [
     {
@@ -173,6 +173,1320 @@
       "timestamp": "2026-03-30T13:41:56.954Z",
       "type": "HEARTBEAT_GAP",
       "gap_minutes": 130.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:46:56.954Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 135.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:51:56.956Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 140.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T13:56:56.957Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 145.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:01:56.957Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 150.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:06:56.959Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 155.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:11:56.959Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 160.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:16:56.959Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 165.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:21:56.959Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 170.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:26:56.960Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 175.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:31:56.959Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 180.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:36:56.961Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 185.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:41:56.962Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 190.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:46:56.966Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 195.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:51:56.961Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 200.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T14:56:56.969Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 205.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:01:56.964Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 210.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:06:56.964Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 215.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:11:56.964Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 220.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:16:56.963Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 225.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:21:56.965Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 230.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:26:56.965Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 235.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:31:56.967Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 240.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:36:56.966Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 245.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:41:56.966Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 250.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:46:56.966Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 255.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:51:56.968Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 260.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T15:56:56.969Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 265.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:01:56.969Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 270.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:06:56.969Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 275.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:11:56.970Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 280.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:16:56.971Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 285.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:21:56.972Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 290.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:26:56.972Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 295.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:31:56.972Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 300.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:36:56.974Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 305.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:41:56.974Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 310.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:46:56.974Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 315.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:51:56.975Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 320.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T16:56:56.975Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 325.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:01:56.976Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 330.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:06:56.977Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 335.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:11:56.977Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 340.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:16:56.978Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 345.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:21:56.979Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 350.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:26:56.980Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 355.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:31:56.980Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 360.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:36:56.980Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 365.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:41:56.981Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 370.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:46:56.981Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 375.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:51:56.981Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 380.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T17:56:56.982Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 385.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:01:56.982Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 390.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:06:56.984Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 395.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:11:56.990Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 400.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:16:56.983Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 405.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:21:56.984Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 410.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:26:56.986Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 415.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:31:56.984Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 420.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:36:56.984Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 425.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:41:56.986Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 430.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:46:56.987Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 435.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:51:56.989Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 440.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T18:56:56.988Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 445.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:01:56.989Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 450.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:06:56.990Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 455.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:11:56.990Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 460.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:16:56.990Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 465.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:21:56.990Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 470.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:26:56.992Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 475.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:31:56.993Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 480.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:36:56.992Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 485.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:41:56.994Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 490.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:46:56.994Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 495.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:51:56.995Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 500.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T19:56:56.995Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 505.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:01:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 510.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:06:56.996Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 515.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:11:56.997Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 520.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:16:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 525.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:21:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 530.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:26:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 535.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:31:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 540.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:36:56.999Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 545.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:41:56.998Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 550.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:46:56.999Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 555.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:51:57.001Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 560.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T20:56:56.999Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 565.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:01:56.999Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 570.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:06:57.001Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 575.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:11:57.001Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 580.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:16:57.000Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 585.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:21:57.002Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 590.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:26:57.002Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 595.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:31:57.002Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 600.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:36:57.003Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 605.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:41:57.003Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 610.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:46:57.004Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 615.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:51:57.005Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 620.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T21:56:57.005Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 625.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:01:57.007Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 630.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:06:57.007Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 635.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:11:57.007Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 640.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:16:57.007Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 645.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:21:57.009Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 650.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:26:57.007Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 655.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:31:57.008Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 660.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:36:57.010Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 665.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:41:57.009Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 670.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:46:57.010Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 675.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:51:57.011Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 680.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T22:56:57.011Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 685.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:01:57.012Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 690.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:06:57.014Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 695.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:11:57.013Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 700.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:16:57.015Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 705.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:21:57.016Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 710.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:26:57.015Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 715.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:31:57.016Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 720.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:36:57.016Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 725.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:41:57.016Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 730.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:46:57.017Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 735.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:51:57.018Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 740.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-30T23:56:57.019Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 745.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:01:57.022Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 750.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:06:57.021Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 755.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:11:57.022Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 760.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:16:57.023Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 765.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:21:57.024Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 770.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:26:57.023Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 775.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:31:57.024Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 780.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:36:57.025Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 785.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:41:57.026Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 790.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:46:57.026Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 795.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:51:57.026Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 800.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T00:56:57.028Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 805.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:01:57.027Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 810.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:06:57.029Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 815.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:11:57.028Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 820.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:16:57.028Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 825.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:21:57.030Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 830.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:26:57.031Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 835.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:31:57.030Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 840.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:36:57.030Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 845.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:41:57.032Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 850.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:46:57.033Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 855.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:51:57.032Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 860.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T01:56:57.034Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 865.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:01:57.035Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 870.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:06:57.036Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 875.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:11:57.038Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 880.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:16:57.038Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 885.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:21:57.039Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 890.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:26:57.040Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 895.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:31:57.042Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 900.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:36:57.042Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 905.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:41:57.040Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 910.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:46:57.041Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 915.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:51:57.041Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 920.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T02:56:57.042Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 925.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:01:57.041Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 930.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:06:57.043Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 935.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:11:57.045Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 940.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:16:57.045Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 945.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:21:57.047Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 950.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:26:57.046Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 955.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:31:57.047Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 960.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:36:57.047Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 965.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:41:57.057Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 970.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:46:57.049Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 975.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:51:57.050Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 980.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T03:56:57.050Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 985.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:01:57.050Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 990.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:06:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 995.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:11:57.052Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1000.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:16:57.054Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1005.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:21:57.053Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1010.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:26:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1015.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:31:57.053Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1020.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:36:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1025.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:41:57.056Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1030.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:46:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1035.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:51:57.056Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1040.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T04:56:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1045.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:01:57.055Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1050.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:06:57.057Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1055.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:11:57.057Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1060.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:16:57.057Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1065.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:21:57.057Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1070.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:26:57.059Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1075.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:31:57.059Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1080.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:36:57.061Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1085.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:41:57.060Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1090.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:46:57.062Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1095.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:51:57.063Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1100.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T05:56:57.064Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1105.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:01:57.064Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1110.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:06:57.067Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1115.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:11:57.067Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1120.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:16:57.067Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1125.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:21:57.068Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1130.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:26:57.070Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1135.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:31:57.068Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1140.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:36:57.068Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1145.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:41:57.069Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1150.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:46:57.069Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1155.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:51:57.071Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1160.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T06:56:57.072Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1165.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:01:57.072Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1170.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:06:57.074Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1175.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:11:57.074Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1180.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:16:57.075Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1185.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:21:57.080Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1190.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:26:57.078Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1195.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:31:57.083Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1200.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:36:57.086Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1205.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:41:57.084Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1210.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:46:57.083Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1215.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:51:57.085Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1220.96,
+      "level": "ERROR"
+    },
+    {
+      "timestamp": "2026-03-31T07:56:57.091Z",
+      "type": "HEARTBEAT_GAP",
+      "gap_minutes": 1225.96,
       "level": "ERROR"
     }
   ],
