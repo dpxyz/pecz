@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /**
  * OpenClaw Forward v5 - Health Server
- * Block 5.3.1: Health Endpoints
+ * Block 5.3.3: Health Endpoints + Alert Integration
  * 
  * Endpoints:
  *   GET /health/live    - Liveness probe (<10ms)
- *   GET /health/ready   - Readiness probe (<50ms)
+ *   GET /health/ready   - Readiness probe (<50ms) + Alert Evaluation
  *   GET /health/startup - Startup probe (<1ms)
  *   GET /health         - Aggregated health
+ *   GET /alerts         - Active alerts for dashboard
  * 
  * Port: 3000 (configurable via PORT env)
  * 
@@ -19,6 +20,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const AlertEngine = require('./alertEngine');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +28,11 @@ const STATE_FILE = path.join(__dirname, '../runtime_validation/state.json');
 
 // Track server start time for uptime
 const SERVER_START = Date.now();
+
+// Initialize Alert Engine
+const alertEngine = new AlertEngine({
+  discordWebhook: process.env.DISCORD_WEBHOOK_URL
+});
 
 /**
  * LIVENESS CHECK
@@ -57,6 +64,7 @@ app.get('/health/live', (req, res) => {
 app.get('/health/ready', (req, res) => {
   const startTime = Date.now();
   const uptimeSeconds = Math.floor((Date.now() - SERVER_START) / 1000);
+  let responseData;
   
   // Read state
   let state = null;
@@ -107,25 +115,36 @@ app.get('/health/ready', (req, res) => {
   const responseTime = Date.now() - startTime;
   
   if (isHealthy) {
-    res.status(200).json({
+    responseData = {
       status: "UP",
       component: "readiness",
       timestamp: new Date().toISOString(),
       uptime_seconds: uptimeSeconds,
       checks: checks
-    });
+    };
+    res.status(200).json(responseData);
   } else {
     // Find first failing check
     const failing = Object.entries(checks).find(([k, v]) => 
       !["OK", "COMPLETE", "RUNNING", "COMPLETED"].some(ok => String(v).startsWith(ok)));
     
-    res.status(503).json({
+    responseData = {
       status: "DOWN",
       component: "readiness",
       timestamp: new Date().toISOString(),
       uptime_seconds: uptimeSeconds,
       reason: failing ? `${failing[0]}: ${failing[1]}` : "unknown",
       checks: checks
+    };
+    res.status(503).json(responseData);
+  }
+  
+  // Alert Evaluation (after response sent)
+  const alertResult = alertEngine.evaluate(responseData);
+  if (alertResult.fired.length > 0) {
+    // Send new alerts to Discord
+    alertResult.fired.forEach(alert => {
+      alertEngine.sendDiscord(alert);
     });
   }
 });
@@ -245,6 +264,20 @@ app.get('/', (req, res) => {
   }
 });
 
+/**
+ * ALERTS ENDPOINT
+ * Returns active alerts for dashboard display
+ */
+app.get('/alerts', (req, res) => {
+  const activeAlerts = alertEngine.getActiveAlerts();
+  res.json({
+    active: activeAlerts,
+    count: activeAlerts.length,
+    inGrace: alertEngine.isInGracePeriod(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error handling
 app.use((err, req, res, next) => {
   console.error('Health Server Error:', err);
@@ -258,7 +291,7 @@ app.use((err, req, res, next) => {
 // Start server
 const server = app.listen(PORT, () => {
   console.log(`╔════════════════════════════════════════════════════════╗`);
-  console.log(`║  Forward v5 Health Server v5.3.1                   ║`);
+  console.log(`║  Forward v5 Health Server v5.3.3                   ║`);
   console.log(`║  Listening on port ${PORT}                               ║`);
   console.log(`╚════════════════════════════════════════════════════════╝`);
   console.log();
@@ -267,6 +300,7 @@ const server = app.listen(PORT, () => {
   console.log(`  http://localhost:${PORT}/health/ready`);
   console.log(`  http://localhost:${PORT}/health/startup`);
   console.log(`  http://localhost:${PORT}/health`);
+  console.log(`  http://localhost:${PORT}/alerts`);
   console.log();
   console.log('Press Ctrl+C to stop');
 });

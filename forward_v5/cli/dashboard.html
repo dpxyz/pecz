@@ -161,12 +161,50 @@
     .error-banner.show {
       display: block;
     }
+    
+    .alert-banner {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .alert-banner.critical {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+    
+    .alert-banner.warning {
+      background: rgba(234, 179, 8, 0.2);
+      border: 1px solid #eab308;
+      color: #fde047;
+    }
+    
+    .alert-banner.show {
+      display: flex;
+    }
+    
+    .alert-time {
+      margin-left: auto;
+      font-size: 12px;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>🚀 OpenClaw Forward v5</h1>
     <div class="subtitle">Health Dashboard v1.0 · Auto-refresh: 10s</div>
+  </div>
+  
+  <div id="alertBanner" class="alert-banner">
+    <span id="alertIcon">🔴</span>
+    <span id="alertMessage"></span>
+    <span id="alertTime" class="alert-time"></span>
   </div>
   
   <div id="errorBanner" class="error-banner">
@@ -315,6 +353,28 @@
       document.getElementById('errorBanner').className = show ? 'error-banner show' : 'error-banner';
     }
     
+    // Update alert banner
+    function updateAlertBanner(alerts) {
+      const banner = document.getElementById('alertBanner');
+      const icon = document.getElementById('alertIcon');
+      const message = document.getElementById('alertMessage');
+      const time = document.getElementById('alertTime');
+      
+      // Find highest severity alert (CRITICAL > WARNING)
+      const criticalAlert = alerts.find(a => a.severity === 'CRITICAL');
+      const warningAlert = alerts.find(a => a.severity === 'WARNING');
+      const alert = criticalAlert || warningAlert;
+      
+      if (alert) {
+        banner.className = 'alert-banner show ' + (alert.severity === 'CRITICAL' ? 'critical' : 'warning');
+        icon.textContent = alert.severity === 'CRITICAL' ? '🔴' : '🟡';
+        message.textContent = alert.message;
+        time.textContent = new Date(alert.timestamp).toLocaleTimeString();
+      } else {
+        banner.className = 'alert-banner';
+      }
+    }
+    
     // Fetch and update dashboard
     async function refreshDashboard() {
       const btn = document.getElementById('refreshBtn');
@@ -322,6 +382,11 @@
       btn.textContent = 'Loading...';
       
       try {
+        // Fetch alerts first
+        const alertsRes = await fetch(`${API_BASE}/alerts`, { cache: 'no-cache' });
+        const alertsData = await alertsRes.json();
+        updateAlertBanner(alertsData.active);
+        
         // Fetch /health/live (minimal, fast)
         const liveRes = await fetch(`${API_BASE}/health/live`, { 
           method: 'GET',
