@@ -79,8 +79,9 @@ if (lastAlert && (now - lastAlert) < COOLDOWN) {
   return; // Suppress
 }
 
-// 2. Startup-Grace: Keine Alerts in ersten 120s
-if (serverUptime < 120) {
+// 2. Startup-Grace: Keine Alerts in ersten 120s nach AlertEngine-Start
+// (Nicht Service-Uptime - Grace ist an Engine-Instanz gebunden)
+if (engineUptime < 120000) {
   return; // Still starting
 }
 
@@ -97,7 +98,7 @@ if (consecutiveFailures < 2) {
 | Severity | Bedeutung | Farbe | Klingelt es? | Escalation |
 |----------|-----------|-------|--------------|--------------|
 | **CRITICAL** | Service nicht betriebsbereit | 🔴 Rot | Ja (sofort) | Webhook + Log + Dashboard |
-| **WARNING** | Degradiert, aber funktional | 🟡 Gelb | Nein | Log + Dashboard |
+| **WARNING** | Degradiert, aber funktional | 🟡 Gelb | Ja (ruhig, ohne Mention) | Log + Dashboard + Discord |
 | **INFO** | Nur zur Information | 🔵 Blau | Nein | Log |
 
 ### Severity-Entscheidungsbaum
@@ -111,6 +112,16 @@ Is status == "DOWN"?
             ├── "CRITICAL" ──▶ CRITICAL (Speicher > 95%)
             └── "OK" ──▶ Kein Alert
 ```
+
+---
+
+### Reminder-Policy (v1 - One-Shot)
+
+**Grundsatz:** Jeder Alert feuert **genau einmal** pro Incident.
+
+- **Keine Reminder:** Cooldown verhindert Spam, erzeugt aber keine Wiederholungen während aktiv
+- **Kein Re-Fire:** Solange Alert in `activeAlerts` existiert, wird nicht neu gefeuert
+- **Recovery:** Nach 5s Delay aus `activeAlerts` entfernt, nur Dashboard + Log (kein Discord-Recovery in v1)
 
 ---
 

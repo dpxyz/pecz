@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "wrangler": "^4.77.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
