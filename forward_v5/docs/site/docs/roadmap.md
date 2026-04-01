@@ -55,17 +55,38 @@
 
 ---
 
-### Block 5.2: Control CLI — 🔄 STARTED (parallel zu 5.1 pending)
-| # | Aufgabe | Status | Owner |
-|---|---------|--------|-------|
-| 5.2.1 | CLI Skeleton erstellen | 🔄 In Progress | @assistant |
-| 5.2.2 | Commands: start/stop/status | ⬜ Not Started | @assistant |
-| 5.2.3 | Integration mit systemd | ⏳ Blocked by 5.1 | @assistant |
-| 5.2.4 | Log-Viewer | ⬜ Not Started | @assistant |
-| 5.2.5 | Config-Editor | ⬜ Not Started | @assistant |
+### Block 5.2: Control CLI — ✅ CORE COMPLETE / ⏳ SYSTEMD DEFERRED
 
-**Depends on:** Block 5.1 (systemd integration)
-**Strategy:** 5.2 vorbereiten, systemd-Teil pending bis 5.1 Complete
+**Scope Split:**
+- **Core CLI (5.2a):** Status, Logs, Validate, Config, Edit — ✅ COMPLETE
+- **Systemd Actions (5.2b):** Start, Stop, Restart, Journal — ⏳ DEFERRED
+
+| Teil | Aufgabe | Status | Owner | Exit Code |
+|------|---------|--------|-------|-----------|
+| **5.2a.1** | Core CLI Framework | ✅ Complete | @assistant | 0=success |
+| **5.2a.2** | `status` Command | ✅ Complete | @assistant | 0 |
+| **5.2a.3** | `logs [-n N]` Command | ✅ Complete | @assistant | 0 |
+| **5.2a.4** | `validate` Command | ✅ Complete | @assistant | 0 |
+| **5.2a.5** | `config` Command | ✅ Complete | @assistant | 0 |
+| **5.2a.6** | `edit` Command | ✅ Complete | @assistant | 0 |
+| **5.2a.7** | Exit Codes & stderr/stdout | ✅ Complete | @assistant | 0/1/2 |
+| **5.2b.1** | `start` (systemd) | ⏳ **DEFERRED** | @assistant | **2** |
+| **5.2b.2** | `stop` (systemd) | ⏳ **DEFERRED** | @assistant | **2** |
+| **5.2b.3** | `restart` (systemd) | ⏳ **DEFERRED** | @assistant | **2** |
+| **5.2b.4** | `journal` (systemd) | ⏳ **DEFERRED** | @assistant | **2** |
+
+**Exit Code 2 (DEFERRED):**
+- Wird zurückgegeben bei systemd-Aktionen im Docker-Environment
+- Begründung in stderr: Block 5.1 Host Test pending
+- Dokumentation: systemd/BLOCK_5_1_STATUS.md
+
+**Verfügbarkeit:**
+- ✅ Core CLI: Sofort nutzbar (kein systemd required)
+- ⏳ Systemd Actions: Bei VPS-Deploy automatisch verfügbar
+
+---
+
+### Block 5.3: [Next Phase Name] — 🔄 STARTED
 
 ---
 
