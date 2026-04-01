@@ -14,6 +14,8 @@
 |----|---------|--------|
 | B0 | Architektur unklar | 2026-03-06 |
 | B1 | ADR-003/004 incomplete | 2026-03-08 |
+| B2 | Systemd templates fehlen | ➡️ Phase 5.1 (next) |
+| B10 | Fix 5.0d Memory Monitoring | 2026-04-01 ✅ GO |
 
 ## Blocker-Policy
 
