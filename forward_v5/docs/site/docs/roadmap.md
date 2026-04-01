@@ -15,7 +15,7 @@
 - Block 3.4 (Rebuild CLI) — ✅ COMPLETE (10/10 Tests)
 - Block 3.3 (Report Service) — ✅ COMPLETE (14/14 Tests)
 
-## Phase 4: Fixes & Validation — ✅ COMPLETE (2026-04-01)
+## Phase 5: Operations & Deployment — 🔄 IN PROGRESS (2026-04-01)
 
 ### Block 5.0d: Memory Monitoring Fix — ✅ GO
 | # | Aufgabe | Status | Owner |
@@ -26,15 +26,46 @@
 | 5.0d.4 | Unit Tests (3 Tests) | ✅ Complete | @assistant |
 | 5.0d.5 | 24h Runtime Validation | ✅ **GO** | @assistant |
 
-**Validation Results:**
-- Duration: 24h 16min (24h+ achieved)
-- Heartbeats: 100.1% (1455/1454)
-- Memory Growth: 0% (4→5 MB, no leak)
-- Sustained CRITICAL: 0
-- FATAL Alerts: 0
-- Circuit Breaker: Never triggered
-
 **Status: ✅ GO — Fix 5.0d READY FOR PRODUCTION**
+
+---
+
+### Block 5.1: Systemd Integration — ✅ CODE COMPLETE / ⏳ HOST VALIDATION PENDING
+| # | Aufgabe | Status | Owner |
+|---|---------|--------|-------|
+| 5.1.1 | Service-File erstellen | ✅ Code Complete | @assistant |
+| 5.1.2 | Environment/Overrides | ✅ Code Complete | @assistant |
+| 5.1.3 | Timeouts & Restart-Policy | ✅ Code Complete | @assistant |
+| 5.1.4 | Security Hardening | ✅ Code Complete | @assistant |
+| 5.1.5 | Installation & Tests | ⏳ **HOST TEST PENDING** | @user / @assistant |
+| 5.1.6 | Echte systemd-Maschine | ⏳ **DEFERRED** | Offen |
+
+**Code Status:**
+- forward_v5.service: ✅ Final v1.1 (validated via systemd-analyze)
+- INSTALL.md: ✅ Complete
+- TESTPLAN.md: ✅ 12 Tests definiert
+- deploy_to_vps.sh: ✅ Ready
+
+**Runtime Status:**
+- ⏳ Deployment auf Hostinger VPS pending
+- ⏳ Realer systemctl start/stop/restart test offen
+- ⏳ journald integration test offen
+
+**Note:** Code ist produktionsreif, aber Host-Test auf echter systemd-Maschine ausstehend (Keine Docker-Workarounds).
+
+---
+
+### Block 5.2: Control CLI — 🔄 STARTED (parallel zu 5.1 pending)
+| # | Aufgabe | Status | Owner |
+|---|---------|--------|-------|
+| 5.2.1 | CLI Skeleton erstellen | 🔄 In Progress | @assistant |
+| 5.2.2 | Commands: start/stop/status | ⬜ Not Started | @assistant |
+| 5.2.3 | Integration mit systemd | ⏳ Blocked by 5.1 | @assistant |
+| 5.2.4 | Log-Viewer | ⬜ Not Started | @assistant |
+| 5.2.5 | Config-Editor | ⬜ Not Started | @assistant |
+
+**Depends on:** Block 5.1 (systemd integration)
+**Strategy:** 5.2 vorbereiten, systemd-Teil pending bis 5.1 Complete
 
 ---
 
