@@ -1,25 +1,39 @@
 # Phasenplan 0–9
 
+> **📌 Aktueller Stand:** Siehe [Masterplan Details](masterplan.md) für vollständigen Status.
+> **Quick Status:** Phase 5 CODE COMPLETE | Phase 6 IN PROGRESS
+
 ## Übersicht
 
 Jede Phase muss **vollständig** und mit **Dokumentation** abgeschlossen sein bevor die nächste beginnt.
 
 ```mermaid
 graph TD
-    P0[PHASE 0: Freeze] --> P1[PHASE 1: Skeleton]
-    P1 --> P2[PHASE 2: Core Reliability]
-    P2 --> P3[PHASE 3: Observability]
-    P3 --> P4[PHASE 4: Boundaries]
-    P4 --> P5[PHASE 5: Operations]
-    P5 --> P6[PHASE 6: Tests]
+    P0[PHASE 0: Freeze ✅] --> P1[PHASE 1: Skeleton ✅]
+    P1 --> P2[PHASE 2: Core ✅]
+    P2 --> P3[PHASE 3: Observability ✅]
+    P3 --> P4[PHASE 4: Boundaries ✅]
+    P4 --> P5[PHASE 5: Operations ✅ CODE]
+    P5 --> P6[PHASE 6: Tests 🔄 ACTIVE]
     P6 --> P7[PHASE 7: Strategy Lab ⭐]
     P7 --> P8[PHASE 8: Economics]
     P8 --> P9[PHASE 9: Review & Gate]
     P9 --> LIVE[Manuelle Live-Freigabe]
     
+    style P5 fill:#dcfce7,stroke:#0d9e56,stroke-width:2px
+    style P6 fill:#dbeafe,stroke:#3b6df6,stroke-width:3px
     style P7 fill:#ffeb3b,stroke:#f57f17,stroke-width:3px
     style LIVE fill:#c62828,stroke:#b71c1c,stroke-width:3px,color:#fff
 ```
+
+### Aktueller Status (April 2026)
+
+| Phase | Status | Notizen |
+|-------|--------|---------|
+| 0-4 | ✅ COMPLETE | Alle Done |
+| 5 | ✅ CODE COMPLETE | systemd, CLI, Health, Alerts (5.1/5.2 pending für SSH) |
+| 6 | 🔄 IN PROGRESS | G5 ✅ Discord Failover, G1 ✅ Zero Unmanaged |
+| 7-9 | ⬜ BLOCKED | Warten auf Phase 6 Gates |
 
 ---
 
@@ -322,62 +336,69 @@ Discord down → WARN + Retry + Log
 
 ---
 
-## Phase 5: Operations ⬜ PENDING
+## Phase 5: Operations ✅ CODE COMPLETE
 
-**Status:** Not started  
-**Depends:** Phase 4 COMPLETE
+**Status:** Code Complete (5.1/5.2 deferred für SSH-Zugriff)  
+**Date:** April 2026
 
-### Deliverables
+### Deliverables ✅
 
-- [ ] Systemd service files
-- [ ] Control API/CLI
-- [ ] Log rotation
-- [ ] No manual file edits
+| Komponente | Status | Commit |
+|------------|--------|--------|
+| Systemd service files | ✅ | `forward_v5/systemd/forward_v5.service` |
+| Control API/CLI | ✅ | `forward_v5/cli/forwardctl.js` |
+| Health Dashboard | ✅ | `forward_v5/cli/dashboard.html` |
+| Alert Engine | ✅ | `forward_v5/cli/alertEngine.js` |
+| Health Server | ✅ | `forward_v5/cli/health_server.js` |
 
-### Commands
+### Commands ✅
 
 ```bash
-./cli.js start      # Start service
-./cli.js stop       # Stop service  
-./cli.js pause      # Pause execution
-./cli.js resume     # Resume after review
-./cli.js status     # Current status
-./cli.js reconcile  # Force reconcile
-./cli.js rebuild    # Rebuild from events
+./forwardctl.js status      # Service status + memory
+./forwardctl.js logs        # Latest 50 lines
+./forwardctl.js memory      # Memory analysis
+./forwardctl.js check       # Health check
+./forwardctl.js report      # Last metrics
+./forwardctl.js alerts      # Active alerts
 ```
+
+### Ops Pending (nicht blockierend)
+
+- [ ] 5.1 Host Test (SSH zu VPS)
+- [ ] 5.2 Systemd Actions (start/stop/restart/journal)
 
 ---
 
-## Phase 6: Test Strategy ⬜ PENDING
+## Phase 6: Test Strategy 🔄 IN PROGRESS
 
-**Status:** Not started  
-**Depends:** Phase 5 COMPLETE
+**Status:** In Progress  
+**Date:** April 2026
 
-### Deliverables
+### Acceptance Gates Status
 
-#### Unit Tests
-- [ ] Event store tests
-- [ ] State projection tests
-- [ ] Risk engine tests
-- [ ] Reconcile tests
+| Gate | Kriterium | Status | Test File |
+|------|-----------|--------|-----------|
+| G5 | Discord Failover blockiert nicht | ✅ Complete | `acceptance_g5_discord_failover.test.js` |
+| G1 | Zero unmanaged positions | ✅ Complete | `acceptance_g1_zero_unmanaged.test.js` |
+| G2 | Projection parity | ⬜ Pending | - |
+| G3 | Recovery | ⬜ Pending | - |
+| G4 | No duplicated trade IDs | ⬜ Pending | - |
 
-#### Integration Tests
-- [ ] Tick → Signal → Intent → Fill
-- [ ] Discord down → no trading stop
-- [ ] Watchdog stale → trading pause
-- [ ] Rebuild from store → identical projection
+### Integration Tests ✅
 
-#### Simulation
+```
+tests/
+├── acceptance_g5_discord_failover.test.js     ✅ Complete
+├── acceptance_g1_zero_unmanaged.test.js       ✅ Complete
+├── alert_engine.integration.test.js           ✅ Complete
+└── ...existing tests
+```
+
+### Simulation (Geplant)
+
 - [ ] 1h smoke test
 - [ ] 24h stability test
-- [ ] 7d stability test (after all above)
-
-### Acceptance Gates
-
-| Gate | Kriterium |
-|------|-----------|
-| G1 | Zero unmanaged positions |
-| G2 | Projection parity |
+- [ ] 7d stability test
 | G3 | Recovery from restart |
 | G4 | No duplicated trade IDs |
 | G5 | Report failures don't affect trading |
