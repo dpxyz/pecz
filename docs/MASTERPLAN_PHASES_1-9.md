@@ -1,7 +1,7 @@
 # MASTERPLAN: Forward V5 Phasen 0-9
 ## Professional Trading System Architecture
 
-**Status:** Phase 0 Complete, Phase 1 Starting  
+**Status:** Phase 0 Complete | Phase 1-4 CODE Complete | Phase 5 CODE Complete | Phase 6 IN PROGRESS  
 **Platform:** Hyperliquid  
 **Mode:** Paper/Mock only (Live BLOCKED until Phase 9)  
 **Strategy Lab:** MANDATORY before any Live discussion
@@ -215,18 +215,57 @@ StartLimitIntervalSec=60
 ```
 
 ### Definition of Done
-- [ ] Systemd units getestet
-- [ ] Alle Commands funktionieren
-- [ ] Keine manuellen state.json edits nötig
+- [x] Code Complete: Systemd units definiert
+- [x] Code Complete: Alle Commands funktionieren
+- [x] Code Complete: Health Dashboard + Alert Engine
+- [ ] Ops Pending: Systemd units getestet auf VPS (5.1 - benötigt SSH)
+- [ ] Ops Pending: Systemd Actions (5.2 - wartet auf 5.1)
 
-### Status: ⬜ PENDING
+### Status: ✅ CODE COMPLETE (5.1/5.2 ops pending)
 
 ---
 
-## Phase 6: Test Strategy ⬜ PENDING
+## Phase 6: Test Strategy 🔄 IN PROGRESS
 
-### Ziele
-- Comprehensive tests
+### Aktueller Stand (April 2026)
+
+| Bereich | Status | Notizen |
+|---------|--------|---------|
+| Unit Tests | 🔄 Partial | event_store, risk_engine, state_projection, reconcile |
+| Integration Tests | 🔄 Started | Alert Engine Tests (Phase 6 Step 1) |
+| Acceptance Gates | 🔄 Started | G5: Discord Failover ✅ Complete |
+| Simulation | ⬜ Pending | 1h Smoke, 24h Stability |
+
+### Acceptance Gates
+| Gate | Kriterium | Status |
+|------|-----------|--------|
+| G1 | Zero unmanaged positions | 🔄 Nächster Step |
+| G2 | Projection parity (rebuild == live) | ⬜ Pending |
+| G3 | Recovery from restart | ⬜ Pending |
+| G4 | No duplicated trade IDs | ⬜ Pending |
+| G5 | Report failures don't affect trading | ✅ Complete (acceptance_g5_discord_failover.test.js) |
+
+### Deliverables
+
+```
+tests/
+├── unit/                          # Existierend
+│   ├── event_store.test.js       # ✅
+│   ├── state_projection.test.js  # ✅
+│   ├── risk_engine.test.js       # ✅
+│   └── reconcile.test.js         # ✅
+├── integration/                   # NEU
+│   ├── alert_engine.integration.test.js     # ✅ (5.3 Integration)
+│   └── watchdog_stale_pause.test.js         # ⬜
+├── simulation/                    # ⬜
+│   ├── 1h_smoke.test.js
+│   └── 24h_stability.test.js
+└── acceptance/                     # IN PROGRESS
+    ├── acceptance_g5_discord_failover.test.js  # ✅
+    ├── acceptance_g1_zero_unmanaged.test.js      # 🔄 Next
+    ├── projection_parity.test.js                  # ⬜
+    └── recovery.test.js                           # ⬜
+```
 - Simulation
 - Acceptance gates
 
