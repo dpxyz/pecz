@@ -1,5 +1,60 @@
 # TOOLS.md - OpenClaw Forward v5
 
+## ⚠️ MANDATORY: Pre-Push Safety Checklist
+
+**Diese Checkliste MUSS von Pecz vor jedem Push abgearbeitet werden:**
+
+### Pre-Push Security Verification (Pﬂicht)
+
+Vor `git push origin main` IMMER ausführen:
+
+```bash
+cd /data/.openclaw/workspace/forward_v5
+
+echo "=== MANDATORY PRE-PUSH CHECKLIST ==="
+echo ""
+echo "[✓] Step 1: Pre-commit hook ran successfully?"
+git status
+
+echo ""
+echo "[✓] Step 2: No .env files staged?"
+! git diff --cached --name-only | grep -q "\\.env" && echo "   ✅ PASS" || echo "   ❌ FAIL - .env found!"
+
+echo ""
+echo "[✓] Step 3: No real secrets in staged changes?"
+git diff --cached -p | grep -iE "(ghp_|github_pat_|sk-[a-zA-Z]{20,}|discord\\.com/api/webhooks/[0-9]+/[a-zA-Z0-9_-]{40,})" | grep -v "YOUR_" | grep -v "test_" && echo "   ❌ FAIL - Real secrets found!" || echo "   ✅ PASS"
+
+echo ""
+echo "[✓] Step 4: Safety-Checklist committed?"
+git diff --cached --name-only | grep -q "SAFETY_CHECKLIST" && echo "   ✅ Yes" || echo "   ⚠️  No (fine if not modified)"
+
+echo ""
+echo "=== CHECKLIST COMPLETE ==="
+echo "If all checks passed: Push allowed"
+echo "If any check failed: STOP and fix"
+```
+
+### Red Lines (NIEMALS brechen)
+
+| Verboten | Konsequenz |
+|----------|------------|
+| `git push --no-verify` | AUSGESCHLOSSEN |
+| Secrets in Commit | SOFORT Revert |
+| `.env` commiten | SOFORT Revert |
+| "Schnell mal pushen" | VERBOTEN |
+
+### Verify Hook is Active
+
+Test:
+```bash
+cd /data/.openclaw/workspace/forward_v5/.git/hooks
+ls -la pre-commit  # Sollte existieren und executable sein
+```
+
+---
+
+## Discord Alert Configuration
+
 ## Discord Alert Configuration
 
 **Environment Variable:** `DISCORD_WEBHOOK_URL`
