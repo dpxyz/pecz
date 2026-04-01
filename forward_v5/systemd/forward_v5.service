@@ -1,0 +1,62 @@
+[Unit]
+Description=OpenClaw Forward v5 Runtime Validation Service
+Documentation=https://docs.openclaw.ai/forward_v5
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=node
+Group=node
+
+# Working Directory
+WorkingDirectory=/data/.openclaw/workspace/forward_v5/forward_v5
+
+# Executable
+ExecStart=/usr/local/bin/node runtime_validation/runner.js
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+
+# Environment
+Environment="EVENT_STORE_PATH=./runtime/event_store.db"
+Environment="NODE_ENV=production"
+Environment="FORWARD_VERSION=5.1.0"
+
+# Optional: Load additional env from file
+# EnvironmentFile=-/etc/openclaw/forward_v5.env
+
+# Restart Policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Logging (journald)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=forward_v5
+
+# Working Directory Protection
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/data/.openclaw/workspace/forward_v5/forward_v5/runtime
+ReadWritePaths=/data/.openclaw/workspace/forward_v5/forward_v5/runtime_validation
+ReadWritePaths=/data/.openclaw/workspace/forward_v5/forward_v5/logs
+ReadWritePaths=/tmp
+
+# Process Limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Security Hardening (v1)
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+# Memory Protection
+MemoryDenyWriteExecute=false  # Node.js needs executable heap
+
+[Install]
+WantedBy=multi-user.target
