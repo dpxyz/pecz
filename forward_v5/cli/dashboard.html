@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Forward v5 - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .header {
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+    
+    .header .subtitle {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #334155;
+      transition: border-color 0.2s;
+    }
+    
+    .card:hover {
+      border-color: #475569;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .card-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+    }
+    
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-up { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .status-down { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .card-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 5px;
+    }
+    
+    .card-value.small {
+      font-size: 24px;
+    }
+    
+    .card-detail {
+      font-size: 13px;
+      color: #94a3b8;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .card-detail.error {
+      color: #ef4444;
+    }
+    
+    .refresh-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1e293b;
+      border-top: 1px solid #334155;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .refresh-info {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    
+    .refresh-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .refresh-btn:hover {
+      background: #2563eb;
+    }
+    
+    .refresh-btn:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+    
+    .loading {
+      opacity: 0.6;
+    }
+    
+    .error-banner {
+      background: #ef4444;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .error-banner.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚀 OpenClaw Forward v5</h1>
+    <div class="subtitle">Health Dashboard v1.0 · Auto-refresh: 10s</div>
+  </div>
+  
+  <div id="errorBanner" class="error-banner">
+    ⚠️ Connection error. Retrying...
+  </div>
+  
+  <div class="grid" id="dashboard">
+    <!-- Liveness -->
+    <div class="card" id="card-liveness">
+      <div class="card-header">
+        <span class="card-title">Liveness</span>
+        <div class="status-indicator status-down" id="status-liveness"></div>
+      </div>
+      <div class="card-value" id="value-liveness">--</div>
+      <div class="card-detail" id="detail-liveness">Checking...</div>
+    </div>
+    
+    <!-- Readiness -->
+    <div class="card" id="card-readiness">
+      <div class="card-header">
+        <span class="card-title">Readiness</span>
+        <div class="status-indicator status-down" id="status-readiness"></div>
+      </div>
+      <div class="card-value" id="value-readiness">--</div>
+      <div class="card-detail" id="detail-readiness">Checking...</div>
+    </div>
+    
+    <!-- Uptime -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Uptime</span>
+      </div>
+      <div class="card-value small" id="value-uptime">--</div>
+      <div class="card-detail" id="detail-uptime">Server running time</div>
+    </div>
+    
+    <!-- Last Heartbeat -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Last Heartbeat</span>
+      </div>
+      <div class="card-value small" id="value-heartbeat">--</div>
+      <div class="card-detail" id="detail-heartbeat">From /health/ready</div>
+    </div>
+    
+    <!-- Memory -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Memory</span>
+      </div>
+      <div class="card-value small" id="value-memory">--</div>
+      <div class="card-detail" id="detail-memory">--</div>
+    </div>
+    
+    <!-- Service Status -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Service Status</span>
+      </div>
+      <div class="card-value small" id="value-service">--</div>
+      <div class="card-detail" id="detail-service">From state.json</div>
+    </div>
+    
+    <!-- Circuit Breaker -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Circuit Breaker</span>
+      </div>
+      <div class="card-value small" id="value-cb">--</div>
+      <div class="card-detail" id="detail-cb">Risk protection status</div>
+    </div>
+    
+    <!-- Timestamp -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Last Update</span>
+      </div>
+      <div class="card-value small" id="value-timestamp">--</div>
+      <div class="card-detail" id="detail-timestamp">Dashboard refresh time</div>
+    </div>
+  </div>
+  
+  <div class="refresh-bar">
+    <span class="refresh-info">
+      Source: <code id="source-info">/health/ready</code> · 
+      Next refresh: <span id="countdown">10</span>s
+    </span>
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshDashboard()">Refresh Now</button>
+  </div>
+  
+  <script>
+    const API_BASE = window.location.origin;
+    const REFRESH_INTERVAL = 10000; // 10 seconds
+    
+    let countdown = 10;
+    let countdownInterval;
+    
+    // Format duration from seconds
+    function formatDuration(seconds) {
+      const d = Math.floor(seconds / 86400);
+      const h = Math.floor((seconds % 86400) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      
+      if (d > 0) return `${d}d ${h}h ${m}m`;
+      if (h > 0) return `${h}h ${m}m ${s}s`;
+      if (m > 0) return `${m}m ${s}s`;
+      return `${s}s`;
+    }
+    
+    // Format time ago
+    function timeAgo(isoString) {
+      if (!isoString) return 'never';
+      const then = new Date(isoString).getTime();
+      const now = Date.now();
+      const seconds = Math.floor((now - then) / 1000);
+      
+      if (seconds < 60) return `${seconds}s ago`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      return `${Math.floor(seconds / 86400)}d ago`;
+    }
+    
+    // Update status indicator
+    function updateStatus(elementId, isUp) {
+      const el = document.getElementById(elementId);
+      el.className = `status-indicator ${isUp ? 'status-up' : 'status-down'}`;
+    }
+    
+    // Update card value
+    function updateValue(elementId, value, isError = false) {
+      const el = document.getElementById(elementId);
+      el.textContent = value;
+      el.style.color = isError ? '#ef4444' : '#f8fafc';
+    }
+    
+    // Update detail text
+    function updateDetail(elementId, text, isError = false) {
+      const el = document.getElementById(elementId);
+      el.textContent = text;
+      el.className = 'card-detail' + (isError ? ' error' : '');
+    }
+    
+    // Show/hide error banner
+    function showError(show) {
+      document.getElementById('errorBanner').className = show ? 'error-banner show' : 'error-banner';
+    }
+    
+    // Fetch and update dashboard
+    async function refreshDashboard() {
+      const btn = document.getElementById('refreshBtn');
+      btn.disabled = true;
+      btn.textContent = 'Loading...';
+      
+      try {
+        // Fetch /health/live (minimal, fast)
+        const liveRes = await fetch(`${API_BASE}/health/live`, { 
+          method: 'GET',
+          cache: 'no-cache'
+        });
+        const liveData = await liveRes.json();
+        
+        // Update liveness card
+        const livenessUp = liveData.status === 'UP';
+        updateStatus('status-liveness', livenessUp);
+        updateValue('value-liveness', liveData.status);
+        updateDetail('detail-liveness', `Uptime: ${formatDuration(liveData.uptime_seconds || 0)}`);
+        
+        // Fetch /health/ready (detailed)
+        const readyRes = await fetch(`${API_BASE}/health/ready`, {
+          method: 'GET',
+          cache: 'no-cache'
+        });
+        const readyData = await readyRes.json();
+        
+        // Update readiness card
+        const readinessUp = readyData.status === 'UP';
+        updateStatus('status-readiness', readinessUp);
+        updateValue('value-readiness', readyData.status);
+        
+        if (readyData.reason) {
+          updateDetail('detail-readiness', readyData.reason, true);
+        } else {
+          updateDetail('detail-readiness', 'All checks passing');
+        }
+        
+        // Update uptime (from live)
+        updateValue('value-uptime', formatDuration(liveData.uptime_seconds || 0));
+        
+        // Update metrics from ready checks
+        if (readyData.checks) {
+          // Heartbeat
+          const hb = readyData.checks.heartbeat;
+          if (hb && hb.startsWith('STALE')) {
+            updateValue('value-heartbeat', 'Stale', true);
+            updateDetail('detail-heartbeat', hb, true);
+          } else if (hb === 'OK') {
+            updateValue('value-heartbeat', 'Fresh');
+            updateDetail('detail-heartbeat', 'Last <60s');
+          } else {
+            updateValue('value-heartbeat', hb || '--');
+          }
+          
+          // Memory
+          const mem = readyData.checks.memory;
+          if (mem) {
+            const memMatch = mem.match(/(\d+)%/);
+            if (memMatch) {
+              const pct = parseInt(memMatch[1]);
+              updateValue('value-memory', `${pct}%`);
+              updateDetail('detail-memory', pct > 95 ? 'CRITICAL' : 'Normal');
+              if (pct > 95) {
+                document.getElementById('value-memory').style.color = '#ef4444';
+              }
+            } else {
+              updateValue('value-memory', mem);
+            }
+          }
+          
+          // Service Status
+          const svc = readyData.checks.service_status;
+          updateValue('value-service', svc || '--');
+          updateDetail('detail-service', svc === 'RUNNING' ? 'Active' : svc);
+          
+          // Circuit Breaker (placeholder - not yet in state)
+          const cb = readyData.checks.circuit_breaker || 'CLOSED';
+          updateValue('value-cb', cb);
+          updateDetail('detail-cb', cb === 'CLOSED' ? 'Risks monitored' : 'TRIPPED');
+          if (cb !== 'CLOSED') {
+            document.getElementById('value-cb').style.color = '#ef4444';
+          }
+        }
+        
+        // Update timestamp
+        updateValue('value-timestamp', new Date().toLocaleTimeString());
+        
+        // Clear error
+        showError(false);
+        
+        // Log success
+        console.log(`[${new Date().toISOString()}] Dashboard updated`);
+        
+      } catch (error) {
+        console.error('Dashboard refresh failed:', error);
+        showError(true);
+        
+        // Mark all as unknown
+        updateValue('value-liveness', 'ERROR', true);
+        updateValue('value-readiness', 'ERROR', true);
+        updateDetail('detail-readiness', error.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Refresh Now';
+        resetCountdown();
+      }
+    }
+    
+    // Countdown timer
+    function resetCountdown() {
+      countdown = 10;
+      document.getElementById('countdown').textContent = countdown;
+    }
+    
+    function startCountdown() {
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        countdown--;
+        document.getElementById('countdown').textContent = countdown;
+        if (countdown <= 0) {
+          refreshDashboard();
+        }
+      }, 1000);
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshDashboard();
+      startCountdown();
+    });
+    
+    // Handle visibility change (pause/resume)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearInterval(countdownInterval);
+      } else {
+        refreshDashboard();
+        startCountdown();
+      }
+    });
+  </script>
+</body>
+</html>
