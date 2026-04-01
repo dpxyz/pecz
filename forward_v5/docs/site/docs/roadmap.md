@@ -86,7 +86,21 @@
 
 ---
 
-### Block 5.3: [Next Phase Name] — 🔄 STARTED
+### Block 5.3: Health Dashboard & Monitoring — 🔄 STARTED
+| # | Aufgabe | Status | Owner |
+|---|---------|--------|-------|
+| 5.3.1 | Health Status Endpoint (`/health`) | 🔄 In Progress | @assistant |
+| 5.3.2 | Simple Web Dashboard (HTML) | ⬜ Not Started | @assistant |
+| 5.3.3 | Alert Integration (Webhooks) | ⬜ Not Started | @assistant |
+
+**Scope:** Web-basiertes Real-Time Monitoring
+**Depends on:** 5.2 Core CLI (complete)
+**No systemd dependency:** Runs in Docker environment
+**Deferred Features:** HTTPS, Auth, Rate limiting (until 5.1)
+
+**Tech:** Express.js, Port 3000, Auto-refresh 10s
+
+---
 
 ---
 
