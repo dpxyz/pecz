@@ -1,8 +1,8 @@
 [Unit]
 Description=OpenClaw Forward v5 Runtime Validation Service
 Documentation=https://docs.openclaw.ai/forward_v5
-After=network.target
-Wants=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -22,8 +22,13 @@ Environment="EVENT_STORE_PATH=./runtime/event_store.db"
 Environment="NODE_ENV=production"
 Environment="FORWARD_VERSION=5.1.0"
 
-# Optional: Load additional env from file
-# EnvironmentFile=-/etc/openclaw/forward_v5.env
+TimeoutStartSec=30
+TimeoutStopSec=15
+
+# Override-Strategie: Drop-In oder EnvironmentFile
+# Option A: EnvironmentFile (zuerst suchen, optional)
+EnvironmentFile=-/etc/openclaw/forward_v5.env
+# Option B: Drop-In unter /etc/systemd/system/forward_v5.service.d/*.conf
 
 # Restart Policy
 Restart=on-failure
