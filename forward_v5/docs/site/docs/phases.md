@@ -79,7 +79,7 @@ forward_v5/                 # New (active)
 - [x] ADR-002: Hyperliquid Integration
 - [x] ADR-003: State Model
 - [x] ADR-004: Risk Controls
-- [ ] ADR-005: Observability Boundaries (verschoben zu Phase 3)
+- [x] ADR-005: Observability Boundaries (in Phase 3 implementiert, retrospektiv dokumentiert 2026-04-03)
 
 #### Directory Structure
 - [x] `docs/`
