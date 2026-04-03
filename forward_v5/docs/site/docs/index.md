@@ -590,7 +590,7 @@ title: OpenClaw Strategic Cockpit
       </div>
       <div class="phase-title">Testing</div>
       <div class="phase-goal">Acceptance Gates, Integration Tests</div>
-      <div class="phase-why">G5 ✅ Discord Failover, G1 ✅ Zero Unmanaged</div>
+      <div class="phase-why">G1-G5 ✅ All Acceptance Gates Complete</div>
     </div>
     
     <!-- P7 BLOCKED -->
@@ -630,7 +630,7 @@ title: OpenClaw Strategic Cockpit
   <div class="dependency-notice">
     <strong>✅ Status Update (April 2026):</strong> Phase 5 ist CODE COMPLETE 
     (systemd, CLI, Health Dashboard, Alert Engine). 5.1/5.2 (Host Test, Systemd Actions) 
-    pending für SSH-Zugriff. Phase 6 ist IN PROGRESS mit Acceptance Gates G5 und G1 complete.
+    pending für SSH-Zugriff. Phase 6: ACCEPTANCE GATES G1-G5 ✅ COMPLETE.
     Memory-Monitoring-Fix (5.0d) erfolgreich validiert.
   </div>
 </div>

@@ -371,30 +371,44 @@ Discord down → WARN + Retry + Log
 
 ## Phase 6: Test Strategy 🔄 IN PROGRESS
 
-**Status:** In Progress  
-**Date:** April 2026
+**Status:** Acceptance Gates G1-G5 ✅ COMPLETE  
+**Date:** April 2026  
+**Next:** Simulation (1h Smoke, 24h Stability)
 
-### Acceptance Gates Status
+### Acceptance Gates Status ✅ ALL COMPLETE
 
 | Gate | Kriterium | Status | Test File |
 |------|-----------|--------|-----------|
-| G5 | Discord Failover blockiert nicht | ✅ Complete | `acceptance_g5_discord_failover.test.js` |
 | G1 | Zero unmanaged positions | ✅ Complete | `acceptance_g1_zero_unmanaged.test.js` |
-| G2 | Projection parity | ⬜ Pending | - |
-| G3 | Recovery | ⬜ Pending | - |
-| G4 | No duplicated trade IDs | ⬜ Pending | - |
+| G2 | Projection parity | ✅ Complete | `acceptance_g2_projection_parity.test.js` |
+| G3 | Recovery from restart | ✅ Complete | `acceptance_g3_recovery_scenarios.test.js` |
+| G4 | No duplicated trade IDs | ✅ Complete | `acceptance_g4_no_duplicate_trade_ids.test.js` |
+| G5 | Discord Failover blockiert nicht | ✅ Complete | `acceptance_g5_discord_failover.test.js` |
 
-### Integration Tests ✅
+### Test Coverage Summary
 
 ```
 tests/
-├── acceptance_g5_discord_failover.test.js     ✅ Complete
-├── acceptance_g1_zero_unmanaged.test.js       ✅ Complete
-├── alert_engine.integration.test.js           ✅ Complete
-└── ...existing tests
+├── unit/                              # ✅ Complete
+│   ├── event_store.test.js
+│   ├── state_projection.test.js
+│   ├── risk_engine.test.js
+│   └── reconcile.test.js
+├── integration/                       # ✅ Complete
+│   ├── alert_engine.integration.test.js
+│   └── system_boundaries_integration.test.js
+├── acceptance/                        # ✅ G1-G5 Complete
+│   ├── acceptance_g1_zero_unmanaged.test.js
+│   ├── acceptance_g2_projection_parity.test.js
+│   ├── acceptance_g3_recovery_scenarios.test.js
+│   ├── acceptance_g4_no_duplicate_trade_ids.test.js
+│   └── acceptance_g5_discord_failover.test.js
+└── simulation/                        # ➡️ NEXT
+    ├── 1h_smoke.test.js              # ⬜ TODO
+    └── 24h_stability.test.js         # ⬜ TODO
 ```
 
-### Simulation (Geplant)
+### Simulation Roadmap
 
 - [ ] 1h smoke test
 - [ ] 24h stability test
