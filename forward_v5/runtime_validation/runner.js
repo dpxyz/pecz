@@ -1,3 +1,6 @@
+// Load .env.local for Discord webhook and other secrets
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env.local') });
+
 const path = require('path');
 
 // Load services (runner is in runtime_validation/, so paths are ../)
