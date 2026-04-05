@@ -32,3 +32,9 @@ coverage/
 # Runtime
 /tmp/
 *.log
+
+# Python Phase 7
+__pycache__/
+*.pyc
+research/data/
+research/research/

@@ -69,6 +69,10 @@ def mean_reversion_panic_strategy(df: pl.DataFrame, params: dict) -> pl.DataFram
     return df
 
 
+# Konsistentes Interface für Backtest-Engine
+strategy_func = mean_reversion_panic_strategy
+
+
 def get_default_params() -> dict:
     """Standard-Parameter"""
     return {

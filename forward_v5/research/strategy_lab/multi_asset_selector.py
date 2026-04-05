@@ -125,6 +125,10 @@ def get_vps_safe_param_grid() -> dict:
     }
 
 
+# Konsistentes Interface für Backtest-Engine
+strategy_func = single_asset_equivalent
+
+
 if __name__ == "__main__":
     print("Multi-Asset Selector Strategy V1")
     print(f"Default: {get_default_params()}")

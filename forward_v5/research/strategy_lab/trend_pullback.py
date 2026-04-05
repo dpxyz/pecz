@@ -64,7 +64,7 @@ def trend_pullback_strategy(df: pl.DataFrame, params: dict) -> pl.DataFrame:
     ])
     
     df = df.with_columns([
-        (100 - (100 / (1 + (pl.col('avg_gain') / pl.when(pl.col('avg_loss') == 0).then(1).otherwise(pl.col('avg_loss'))))).alias('rsi')
+        (100 - (100 / (1 + (pl.col('avg_gain') / pl.when(pl.col('avg_loss') == 0).then(1).otherwise(pl.col('avg_loss')))))).alias('rsi')
     ])
     
     # Trend-Definition
@@ -86,6 +86,10 @@ def trend_pullback_strategy(df: pl.DataFrame, params: dict) -> pl.DataFrame:
     ])
     
     return df
+
+
+# Konsistentes Interface für Backtest-Engine
+strategy_func = trend_pullback_strategy
 
 
 def get_default_params() -> dict:

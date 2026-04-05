@@ -1,0 +1,10 @@
+# Phase 7 Strategy Lab Dependencies
+# VPS-First: Minimal, RAM-effizient
+
+polars>=0.20.0
+pyarrow>=14.0.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Optional für Monitoring
+# psutil>=5.9.0  # Nur wenn RAM-Monitoring nötig
