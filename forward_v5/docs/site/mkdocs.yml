@@ -53,6 +53,8 @@ markdown_extensions:
 nav:
   - Mission Control: index.md
   - Phases: phases.md
+  - Roadmap: roadmap.md
+  - Blockers: blockers.md
   - Architecture:
     - Overview: architecture/index.md
     - ADR-001: architecture/adr-001.md

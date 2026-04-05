@@ -1,0 +1,202 @@
+{
+  "test_name": "1h_Smoke_Test",
+  "start_time": "2026-04-03T09:54:04.007Z",
+  "end_time": "2026-04-03T10:54:05.128Z",
+  "duration_ms": 3600000,
+  "status": "PASSED",
+  "checks": [
+    {
+      "check_number": 1,
+      "elapsed_minutes": "5.0",
+      "health": "healthy",
+      "memory_percent": "76.3",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 2,
+      "elapsed_minutes": "10.0",
+      "health": "healthy",
+      "memory_percent": "76.5",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 3,
+      "elapsed_minutes": "15.0",
+      "health": "healthy",
+      "memory_percent": "76.6",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 4,
+      "elapsed_minutes": "20.0",
+      "health": "healthy",
+      "memory_percent": "77.0",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 5,
+      "elapsed_minutes": "25.0",
+      "health": "healthy",
+      "memory_percent": "77.3",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 6,
+      "elapsed_minutes": "30.0",
+      "health": "healthy",
+      "memory_percent": "77.4",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 7,
+      "elapsed_minutes": "35.0",
+      "health": "healthy",
+      "memory_percent": "77.5",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 8,
+      "elapsed_minutes": "40.0",
+      "health": "healthy",
+      "memory_percent": "77.6",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 9,
+      "elapsed_minutes": "45.0",
+      "health": "healthy",
+      "memory_percent": "78.0",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 10,
+      "elapsed_minutes": "50.0",
+      "health": "healthy",
+      "memory_percent": "78.2",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 11,
+      "elapsed_minutes": "55.0",
+      "health": "healthy",
+      "memory_percent": "78.3",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    },
+    {
+      "check_number": 12,
+      "elapsed_minutes": "60.0",
+      "health": "healthy",
+      "memory_percent": "78.4",
+      "circuit_breaker": "CLOSED",
+      "state_consistent": true
+    }
+  ],
+  "errors": [],
+  "memory_samples": [
+    {
+      "timestamp": 1775210344068,
+      "elapsed_minutes": 5.001016666666667,
+      "heap_used_mb": "4.84",
+      "heap_total_mb": "6.35",
+      "percent": "76.3"
+    },
+    {
+      "timestamp": 1775210644162,
+      "elapsed_minutes": 10.002583333333332,
+      "heap_used_mb": "4.86",
+      "heap_total_mb": "6.35",
+      "percent": "76.5"
+    },
+    {
+      "timestamp": 1775210944210,
+      "elapsed_minutes": 15.003383333333334,
+      "heap_used_mb": "4.86",
+      "heap_total_mb": "6.35",
+      "percent": "76.6"
+    },
+    {
+      "timestamp": 1775211244312,
+      "elapsed_minutes": 20.005083333333335,
+      "heap_used_mb": "4.89",
+      "heap_total_mb": "6.35",
+      "percent": "77.0"
+    },
+    {
+      "timestamp": 1775211544414,
+      "elapsed_minutes": 25.00678333333333,
+      "heap_used_mb": "4.90",
+      "heap_total_mb": "6.35",
+      "percent": "77.3"
+    },
+    {
+      "timestamp": 1775211844517,
+      "elapsed_minutes": 30.0085,
+      "heap_used_mb": "4.91",
+      "heap_total_mb": "6.35",
+      "percent": "77.4"
+    },
+    {
+      "timestamp": 1775212144616,
+      "elapsed_minutes": 35.010149999999996,
+      "heap_used_mb": "4.92",
+      "heap_total_mb": "6.35",
+      "percent": "77.5"
+    },
+    {
+      "timestamp": 1775212444718,
+      "elapsed_minutes": 40.011849999999995,
+      "heap_used_mb": "4.92",
+      "heap_total_mb": "6.35",
+      "percent": "77.6"
+    },
+    {
+      "timestamp": 1775212744821,
+      "elapsed_minutes": 45.01356666666666,
+      "heap_used_mb": "4.95",
+      "heap_total_mb": "6.35",
+      "percent": "78.0"
+    },
+    {
+      "timestamp": 1775213044922,
+      "elapsed_minutes": 50.01525,
+      "heap_used_mb": "4.96",
+      "heap_total_mb": "6.35",
+      "percent": "78.2"
+    },
+    {
+      "timestamp": 1775213345024,
+      "elapsed_minutes": 55.016949999999994,
+      "heap_used_mb": "4.97",
+      "heap_total_mb": "6.35",
+      "percent": "78.3"
+    },
+    {
+      "timestamp": 1775213645126,
+      "elapsed_minutes": 60.01865,
+      "heap_used_mb": "4.98",
+      "heap_total_mb": "6.35",
+      "percent": "78.4"
+    }
+  ],
+  "circuit_breaker_state_changes": [],
+  "event_store_growth": [],
+  "duration_actual_ms": 3601121,
+  "success_criteria": {
+    "completed_full_duration": true,
+    "health_success_rate": "1.00",
+    "no_unexpected_cb_open": true,
+    "memory_ok": true,
+    "total_errors": 0
+  }
+}

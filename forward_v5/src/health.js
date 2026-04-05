@@ -91,6 +91,77 @@ function register(name, checkFn, options = {}) {
 }
 
 /**
+ * Built-in Disk Space Check (SAFETY)
+ * Returns available space on critical path
+ */
+async function checkDiskSpace() {
+  const { execSync } = require('child_process');
+  const PATH = '/data';
+  const CRITICAL_THRESHOLD = 90;  // Pause trading at 90%
+  const WARN_THRESHOLD = 80;      // Warn at 80%
+  
+  try {
+    // Get disk usage in percentage
+    const output = execSync(`df -h ${PATH} | awk 'NR==2 {print $5}' | tr -d '%'`, {
+      encoding: 'utf8',
+      timeout: 5000
+    }).trim();
+    
+    const usedPercent = parseInt(output, 10);
+    const availablePercent = 100 - usedPercent;
+    
+    if (usedPercent >= CRITICAL_THRESHOLD) {
+      return {
+        status: 'critical',
+        severity: 'CRITICAL',
+        details: {
+          path: PATH,
+          used_percent: usedPercent,
+          available_percent: availablePercent,
+          message: `DISK CRITICAL: ${usedPercent}% used (> ${CRITICAL_THRESHOLD}%) - TRADING PAUSED`,
+          action: 'PAUSE_TRADING'
+        }
+      };
+    }
+    
+    if (usedPercent >= WARN_THRESHOLD) {
+      return {
+        status: 'warn',
+        severity: 'WARN',
+        details: {
+          path: PATH,
+          used_percent: usedPercent,
+          available_percent: availablePercent,
+          message: `DISK WARNING: ${usedPercent}% used (> ${WARN_THRESHOLD}%)`
+        }
+      };
+    }
+    
+    return {
+      status: 'healthy',
+      severity: 'HEALTHY',
+      details: {
+        path: PATH,
+        used_percent: usedPercent,
+        available_percent: availablePercent,
+        message: `DISK OK: ${usedPercent}% used`
+      }
+    };
+    
+  } catch (err) {
+    return {
+      status: 'error',
+      severity: 'CRITICAL',
+      details: {
+        path: PATH,
+        error: err.message,
+        message: 'DISK CHECK FAILED: Cannot determine disk usage'
+      }
+    };
+  }
+}
+
+/**
  * Register a watchdog with Domain classification
  * @param {string} name - Watchdog name
  * @param {number} thresholdMs - Threshold in milliseconds
@@ -515,6 +586,9 @@ module.exports = {
   runChecks,
   resumeTrading,
   
+  // Disk Safety (SAFETY level - can pause trading)
+  checkDiskSpace,
+  
   // Configuration
   configureAlerts,
   
@@ -532,7 +606,8 @@ module.exports = {
     state_projection: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' },
     risk_engine: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' },
     watchdog_tick: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' },
-    reconcile_positions: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' }
+    reconcile_positions: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' },
+    disk_space: { domain: DOMAIN.SAFETY, severity: 'CRITICAL' }  // 🛡️ DISK SAFETY - can PAUSE trading
   },
   
   // Built-in OBSERVABILITY checks

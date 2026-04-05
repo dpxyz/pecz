@@ -582,26 +582,26 @@ title: OpenClaw Strategic Cockpit
       <div class="phase-why">5.1/5.2 Ops pending (SSH)</div>
     </div>
     
-    <!-- P6 ACTIVE -->
-    <div class="phase-card active">
+    <!-- P6 COMPLETE -->
+    <div class="phase-card complete">
       <div class="phase-header">
         <div class="phase-number">6</div>
-        <div class="phase-status-badge">Active</div>
+        <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Testing</div>
-      <div class="phase-goal">Acceptance Gates, Integration Tests</div>
-      <div class="phase-why">G1-G5 ✅ All Acceptance Gates Complete</div>
+      <div class="phase-goal">Acceptance Gates G1-G5, 24h Test</div>
+      <div class="phase-why">✅ 24h Stability Test PASSED</div>
     </div>
     
-    <!-- P7 BLOCKED -->
-    <div class="phase-card blocked blocked-by-active">
+    <!-- P7 NEXT -->
+    <div class="phase-card active">
       <div class="phase-header">
         <div class="phase-number">7</div>
-        <div class="phase-status-badge">Blocked</div>
+        <div class="phase-status-badge">Next</div>
       </div>
       <div class="phase-title">Strategy Lab</div>
       <div class="phase-goal">Backtesting, Strategie-Validierung</div>
-      <div class="phase-why">Braucht zuverlässiges Basissystem</div>
+      <div class="phase-why">⭐ Ready to start — Blocks Live</div>
     </div>
     
     <!-- P8 BLOCKED -->
@@ -628,10 +628,9 @@ title: OpenClaw Strategic Cockpit
   </div>
   
   <div class="dependency-notice">
-    <strong>✅ Status Update (April 2026):</strong> Phase 5 ist CODE COMPLETE 
-    (systemd, CLI, Health Dashboard, Alert Engine). 5.1/5.2 (Host Test, Systemd Actions) 
-    pending für SSH-Zugriff. Phase 6: ACCEPTANCE GATES G1-G5 ✅ COMPLETE.
-    Memory-Monitoring-Fix (5.0d) erfolgreich validiert.
+    <strong>🎉 Status Update (April 2026):</strong> Phase 6 COMPLETE — 24h Stability Test PASSED!
+    Alle 96 Checks healthy (100%), Max Memory 83.4%, 0 Errors. Phase 7 Strategy Lab ⭐
+    ready to start. Phase 5 Code Complete (5.1/5.2 deferred für SSH-Zugriff — kein Blocker).
   </div>
 </div>
 
@@ -642,12 +641,12 @@ title: OpenClaw Strategic Cockpit
 
 <div class="status-grid">
   <div class="status-panel highlight">
-    <div class="status-panel-title">🔄 Phase 6 IN PROGRESS</div>
-    <div class="status-main info">Acceptance Gates</div>
+    <div class="status-panel-title">🎉 Phase 6 COMPLETE</div>
+    <div class="status-main success">24h Test PASSED</div>
     <div class="status-desc">
-      Phase 5 ist CODE COMPLETE (systemd, CLI, Health Dashboard, Alert Engine). 
-      Phase 6 Testing aktiv: G5 Discord Failover ✅, G1 Zero Unmanaged ✅.
-      Memory-Monitoring-Fix (5.0d) erfolgreich validiert. 5.1/5.2 pending für SSH.
+      24h Stability Test erfolgreich abgeschlossen (86,409,577 ms).
+      Alle 96 Checks healthy (100%), Max Memory 83.4%, 0 Errors, Circuit Breaker stable.
+      Alle Acceptance Gates G1-G5 ✅ PASSED. Phase 7 Strategy Lab ⭐ bereit!
     </div>
   </div>
   
@@ -721,17 +720,17 @@ title: OpenClaw Strategic Cockpit
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
-          <strong>Phase 6 Acceptance Gates fortsetzen</strong>
-          <span class="next-meta">G2-G4: Projection Parity, Recovery, Duplicate Trade IDs</span>
+          <strong>Phase 7 Strategy Lab starten</strong>
+          <span class="next-meta">Backtest Engine, 3+ Strategien, Walk-forward Validation</span>
         </div>
-        <div class="next-badge ready">Active</div>
+        <div class="next-badge ready">⭐ Next</div>
       </div>
       
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
           <strong>Phase 5.1/5.2 Host Test (SSH)</strong>
-          <span class="next-meta">Systemd Actions auf VPS - deferred für später</span>
+          <span class="next-meta">Systemd Actions auf VPS - parallel/optional</span>
         </div>
         <div class="next-badge ready">Deferred</div>
       </div>
@@ -739,19 +738,10 @@ title: OpenClaw Strategic Cockpit
       <div class="next-item ready">
         <div class="next-check">✓</div>
         <div class="next-text">
-          <strong>Simulation Tests planen</strong>
-          <span class="next-meta">1h Smoke Test, 24h Stability Test scaffolding</span>
+          <strong>24h Stability Test</strong>
+          <span class="next-meta">✅ PASSED — 96/96 checks healthy, 0 errors</span>
         </div>
-        <div class="next-badge ready">Bereit</div>
-      </div>
-      
-      <div class="next-item ready">
-        <div class="next-check">✓</div>
-        <div class="next-text">
-          <strong>Mission Control Dashboard aktualisiert</strong>
-          <span class="next-meta">Phase 5 ➜ Code Complete, Phase 6 ➜ Active</span>
-        </div>
-        <div class="next-badge ready">Jetzt ✅</div>
+        <div class="next-badge ready">Complete ✅</div>
       </div>
     </div>
   </div>

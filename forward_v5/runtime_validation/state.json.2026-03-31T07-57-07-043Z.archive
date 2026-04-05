@@ -1,0 +1,46 @@
+{
+  "run_id": "rv-2026-03-31-2pv6s2",
+  "version": "1.0",
+  "start_time": "2026-03-31T07:57:07.043Z",
+  "planned_end_time": "2026-04-02T07:57:07.050Z",
+  "status": "COMPLETED",
+  "completed_at": "2026-04-01T10:25:00.000Z",
+  "last_heartbeat": "2026-04-01T08:21:08.247Z",
+  "last_health_check": "2026-04-01T08:17:07.257Z",
+  "counters": {
+    "heartbeats_expected": 1464,
+    "heartbeats_received": 1465,
+    "heartbeats_missed": 0,
+    "health_checks_total": 294,
+    "health_checks_passed": 170,
+    "health_checks_failed": 124,
+    "alerts_fatal": 0,
+    "alerts_critical": 24,
+    "alerts_error": 0,
+    "alerts_warn": 100
+  },
+  "events": [],
+  "cb_events": [],
+  "metrics": {
+    "memory_start_mb": 4,
+    "memory_current_mb": 5,
+    "memory_peak_mb": 5,
+    "memory_growth_percent": 0,
+    "memory_percent": "80.5"
+  },
+  "result": {
+    "status": "GO",
+    "completed_at": "2026-04-01T10:25:00.000Z",
+    "duration_hours": 24.5,
+    "summary": "Fix 5.0d validation successful - 0% memory growth, 0 sustained CRITICAL, 100.1% heartbeats",
+    "criteria_met": [
+      "Duration: 24h+",
+      "Heartbeat completeness: 100.1%",
+      "No sustained CRITICAL events",
+      "No FATAL alerts",
+      "Memory growth: 0%",
+      "Circuit Breaker: never triggered"
+    ],
+    "recommendation": "Fix 5.0d READY FOR PRODUCTION"
+  }
+}
