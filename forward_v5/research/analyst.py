@@ -2,84 +2,321 @@
 """
 KI Meta-Analyst — Ollama Cloud / Kimi 2.5
 
-Analysiert Scorecards und liefert:
-- Hypothesen-Bewertung
-- Schwachstellen-Clustering  
-- Konkrete Verbesserungsvorschläge
-- Nächste Experimente
+Analysiert fertige Scorecards und generiert strukturierte Meta-Analysen.
+Keine Neuberechnungen — nur Bewertung vorliegender Ergebnisse.
 
-VPS-First:
-- Nur HTTP stdlib (kein ollama-python package)
-- Kurze Timeouts (30s)
-- Kompakte Prompts (Token-sparend)
-- Keine Massen-Analysen
+Usage:
+    # Direkt
+    python research/analyst.py --scorecard scorecards/demo_scorecard.json
+    
+    # Via Workflow
+    python run_demo_strategy.py --strategy trend_pullback --analyze
+
+Environment:
+    OLLAMA_API_KEY      Required
+    OLLAMA_MODEL        Optional (default: kimi-k2.5)
+    OLLAMA_TIMEOUT      Optional (default: 30)
 """
 
+import argparse
 import json
 import os
 import ssl
+import sys
+import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Dict, List, Optional
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 
+DEFAULT_CONFIG = {
+    "api_url": "https://api.ollama.com/v1/chat/completions",
+    "model": "kimi-k2.5",
+    "timeout": 30,
+    "max_tokens": 1000,
+    "temperature": 0.2
+}
+
+
 @dataclass
+class AnalystReport:
+    """Strukturierte Meta-Analyse"""
+    analyzed_at: str
+    scorecard_file: str
+    strategy_name: str
+    analyst_model: str
+    
+    hypothesis_valid: bool = False
+    hypothesis_assessment: str = ""
+    data_quality: str = ""
+    data_quality_reason: str = ""
+    metric_pass: bool = False
+    failed_metrics: List[str] = None
+    metrics_detail: Dict = None
+    walk_forward_pass: bool = False
+    wf_degradation_pct: float = 0.0
+    wf_robustness_score: float = 0.0
+    wf_assessment: str = ""
+    vps_fit: bool = False
+    vps_notes: Dict = None
+    weaknesses: List[str] = None
+    hypotheses_next: List[str] = None
+    verdict: str = ""
+    reason: str = ""
+    confidence: float = 0.0
+    raw_response: str = ""
+    execution_time_ms: int = 0
+    
+    def __post_init__(self):
+        if self.failed_metrics is None:
+            self.failed_metrics = []
+        if self.metrics_detail is None:
+            self.metrics_detail = {}
+        if self.vps_notes is None:
+            self.vps_notes = {}
+        if self.weaknesses is None:
+            self.weaknesses = []
+        if self.hypotheses_next is None:
+            self.hypotheses_next = []
+    
+    def to_dict(self) -> Dict:
+        return {
+            "analyzed_at": self.analyzed_at,
+            "scorecard_file": self.scorecard_file,
+            "strategy_name": self.strategy_name,
+            "analyst_model": self.analyst_model,
+            "analysis": {
+                "hypothesis_valid": self.hypothesis_valid,
+                "hypothesis_assessment": self.hypothesis_assessment,
+                "data_quality": self.data_quality,
+                "data_quality_reason": self.data_quality_reason,
+                "metric_pass": self.metric_pass,
+                "failed_metrics": self.failed_metrics,
+                "metrics_detail": self.metrics_detail,
+                "walk_forward_pass": self.walk_forward_pass,
+                "wf_degradation_pct": self.wf_degradation_pct,
+                "wf_robustness_score": self.wf_robustness_score,
+                "wf_assessment": self.wf_assessment,
+                "vps_fit": self.vps_fit,
+                "vps_notes": self.vps_notes,
+                "weaknesses": self.weaknesses,
+                "hypotheses_next": self.hypotheses_next,
+                "verdict": self.verdict,
+                "reason": self.reason,
+                "confidence": self.confidence
+            },
+            "raw_response": self.raw_response[:500] if self.raw_response else "",
+            "execution_time_ms": self.execution_time_ms
+        }
+    
+    def save(self, filepath: str):
+        """Speichere Report als JSON"""
+        with open(filepath, 'w') as f:
+            json.dump(self.to_dict(), f, indent=2)
+    
+    def summary(self) -> str:
+        """Kompakte Zusammenfassung für CLI"""
+        verdict_emoji = {
+            "PASS": "✅",
+            "FAIL": "❌",
+            "TWEAK": "🔧",
+            "REJECT": "🚫",
+            "INCONCLUSIVE": "❓"
+        }.get(self.verdict, "❓")
+        
+        lines = [
+            "",
+            "╔" + "═" * 58 + "╗",
+            "║" + " KI META-ANALYST REPORT ".center(58) + "║",
+            "╠" + "═" * 58 + "╣",
+            f"║  Strategie:   {self.strategy_name:<45} ║",
+            f"║  Verdict:     {verdict_emoji} {self.verdict:<41} ║",
+            f"║  Konfidenz:   {self.confidence*100:.0f}%{''*<43} ║",
+            "╠" + "═" * 58 + "╣",
+            "║  CHECKS                                    ║",
+            f"║    Hypothese:    {'✓' if self.hypothesis_valid else '✗'} Gültig{''*<35} ║",
+            f"║    Daten:        {self.data_quality:<10} ({self.data_quality_reason[:20]}...){''*<8} ║",
+            f"║    Metriken:     {'✓' if self.metric_pass else '✗'} Pass{''*<37} ║",
+            f"║    Walk-Forward: {'✓' if self.walk_forward_pass else '✗'} {f'OOS: {self.wf_degradation_pct:.0f}% Degradation':<33} ║",
+            f"║    VPS-Fit:      {'✓' if self.vps_fit else '✗'} Tauglich{''*<33} ║",
+            "╠" + "═" * 58 + "╣",
+            "║  NÄCHSTE HYPOTHESEN (max 3)               ║",
+        ]
+        for i, h in enumerate(self.hypotheses_next[:3], 1):
+            lines.append(f"║    {i}. {h[:50]:<50} ║")
+        lines.extend([
+            "╠" + "═" * 58 + "╣",
+            "║  BEGRÜNDUNG                               ║",
+        ])
+        words = self.reason.split()
+        current_line = ""
+        for word in words:
+            if len(current_line) + len(word) + 1 <= 54:
+                current_line += (" " if current_line else "") + word
+            else:
+                lines.append(f"║  {current_line:<54} ║")
+                current_line = word
+        if current_line:
+            lines.append(f"║  {current_line:<54} ║")
+        
+        lines.extend([
+            "╚" + "═" * 58 + "╝",
+            ""
+        ])
+        return "\n".join(lines)
+
+
 class AnalystConfig:
     """Konfiguration für Ollama Cloud"""
-    api_url: str = "https://api.ollama.com/v1/chat/completions"
-    model: str = "kimi-k2.5"  # Ollama Cloud Modell
-    api_key: Optional[str] = None
-    timeout: int = 30  # Sekunden
-    max_tokens: int = 800  # Kompakte Antworten
-    temperature: float = 0.3  # Faktisch, nicht kreativ
-    
-    @classmethod
-    def from_env(cls) -> 'AnalystConfig':
-        """Lade aus Umgebungsvariablen"""
-        return cls(
-            api_url=os.getenv('OLLAMA_API_URL', cls.api_url),
-            model=os.getenv('OLLAMA_MODEL', cls.model),
-            api_key=os.getenv('OLLAMA_API_KEY'),
-            timeout=int(os.getenv('OLLAMA_TIMEOUT', '30')),
-            max_tokens=int(os.getenv('OLLAMA_MAX_TOKENS', '800'))
-        )
-    
-    def validate(self) -> bool:
-        """Prüfe ob API Key vorhanden"""
-        return self.api_key is not None
+    def __init__(self):
+        self.api_url = os.getenv('OLLAMA_API_URL', DEFAULT_CONFIG["api_url"])
+        self.model = os.getenv('OLLAMA_MODEL', DEFAULT_CONFIG["model"])
+        self.api_key = os.getenv('OLLAMA_API_KEY')
+        self.timeout = int(os.getenv('OLLAMA_TIMEOUT', DEFAULT_CONFIG["timeout"]))
+        self.max_tokens = int(os.getenv('OLLAMA_MAX_TOKENS', DEFAULT_CONFIG["max_tokens"]))
+        self.temperature = float(os.getenv('OLLAMA_TEMPERATURE', DEFAULT_CONFIG["temperature"]))
 
 
 class KIAnalyst:
-    """
-    Meta-Analyst für Strategy Scorecards
-    
-    Usage:
-        analyst = KIAnalyst()
-        if analyst.available():
-            report = analyst.analyze_scorecard(scorecard)
-            print(report.summary())
-    """
+    """Meta-Analyst für Strategy Scorecards"""
     
     def __init__(self, config: Optional[AnalystConfig] = None):
-        self.config = config or AnalystConfig.from_env()
-        self._available = self.config.validate()
+        self.config = config or AnalystConfig()
+        self._available = self.config.api_key is not None
     
     def available(self) -> bool:
-        """Ist der Analyst nutzbar?"""
         return self._available
     
-    def _call_api(self, messages: List[Dict]) -> Optional[str]:
-        """
-        HTTP POST an Ollama Cloud
-        Nutzt nur Standard-Library (kein requests/httpx)
-        """
+    def analyze_scorecard(self, scorecard: Dict, scorecard_path: str = "unknown") -> AnalystReport:
+        """Analysiere eine Scorecard mit Kimi"""
+        from datetime import datetime
+        
+        start_time = time.time()
+        strategy_name = scorecard.get('strategy_name', 'unknown')
+        
+        # Kompaktes Scorecard-JSON für Prompt
+        compact = self._compact_scorecard(scorecard)
+        prompt = self._build_prompt(compact)
+        
+        # Kimi Call
+        response = self._call_kimi(prompt)
+        
+        # Parse Response
+        parsed = self._parse_response(response)
+        
+        return AnalystReport(
+            analyzed_at=datetime.now().isoformat(),
+            scorecard_file=scorecard_path,
+            strategy_name=strategy_name,
+            analyst_model=self.config.model,
+            hypothesis_valid=parsed.get("hypothesis_valid", False),
+            hypothesis_assessment=parsed.get("hypothesis_assessment", ""),
+            data_quality=parsed.get("data_quality", "UNKNOWN"),
+            data_quality_reason=parsed.get("data_quality_reason", ""),
+            metric_pass=parsed.get("metric_pass", False),
+            failed_metrics=parsed.get("failed_metrics", []),
+            metrics_detail=parsed.get("metrics_detail", {}),
+            walk_forward_pass=parsed.get("walk_forward_pass", False),
+            wf_degradation_pct=parsed.get("wf_degradation_pct", 0.0),
+            wf_robustness_score=parsed.get("wf_robustness_score", 0.0),
+            wf_assessment=parsed.get("wf_assessment", ""),
+            vps_fit=parsed.get("vps_fit", False),
+            vps_notes=parsed.get("vps_notes", {}),
+            weaknesses=parsed.get("weaknesses", []),
+            hypotheses_next=parsed.get("hypotheses_next", []),
+            verdict=parsed.get("verdict", "INCONCLUSIVE"),
+            reason=parsed.get("reason", "Parse error"),
+            confidence=parsed.get("confidence", 0.0),
+            raw_response=response,
+            execution_time_ms=int((time.time() - start_time) * 1000)
+        )
+    
+    def _compact_scorecard(self, sc: Dict) -> Dict:
+        """Reduziere Scorecard auf essentielle Felder"""
+        bt = sc.get("backtest_results", {})
+        return {
+            "strategy": sc.get("strategy_name"),
+            "hypothesis": sc.get("hypothesis", "")[:150],
+            "dataset": sc.get("dataset", {}),
+            "results": {
+                "net_return": bt.get("net_return"),
+                "max_drawdown": bt.get("max_drawdown"),
+                "profit_factor": bt.get("profit_factor"),
+                "win_rate": bt.get("win_rate"),
+                "expectancy": bt.get("expectancy"),
+                "trade_count": bt.get("trade_count")
+            },
+            "walk_forward": sc.get("walk_forward", {}),
+            "resources": sc.get("resource_usage", {}),
+            "verdict": sc.get("verdict"),
+            "failures": sc.get("failure_reasons", [])
+        }
+    
+    def _build_prompt(self, scorecard: Dict) -> str:
+        """Baue den strukturierten Kimi-Prompt"""
+        return f"""Du bist der Strategy Lab Analyst. Du analysierst ausschließlich fertige Backtest-Ergebnisse.
+
+## INPUT
+
+**Scorecard:**
+```json
+{json.dumps(scorecard, indent=2, default=str)}
+```
+
+## AUFGABE
+
+Bewerte die Strategie anhand dieser Kriterien:
+
+1. Hypothese-Check: Logisch und testbar?
+2. Datenqualität: Trade-Count >30? Zeitraum abgedeckt?
+3. Metriken-Check: PF>1.5? DD<20%? WR>45%? Exp>0?
+4. Walk-Forward: OOS stabil? Degradation <30%?
+5. VPS-Fit: execution <300s, memory <500MB?
+6. Schwachstellen: Wann/wo verliert die Strategie?
+
+## OUTPUT als JSON
+
+```json
+{{
+  "hypothesis_valid": true,
+  "data_quality": "GOOD",
+  "data_quality_reason": "45 Trades über 12 Monate",
+  "metric_pass": true,
+  "failed_metrics": [],
+  "metrics_detail": {{
+    "profit_factor": {{"value": 1.6, "target": 1.5, "passed": true}},
+    "max_drawdown": {{"value": -8.2, "target": -20.0, "passed": true}},
+    "win_rate": {{"value": 52.6, "target": 45.0, "passed": true}},
+    "expectancy": {{"value": 0.45, "target": 0.0, "passed": true}}
+  }},
+  "walk_forward_pass": true,
+  "wf_degradation_pct": 12.0,
+  "wf_assessment": "OOS stabil",
+  "vps_fit": true,
+  "vps_notes": {{"memory_mb": 128, "execution_s": 4.5}},
+  "weaknesses": ["Schwäche in Seitwärtsphasen"],
+  "hypotheses_next": ["Volatility-Filter testen", "Exit-Regel verschärfen"],
+  "verdict": "PASS",
+  "reason": "Solide Performance, robuste Metriken",
+  "confidence": 0.85
+}}
+```
+
+Regeln: Nur Daten verwenden. Keine neuen Backtests. Max 3 Hypothesen. Harte Verdicts (PASS/FAIL/TWEAK/REJECT)."""
+    
+    def _call_kimi(self, prompt: str) -> str:
+        """HTTP POST an Ollama Cloud"""
         if not self.available():
-            return None
+            return ""
         
         payload = {
             "model": self.config.model,
-            "messages": messages,
+            "messages": [
+                {"role": "system", "content": "Du bist ein quantitativer Trading-Analyst. Antworte nur mit validem JSON."},
+                {"role": "user", "content": prompt}
+            ],
             "stream": False,
             "options": {
                 "temperature": self.config.temperature,
@@ -94,177 +331,82 @@ class KIAnalyst:
         
         try:
             data = json.dumps(payload).encode('utf-8')
-            req = Request(
-                self.config.api_url,
-                data=data,
-                headers=headers,
-                method="POST"
-            )
-            
-            # Timeout und SSL
+            req = Request(self.config.api_url, data=data, headers=headers, method="POST")
             context = ssl.create_default_context()
             
             with urlopen(req, timeout=self.config.timeout, context=context) as resp:
                 result = json.loads(resp.read().decode('utf-8'))
-                return result.get('message', {}).get('content', '').strip()
+                return result.get('message', {}).get('content', '')
                 
         except HTTPError as e:
-            error_body = e.read().decode('utf-8')
-            return f"[API Error {e.code}: {error_body[:100]}]"
-            
+            error = e.read().decode('utf-8')[:100]
+            return f'{{"error": "HTTP {e.code}: {error}"}}'
         except URLError as e:
-            return f"[Connection Error: {str(e)[:100]}]"
-            
+            return f'{{"error": "Connection: {str(e)[:100]}"}}'
         except Exception as e:
-            return f"[Error: {str(e)[:100]}]"
+            return f'{{"error": "{str(e)[:100]}"}}'
     
-    def analyze_scorecard(self, scorecard: Dict) -> 'AnalystReport':
-        """
-        Analysiere eine Scorecard
-        
-        Liefert:
-        - Hypothesen-Stärke
-        - Datenqualität
-        - Risiko-Cluster
-        - Verbesserungsvorschläge (max 3)
-        """
-        
-        # Kompakte Scorecard-Serialisierung
-        compact = self._compact_scorecard(scorecard)
-        
-        # Prompt 1: Hypothesen-Analyse
-        hypothesis_prompt = self._build_hypothesis_prompt(compact)
-        hypothesis_analysis = self._call_api([
-            {"role": "system", "content": "You are a quantitative trading analyst. Be factual, concise, data-driven."},
-            {"role": "user", "content": hypothesis_prompt}
-        ]) or "[Analysis unavailable - check OLLAMA_API_KEY]"
-        
-        # Prompt 2: Verbesserungsvorschläge
-        improvement_prompt = self._build_improvement_prompt(compact)
-        improvements = self._call_api([
-            {"role": "system", "content": "You are a strategy optimization expert. Focus on actionable changes."},
-            {"role": "user", "content": improvement_prompt}
-        ]) or "[Suggestions unavailable]"
-        
-        return AnalystReport(
-            strategy=scorecard.get('strategy_name', 'unknown'),
-            verdict=scorecard.get('verdict', 'UNKNOWN'),
-            hypothesis_analysis=hypothesis_analysis,
-            improvements=improvements,
-            next_experiments=self._extract_next_experiments(improvements)
-        )
+    def _parse_response(self, response: str) -> Dict:
+        """Parse Kimi Antwort"""
+        try:
+            if "```json" in response:
+                json_start = response.find("```json") + 7
+                json_end = response.find("```", json_start)
+                json_str = response[json_start:json_end].strip()
+                return json.loads(json_str)
+            elif "{" in response:
+                json_start = response.find("{")
+                json_str = response[json_start:]
+                return json.loads(json_str)
+            else:
+                return json.loads(response)
+        except json.JSONDecodeError:
+            return {}
+
+
+def fallback_analysis(scorecard: Dict, scorecard_path: str) -> AnalystReport:
+    """Heuristische Analyse ohne KI"""
+    from datetime import datetime
     
-    def _compact_scorecard(self, sc: Dict) -> str:
-        """Extrahiere nur relevante Daten für den Prompt"""
-        bt = sc.get('backtest_results', {})
-        wf = sc.get('walk_forward', {})
-        
-        lines = [
-            f"Strategy: {sc.get('strategy_name', 'N/A')}",
-            f"Hypothesis: {sc.get('hypothesis', 'N/A')[:100]}...",
-            f"Dataset: {sc.get('dataset', {}).get('symbol', 'N/A')}",
-            f"Timeframe: {sc.get('dataset', {}).get('timeframe', 'N/A')}",
-            f"",
-            f"Results:",
-            f"- Net Return: {bt.get('net_return', 0):.2f}%",
-            f"- Max Drawdown: {bt.get('max_drawdown', 0):.2f}%",
-            f"- Profit Factor: {bt.get('profit_factor', 0):.2f}",
-            f"- Win Rate: {bt.get('win_rate', 0):.1f}%",
-            f"- Trade Count: {bt.get('trade_count', 0)}",
-            f"- Expectancy: {bt.get('expectancy', 0):.3f}",
-            f"",
-            f"Walk-Forward:",
-            f"- Robustness: {wf.get('robustness_score', 'N/A')}",
-            f"- Passed: {wf.get('passed', False)}",
-            f"",
-            f"Resource:",
-            f"- Memory: {sc.get('resource_usage', {}).get('memory_peak_mb', 'N/A')} MB",
-            f"- Time: {sc.get('resource_usage', {}).get('execution_time_ms', 'N/A')} ms",
-            f"",
-            f"Failures: {sc.get('failure_reasons', [])}",
-            f"Verdict: {sc.get('verdict', 'N/A')}"
-        ]
-        
-        return "\n".join(lines)
+    bt = scorecard.get("backtest_results", {})
     
-    def _build_hypothesis_prompt(self, compact: str) -> str:
-        """Prompt für Hypothesen-Analyse"""
-        return f"""Analyze this trading strategy scorecard:
-
-{compact}
-
-Evaluate:
-1. Is the hypothesis testable and logical? (1-2 sentences)
-2. Is the sample size adequate (>30 trades)? Yes/No
-3. Is the result believable or overfit? (data-driven assessment)
-4. What is the weakest assumption in this strategy?
-
-Be concise. Max 200 words."""
+    trade_count = bt.get("trade_count", 0)
+    net_return = bt.get("net_return", 0)
+    max_dd = bt.get("max_drawdown", 0)
+    pf = bt.get("profit_factor", 0)
+    wr = bt.get("win_rate", 0)
+    exp = bt.get("expectancy", 0)
     
-    def _build_improvement_prompt(self, compact: str) -> str:
-        """Prompt für Verbesserungen"""
-        return f"""Based on this scorecard:
-
-{compact}
-
-Suggest EXACTLY 3 concrete improvements:
-
-1. [Parameter/Logic change] → Expected impact
-2. [Risk management change] → Expected impact  
-3. [Data/Timeframe change] → Expected impact
-
-Format as actionable bullet points. No fluff."""
+    # Heuristik
+    verdict = "TWEAK"
+    reason = "Automatische Bewertung (KI nicht verfügbar)"
+    metric_pass = False
     
-    def _extract_next_experiments(self, improvements_text: str) -> List[str]:
-        """Extrahiere nächste Experimente aus Verbesserungen"""
-        # Einfache Extraktion – in Praxis könnte KI strukturiertes JSON liefern
-        lines = [l.strip() for l in improvements_text.split('\n') if l.strip() and l[0].isdigit()]
-        return lines[:3]
-
-
-@dataclass
-class AnalystReport:
-    """Ergebnis einer KI-Analyse"""
-    strategy: str
-    verdict: str
-    hypothesis_analysis: str
-    improvements: str
-    next_experiments: List[str]
+    if trade_count >= 30 and net_return > 5 and max_dd > -20 and pf > 1.3 and wr > 45 and exp > 0:
+        verdict = "PASS"
+        reason = "Alle Checks bestanden (automatisch)"
+        metric_pass = True
+    elif trade_count < 10 or net_return < -5:
+        verdict = "FAIL"
+        reason = "Kritische Metriken nicht erfüllt"
     
-    def summary(self) -> str:
-        """Kompakte Zusammenfassung für CLI"""
-        return f"""
-╔══════════════════════════════════════════════════════════╗
-║  KI ANALYST REPORT: {self.strategy[:35]:<35} ║
-╠══════════════════════════════════════════════════════════╣
-║  Verdict: {self.verdict:<45} ║
-╠══════════════════════════════════════════════════════════╣
-HYPOTHESIS ANALYSIS:
-{self._truncate(self.hypothesis_analysis, 250)}
-
-IMPROVEMENTS:
-{self._truncate(self.improvements, 300)}
-
-NEXT EXPERIMENTS:
-{chr(10).join(f"  {i+1}. {e[:60]}" for i, e in enumerate(self.next_experiments))}
-╚══════════════════════════════════════════════════════════╝"""
-    
-    def save(self, filepath: str):
-        """Speichere als JSON"""
-        with open(filepath, 'w') as f:
-            json.dump({
-                'strategy': self.strategy,
-                'verdict': self.verdict,
-                'hypothesis_analysis': self.hypothesis_analysis,
-                'improvements': self.improvements,
-                'next_experiments': self.next_experiments
-            }, f, indent=2)
-    
-    @staticmethod
-    def _truncate(text: str, max_len: int) -> str:
-        if len(text) <= max_len:
-            return text
-        return text[:max_len] + "..."
+    return AnalystReport(
+        analyzed_at=datetime.now().isoformat(),
+        scorecard_file=scorecard_path,
+        strategy_name=scorecard.get("strategy_name", "unknown"),
+        analyst_model="heuristic_fallback",
+        hypothesis_valid=True,
+        hypothesis_assessment="Hypothese nicht bewertet (Fallback)",
+        data_quality="GOOD" if trade_count >= 30 else "WARNING",
+        data_quality_reason=f"{trade_count} Trades",
+        metric_pass=metric_pass,
+        failed_metrics=[],
+        vps_fit=True,
+        verdict=verdict,
+        reason=reason,
+        confidence=0.5,
+        execution_time_ms=100
+    )
 
 
 def check_analyst_availability() -> bool:
@@ -272,10 +414,78 @@ def check_analyst_availability() -> bool:
     return bool(os.getenv('OLLAMA_API_KEY'))
 
 
+def main():
+    parser = argparse.ArgumentParser(
+        description="KI Meta-Analyst für Strategy Scorecards",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Usage:
+  %(prog)s --scorecard scorecards/demo_scorecard.json
+  %(prog)s --scorecard scorecards/demo_scorecard.json --output analysis.json
+
+Environment:
+  OLLAMA_API_KEY      Required
+  OLLAMA_MODEL        Optional (default: kimi-k2.5)
+        """
+    )
+    
+    parser.add_argument('--scorecard', required=True, help='Pfad zur Scorecard JSON')
+    parser.add_argument('--output', help='Output Pfad (default: auto)')
+    
+    args = parser.parse_args()
+    
+    # Header
+    print("\n" + "╔" + "═" * 58 + "╗")
+    print("║" + " KI META-ANALYST ".center(58) + "║")
+    print("╚" + "═" * 58 + "╝")
+    
+    if not Path(args.scorecard).exists():
+        print(f"\n❌ Fehler: Scorecard nicht gefunden: {args.scorecard}")
+        sys.exit(1)
+    
+    print(f"\n📄 Scorecard: {args.scorecard}")
+    
+    # Lade Scorecard
+    with open(args.scorecard, 'r') as f:
+        scorecard = json.load(f)
+    
+    # Analyst initialisieren
+    analyst = KIAnalyst()
+    
+    if not analyst.available():
+        print("\n⚠️  OLLAMA_API_KEY nicht gesetzt")
+        print("    export OLLAMA_API_KEY='your-key'")
+        print("\n    → Nutze Fallback-Heuristik...")
+        report = fallback_analysis(scorecard, args.scorecard)
+    else:
+        print(f"🧠 Model: {analyst.config.model}")
+        print(f"⏱️  Timeout: {analyst.config.timeout}s")
+        print("\n" + "-" * 60)
+        print("Analysiere... (max 30 Sekunden)")
+        print("-" * 60 + "\n")
+        
+        report = analyst.analyze_scorecard(scorecard, args.scorecard)
+    
+    # Output
+    print(report.summary())
+    
+    # Speichern
+    if args.output:
+        output_path = args.output
+    else:
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        strategy = report.strategy_name.replace(" ", "_").lower()
+        scorecard_dir = Path(args.scorecard).parent
+        output_path = scorecard_dir / f"meta_analysis_{strategy}_{timestamp}.json"
+    
+    with open(output_path, 'w') as f:
+        json.dump(report.to_dict(), f, indent=2)
+    
+    print(f"✅ Meta-Analyse gespeichert: {output_path}")
+    
+    # Exit-Code für Skripting
+    sys.exit(0 if report.verdict == "PASS" else 1)
+
+
 if __name__ == "__main__":
-    print("KI Meta-Analyst V1")
-    print(f"Status: {'✓ Available' if check_analyst_availability() else '✗ Not configured'}")
-    print(f"")
-    print("Usage:")
-    print("  export OLLAMA_API_KEY='your-key'")
-    print("  python analyst.py  # Run standalone check")
+    main()

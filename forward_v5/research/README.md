@@ -31,7 +31,7 @@ research/
 │   ├── scorecard_schema.json         → JSON Standard
 │   ├── scorecard_generator.py      → Generator
 │   └── *.json                        → Ergebnisse
-├── analyst.py                      → 🧠 KI Meta-Analyst (Kimi 2.5)
+├── analyst.py                      → 🧠 KI Meta-Analyst (Einzeltool)
 ├── run_demo_strategy.py            → Full Workflow
 ├── generate_dummy_data.py          → Test-Daten
 └── README.md                        → Diese Datei
@@ -54,24 +54,24 @@ cd forward_v5/research
 python generate_dummy_data.py --bars 5000
 ```
 
-### 2. Full Workflow (ohne KI)
+### 2. Full Workflow
 
 ```bash
+# Ohne KI
 python run_demo_strategy.py --strategy trend_pullback
+
+# Mit KI-Analyse (empfohlen)
+export OLLAMA_API_KEY='your-key-here'
+python run_demo_strategy.py --strategy trend_pullback --analyze
 ```
 
-### 3. Full Workflow (mit KI-Analyst)
+### 3. Direkte KI-Analyse (optional)
 
 ```bash
-# Ollama Cloud API Key setzen
+# Falls Scorecard schon existiert
 export OLLAMA_API_KEY='your-key-here'
-
-# Optional: Custom endpoint
-export OLLAMA_API_URL='https://api.ollama.com/v1/chat/completions'
-export OLLAMA_MODEL='kimi-k2.5'
-
-# Mit Analyse
-python run_demo_strategy.py --strategy trend_pullback --analyze
+python analyst.py --scorecard scorecards/demo_scorecard.json
+# Output: scorecards/meta_analysis_[strategy]_[timestamp].json
 ```
 
 ---
@@ -92,95 +92,53 @@ python run_demo_strategy.py --strategy trend_pullback --analyze
 
 ## 🧠 KI Meta-Analyst
 
-Nutzt **Ollama Cloud** mit **Kimi 2.5** für kontextuelle Analyse von Scorecards.
+**Ein Tool:** Eingebettet in `analyst.py` — nutzt Ollama Cloud / Kimi 2.5.
 
 ### Was der Analyst macht:
 
-| Task | Output |
-|------|--------|
-| Hypothesen-Analyse | Ist die Hypothese logisch/testbar? |
-| Schwachstellen-Scan | Kleinste Stichprobe, überflüssigste Annahme |
-| Verbesserungsvorschläge | Genau 3 konkrete Änderungen |
-| Nächste Experimente | Priorisierte Forschungsrichtung |
+| Check | Bewertung |
+|-------|-----------|
+| Hypothese-Check | Logisch? Testbar? Bestätigt? |
+| Datenqualität | Trades >30? Zeitraum abgedeckt? |
+| Metriken | PF>1.5? DD<20%? WR>45%? |
+| Walk-Forward | OOS stabil? Degradation <30%? |
+| VPS-Fit | time<300s? memory<500MB? |
+| Schwachstellen | Wann/wo verliert die Strategie? |
 
-### Was der Analyst NICHT macht:
+### Output-Form
 
-❌ Keine Backtests berechnen  
-❌ Keine Trades ausführen  
-❌ Keine Architekturentscheidungen  
-❌ Keine Strategien ohne Datenbasis freisprechen  
+```json
+{
+  "analyzed_at": "2026-04-05T13:30:00Z",
+  "strategy_name": "trend_pullback",
+  "analysis": {
+    "hypothesis_valid": true,
+    "data_quality": "GOOD",
+    "metric_pass": true,
+    "walk_forward_pass": true,
+    "vps_fit": true,
+    "weaknesses": ["Schwäche in Seitwärtsphasen"],
+    "hypotheses_next": ["Volatility-Filter testen"],
+    "verdict": "PASS",
+    "reason": "Solide Performance, robuste Metriken",
+    "confidence": 0.85
+  }
+}
+```
 
 ### Konfiguration
 
 ```bash
 # Required
-export OLLAMA_API_KEY='your-api-key'
+export OLLAMA_API_KEY='your-key-here'
 
 # Optional (defaults)
-export OLLAMA_API_URL='https://api.ollama.com/v1/chat/completions'
 export OLLAMA_MODEL='kimi-k2.5'
-export OLLAMA_TIMEOUT='30'        # Sekunden
-export OLLAMA_MAX_TOKENS='800'    # Kompakte Antworten
+export OLLAMA_TIMEOUT='30'
+export OLLAMA_MAX_TOKENS='1000'
 ```
 
-### Standalone Analyst
-
-```python
-from analyst import KIAnalyst
-import json
-
-# Lade Scorecard
-with open('scorecards/scorecard_trend_pullback.json', 'r') as f:
-    scorecard = json.load(f)
-
-# Analysiere
-analyst = KIAnalyst()
-if analyst.available():
-    report = analyst.analyze_scorecard(scorecard)
-    print(report.summary())
-    report.save('analyst_report.json')
-```
-
----
-
-## 📊 Scorecard Schema
-
-```json
-{
-  "strategy_name": "trend_pullback",
-  "hypothesis": "...",
-  "dataset": { "symbol": "BTCUSDT", "timeframe": "1h", ... },
-  "parameters": { "ema_period": 20, ... },
-  "backtest_results": {
-    "net_return": 15.5,
-    "max_drawdown": -8.2,
-    "profit_factor": 1.4,
-    "win_rate": 52.3,
-    "expectancy": 0.8,
-    "trade_count": 45,
-    "sharpe_ratio": 1.2,
-    "stability_score": 75
-  },
-  "walk_forward": {
-    "n_windows": 3,
-    "robustness_score": 75,
-    "passed": true
-  },
-  "resource_usage": {
-    "execution_time_ms": 4500,
-    "memory_peak_mb": 128.5,
-    "vps_safe": true
-  },
-  "verdict": "PASS",
-  "next_actions": ["Integrate into system", "Paper trade"]
-}
-```
-
-**Verdicts:**
-- **PASS** → Weiter zu Phase 8 (Economics)
-- **FAIL** → Hypothese überarbeiten
-- **INCONCLUSIVE** → Mehr Daten, kein Go
-- **REJECT_VPS_UNSAFE** → Zu schwer, verworfen
+**Fallback:** Ohne `OLLAMA_API_KEY` wird eine heuristische Analyse durchgeführt.
 
 ---
 
@@ -191,28 +149,24 @@ if analyst.available():
 │  PHASE 7 WORKFLOW                                          │
 ├────────────────────────────────────────────────────────────┤
 │  1. Hypothese formulieren                                  │
-│     └─ trend_pullback: "EMA above + RSI oversold = entry" │
+│     └─ trend_pullback: "EMA above + RSI oversold = entry"   │
 │                                                            │
 │  2. Daten prüfen                                            │
 │     └─ OHLCV Parquet in data/                              │
-│     └─ python generate_dummy_data.py (falls nötig)      │
+│     └─ python generate_dummy_data.py (Demo)             │
 │                                                            │
-│  3. Strategie implementieren                               │
-│     └─ strategy_lab/[name].py                              │
-│     └─ get_vps_safe_param_grid(): max 50 kombos          │
-│                                                            │
-│  4. Parameter Sweep                                        │
+│  3. Strategie testen                                     │
 │     └─ python run_demo_strategy.py --strategy [name]     │
 │     └─ Output: Scorecard JSON                              │
 │                                                            │
-│  5. (Optional) KI-Analyse                                  │
+│  4. (Optional) KI-Analyse                                  │
 │     └─ export OLLAMA_API_KEY=...                          │
-│     └─ python run_demo_strategy.py --strategy [name] \\│
-│        --analyze                                           │
-│     └─ Output: Analyst Report JSON                         │
+│     └─ --analyze Flag bei run_demo_strategy.py            │
+│     └─ oder: python analyst.py --scorecard [file]         │
+│     └─ Output: meta_analysis_[strategy]_[ts].json         │
 │                                                            │
-│  6. Scorecard bewerten                                     │
-│     └─ Verdict: PASS / FAIL / INCONCLUSIVE                 │
+│  5. Bewertung                                              │
+│     └─ Verdict: PASS / FAIL / TWEAK / INCONCLUSIVE        │
 │     └─ Bei PASS: Weiter zu Phase 8                         │
 └────────────────────────────────────────────────────────────┘
 ```
@@ -235,37 +189,27 @@ if analyst.available():
 
 ## 🔍 Beispiel-Ausgabe
 
-### Standard Workflow
-
 ```bash
-$ python run_demo_strategy.py --strategy mean_reversion_panic
+$ python run_demo_strategy.py --strategy mean_reversion_panic --analyze
 
 ╔════════════════════════════════════════════════════════════╗
 ║  PHASE 7: Strategy Lab — Research Workflow                   ║
 ╚════════════════════════════════════════════════════════════╝
 
 Selected Strategy: mean_reversion_panic
-Description: Z-Score Panic Recovery
+KI Analyst: ✓ Available (Kimi 2.5)
 ...
 
 Demo: Parameter Sweep (mean_reversion_panic)
 ============================================================
 Strategy: mean_reversion_panic
 Grid: 12 combinations (VPS-Safe)
-------------------------------------------------------------
-[1/12] Testing: {'sma_period': 40, 'z_entry_long': -2.5} ✓ Return: 8.4%, Trades: 23
+[1/12] Testing: {...} ✓ Return: 8.4%, Trades: 23
 ...
 
 ✓ Sweep Complete:
   Total: 12
   Completed: 11
-  Failed: 1
-  Time: 2847ms
-
-🏆 Best Result:
-  Params: {'sma_period': 50, 'z_entry_long': -2.0, ...}
-  Return: 12.5%
-  Drawdown: -6.2%
 
 ╔══════════════════════════════════════════════════════════╗
 ║  SCORECARD: mean_reversion_panic                         ║
@@ -273,49 +217,34 @@ Grid: 12 combinations (VPS-Safe)
 ║  Verdict: PASS                                           ║
 ║  Return:    12.50%                                       ║
 ║  Drawdown:   -6.20%                                      ║
-║  Trades:    38                                           ║
-║  W-F Robustness: 75                                      ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║  KI META-ANALYST REPORT                                  ║
+╠══════════════════════════════════════════════════════════╣
+║  Verdict:     ✅ PASS                                    ║
+║  Konfidenz:   85%                                        ║
+╠══════════════════════════════════════════════════════════╣
+║  CHECKS                                                  ║
+║    Hypothese:    ✓ Gültig                                ║
+║    Daten:        GOOD (45 Trades über 12 Monate)        ║
+║    Metriken:     ✓ Pass                                  ║
+║    Walk-Forward: ✓ OOS: 12% Degradation                ║
+║    VPS-Fit:      ✓ Tauglich                              ║
+╠══════════════════════════════════════════════════════════╣
+║  NÄCHSTE HYPOTHESEN (max 3)                            ║
+║    1. Volatility-Filter testen                          ║
+║    2. Exit-Regel verschärfen                            ║
 ╚══════════════════════════════════════════════════════════╝
 
 Workflow Complete!
 
 Artifacts:
   📄 Scorecard: scorecards/scorecard_mean_reversion_panic.json
+  🧠 Meta-Analysis: scorecards/meta_analysis_mean_reversion_panic_2026...
 
 Verdict: PASS
-✅ Strategy PASSED — Consider integration
-```
-
-### Mit KI-Analyst
-
-```bash
-$ export OLLAMA_API_KEY='...'
-$ python run_demo_strategy.py --analyze
-
-...
-
-╔══════════════════════════════════════════════════════════╗
-║  KI ANALYST REPORT: trend_pullback                       ║
-╠══════════════════════════════════════════════════════════╣
-║  Verdict: PASS                                           ║
-╠══════════════════════════════════════════════════════════╣
-HYPOTHESIS ANALYSIS:
-The hypothesis is testable: EMA + RSI is a classic setup. Sample
-size (38 trades) is borderline adequate. No obvious overfit.
-
-IMPROVEMENTS:
-1. Test RSI threshold 35 vs 45 → Expect smoother entries
-2. Add ATR-based position sizing → Expect better risk control
-3. Run on 4h timeframe → Expect fewer noise trades
-
-NEXT EXPERIMENTS:
-  1. Parameter Sweep: rsi_threshold_long in [35, 45]
-  2. Add volatility_filter for position sizing
-  3. Compare 1h vs 4h performance
-
-╚══════════════════════════════════════════════════════════╝
-
-✓ Report saved: scorecards/scorecard_trend_pullback_analyst_report.json
+✅ Strategy PASSED — Integrate into forward_v5
 ```
 
 ---
@@ -331,13 +260,17 @@ NEXT EXPERIMENTS:
 
 ---
 
-## Status: 🟢 Phase 7 Bereit
+## Status: 🟢 Phase 7 Komplett
 
-- ✅ Backtest Engine (fees, slippage, equity curve)
-- ✅ Parameter Sweep (max 50, VPS-safe)
-- ✅ Walk-Forward (robustness scoring)
-- ✅ 3 Strategien (testfähig)
-- ✅ Scorecards (harte Verdicts)
-- ✅ KI Analyst (Ollama Cloud / Kimi 2.5)
+| Komponente | Status |
+|------------|--------|
+| Backtest Engine | ✅ Fees, Slippage, Equity Curve |
+| Parameter Sweep | ✅ Max 50, VPS-safe |
+| Walk-Forward | ✅ Robustness Scoring |
+| 3 Strategien | ✅ Testfähig |
+| Scorecards | ✅ Harte Verdicts |
+| KI Analyst | ✅ Einzeltool, integriert |
 
-**Ready für erste echte Scorecards.**
+**Phase 7:** Vollständiger Research-Ablauf bereit.
+
+**Next:** Echte Scorecards generieren → Mit KI-Analyst bewerten → Beste zu Phase 8.
