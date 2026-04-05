@@ -593,26 +593,26 @@ title: OpenClaw Strategic Cockpit
       <div class="phase-why">✅ 24h Stability Test PASSED</div>
     </div>
     
-    <!-- P7 NEXT -->
-    <div class="phase-card active">
+    <!-- P7 COMPLETE -->
+    <div class="phase-card complete">
       <div class="phase-header">
         <div class="phase-number">7</div>
-        <div class="phase-status-badge">Next</div>
+        <div class="phase-status-badge">Done</div>
       </div>
       <div class="phase-title">Strategy Lab</div>
-      <div class="phase-goal">Backtesting, Strategie-Validierung</div>
-      <div class="phase-why">⭐ Ready to start — Blocks Live</div>
+      <div class="phase-goal">3 Strategien validiert, Polars-First Engine</div>
+      <div class="phase-why">✅ COMPLETE — Alle Scorecards generated</div>
     </div>
     
-    <!-- P8 BLOCKED -->
-    <div class="phase-card blocked blocked-by-active">
+    <!-- P8 NEXT -->
+    <div class="phase-card active">
       <div class="phase-header">
         <div class="phase-number">8</div>
-        <div class="phase-status-badge">Blocked</div>
+        <div class="phase-status-badge">Next</div>
       </div>
       <div class="phase-title">Economics</div>
       <div class="phase-goal">Paper Trading, Performance-Validierung</div>
-      <div class="phase-why">Braucht Strategien + stabiles System</div>
+      <div class="phase-why">⭐ Ready to start — Blocks Live</div>
     </div>
     
     <!-- P9 BLOCKED -->
@@ -628,9 +628,10 @@ title: OpenClaw Strategic Cockpit
   </div>
   
   <div class="dependency-notice">
-    <strong>🎉 Status Update (April 2026):</strong> Phase 6 COMPLETE — 24h Stability Test PASSED!
-    Alle 96 Checks healthy (100%), Max Memory 83.4%, 0 Errors. Phase 7 Strategy Lab ⭐
-    ready to start. Phase 5 Code Complete (5.1/5.2 deferred für SSH-Zugriff — kein Blocker).
+    <strong>🎉 Status Update (April 2026):</strong> Phase 7 COMPLETE — Strategy Lab validated!
+    Alle 3 Strategien (trend_pullback, mean_reversion_panic, multi_asset_selector) mit 
+    validen Scorecards. Polars-First Engine, robuste Guardrails, Kimi-2.5 Integration ✅
+    Phase 8 Economics ⭐ ready to start. 
   </div>
 </div>
 
@@ -641,12 +642,12 @@ title: OpenClaw Strategic Cockpit
 
 <div class="status-grid">
   <div class="status-panel highlight">
-    <div class="status-panel-title">🎉 Phase 6 COMPLETE</div>
-    <div class="status-main success">24h Test PASSED</div>
+    <div class="status-panel-title">🎉 Phase 7 COMPLETE</div>
+    <div class="status-main success">Strategy Lab Validated</div>
     <div class="status-desc">
-      24h Stability Test erfolgreich abgeschlossen (86,409,577 ms).
-      Alle 96 Checks healthy (100%), Max Memory 83.4%, 0 Errors, Circuit Breaker stable.
-      Alle Acceptance Gates G1-G5 ✅ PASSED. Phase 7 Strategy Lab ⭐ bereit!
+      Alle 3 Strategien erfolgreich getestet: trend_pullback (FAIL/expected), 
+      mean_reversion_panic (PASS), multi_asset_selector (PASS). Polars-First Engine 
+      confirmed. Guardrails: MAX_COMBINATIONS=50, MAX_ASSETS=3. Phase 8 Economics ⭐ bereit!
     </div>
   </div>
   

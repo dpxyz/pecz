@@ -49,6 +49,17 @@ def multi_asset_selector_strategy(
     momentum_period = params.get('momentum_period', 20)
     n_top = params.get('n_top', 2)
     
+    # HARD GUARDRAIL: Max 3 Assets (VPS-Safety)
+    MAX_ASSETS = 3
+    if n_top > MAX_ASSETS:
+        raise ValueError(f"VPS Safety: n_top ({n_top}) exceeds MAX_ASSETS ({MAX_ASSETS}). "
+                        f"Use {MAX_ASSETS} or fewer assets.")
+    
+    if len(data_dict) > MAX_ASSETS:
+        raise ValueError(f"VPS Safety: Too many assets ({len(data_dict)}). "
+                        f"Maximum allowed: {MAX_ASSETS}. "
+                        f"Got: {list(data_dict.keys())}")
+    
     if len(data_dict) < n_top:
         raise ValueError(f"Need at least {n_top} assets, got {len(data_dict)}")
     
@@ -101,8 +112,20 @@ def single_asset_equivalent(df: pl.DataFrame, params: dict) -> pl.DataFrame:
     ])
     
     # Entry wenn Momentum > 0
+    # Behandle null Werte (entstehen durch shift) - fill mit 0 (kein Signal)
     df = df.with_columns([
-        pl.when(pl.col('momentum') > 2.0).then(1).otherwise(0).alias('signal')
+        pl.col('momentum').fill_null(0).alias('momentum')
+    ])
+    
+    # Nutze Parameter-Threshold oder Default 2.0
+    threshold = params.get('momentum_threshold', 2.0)
+    
+    # Einfacher Momentum-Vergleich mit festem Threshold
+    df = df.with_columns([
+        pl.when(pl.col('momentum') > threshold)
+              .then(1)
+              .otherwise(0)
+              .alias('signal')
     ])
     
     return df

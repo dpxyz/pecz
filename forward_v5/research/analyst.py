@@ -318,10 +318,8 @@ Regeln: Nur Daten verwenden. Keine neuen Backtests. Max 3 Hypothesen. Harte Verd
                 {"role": "user", "content": prompt}
             ],
             "stream": False,
-            "options": {
-                "temperature": self.config.temperature,
-                "num_predict": self.config.max_tokens
-            }
+            "temperature": self.config.temperature,
+            "max_tokens": self.config.max_tokens
         }
         
         headers = {
@@ -335,33 +333,95 @@ Regeln: Nur Daten verwenden. Keine neuen Backtests. Max 3 Hypothesen. Harte Verd
             context = ssl.create_default_context()
             
             with urlopen(req, timeout=self.config.timeout, context=context) as resp:
-                result = json.loads(resp.read().decode('utf-8'))
-                return result.get('message', {}).get('content', '')
+                raw_response = resp.read().decode('utf-8')
+                result = json.loads(raw_response)
+                
+                # ROBUST PARSING: Verschiedene API-Formate unterstützen
+                # OpenAI-Format: choices[0].message.content
+                # Ollama-Format: message.content
+                content = None
+                
+                if 'choices' in result and len(result['choices']) > 0:
+                    # OpenAI-Completions-Format
+                    choice = result['choices'][0]
+                    if 'message' in choice:
+                        content = choice['message'].get('content', '')
+                    elif 'text' in choice:
+                        content = choice['text']
+                elif 'message' in result:
+                    # Direktes Ollama-Format
+                    content = result['message'].get('content', '')
+                elif 'response' in result:
+                    # Alternatives Format
+                    content = result['response']
+                
+                if content:
+                    return content
+                else:
+                    # Fallback: return raw für Debug
+                    return f'{{"error": "Unexpected format", "raw_keys": {list(result.keys())}}}'
                 
         except HTTPError as e:
-            error = e.read().decode('utf-8')[:100]
+            error = e.read().decode('utf-8')[:200]
             return f'{{"error": "HTTP {e.code}: {error}"}}'
         except URLError as e:
-            return f'{{"error": "Connection: {str(e)[:100]}"}}'
+            return f'{{"error": "Connection: {str(e)[:200]}"}}'
         except Exception as e:
-            return f'{{"error": "{str(e)[:100]}"}}'
+            return f'{{"error": "{str(e)[:200]}"}}'
     
     def _parse_response(self, response: str) -> Dict:
-        """Parse Kimi Antwort"""
-        try:
-            if "```json" in response:
-                json_start = response.find("```json") + 7
-                json_end = response.find("```", json_start)
-                json_str = response[json_start:json_end].strip()
-                return json.loads(json_str)
-            elif "{" in response:
-                json_start = response.find("{")
-                json_str = response[json_start:]
-                return json.loads(json_str)
-            else:
+        """Parse Kimi Antwort - Robust für verschiedene Formate"""
+        import re
+        
+        # Erst prüfen ob es ein Error-Response ist
+        if response.startswith('{"error":'):
+            try:
                 return json.loads(response)
-        except json.JSONDecodeError:
-            return {}
+            except:
+                return {"error": response}
+        
+        # Versuche JSON aus verschiedenen Formaten zu extrahieren
+        candidates = []
+        
+        # 1. Code-Block mit json
+        if "```json" in response:
+            match = re.search(r'```json\s*(.*?)\s*```', response, re.DOTALL)
+            if match:
+                candidates.append(match.group(1))
+        
+        # 2. Code-Block ohne json-Tag
+        if "```" in response:
+            match = re.search(r'```\s*(\{.*?\})\s*```', response, re.DOTALL)
+            if match:
+                candidates.append(match.group(1))
+        
+        # 3. Rohes JSON (erste geschweifte Klammer bis letzte)
+        if "{" in response:
+            # Finde erstes { und letztes }
+            start = response.find("{")
+            end = response.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                candidates.append(response[start:end+1])
+        
+        # 4. Ganze Response als JSON
+        candidates.append(response)
+        
+        # Versuche jeden Kandidaten
+        for candidate in candidates:
+            try:
+                candidate = candidate.strip()
+                if candidate:
+                    parsed = json.loads(candidate)
+                    if isinstance(parsed, dict):
+                        return parsed
+            except json.JSONDecodeError:
+                continue
+        
+        # Kein gültiges JSON gefunden
+        return {
+            "parse_error": True,
+            "raw_response_preview": response[:500] if response else "(empty)"
+        }
 
 
 def fallback_analysis(scorecard: Dict, scorecard_path: str) -> AnalystReport:
