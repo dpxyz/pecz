@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Strategy Scorecard V1",
+  "description": "Standardisierte Scorecard für VPS-basiertes Strategy Research",
+  "type": "object",
+  "required": [
+    "strategy_name",
+    "hypothesis",
+    "dataset",
+    "verdict"
+  ],
+  "properties": {
+    "strategy_name": {
+      "type": "string",
+      "description": "Einzigartiger Strategie-Name"
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "Klare Investitionshypothese"
+    },
+    "dataset": {
+      "type": "object",
+      "required": ["symbol", "timeframe", "date_range", "n_bars"],
+      "properties": {
+        "symbol": { "type": "string" },
+        "timeframe": { "type": "string", "enum": ["1m", "5m", "15m", "1h", "4h", "1d"] },
+        "date_range": { "type": "string" },
+        "n_bars": { "type": "integer", "minimum": 100 }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Verwendete Parameter"
+    },
+    "backtest_results": {
+      "type": "object",
+      "required": ["trade_count", "net_return", "max_drawdown"],
+      "properties": {
+        "trade_count": { "type": "integer", "minimum": 0 },
+        "net_return": { "type": "number" },
+        "max_drawdown": { "type": "number", "maximum": 0 },
+        "profit_factor": { "type": "number", "minimum": 0 },
+        "win_rate": { "type": "number", "minimum": 0, "maximum": 100 },
+        "expectancy": { "type": "number" },
+        "sharpe_ratio": { "type": "number" },
+        "stability_score": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "walk_forward": {
+      "type": "object",
+      "properties": {
+        "n_windows": { "type": "integer" },
+        "is_avg_return": { "type": "number" },
+        "oos_avg_return": { "type": "number" },
+        "robustness_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "resource_usage": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": { "type": "integer" },
+        "memory_peak_mb": { "type": "number" },
+        "vps_safe": { "type": "boolean" }
+      }
+    },
+    "failure_reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "INCONCLUSIVE", "REJECT_VPS_UNSAFE"],
+      "description": "Endgültige Entscheidung"
+    },
+    "next_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Empfohlene nächste Schritte"
+    }
+  }
+}
