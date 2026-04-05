@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw — Strategic Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-surface: #ffffff;
+            --bg-elevated: #f1f3f5;
+            --text-primary: #1a1d21;
+            --text-secondary: #5a636d;
+            --text-tertiary: #8a929d;
+            --border: #e3e7eb;
+            --accent-blue: #3b6df6;
+            --accent-green: #0d9e56;
+            --accent-amber: #e89005;
+            --accent-red: #dc2626;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 18px; font-weight: 700; }
+        .logo span { color: var(--accent-blue); }
+        
+        .meta { font-size: 12px; color: var(--text-tertiary); }
+
+        /* Vision Banner (compact) */
+        .vision-banner {
+            background: linear-gradient(90deg, #e8f0fe 0%, #f0f7ff 100%);
+            border-bottom: 1px solid #d1e0fd;
+            padding: 20px 32px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .vision-banner strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Main Dashboard Grid */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px;
+        }
+
+        /* Widget Base */
+        .widget {
+            background: var(--bg-surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .widget-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+        }
+
+        .widget-action {
+            font-size: 12px;
+            color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .widget-body {
+            padding: 20px;
+        }
+
+        /* Timeline Widget (spans 2 columns) */
+        .timeline-widget {
+            grid-column: 1 / -1;
+        }
+
+        .timeline-track {
+            display: flex;
+            gap: 12px;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 60px;
+            right: 60px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                var(--accent-green) 0%,
+                var(--accent-green) 45%,
+                var(--accent-blue) 45%,
+                var(--accent-blue) 55%,
+                var(--border) 55%,
+                var(--border) 100%);
+            border-radius: 2px;
+        }
+
+        .phase-node {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .phase-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            border: 3px solid transparent;
+        }
+
+        .phase-node.complete .phase-dot {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .phase-node.active .phase-dot {
+            background: var(--accent-blue);
+            color: white;
+            border-color: rgba(59, 109, 246, 0.3);
+            box-shadow: 0 0 0 4px rgba(59, 109, 246, 0.15);
+        }
+
+        .phase-node.pending .phase-dot {
+            background: white;
+            color: var(--text-tertiary);
+            border-color: var(--border);
+        }
+
+        .phase-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .phase-status-label {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .phase-node.active .phase-status-label {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Status Cards */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .status-card {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--border);
+        }
+
+        .status-card.success { border-left-color: var(--accent-green); }
+        .status-card.warning { border-left-color: var(--accent-amber); }
+        .status-card.info { border-left-color: var(--accent-blue); }
+
+        .status-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .status-value.success { color: var(--accent-green); }
+        .status-value.warning { color: var(--accent-amber); }
+        .status-value.info { color: var(--accent-blue); }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-sublabel {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
+        }
+
+        /* Activity Feed */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+        }
+
+        .activity-item.success { border-left-color: var(--accent-green); }
+        .activity-item.warning { border-left-color: var(--accent-amber); }
+        .activity-item.info { border-left-color: var(--accent-blue); }
+
+        .activity-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.success { background: #dcfce7; color: var(--accent-green); }
+        .activity-icon.warning { background: #fef3c7; color: var(--accent-amber); }
+        .activity-icon.info { background: #dbeafe; color: var(--accent-blue); }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .activity-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        /* Action Items */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .action-item.blocked {
+            border-color: var(--accent-amber);
+            background: #fffbeb;
+        }
+
+        .action-item.ready {
+            border-color: var(--accent-green);
+            background: #f0fdf4;
+        }
+
+        .action-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .action-item.blocked .action-checkbox {
+            border-color: var(--accent-amber);
+            background: white;
+        }
+
+        .action-item.ready .action-checkbox {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .action-text {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .action-text strong {
+            font-weight: 600;
+        }
+
+        .action-meta {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .action-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .action-badge.blocked {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-badge.ready {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* Deep Dive Section */
+        .deep-dive-section {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+        }
+
+        .deep-dive-toggle {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .deep-dive-toggle:hover {
+            background: var(--bg-elevated);
+        }
+
+        .deep-dive-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .deep-dive-content.expanded {
+            display: block;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .detail-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .detail-card h4 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+
+        .detail-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+
+        .detail-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .detail-table td:first-child {
+            color: var(--text-secondary);
+        }
+
+        .detail-table td:last-child {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .badge.pass { background: #dcfce7; color: #166534; }
+        .badge.fail { background: #fee2e2; color: #991b1b; }
+        .badge.pending { background: var(--bg-elevated); color: var(--text-tertiary); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .timeline-track::before { display: none; }
+            .phase-node { min-width: 80px; }
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">Open<span>Claw</span> Strategic Dashboard</div>
+    <div class="meta">Updated: 2026-03-30 14:28 CET · Phase 5.0 Active</div>
+</header>
+
+<!-- Compact Vision Context -->
+<div class="vision-banner">
+    <strong>Vision:</strong> Build a reliable, autonomous trading infrastructure with minimal human intervention. 
+    By Phase 9: production-ready reliability through 48+ hours continuous validated runtime. 
+    <span style="color: var(--text-tertiary);">Current focus: Operations (Phase 5)</span>
+</div>
+
+<!-- Main Dashboard -->
+<div class="dashboard">
+
+    <!-- Timeline Widget -->
+    <div class="widget timeline-widget">
+        <div class="widget-header">
+            <div class="widget-title">Project Timeline — Phase 0 → 9</div>
+            <div class="widget-action">View Details →</div>
+        </div>
+        <div class="widget-body">
+            <div class="timeline-track">
+                <div class="phase-node complete" title="Freeze & Archive">
+                    <div class="phase-dot">0</div>
+                    <div class="phase-name">Freeze</div>
+                    <div class="phase-status-label">Done</div>
+                </div>
+                <div class="phase-node complete" title="Skeleton & ADRs">
+                    <div class="phase-dot">1</div>
+                    <div class="phase-name">Skeleton</div>
+                    <div class="phase-status-label">Done</div>
+                </div>
+                <div class="phase-node complete" title="Core Reliability">
+                    <div class="phase-dot">2</div>
+                    <div class="phase-name">Core</div>
+                    <div class="phase-status-label">Done</div>
+                </div>
+                <div class="phase-node complete" title="Observability">
+                    <div class="phase-dot">3</div>
+                    <div class="phase-name">Observe</div>
+                    <div class="phase-status-label">Done</div>
+                </div>
+                <div class="phase-node complete" title="System Boundaries">
+                    <div class="phase-dot">4</div>
+                    <div class="phase-name">Boundaries</div>
+                    <div class="phase-status-label">Done</div>
+                </div>
+                <div class="phase-node active" title="Operations — Runtime Validation">
+                    <div class="phase-dot">5</div>
+                    <div class="phase-name">Operations</div>
+                    <div class="phase-status-label">Active</div>
+                </div>
+                <div class="phase-node pending" title="Test Strategy — Blocked">
+                    <div class="phase-dot">6</div>
+                    <div class="phase-name">Testing</div>
+                    <div class="phase-status-label">Blocked</div>
+                </div>
+                <div class="phase-node pending" title="Strategy Lab — Blocked">
+                    <div class="phase-dot">7</div>
+                    <div class="phase-name">Strategy</div>
+                    <div class="phase-status-label">Blocked</div>
+                </div>
+                <div class="phase-node pending" title="Economics — Blocked">
+                    <div class="phase-dot">8</div>
+                    <div class="phase-name">Economics</div>
+                    <div class="phase-status-label">Blocked</div>
+                </div>
+                <div class="phase-node pending" title="Review & Gate — Blocked">
+                    <div class="phase-dot">9</div>
+                    <div class="phase-name">Review</div>
+                    <div class="phase-status-label">Blocked</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Status Widget -->
+    <div class="widget">
+        <div class="widget-header">
+            <div class="widget-title">Current Status — Phase 5.0</div>
+            <div class="widget-action">Run Details →</div>
+        </div>
+        <div class="widget-body">
+            <div class="status-grid">
+                <div class="status-card warning">
+                    <div class="status-value warning">NO-GO</div>
+                    <div class="status-label">48h Runtime Result</div>
+                    <div class="status-sublabel">Memory growth 25% > 10% limit</div>
+                </div>
+                <div class="status-card info">
+                    <div class="status-value info">5.0a</div>
+                    <div class="status-label">Fixes Complete</div>
+                    <div class="status-sublabel">P0–P3 implemented</div>
+                </div>
+                <div class="status-card success">
+                    <div class="status-value success">191</div>
+                    <div class="status-label">Tests Passing</div>
+                    <div class="status-sublabel">All unit tests green</div>
+                </div>
+                <div class="status-card success">
+                    <div class="status-value success">48%</div>
+                    <div class="status-label">Project Progress</div>
+                    <div class="status-sublabel">4 of 9 phases</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blocker Widget -->
+    <div class="widget">
+        <div class="widget-header">
+            <div class="widget-title">Active Blockers</div>
+            <div class="widget-action">View All →</div>
+        </div>
+        <div class="widget-body">
+            <div class="activity-list">
+                <div class="activity-item warning">
+                    <div class="activity-icon warning">⏸</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Block 5.0: Runtime Validation</div>
+                        <div class="activity-desc">Re-Run required after fixes</div>
+                    </div>
+                </div>
+                <div class="activity-item info">
+                    <div class="activity-icon info">⏳</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Phases 6–9</div>
+                        <div class="activity-desc">Waiting for Phase 5 GO</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Widget -->
+    <div class="widget">
+        <div class="widget-header">
+            <div class="widget-title">Recent Activity</div>
+            <div class="widget-action">View Log →</div>
+        </div>
+        <div class="widget-body">
+            <div class="activity-list">
+                <div class="activity-item success">
+                    <div class="activity-icon success">✓</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Fix 5.0a Complete</div>
+                        <div class="activity-desc">Memory trend algorithm updated</div>
+                    </div>
+                    <div class="activity-time">Today</div>
+                </div>
+                <div class="activity-item warning">
+                    <div class="activity-icon warning">⚡</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Runtime Validation NO-GO</div>
+                        <div class="activity-desc">48h run concluded with issues</div>
+                    </div>
+                    <div class="activity-time">2 days ago</div>
+                </div>
+                <div class="activity-item info">
+                    <div class="activity-icon info">●</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Phase 4 Complete</div>
+                        <div class="activity-desc">System Boundaries frozen</div>
+                    </div>
+                    <div class="activity-time">4 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Steps Widget -->
+    <div class="widget">
+        <div class="widget-header">
+            <div class="widget-title">Next Steps</div>
+            <div class="widget-action">Roadmap →</div>
+        </div>
+        <div class="widget-body">
+            <div class="action-list">
+                <div class="action-item blocked">
+                    <div class="action-checkbox"></div>
+                    <div class="action-text">
+                        <strong>Start 48h Re-Run</strong>
+                        <div class="action-meta">With fixes 5.0a applied</div>
+                    </div>
+                    <div class="action-badge blocked">Blocked</div>
+                </div>
+                <div class="action-item ready">
+                    <div class="action-checkbox">✓</div>
+                    <div class="action-text">
+                        <strong>Review Systemd Integration</strong>
+                        <div class="action-meta">Ready for implementation</div>
+                    </div>
+                    <div class="action-badge ready">Ready</div>
+                </div>
+                <div class="action-item ready">
+                    <div class="action-checkbox">✓</div>
+                    <div class="action-text">
+                        <strong>Strategy Lab MVP Review</strong>
+                        <div class="action-meta">Framework complete</div>
+                    </div>
+                    <div class="action-badge ready">Ready</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deep Dive Section -->
+    <div class="deep-dive-section">
+        <div class="deep-dive-toggle" onclick="this.nextElementSibling.classList.toggle('expanded')">
+            <span>▼ Deep Dive — Technical Details, Acceptance Criteria & Resources</span>
+        </div>
+        <div class="deep-dive-content">
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <h4>Runtime Validation Criteria</h4>
+                    <table class="detail-table">
+                        <tr><td>Duration</td><td><span class="badge pass">✓ Pass</span></td></tr>
+                        <tr><td>Heartbeat</td><td><span class="badge pass">✓ Pass</span></td></tr>
+                        <tr><td>Health Checks</td><td><span class="badge fail">✗ Fail</span></td></tr>
+                        <tr><td>Memory Growth</td><td><span class="badge fail">✗ Fail</span></td></tr>
+                    </table>
+                </div>
+                <div class="detail-card">
+                    <h4>Fixes 5.0a</h4>
+                    <table class="detail-table">
+                        <tr><td>P0: Persistent Store</td><td>✓ Done</td></tr>
+                        <tr><td>P1: Memory Algorithm</td><td>✓ Done</td></tr>
+                        <tr><td>P2: Health Tracking</td><td>✓ Done</td></tr>
+                        <tr><td>P3: No In-Memory</td><td>✓ Done</td></tr>
+                    </table>
+                </div>
+                <div class="detail-card">
+                    <h4>Resources</h4>
+                    <table class="detail-table">
+                        <tr><td>📐 Architecture</td><td><a href="architecture/">View →</a></td></tr>
+                        <tr><td>📋 Runbooks</td><td><a href="runbooks/">View →</a></td></tr>
+                        <tr><td>📊 Test Reports</td><td><a href="test-reports.md">View →</a></td></tr>
+                        <tr><td>🧪 Strategy Lab</td><td><a href="strategy-lab/">View →</a></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
