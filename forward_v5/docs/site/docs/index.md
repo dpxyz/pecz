@@ -628,9 +628,11 @@ title: OpenClaw Strategic Cockpit
   </div>
   
   <div class="dependency-notice">
-    <strong>🎉 Status Update (April 2026):</strong> Phase 7 COMPLETE — Strategy Lab validated!
+    <strong>🎉 Status Update (18. April 2026):</strong> Phase 7 AUDIT-FEST — Recovery abgeschlossen!
     Alle 3 Strategien (trend_pullback, mean_reversion_panic, multi_asset_selector) mit 
-    validen Scorecards. Polars-First Engine, robuste Guardrails, Kimi-2.5 Integration ✅
+    validen Scorecards. Polars-First Engine, robuste Guardrails. 
+    <strong>KI-Analyse:</strong> Gemma4:31b-cloud (Kimi-2.5 nach Docker-Update nicht funktional, leerer Content).
+    <strong>Recovery:</strong> Fehlende Rohbelege nachträglich erzeugt und unter <code>research/evidence/phase7/</code> archiviert.
     Phase 8 Economics ⭐ ready to start. 
   </div>
 </div>
@@ -642,12 +644,16 @@ title: OpenClaw Strategic Cockpit
 
 <div class="status-grid">
   <div class="status-panel highlight">
-    <div class="status-panel-title">🎉 Phase 7 COMPLETE</div>
-    <div class="status-main success">Strategy Lab Validated</div>
+    <div class="status-panel-title">✅ Phase 7 AUDIT-FEST</div>
+    <div class="status-main success">Strategy Lab Validated + Recovery Complete</div>
     <div class="status-desc">
       Alle 3 Strategien erfolgreich getestet: trend_pullback (FAIL/expected), 
       mean_reversion_panic (PASS), multi_asset_selector (PASS). Polars-First Engine 
-      confirmed. Guardrails: MAX_COMBINATIONS=50, MAX_ASSETS=3. Phase 8 Economics ⭐ bereit!
+      confirmed. Guardrails: MAX_COMBINATIONS=50, MAX_ASSETS=3.
+      <br><br>
+      <strong>Recovery (18.04.):</strong> Fehlende Rohbelege nachträglich erzeugt — KI-Analyse mit Gemma4:31b-cloud (Kimi-2.5 nach Docker-Update nicht funktional), 3×3 Stabilitäts-Logs, Guardrail-Sammelbeleg. Alle Artefakte unter <code>research/evidence/phase7/</code>.
+      <br><br>
+      Phase 8 Economics ⭐ bereit!
     </div>
   </div>
   
@@ -852,4 +858,4 @@ title: OpenClaw Strategic Cockpit
 
 ---
 
-*Aktualisiert: 2026-03-30 15:05 CET · Pecz Strategic Cockpit v2.1*
+*Aktualisiert: 2026-04-18 13:58 CET · Pecz Strategic Cockpit v2.1*
