@@ -20,6 +20,7 @@ from signal_generator import SignalGenerator, SignalType
 from state_manager import StateManager, GuardState
 from risk_guard import RiskGuard
 from discord_reporter import DiscordReporter
+from command_listener import CommandListener
 
 log = logging.getLogger("paper_engine")
 
@@ -56,6 +57,7 @@ class PaperTradingEngine:
         channel_id = os.environ.get("DISCORD_CHANNEL_ID", DISCORD_CHANNEL_ID)
         self.reporter = DiscordReporter(channel_id=channel_id)
         self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle)
+        self.commands = CommandListener(self, channel_id=channel_id)
         self._running = False
         self._last_candle_hour = {}  # track which hours we've processed
 
@@ -78,19 +80,28 @@ class PaperTradingEngine:
         log.info(f"   DB: {self.state.db_path}")
         log.info(f"   Trade log: {TRADE_LOG}")
 
+        # Record engine start time
+        self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
+
         # Send startup message to Discord
         self.reporter.report_custom(
             f"🚀 **Paper Trading Engine V1 Started**\n"
             f"Assets: {', '.join(self.assets)}\n"
             f"Strategy: MACD+ADX+EMA Baseline\n"
             f"Capital: {INITIAL_CAPITAL}€ | Leverage: 1x\n"
-            f"Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPos=1, CL≥5"
+            f"Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPos=1, CL≥5\n"
+            f"Commands: !kill, !resume, !status, !help"
         )
 
-        await self.feed.start()
+        # Start command listener and data feed concurrently
+        await asyncio.gather(
+            self.commands.start(),
+            self.feed.start(),
+        )
 
     async def stop(self):
         self._running = False
+        await self.commands.stop()
         await self.feed.stop()
         log.info("Paper Trading Engine stopped")
 

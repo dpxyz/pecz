@@ -1,0 +1,30 @@
+[Unit]
+Description=Forward V5 Paper Trading Engine
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=node
+WorkingDirectory=/data/.openclaw/workspace/forward_v5/forward_5/executor
+ExecStart=/usr/bin/python3 paper_engine.py
+Restart=on-failure
+RestartSec=30
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=paper-engine
+
+# Environment
+EnvironmentFile=/data/.openclaw/workspace/forward_v5/forward_5/executor/.env
+
+# Safety
+TimeoutStartSec=60
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
