@@ -128,7 +128,7 @@ def format_entry_blocked(event: dict) -> tuple:
     return (
         "🛑 **BLOCKED**",
         f"**ENTRY BLOCKED** {symbol}\n{reason}",
-        COLOR_RED
+        COLOR_AMBER  # Warning, not critical
     )
 
 
