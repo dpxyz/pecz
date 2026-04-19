@@ -278,6 +278,7 @@ class BacktestEngine:
         tp_pct = exit_config.get("take_profit_pct", None)
         sl_pct = exit_config.get("stop_loss_pct", None)
         max_hold = exit_config.get("max_hold_bars", None)
+        trailing_stop_pct = exit_config.get("trailing_stop_pct", None)  # % from high water mark
 
         # Hole timestamp Column Name
         timestamp_col = None
@@ -306,6 +307,7 @@ class BacktestEngine:
         in_position = False
         entry_price = 0.0
         entry_bar = 0
+        highest_since_entry = 0.0  # For trailing stop
 
         while i < n - 1:
             # Check for entry signal (0 or not-in-position -> 1)
@@ -313,6 +315,7 @@ class BacktestEngine:
                 # Enter at next bar's open
                 entry_price = opens[i + 1] * (1 + self.slippage)
                 entry_bar = i + 1
+                highest_since_entry = highs[i + 1]  # Track high for trailing stop
                 in_position = True
                 i += 1
                 continue
@@ -365,7 +368,33 @@ class BacktestEngine:
                 i += 1
                 continue
 
-            # 3. Max hold bars
+            # 3. Trailing Stop check
+            if trailing_stop_pct is not None:
+                # Update high water mark
+                if highs[i] > highest_since_entry:
+                    highest_since_entry = highs[i]
+                # Check if price dropped below trailing stop level
+                trailing_level = highest_since_entry * (1 - trailing_stop_pct / 100)
+                if closes[i] <= trailing_level:
+                    exit_price = trailing_level * (1 - self.slippage)
+                    gross_pnl = (exit_price - entry_price) / entry_price
+                    net_pnl = gross_pnl - self.fee_rate * 2
+                    trades.append(Trade(
+                        entry_time=str(entry_bar),
+                        exit_time=str(i),
+                        entry_price=entry_price,
+                        exit_price=exit_price,
+                        side='long',
+                        pnl=net_pnl * 100,
+                        exit_reason='trailing_stop'
+                    ))
+                    equity *= (1 + net_pnl)
+                    equity_curve.append(equity)
+                    in_position = False
+                    i += 1
+                    continue
+
+            # 4. Max hold bars
             bars_held = i - entry_bar
             if max_hold is not None and bars_held >= max_hold:
                 exit_price = closes[i] * (1 - self.slippage)
@@ -386,7 +415,7 @@ class BacktestEngine:
                 i += 1
                 continue
 
-            # 4. Signal exit (signal flips from 1 to 0 or -1)
+            # 5. Signal exit (signal flips from 1 to 0 or -1)
             if signals[i] != 1:
                 exit_price = opens[i + 1] * (1 - self.slippage) if i + 1 < n else closes[i] * (1 - self.slippage)
                 gross_pnl = (exit_price - entry_price) / entry_price

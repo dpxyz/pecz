@@ -1,12 +1,12 @@
 """
-Generator v0.2 – KI-gestützter Strategie-Generator
+Generator v0.3 – Multi-Regime Strategie-Generator
 
-Liest Spec + (optional) Feedback von vorherigem FAIL.
-Generiert Kandidaten im DSL-Format.
+v0.3: Erweitert auf Trend-Following, Momentum, Breakout und Hybrid-Strategien.
+      Basiert auf Validierungserkenntnissen: Mean-Reversion funktioniert nur in
+      bestimmten Regimen (Bärenmarkt-Bottom, hohe Volatilität). Brauchen
+      Strategien für Trend-Phasen (Bull-Markt, Range).
+
 Nutzt Gemma4:31b über Ollama API.
-
-v0.2: Verbesserter Prompt mit konkreten DSL-Beispielen, Exit-Regeln,
-      Fokus auf Mean-Reversion, verhindert period=0 und Trend-Following.
 """
 
 import json
@@ -22,67 +22,100 @@ API_KEY = os.environ.get("OLLAMA_API_KEY", "ollama-cloud")
 MODEL = os.environ.get("GENERATOR_MODEL", "gemma4:31b-cloud")
 
 
+# ── Validierungserkenntnisse (v0.3) ──
+# Mean-Reversion (RSI<30, ZScore<-2):
+#   - BTC 2024H1: +2.1% PF 1.46 ✅ (Bärenmarkt-Bottom)
+#   - BTC 2023: -6.8% ❌ (Trend-Phase, Mean-Rev verliert)
+#   - ETH: Konstant negativ ❌ (Momentum-Asset)
+#   - SOL 2023: +6.6% ✅ (hohe Volatilität)
+# 
+# Fazit: Brauchen Trend-Following + Momentum für Bull-Phasen + Range-Phasen
+# Strategie-Typen die funktionieren sollten:
+#   1. Trend-Following: EMA-Crossover, Momentum (MACD, ADX)
+#   2. Breakout: BB-Squeeze + Expansion, Donchian Channel
+#   3. Hybrid: Regime-Adaptive (Trend-Filter + Entry-Art)
+
+
 def build_prompt(spec: dict, feedback: str = None, iteration: int = 1) -> str:
     """Build the generation prompt for the KI."""
     
     spec_str = yaml.dump(spec, default_flow_style=False)
+    n_candidates = spec.get('evolution', {}).get('candidates_per_iteration', 3)
     
-    prompt = f"""Du bist ein Quant-Stratege. Generiere Strategie-Kandidaten basierend auf dieser Spec.
+    prompt = f"""Du bist ein Quant-Stratege für Crypto-Perps auf Hyperliquid (0.01% Maker-Fees, 100€ Startkapital).
 
 SPEC:
 {spec_str}
 
-REGELN:
-1. Generiere genau {spec.get('evolution', {}).get('candidates_per_iteration', 3)} Kandidaten
-2. Jeder Kandidat MUSS im DSL-Format sein (siehe unten)
-3. Jeder Kandidat MUSS gegen die Spec-Kriterien konstruiert sein
+VALIDIERUNGS-ERGEBNISSE (aus echtem Backtest über 2+ Jahre):
+- Mean-Reversion (RSI<30 AND Close>EMA100) funktioniert NUR in bestimmten Regimen
+- BTC 2024H1: +2.1% PF 1.46 ✅ — aber BTC 2023: -6.8% ❌ (Bärenmarkt-Trend)
+- ETH: Konstant negativ ❌ — Momentum-Asset, mean-reversion funktioniert nicht
+- SOL 2023: +6.6% ✅ — hohe Volatilität begünstigt Mean-Reversion
+- Walk-Forward: Nur 1-2/5 Fenster profitabel für Mean-Rev → zu schwankend
+
+AUFGABE: Generiere {n_candidates} Strategie-Kandidaten die ROBUST über verschiedene Markt-Phasen funktionieren.
+
+STRATEGIE-TYPEN (bevorzuge diese, MIX ist wichtig!):
+
+1. **TREND-FOLLOWING** (funktionaliert in Bull-Märkten):
+   - EMA-Crossover: EMA_12 > EMA_50 (Golden Cross)
+   - MACD-Histogramm: macd_hist > 0 AND macd_line > signal_line
+   - Pullback-in-Trend: close > ema_50 AND rsi_14 BETWEEN 40 AND 60
+   - WICHTIG: Nutze trailing_stop_pct statt take_profit_pct für Trend-Riding!
+
+2. **MOMENTUM** (funktioniert in starken Trends):
+   - Breakout: close > bb_upper_20 AND atr_14 > atr_14_sma_20 (Volatility-Explosion)
+   - RSI-Momentum: rsi_14 > 60 AND close > ema_20 (starker Aufwärts-Momentum)
+   - Volume-Spike: close > sma_20 AND volume > volume_sma_20 * 1.5
+
+3. **MEAN-REVERSION** (nur mit Regime-Filter!):
+   - RSI_BB_Filtered: rsi_14 < 30 AND close < bb_lower_20 AND close > ema_100 (Trend-Filter)
+   - ZScore mit ATR-Filter: zscore_20 < -2.0 AND atr_14 > atr_14_sma_20 * 0.8
+
+4. **HYBRID / REGIME-ADAPTIVE**:
+   - Trend-Pullback: ema_50 > ema_200 (Uptrend) AND rsi_14 < 35 (Pullback)
+   - Volatility-Breakout: bb_width_20 < bb_width_20_sma_50 (Squeeze) → close > bb_upper_20 (Breakout)
 
 KRITISCHE REGELN (VERLETZUNG = INVALID):
 - NIEMALS period=0 oder period=1! Minimum ist period=2
-- entry.condition MUSS ein konkreter DSL-Ausdruck sein, KEIN Freitext!
-- entry.condition MUSS Indikatoren referenzieren, die unter indicators: gelistet sind
-- Bevorzuge mean_reversion und breakout-Strategien – trend_following funktioniert schlecht auf 1h-Data
-- Nutze IMMER exit-Regeln: take_profit_pct (1.5-3.0) und stop_loss_pct (1.5-3.0) und max_hold_bars (24-72)
+- entry.condition MUSS ein konkreter DSL-Ausdruck sein (kein Freitext!)
+- Indikator-Name MUSS mit period-Nummer matchen (rsi_14, ema_50, bb_upper_20 etc.)
+- IMMER exit-Regeln: take_profit_pct ODER trailing_stop_pct + stop_loss_pct + max_hold_bars
+- Trend-Strategien: Nutze trailing_stop_pct (1.5-3.0) statt take_profit_pct (gewinne laufen lassen!)
+- Mean-Rev-Strategien: Nutze take_profit_pct (1.5-2.5) + stop_loss_pct (1.5-3.0)
+- JEDER Kandidat MUSS mindestens einen Trend- oder Momentum-Indikator haben (EMA>50, MACD, ADX)
 
-DSL-AUSDRÜCKE FÜR CONDITIONS:
-- Vergleich: INDICATOR OP VALUE (z.B. rsi_14 < 30)
-- Logisch: AND, OR (z.B. rsi_14 < 30 AND close < ema_20)
-- WICHTIG: Indikator-Name MUSS mit period-Nummer matchen!
-  - Richtig: rsi_14 < 30 (wenn indicators: [{{"name": "RSI", "params": {{"period": 14}}}}])
-  - Falsch: rsi < 30 (ohne Nummer)
-  - Richtig: close < ema_20 (wenn indicators: [{{"name": "EMA", "params": {{"period": 20}}}}])
-  - Richtig: close > bb_upper_20 (wenn indicators: [{{"name": "BB", "params": {{"period": 20, "std_dev": 2.0}}}}])
+GÜLTIGE INDIKATOREN:
+- SMA(period), EMA(period), RSI(period), BB(period, std_dev), ATR(period)
+- MACD(fast, slow, signal), ZSCORE(period)
+- VWAP (kein period), ADX(period)
+- Sonder: bb_upper_N, bb_lower_N, bb_mid_N, bb_width_N, macd_line, macd_signal, macd_hist
 
-ERPROBTE STRATEGIE-MUSTER (bevorzuge diese):
-1. RSI Mean Reversion: rsi_14 < 30 AND close < bb_lower_20 (entry) → rsi_14 > 70 (exit condition)
-2. ZScore Reversion: zscore_50 < -2.0 AND close < bb_lower_20 → zscore_50 > 2.0
-3. BB Bounce: close < bb_lower_20 AND rsi_14 < 35 → close > bb_mid_20
-4. RSI + EMA Filter: rsi_14 < 30 AND close > ema_50 (trend filter) → rsi_14 > 65
-5. ZScore + ATR Volatility: zscore_20 < -1.5 AND atr_14 > close * 0.02 → zscore_20 > 1.5
+GÜLTIGE CONDITION-OPERATOREN:
+- <, >, <=, >=, AND, OR, BETWEEN (z.B. rsi_14 BETWEEN 40 AND 60)
+- Arithmetik: close * 1.02, atr_14 * 0.8, volume_sma_20 * 1.5
 
-MEIDE: Reine Trend-Following (SMA/EMA Crossover) – generiert zu wenige Signale auf 1h-Data!
-
-DSL-FORMAT (genau dieses JSON-Format, kein Markdown, keine Code-Blöcke):
+DSL-FORMAT (genau dieses JSON, kein Markdown, keine Code-Blöcke):
 {{
   "dsl_version": "0.1",
   "strategy": {{
     "name": "deskriptiver_name",
-    "type": "mean_reversion|breakout|hybrid",
-    "hypothesis": "Warum diese Strategie funktionieren sollte",
+    "type": "trend_following|momentum|mean_reversion|breakout|hybrid",
+    "hypothesis": "Warum diese Strategie über verschiedene Markt-Phasen robust ist",
     "assets": ["BTCUSDT"],
     "timeframe": "1h",
     "indicators": [
-      {{"name": "RSI", "params": {{"period": 14}}}},
-      {{"name": "BB", "params": {{"period": 20, "std_dev": 2.0}}}}
+      {{"name": "EMA", "params": {{"period": 50}}}},
+      {{"name": "RSI", "params": {{"period": 14}}}}
     ],
     "entry": {{
-      "condition": "rsi_14 < 30 AND close < bb_lower_20",
+      "condition": "ema_12 > ema_50 AND rsi_14 > 50",
       "max_per_day": 3
     }},
     "exit": {{
-      "take_profit_pct": 2.0,
-      "stop_loss_pct": 1.5,
-      "trailing_stop_pct": null,
+      "trailing_stop_pct": 2.0,
+      "stop_loss_pct": 2.0,
       "max_hold_bars": 48
     }},
     "position_sizing": {{
@@ -93,11 +126,7 @@ DSL-FORMAT (genau dieses JSON-Format, kein Markdown, keine Code-Blöcke):
   }}
 }}
 
-Gültige Indikatoren: SMA, EMA, RSI, BB, ATR, VWAP, MACD, ZSCORE
-Gültige Zeitrahmen: 1h
-Gültige Assets: BTCUSDT, ETHUSDT, SOLUSDT
-
-AUSGABE: Nur ein JSON-Array mit den Kandidaten. Kein Text davor oder danach.
+AUSGABE: Nur ein JSON-Array. Kein Text davor oder danach.
 Beispiel: [{{"dsl_version": "0.1", "strategy": {{...}}}}, ...]"""
 
     if feedback:
@@ -106,11 +135,14 @@ Beispiel: [{{"dsl_version": "0.1", "strategy": {{...}}}}, ...]"""
 FEEDBACK VON VORHERIGEM VERSUCH (Iteration {iteration - 1}):
 {feedback}
 
-BERÜCKSICHTIGE dieses Feedback. Verbessere die Strategie basierend auf den FAIL-Gates.
-Wenn "No trades generated": Nutze weniger restriktive Entry-Conditions oder Mean-Reversion.
-Wenn G1_profitability FAIL: Erhöhe take_profit_pct oder wähle volatilere Entry-Bedingungen.
-Wenn G2_risk FAIL: Reduziere stop_loss_pct oder kürze max_hold_bars.
-"""
+BERÜCKSICHTIGE dieses Feedback. Wenn Mean-Reversion FAIL:
+→ Versuche Trend-Following oder Momentum!
+Wenn "No trades generated":
+→ Nutze weniger restriktive Entry-Conditions.
+Wenn G1_profitability FAIL:
+→ Erhöhe trailing_stop oder nutze Trend-Riding statt fester TP.
+Wenn G2_risk FAIL (DD zu hoch):
+→ Nutze engeren stop_loss oder kürze max_hold_bars."""
 
     return prompt
 
@@ -160,7 +192,7 @@ def generate_candidates(spec: dict, feedback: str = None, iteration: int = 1) ->
     """Generate and validate strategy candidates."""
     prompt = build_prompt(spec, feedback, iteration)
     
-    print(f"[Generator] Iteration {iteration}: Requesting {spec.get('evolution', {}).get('candidates_per_iteration', 3)} candidates...")
+    print(f"[Generator v0.3] Iteration {iteration}: Requesting {spec.get('evolution', {}).get('candidates_per_iteration', 3)} candidates...")
     
     raw = call_llm(prompt)
     candidates = json.loads(raw)
@@ -177,7 +209,7 @@ def generate_candidates(spec: dict, feedback: str = None, iteration: int = 1) ->
             for e in errors:
                 print(f"      {e.path}: {e.message}")
     
-    print(f"[Generator] {len(valid_candidates)}/{len(candidates)} Kandidaten DSL-valid")
+    print(f"[Generator v0.3] {len(valid_candidates)}/{len(candidates)} Kandidaten DSL-valid")
     return valid_candidates
 
 

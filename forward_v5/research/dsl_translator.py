@@ -94,6 +94,46 @@ def calc_zscore(df: pl.DataFrame, period: int) -> pl.Series:
     return (df["close"] - sma) / std_safe
 
 
+def calc_adx(df: pl.DataFrame, period: int = 14) -> pl.Series:
+    """Average Directional Index - measures trend strength."""
+    high = df["high"]
+    low = df["low"]
+    close = df["close"]
+    
+    # True Range
+    tr = pl.max_horizontal(
+        high - low,
+        (high - close.shift(1)).abs(),
+        (low - close.shift(1)).abs()
+    )
+    
+    # +DM and -DM
+    up_move = high - high.shift(1)
+    down_move = low.shift(1) - low
+    plus_dm = pl.when((up_move > down_move) & (up_move > 0)).then(up_move).otherwise(0)
+    minus_dm = pl.when((down_move > up_move) & (down_move > 0)).then(down_move).otherwise(0)
+    
+    # Smoothed
+    atr_smooth = tr.rolling_mean(window_size=period, min_periods=period)
+    plus_di = 100 * plus_dm.rolling_mean(window_size=period, min_periods=period) / atr_smooth
+    minus_di = 100 * minus_dm.rolling_mean(window_size=period, min_periods=period) / atr_smooth
+    
+    # DX → ADX
+    di_sum = plus_di + minus_di
+    di_diff = (plus_di - minus_di).abs()
+    dx = pl.when(pl.Series(di_sum) != 0).then(100 * pl.Series(di_diff) / pl.Series(di_sum)).otherwise(0)
+    adx = dx.rolling_mean(window_size=period, min_periods=period)
+    
+    return adx
+
+
+def calc_bb_width(df: pl.DataFrame, period: int, std_dev: float = 2.0) -> pl.Series:
+    """BB Width = (Upper - Lower) / Mid. Measures volatility expansion."""
+    upper, mid, lower = calc_bb(df, period, std_dev)
+    mid_safe = pl.when(mid != 0).then(mid).otherwise(1.0)
+    return (upper - lower) / mid_safe
+
+
 INDICATOR_REGISTRY = {
     "SMA": ("period", calc_sma),
     "EMA": ("period", calc_ema),
@@ -103,6 +143,7 @@ INDICATOR_REGISTRY = {
     "VWAP": (None, calc_vwap),
     "MACD": (None, calc_macd),        # returns (macd, signal, hist)
     "ZSCORE": ("period", calc_zscore),
+    "ADX": ("period", calc_adx),       # trend strength
 }
 
 
@@ -279,6 +320,12 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 indicator_cols["bb_upper"] = col_upper
                 indicator_cols["bb_mid"] = col_mid
                 indicator_cols["bb_lower"] = col_lower
+                # BB Width (volatility measure)
+                bb_width = calc_bb_width(df, period, std_dev)
+                col_width = f"bb_width_{period}"
+                df = df.with_columns(bb_width.alias(col_width))
+                indicator_cols[f"bb_width_{period}"] = col_width
+                indicator_cols["bb_width"] = col_width
                 
             elif name == "MACD":
                 fast = params.get("macd_fast", ind_params.get("fast", 12))
@@ -302,6 +349,14 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 col_vwap = "vwap"
                 df = df.with_columns(vwap.alias(col_vwap))
                 indicator_cols["vwap"] = col_vwap
+                
+            elif name == "ADX":
+                period = params.get(f"adx_period", ind_params.get("period", 14))
+                adx = calc_adx(df, period)
+                col_adx = f"adx_{period}"
+                df = df.with_columns(adx.alias(col_adx))
+                indicator_cols[f"adx_{period}"] = col_adx
+                indicator_cols["adx"] = col_adx
                 
             else:
                 # Single-output indicators (SMA, EMA, RSI, ATR, ZSCORE)
