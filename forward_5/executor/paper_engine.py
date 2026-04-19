@@ -29,9 +29,25 @@ log = logging.getLogger("paper_engine")
 INITIAL_CAPITAL = 100.0
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
-ASSETS = ["BTCUSDT", "ETHUSDT"]
+ASSETS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "LINKUSDT", "ADAUSDT"]
 DISCORD_CHANNEL_ID = None  # Loaded from .env at runtime
 DISCORD_WEBHOOK_URL = None  # Not used — OpenClaw message tool instead of webhook
+
+# ── Leverage Tiers (ADR-007) ──
+# Static, asset-specific. Based on backtest DD analysis.
+# Tier 1 (1.8x): BTC, ETH — low volatility, deepest liquidity
+# Tier 2 (1.5x): SOL, LINK, ADA — medium volatility
+# Tier 3 (1.0x): AVAX — high volatility, conservative
+LEVERAGE_TIERS = {
+    "BTCUSDT":  1.8,
+    "ETHUSDT":  1.8,
+    "SOLUSDT":  1.5,
+    "AVAXUSDT": 1.0,
+    "LINKUSDT": 1.5,
+    "ADAUSDT":  1.5,
+}
+
+DEFAULT_LEVERAGE = 1.0
 
 # ── Trade Log (JSONL) ──
 
@@ -84,11 +100,12 @@ class PaperTradingEngine:
         self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
 
         # Send startup message to Discord
+        tier_str = ', '.join(f"{s}@{LEVERAGE_TIERS.get(s, 1.0)}x" for s in self.assets)
         self.reporter.report_custom(
             f"🚀 **Paper Trading Engine V1 Started**\n"
-            f"Assets: {', '.join(self.assets)}\n"
-            f"Strategy: MACD+ADX+EMA Baseline\n"
-            f"Capital: {INITIAL_CAPITAL}€ | Leverage: 1x\n"
+            f"Assets: {tier_str}\n"
+            f"Strategy: MACD+ADX+EMA Baseline (ADR-007 tiers)\n"
+            f"Capital: {INITIAL_CAPITAL}€ per asset\n"
             f"Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPos=1, CL≥5\n"
             f"Commands: !kill, !resume, !status, !help"
         )
@@ -158,8 +175,9 @@ class PaperTradingEngine:
                 exit_price = exit_signal.price
                 # Apply slippage
                 exit_price *= (1 - SLIPPAGE_BPS / 10000)
-                # Apply fee
-                fee = exit_price * FEE_RATE
+                # Apply fee on leveraged position
+                leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
+                fee = exit_price * FEE_RATE * leverage
 
                 pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
                 self.state.close_position(symbol, exit_price, current_candle["timestamp"],
@@ -211,10 +229,11 @@ class PaperTradingEngine:
                 })
                 return
 
-            # Calculate position size (100% of equity, 1x leverage)
+            # Calculate position size with asset-specific leverage
+            leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
             entry_price = current_price * (1 + SLIPPAGE_BPS / 10000)  # Slippage on entry
-            fee = entry_price * FEE_RATE
-            size = (equity - fee) / entry_price  # Full capital, 1x leverage
+            fee = entry_price * FEE_RATE * leverage  # Fee on leveraged position
+            size = (equity * leverage - fee) / entry_price  # Leveraged position
 
             self.state.open_position(symbol, entry_price, current_candle["timestamp"],
                                      size, guard_state.value)
@@ -295,7 +314,8 @@ async def main():
     log.info("  Entry: macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20")
     log.info("  Exit:  trailing_stop 2%, stop_loss 2.5%, max_hold 48h")
     log.info("  Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPositions=1, CL≥5")
-    log.info("  Capital: 100€ | Leverage: 1x | Slippage: 1bp | Fee: 0.01%")
+    log.info(f"  Leverage Tiers (ADR-007): {LEVERAGE_TIERS}")
+    log.info("  Capital: 100€/asset | Slippage: 1bp | Fee: 0.01%")
     log.info("=" * 60)
 
     try:

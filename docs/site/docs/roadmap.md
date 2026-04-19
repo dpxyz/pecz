@@ -99,14 +99,29 @@ aber höhere CL-Werte (Ø 11 vs 7). Gate-Passrate bei CL≤8: 12%, bei CL≤12: 
 - ≥95% Signal Execution Rate
 - ≤60s Kill-Switch Response
 
-### 8.3: Economics — NACH Paper Trading
+### 8.3: Economics — FRAMEWORK DONE, NUMBERS PENDING
 
-| Report | Inhalt |
-|--------|--------|
-| Monthly PnL Projection | Erwarteter Return bei 100€ |
-| Infra Costs | Server, API, Monitoring |
-| Break-even Analysis | Trades/Tag für Profitabilität |
-| Risk-adjusted Returns | Sharpe, Sortino, Calmar |
+| Report | Inhalt | Status |
+|--------|--------|--------|
+| Monthly PnL Projection | Erwarteter Return bei 100€ | ✅ |
+| Infra Costs | Server, API, Monitoring | ✅ |
+| Break-even Analysis | Trades/Tag für Profitabilität | ✅ |
+| Risk-adjusted Returns | Sharpe, Sortino, Calmar | ⬜ |
+
+#### Leverage Tiers (ADR-007)
+
+| Tier | Hebel | Assets | DD Range |
+|------|-------|--------|----------|
+| 1 | 1.8x | BTC, ETH | 18.3-18.5% |
+| 2 | 1.5x | SOL, LINK, ADA | 17.9-19.9% |
+| 3 | 1.0x | AVAX | 18.3% |
+
+**Portfolio Economics:** 910€ deployed, **+27.4€/mo net** (nach VPS), **+329€/yr**
+
+#### Strategic Review (2026-04-19)
+- Trailing Stop: Backtest nutzt CLOSE (optimistisch), Paper Engine nutzt Echtzeit (realistisch)
+- Gap: BTC +22% (CLOSE) vs -47% (LOW) → Paper Trading klärt das
+- Alpha Stack V2 geplant: Asset-Ranking, ADX-Sizing, Limit-Orders
 
 ---
 
