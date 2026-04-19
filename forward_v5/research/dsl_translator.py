@@ -35,7 +35,14 @@ def calc_sma(df: pl.DataFrame, period: int) -> pl.Series:
 
 
 def calc_ema(df: pl.DataFrame, period: int) -> pl.Series:
-    return df["close"].rolling_mean(window_size=period, min_periods=period)  # Polars EMA equivalent
+    """EMA via exponential weighted mean (Polars ewm_mean).
+    
+    Note: Previous version used rolling_mean (SMA) which is incorrect for EMA.
+    This is now a proper EMA. If you need SMA, use calc_sma().
+    """
+    # Polars ewm_mean uses alpha = 2/(period+1) by default (standard EMA)
+    # We need min_samples to match warmup period
+    return df["close"].ewm_mean(alpha=2/(period+1), min_samples=period)
 
 
 def calc_rsi(df: pl.DataFrame, period: int) -> pl.Series:
@@ -79,10 +86,15 @@ def calc_vwap(df: pl.DataFrame, period: int = None) -> pl.Series:
 
 
 def calc_macd(df: pl.DataFrame, fast: int = 12, slow: int = 26, signal: int = 9) -> Tuple[pl.Series, pl.Series, pl.Series]:
-    ema_fast = df["close"].rolling_mean(window_size=fast, min_periods=fast)
-    ema_slow = df["close"].rolling_mean(window_size=slow, min_periods=slow)
+    """MACD using proper EMA (not SMA approximation).
+    
+    Note: Previous version used rolling_mean (SMA) which produces different
+    signals than true MACD. This is now correct.
+    """
+    ema_fast = df["close"].ewm_mean(alpha=2/(fast+1), min_samples=fast)
+    ema_slow = df["close"].ewm_mean(alpha=2/(slow+1), min_samples=slow)
     macd_line = ema_fast - ema_slow
-    signal_line = macd_line.rolling_mean(window_size=signal, min_periods=signal)
+    signal_line = macd_line.ewm_mean(alpha=2/(signal+1), min_samples=signal)
     histogram = macd_line - signal_line
     return macd_line, signal_line, histogram
 

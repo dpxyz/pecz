@@ -58,13 +58,14 @@ class BacktestResult:
             self.failure_reasons.append("No trades generated")
             return self
 
-        # PnL
+        # PnL — trades store pnl in PERCENT (net_pnl * 100)
+        # So sum(pnls) is already in % — use directly for net_return
         pnls = [t.pnl for t in self.trades if t.pnl is not None]
         gross_profit = sum(p for p in pnls if p > 0)
         gross_loss = sum(abs(p) for p in pnls if p < 0)
-        net_pnl = sum(pnls)
+        net_pnl_pct = sum(pnls)  # Already in %
 
-        self.net_return = (net_pnl / initial_capital) * 100
+        self.net_return = net_pnl_pct  # % direkt (war vorher /capital * 100 = 100x zu klein)
 
         # Win Rate
         wins = sum(1 for p in pnls if p > 0)
@@ -73,8 +74,8 @@ class BacktestResult:
         # Profit Factor
         self.profit_factor = gross_profit / gross_loss if gross_loss > 0 else float('inf') if gross_profit > 0 else 0
 
-        # Expectancy
-        self.expectancy = net_pnl / len(pnls) if pnls else 0
+        # Expectancy (in %)
+        self.expectancy = net_pnl_pct / len(pnls) if pnls else 0
 
         # Max Drawdown
         self.max_drawdown = self._calc_max_drawdown()

@@ -18,15 +18,20 @@ log = logging.getLogger("signal_generator")
 # ── Indicator calculations (Polars Expression API) ──
 
 def calc_ema(series: pl.Series, period: int) -> pl.Series:
-    """EMA via rolling_mean (approximation for live — close enough for signal gen)."""
-    return series.rolling_mean(window_size=period, min_periods=period)
+    """EMA via exponential weighted mean.
+    
+    Note: Previous version used rolling_mean (SMA). This is now proper EMA
+    using Polars ewm_mean with alpha = 2/(period+1).
+    """
+    return series.ewm_mean(alpha=2/(period+1), min_samples=period)
 
 
 def calc_macd(closes: pl.Series, fast: int = 12, slow: int = 26, signal: int = 9):
-    ema_fast = closes.rolling_mean(window_size=fast, min_periods=fast)
-    ema_slow = closes.rolling_mean(window_size=slow, min_periods=slow)
+    """MACD using proper EMA (not SMA approximation)."""
+    ema_fast = closes.ewm_mean(alpha=2/(fast+1), min_samples=fast)
+    ema_slow = closes.ewm_mean(alpha=2/(slow+1), min_samples=slow)
     macd_line = ema_fast - ema_slow
-    signal_line = macd_line.rolling_mean(window_size=signal, min_periods=signal)
+    signal_line = macd_line.ewm_mean(alpha=2/(signal+1), min_samples=signal)
     histogram = macd_line - signal_line
     return macd_line, signal_line, histogram
 

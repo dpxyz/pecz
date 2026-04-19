@@ -188,7 +188,7 @@ def real_backtest(candidate: dict, spec: dict) -> dict:
     
     result = {
         "backtest_results": {
-            "net_return": bt_dict.get("net_return", 0) / 100,  # engine returns %, gate expects decimal (0.05 = 5%)
+            "net_return": bt_dict.get("net_return", 0) / 100,  # engine now returns %, gate expects decimal (0.05 = 5%)
             "max_drawdown": bt_dict.get("max_drawdown", 100),
             "profit_factor": bt_dict.get("profit_factor", 0),
             "win_rate": bt_dict.get("win_rate", 0),

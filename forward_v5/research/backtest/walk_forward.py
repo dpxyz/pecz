@@ -197,7 +197,7 @@ class WalkForwardAnalyzer:
             
             oos_return = oos_result.net_return if oos_result.trade_count > 0 else 0.0
             
-            degradation = (best_return - oos_return) / abs(best_return) if best_return != 0 else 0
+            degradation = (best_return - oos_return) / max(abs(best_return), 0.01) if best_return != 0 else 0
             
             print(f"OOS return: {oos_return:.2f}% (trades: {oos_result.trade_count})")
             

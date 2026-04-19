@@ -48,10 +48,10 @@ from typing import Optional
 import json
 
 # ── Allowed values ──
-STRATEGY_TYPES = {"mean_reversion", "trend_following", "breakout", "hybrid"}
+STRATEGY_TYPES = {"mean_reversion", "trend_following", "momentum", "breakout", "hybrid"}
 INDICATOR_NAMES = {"SMA", "EMA", "RSI", "BB", "ATR", "VWAP", "MACD", "ZSCORE"}
 VALID_TIMEFRAMES = {"15m", "1h", "4h"}
-VALID_ASSETS = {"BTCUSDT", "ETHUSDT", "SOLUSDT"}
+VALID_ASSETS = {"BTCUSDT", "ETHUSDT", "SOLUSDT", "DOGEUSDT", "AVAXUSDT", "LINKUSDT", "XRPUSDT", "ADAUSDT"}
 SIZING_METHODS = {"fixed_frac", "kelly", "fixed_qty"}
 FILTER_TYPES = {"time", "volatility", "volume", "trend"}
 
@@ -126,8 +126,12 @@ def validate_candidate(candidate: dict) -> tuple[bool, list[DSLError]]:
     exit_cfg = strategy.get("exit", {})
     tp = exit_cfg.get("take_profit_pct", 0)
     sl = exit_cfg.get("stop_loss_pct", 0)
-    if tp <= 0 or tp > 50:
-        errors.append(DSLError("strategy.exit.take_profit_pct", f"Must be 0-50%, got {tp}"))
+    trailing = exit_cfg.get("trailing_stop_pct", None)
+    # TP can be 0 if trailing_stop_pct is set (trend strategies)
+    if tp <= 0 and not trailing:
+        errors.append(DSLError("strategy.exit.take_profit_pct", f"Must be >0 or set trailing_stop_pct, got tp={tp}"))
+    elif tp > 50:
+        errors.append(DSLError("strategy.exit.take_profit_pct", f"Must be <=50%, got {tp}"))
     if sl <= 0 or sl > 50:
         errors.append(DSLError("strategy.exit.stop_loss_pct", f"Must be 0-50%, got {sl}"))
     max_hold = exit_cfg.get("max_hold_bars", 0)
