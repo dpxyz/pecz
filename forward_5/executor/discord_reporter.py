@@ -163,19 +163,20 @@ def format_daily_summary(state_manager) -> str:
 
 # ── Discord Sender ──
 
-def send_to_discord(message: str, channel: str = "discord", target: str = None):
+def send_to_discord(message: str, channel_id: str = None):
     """
-    Send a message to Discord via the OpenClaw message tool.
-    Falls back to direct webhook if available.
+    Send a message to Discord via OpenClaw message tool.
+    Primary path: OpenClaw message API → Discord channel.
+    Fallback: Direct Discord Bot API.
     """
-    # Try OpenClaw message tool first
+    # Primary: OpenClaw subprocess (uses configured bot)
     try:
         import subprocess
-        result = subprocess.run(
-            ["openclaw", "message", "send", "--channel", channel,
-             "--message", message],
-            capture_output=True, text=True, timeout=10
-        )
+        cmd = ["openclaw", "message", "send", "--channel", "discord",
+               "--message", message]
+        if channel_id:
+            cmd.extend(["--target", channel_id])
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
             log.debug("Discord message sent via OpenClaw")
             return True
@@ -183,10 +184,9 @@ def send_to_discord(message: str, channel: str = "discord", target: str = None):
         log.debug(f"OpenClaw send failed: {e}")
 
     # Fallback: Direct Discord API via bot token
-    # (configured via environment variable or config)
     import os
     bot_token = os.environ.get("DISCORD_BOT_TOKEN")
-    channel_id = target or os.environ.get("DISCORD_CHANNEL_ID")
+    channel_id = os.environ.get("DISCORD_CHANNEL_ID")
     
     if bot_token and channel_id:
         try:
@@ -209,37 +209,34 @@ def send_to_discord(message: str, channel: str = "discord", target: str = None):
 
 
 class DiscordReporter:
-    """Send formatted trade events to Discord."""
+    """Send formatted trade events to Discord via OpenClaw message tool."""
     
     def __init__(self, channel_id: str = None):
         self.channel_id = channel_id
     
+    def _send(self, msg: str):
+        send_to_discord(msg, channel_id=self.channel_id)
+    
     def report_entry(self, event: dict):
-        msg = format_entry(event)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_entry(event))
     
     def report_exit(self, event: dict):
-        msg = format_exit(event)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_exit(event))
     
     def report_guard_change(self, event: dict):
-        msg = format_guard_change(event)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_guard_change(event))
     
     def report_entry_blocked(self, event: dict):
-        msg = format_entry_blocked(event)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_entry_blocked(event))
     
     def report_hourly(self, state_manager):
-        msg = format_hourly_status(state_manager)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_hourly_status(state_manager))
     
     def report_daily(self, state_manager):
-        msg = format_daily_summary(state_manager)
-        send_to_discord(msg, target=self.channel_id)
+        self._send(format_daily_summary(state_manager))
     
     def report_custom(self, message: str):
-        send_to_discord(message, target=self.channel_id)
+        self._send(message)
 
 
 # ── Test ──

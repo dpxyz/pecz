@@ -29,7 +29,8 @@ INITIAL_CAPITAL = 100.0
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
 ASSETS = ["BTCUSDT", "ETHUSDT"]
-DISCORD_CHANNEL_ID = None  # Set to your Discord channel ID for live reporting
+DISCORD_CHANNEL_ID = "1476565086708695104"  # #foundry-reports channel
+DISCORD_WEBHOOK_URL = None  # Using OpenClaw message tool instead of webhook
 
 # ── Trade Log (JSONL) ──
 
