@@ -168,7 +168,7 @@ _ALLOWED_COLUMNS = {"close", "open", "high", "low", "volume"}
 # Indicator reference pattern: INDICATOR_period or INDICATOR_param
 # e.g. SMA_50, RSI_14, BB_upper_20, ZSCORE_50, MACD_hist
 _IND_PATTERN = re.compile(
-    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE|ADX|bb_width)(?:_(\d+))?$',
+    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|ATR_sma|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE|ADX|bb_width|atr_sma)(?:_(\d+))?$',
     re.IGNORECASE
 )
 
@@ -369,8 +369,24 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 indicator_cols[f"adx_{period}"] = col_adx
                 indicator_cols["adx"] = col_adx
                 
+            elif name == "ATR":
+                period = params.get(f"atr_period", ind_params.get("period", 14))
+                atr = calc_fn(df, period)
+                col_atr = f"atr_{period}"
+                # ATR SMA (for volatility expansion filter)
+                atr_sma_period = 50
+                # Use expression-based rolling_mean on the ATR column
+                df = df.with_columns(atr.alias(col_atr))
+                atr_sma_expr = pl.col(col_atr).rolling_mean(window_size=atr_sma_period, min_periods=atr_sma_period)
+                col_atr_sma = f"atr_sma_{atr_sma_period}"
+                df = df.with_columns(atr_sma_expr.alias(col_atr_sma))
+                indicator_cols[f"atr_{period}"] = col_atr
+                indicator_cols["atr"] = col_atr
+                indicator_cols[f"atr_sma_{atr_sma_period}"] = col_atr_sma
+                indicator_cols["atr_sma"] = col_atr_sma
+                
             else:
-                # Single-output indicators (SMA, EMA, RSI, ATR, ZSCORE)
+                # Single-output indicators (SMA, EMA, RSI, ZSCORE)
                 # Allow params override: {indicator_name_lower}_period
                 period = params.get(f"{name.lower()}_period", ind_params.get("period", 14))
                 series = calc_fn(df, period)
@@ -379,7 +395,7 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 indicator_cols[f"{name.lower()}_{period}"] = col_name
                 # Also register canonical name (without number) for condition parsing
                 indicator_cols[name.lower()] = col_name
-        
+
         # 2. Parse entry condition → signal
         # Rewrite condition to use dynamic column names
         # e.g. 'rsi_14 < 30' → 'rsi_7 < 30' when rsi_period is overridden to 7
