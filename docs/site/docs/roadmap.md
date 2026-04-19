@@ -56,10 +56,41 @@
 
 ---
 
-## ⭐ Phase 7: Strategy Lab — NEXT
+## ⭐ Phase 7: Strategy Lab — REGIME FILTER VALIDATED
 
-**Status:** 🚀 **READY TO START**  
-**⚠️ MANDATORY — Blocks Live Trading**
+**Status:** 🎯 **BASELINE COMMITTED — PAPER TRADING NEXT**
+
+### Baseline Strategy: MACD Momentum + ADX+EMA
+
+```
+Entry: macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20
+Exit:  trailing_stop 2%, stop_loss 2.5%, max_hold 48 bars
+```
+
+| Metrik | Wert |
+|--------|------|
+| Pass Rate | 8/16 (50%) |
+| Avg Return | +35.9% |
+| Avg Drawdown | 14.1% |
+| Avg Consecutive Losses | 6.5 |
+| ATR-Filter getestet | ❌ Keine Verbesserung |
+| Gate-Lockerung | ❌ Abgelehnt |
+
+### Foundry V1 Status
+
+| Komponente | Status | Beschreibung |
+|------------|--------|--------------|
+| backtest_engine.py | ✅ | Mit Trailing Stop + Sharpe + CL |
+| walk_forward.py | ✅ | Walk-Forward Validierung |
+| dsl_translator.py v3 | ✅ | 8+ Indikatoren, ADX+ATR+bb_width Fix |
+| evolution_runner.py v2 | ✅ | 3 Modi (mock/dry-run/live) |
+| gate_evaluator.py | ✅ | Standalone Functions + GateResult |
+| Regime Filter | ✅ | ADX+EMA (50% Pass), ATR getestet (kein Gewinn) |
+| Broad Validation | ✅ | 8 Assets × 2 Perioden × 5 Filter = 80 Tests |
+
+### Nächster Schritt: Paper/Forward Trading (ADR-006)
+
+→ Siehe ADR-006: Executor V1 mit Kill-Switches, Runtime Guards, Discord-Reporting
 
 ### Backtest Engine
 
