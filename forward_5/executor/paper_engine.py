@@ -19,6 +19,7 @@ from data_feed import DataFeed, SYMBOL_MAP
 from signal_generator import SignalGenerator, SignalType
 from state_manager import StateManager, GuardState
 from risk_guard import RiskGuard
+from discord_reporter import DiscordReporter
 
 log = logging.getLogger("paper_engine")
 
@@ -28,6 +29,7 @@ INITIAL_CAPITAL = 100.0
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
 ASSETS = ["BTCUSDT", "ETHUSDT"]
+DISCORD_CHANNEL_ID = None  # Set to your Discord channel ID for live reporting
 
 # ── Trade Log (JSONL) ──
 
@@ -46,6 +48,7 @@ class PaperTradingEngine:
         self.state = StateManager(db_path=db_path)
         self.risk = RiskGuard(self.state)
         self.signal = SignalGenerator()
+        self.reporter = DiscordReporter(channel_id=DISCORD_CHANNEL_ID)
         self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle)
         self._running = False
         self._last_candle_hour = {}  # track which hours we've processed
@@ -65,9 +68,18 @@ class PaperTradingEngine:
         log.info("🚀 Paper Trading Engine starting...")
         log.info(f"   Assets: {self.assets}")
         log.info(f"   Strategy: MACD Momentum + ADX+EMA regime filter")
-        log.info(f"   Kill-switches: Daily>{self.risk.__class__.__name__}")
+        log.info(f"   Capital: {INITIAL_CAPITAL}€ | Fee: {FEE_RATE*100}% | Slippage: {SLIPPAGE_BPS}bps")
         log.info(f"   DB: {self.state.db_path}")
         log.info(f"   Trade log: {TRADE_LOG}")
+
+        # Send startup message to Discord
+        self.reporter.report_custom(
+            f"🚀 **Paper Trading Engine V1 Started**\n"
+            f"Assets: {', '.join(self.assets)}\n"
+            f"Strategy: MACD+ADX+EMA Baseline\n"
+            f"Capital: {INITIAL_CAPITAL}€ | Leverage: 1x\n"
+            f"Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPos=1, CL≥5"
+        )
 
         await self.feed.start()
 
@@ -137,7 +149,7 @@ class PaperTradingEngine:
                                            exit_signal.reason, guard_state.value)
                 self.risk.on_trade_closed(pnl)
 
-                log_trade({
+                exit_event = {
                     "event": "EXIT",
                     "symbol": symbol,
                     "side": "LONG",
@@ -148,7 +160,9 @@ class PaperTradingEngine:
                     "reason": exit_signal.reason,
                     "guard_state": guard_state.value,
                     "timestamp": current_candle["timestamp"],
-                })
+                }
+                log_trade(exit_event)
+                self.reporter.report_exit(exit_event)
                 # Reset bars held
                 self.state.set_state(f"bars_held_{symbol}", 0)
                 return
@@ -162,6 +176,14 @@ class PaperTradingEngine:
             allowed, reason = self.risk.check_all(symbol)
             if not allowed:
                 log.info(f"  🛑 {symbol} entry blocked: {reason}")
+                self.reporter.report_entry_blocked({
+                    "event": "ENTRY_BLOCKED",
+                    "symbol": symbol,
+                    "price": current_price,
+                    "reason": reason,
+                    "guard_state": guard_state.value,
+                    "timestamp": current_candle["timestamp"],
+                })
                 log_trade({
                     "event": "ENTRY_BLOCKED",
                     "symbol": symbol,
@@ -180,7 +202,7 @@ class PaperTradingEngine:
             self.state.open_position(symbol, entry_price, current_candle["timestamp"],
                                      size, guard_state.value)
 
-            log_trade({
+            entry_event = {
                 "event": "ENTRY",
                 "symbol": symbol,
                 "side": "LONG",
@@ -191,7 +213,9 @@ class PaperTradingEngine:
                 "guard_state": guard_state.value,
                 "indicators": signal.indicators,
                 "timestamp": current_candle["timestamp"],
-            })
+            }
+            log_trade(entry_event)
+            self.reporter.report_entry(entry_event)
             log.info(f"  🟢 ENTRY {symbol} @ {entry_price:.2f}, size={size:.6f}")
 
         elif signal.type == SignalType.SIGNAL_FLAT:
