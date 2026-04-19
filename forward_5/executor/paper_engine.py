@@ -29,8 +29,8 @@ INITIAL_CAPITAL = 100.0
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
 ASSETS = ["BTCUSDT", "ETHUSDT"]
-DISCORD_CHANNEL_ID = "1476565086708695104"  # #foundry-reports channel
-DISCORD_WEBHOOK_URL = None  # Using OpenClaw message tool instead of webhook
+DISCORD_CHANNEL_ID = None  # Loaded from .env at runtime
+DISCORD_WEBHOOK_URL = None  # Not used — OpenClaw message tool instead of webhook
 
 # ── Trade Log (JSONL) ──
 
@@ -49,7 +49,12 @@ class PaperTradingEngine:
         self.state = StateManager(db_path=db_path)
         self.risk = RiskGuard(self.state)
         self.signal = SignalGenerator()
-        self.reporter = DiscordReporter(channel_id=DISCORD_CHANNEL_ID)
+        # Load Discord channel from .env
+        from dotenv import load_dotenv
+        import os
+        load_dotenv(Path(__file__).parent / ".env")
+        channel_id = os.environ.get("DISCORD_CHANNEL_ID", DISCORD_CHANNEL_ID)
+        self.reporter = DiscordReporter(channel_id=channel_id)
         self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle)
         self._running = False
         self._last_candle_hour = {}  # track which hours we've processed

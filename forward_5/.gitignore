@@ -1,3 +1,4 @@
 executor/state.db
 executor/trades.jsonl
 __pycache__/
+.env
