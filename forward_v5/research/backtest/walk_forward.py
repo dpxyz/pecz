@@ -15,8 +15,8 @@ from dataclasses import dataclass
 
 import polars as pl
 
-from backtest_engine import BacktestEngine, BacktestResult
-from parameter_sweep import ParameterSweep, SweepResult
+from backtest.backtest_engine import BacktestEngine, BacktestResult
+from backtest.parameter_sweep import ParameterSweep, SweepResult
 
 
 @dataclass
@@ -250,27 +250,33 @@ class WalkForwardAnalyzer:
     
     def _quick_simulate(self, df: pl.DataFrame, strategy_func: Callable, params: Dict) -> float:
         """
-        Schnelle Simulation (vereinfacht)
-        In Produktion würde dies die volle Engine nutzen
+        Schnelle Simulation mit Polars-native Operations
         """
         try:
             # Apply strategy
             result = strategy_func(df, params)
             
-            # Return average signal return (simplified metric)
-            if hasattr(result, 'to_pandas'):
-                result = result.to_pandas()
-            
             if 'signal' not in result.columns or 'close' not in result.columns:
                 return 0.0
             
-            # Berechne returns
-            result['returns'] = result['close'].pct_change()
-            result['strategy_returns'] = result['signal'].shift(1) * result['returns']
+            # Polars-native: compute returns
+            result = result.with_columns([
+                pl.col('close').pct_change().alias('returns'),
+                pl.col('signal').shift(1).alias('signal_lag')
+            ])
+            
+            # Strategy returns = signal * market returns
+            result = result.with_columns(
+                (pl.col('signal_lag') * pl.col('returns')).alias('strategy_returns')
+            )
             
             total_return = result['strategy_returns'].sum() * 100
             
-            return total_return
+            # Python float, not Polars scalar
+            if hasattr(total_return, 'item'):
+                total_return = total_return.item()
+            
+            return float(total_return)
             
         except Exception as e:
             print(f"Simulation error: {e}")

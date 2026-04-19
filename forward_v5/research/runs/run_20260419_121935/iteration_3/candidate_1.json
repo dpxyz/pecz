@@ -1,0 +1,56 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Trend_Following_Momentum_Hybrid",
+    "type": "trend_following",
+    "hypothesis": "Kombination aus langfristigem Trend-Filter (SMA 200) und kurzfristigem Momentum (EMA Crossover) zur Erfassung von Bull-Runs in Krypto-Assets.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "SMA",
+        "params": {
+          "period": 200
+        }
+      },
+      {
+        "name": "EMA",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "EMA",
+        "params": {
+          "period": 50
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close > SMA(200) AND EMA(20) crosses above EMA(50)",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": 1.0,
+      "max_hold_bars": 168
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_ma_ratio": 1.2
+        }
+      }
+    ]
+  }
+}

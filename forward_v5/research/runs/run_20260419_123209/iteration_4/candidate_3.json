@@ -1,0 +1,55 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Hybrid_Breakout_RSI_Optimized",
+    "type": "hybrid",
+    "hypothesis": "Improved breakout strategy using RSI for trend confirmation and tighter risk controls to fix previous drawdown and profitability failures.",
+    "assets": [
+      "BTCUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      },
+      {
+        "name": "SMA",
+        "params": {
+          "period": 100
+        }
+      },
+      {
+        "name": "ATR",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close > SMA(100) and RSI > 55 and close > high[1]",
+      "max_per_day": 1
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 1.2,
+      "trailing_stop_pct": 0.8,
+      "max_hold_bars": 72
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 0.5
+    },
+    "filters": [
+      {
+        "type": "trend",
+        "params": {
+          "min_slope": 0.01
+        }
+      }
+    ]
+  }
+}

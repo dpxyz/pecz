@@ -1,0 +1,7 @@
+🏭 **Foundry Weekly Report** `run_20260419_113325`
+
+❌ **0 PASS, alle Kandidaten FAIL**
+   5 Iterationen, keine Strategie besteht alle Gates
+   Letzte Gates: G1_profitability, G2_risk
+
+_Spec = Wahrheit. Gates = Wahrheit. Rest = Suche._

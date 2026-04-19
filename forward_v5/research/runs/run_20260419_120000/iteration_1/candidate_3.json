@@ -1,0 +1,50 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Volatility_Breakout_ZScore",
+    "type": "breakout",
+    "hypothesis": "Einstieg bei hoher statistischer Abweichung vom Mittelwert, sobald der Preis aus einer Konsolidierungsphase ausbricht.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "SMA",
+        "params": {
+          "period": 100
+        }
+      }
+    ],
+    "entry": {
+      "condition": "ZSCORE > 2.0 and close > SMA(100)",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 2.5,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": 0.5,
+      "max_hold_bars": 48
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "trend",
+        "params": {
+          "min_slope": 0.01
+        }
+      }
+    ]
+  }
+}

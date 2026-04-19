@@ -1,0 +1,21 @@
+{
+  "backtest_results": {
+    "net_return": 0.035,
+    "max_drawdown": 18.0,
+    "profit_factor": 1.42,
+    "win_rate": 56.0,
+    "expectancy": 0.012,
+    "trade_count": 72,
+    "sharpe_ratio": 0.45,
+    "max_consecutive_losses": 5,
+    "resource_usage": {
+      "execution_time_ms": 2100,
+      "memory_peak_mb": 134.0,
+      "cpu_avg_pct": 15
+    }
+  },
+  "walk_forward": {
+    "windows_profitable": 2,
+    "degradation_pct": 35
+  }
+}

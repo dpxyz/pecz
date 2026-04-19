@@ -44,7 +44,8 @@ def calc_rsi(df: pl.DataFrame, period: int) -> pl.Series:
     loss = (-delta).clip(lower_bound=0)
     avg_gain = gain.rolling_mean(window_size=period, min_periods=period)
     avg_loss = loss.rolling_mean(window_size=period, min_periods=period)
-    rs = avg_gain / avg_loss.when(avg_loss != 0).otherwise(1.0)
+    avg_loss_safe = pl.when(pl.Series(avg_loss) != 0).then(pl.Series(avg_loss)).otherwise(1.0)
+    rs = pl.Series(avg_gain) / avg_loss_safe
     return 100 - (100 / (1 + rs))
 
 
@@ -89,7 +90,8 @@ def calc_macd(df: pl.DataFrame, fast: int = 12, slow: int = 26, signal: int = 9)
 def calc_zscore(df: pl.DataFrame, period: int) -> pl.Series:
     sma = df["close"].rolling_mean(window_size=period, min_periods=period)
     std = df["close"].rolling_std(window_size=period, min_periods=period)
-    return (df["close"] - sma) / std.when(std != 0).otherwise(1.0)
+    std_safe = pl.when(pl.Series(std) != 0).then(pl.Series(std)).otherwise(1.0)
+    return (df["close"] - sma) / std_safe
 
 
 INDICATOR_REGISTRY = {
@@ -238,7 +240,13 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
     condition_str = entry.get("condition", "")
     
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
-        """Generated strategy function from DSL candidate."""
+        """Generated strategy function from DSL candidate.
+        
+        params can override indicator periods:
+          {'ema_period': 16, 'rsi_period': 7}  → uses EMA(16), RSI(7)
+          {'ema_period': 20, 'rsi_period': 14}  → uses EMA(20), RSI(14)
+          {}  → uses defaults from DSL
+        """
         indicator_cols = {}
         
         # 1. Add indicator columns
@@ -252,8 +260,9 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
             param_key, calc_fn = INDICATOR_REGISTRY[name]
             
             if name == "BB":
-                period = ind_params.get("period", 20)
-                std_dev = ind_params.get("std_dev", 2.0)
+                # Allow params override: bb_period, bb_std_dev
+                period = params.get(f"bb_period", ind_params.get("period", 20))
+                std_dev = params.get(f"bb_std_dev", ind_params.get("std_dev", 2.0))
                 upper, mid, lower = calc_fn(df, period, std_dev)
                 col_upper = f"bb_upper_{period}"
                 col_mid = f"bb_mid_{period}"
@@ -266,11 +275,15 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 indicator_cols[f"bb_upper_{period}"] = col_upper
                 indicator_cols[f"bb_mid_{period}"] = col_mid
                 indicator_cols[f"bb_lower_{period}"] = col_lower
+                # Also register canonical names for condition parsing
+                indicator_cols["bb_upper"] = col_upper
+                indicator_cols["bb_mid"] = col_mid
+                indicator_cols["bb_lower"] = col_lower
                 
             elif name == "MACD":
-                fast = ind_params.get("fast", 12)
-                slow = ind_params.get("slow", 26)
-                sig = ind_params.get("signal", 9)
+                fast = params.get("macd_fast", ind_params.get("fast", 12))
+                slow = params.get("macd_slow", ind_params.get("slow", 26))
+                sig = params.get("macd_signal", ind_params.get("signal", 9))
                 macd_line, signal_line, hist = calc_fn(df, fast, slow, sig)
                 col_macd = f"macd_line"
                 col_signal = f"macd_signal"
@@ -292,16 +305,36 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 
             else:
                 # Single-output indicators (SMA, EMA, RSI, ATR, ZSCORE)
-                period = ind_params.get("period", 14)
+                # Allow params override: {indicator_name_lower}_period
+                period = params.get(f"{name.lower()}_period", ind_params.get("period", 14))
                 series = calc_fn(df, period)
                 col_name = f"{name.lower()}_{period}"
                 df = df.with_columns(series.alias(col_name))
                 indicator_cols[f"{name.lower()}_{period}"] = col_name
+                # Also register canonical name (without number) for condition parsing
+                indicator_cols[name.lower()] = col_name
         
         # 2. Parse entry condition → signal
-        if condition_str:
+        # Rewrite condition to use dynamic column names
+        # e.g. 'rsi_14 < 30' → 'rsi_7 < 30' when rsi_period is overridden to 7
+        dynamic_condition = condition_str
+        if dynamic_condition:
+            # Build mapping from original indicator names to dynamic names
+            # Original names come from the DSL candidate's fixed periods
+            for ind in indicators:
+                orig_name = ind["name"]
+                orig_params = ind.get("params", {})
+                if orig_name in ("BB", "MACD", "VWAP"):
+                    continue  # Complex indicators handled separately
+                orig_period = orig_params.get("period", 14)
+                orig_col = f"{orig_name.lower()}_{orig_period}"
+                new_period = params.get(f"{orig_name.lower()}_period", orig_period)
+                new_col = f"{orig_name.lower()}_{new_period}"
+                if orig_col != new_col:
+                    dynamic_condition = dynamic_condition.replace(orig_col, new_col)
+            
             try:
-                signal_expr = parse_condition(condition_str, indicator_cols)
+                signal_expr = parse_condition(dynamic_condition, indicator_cols)
                 # Long signal
                 long_signal = signal_expr
                 

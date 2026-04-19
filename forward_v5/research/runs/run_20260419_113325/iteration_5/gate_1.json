@@ -1,0 +1,157 @@
+{
+  "verdict": "FAIL",
+  "all_gates_passed": false,
+  "passed_gates": [
+    "G3_robustness",
+    "G4_resources",
+    "G5_guardrails"
+  ],
+  "failed_gates": [
+    "G1_profitability",
+    "G2_risk"
+  ],
+  "gates": {
+    "G1_profitability": {
+      "passed": false,
+      "checks": [
+        {
+          "name": "net_return_pct",
+          "value": 6.2,
+          "threshold": 5.0,
+          "operator": ">=",
+          "passed": true
+        },
+        {
+          "name": "profit_factor",
+          "value": 1.55,
+          "threshold": 1.5,
+          "operator": ">=",
+          "passed": true
+        },
+        {
+          "name": "expectancy",
+          "value": 0.018,
+          "threshold": 0.01,
+          "operator": ">",
+          "passed": true
+        },
+        {
+          "name": "trade_count",
+          "value": 45,
+          "threshold": 50,
+          "operator": ">=",
+          "passed": false
+        }
+      ]
+    },
+    "G2_risk": {
+      "passed": false,
+      "checks": [
+        {
+          "name": "max_drawdown_pct",
+          "value": 22.0,
+          "threshold": 15.0,
+          "operator": "<=",
+          "passed": false
+        },
+        {
+          "name": "return_dd_ratio",
+          "value": 0.281818,
+          "threshold": 0.33,
+          "operator": ">=",
+          "passed": false
+        },
+        {
+          "name": "max_consecutive_losses",
+          "value": 6,
+          "threshold": 8,
+          "operator": "<=",
+          "passed": true
+        }
+      ]
+    },
+    "G3_robustness": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "wf_windows_profitable",
+          "value": 2,
+          "threshold": 2,
+          "operator": ">=",
+          "passed": true
+        },
+        {
+          "name": "wf_degradation_pct",
+          "value": 30,
+          "threshold": 40,
+          "operator": "<=",
+          "passed": true
+        },
+        {
+          "name": "sharpe_ratio",
+          "value": 0.68,
+          "threshold": 0.5,
+          "operator": ">=",
+          "passed": true
+        }
+      ]
+    },
+    "G4_resources": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "memory_peak_mb",
+          "value": 98.0,
+          "threshold": 256,
+          "operator": "<=",
+          "passed": true
+        },
+        {
+          "name": "execution_time_s",
+          "value": 1.8,
+          "threshold": 30,
+          "operator": "<=",
+          "passed": true
+        },
+        {
+          "name": "cpu_avg_pct",
+          "value": 11,
+          "threshold": 50,
+          "operator": "<=",
+          "passed": true
+        }
+      ]
+    },
+    "G5_guardrails": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "param_combinations",
+          "value": 2.0,
+          "threshold": 50.0,
+          "operator": "<=",
+          "passed": true
+        },
+        {
+          "name": "asset_count",
+          "value": 3.0,
+          "threshold": 3.0,
+          "operator": "<=",
+          "passed": true
+        },
+        {
+          "name": "max_lookback_bars",
+          "value": 50.0,
+          "threshold": 500.0,
+          "operator": "<=",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "improvement_hints": [
+    "G1_profitability.trade_count: 45 >= 50 \u2192 FAIL",
+    "G2_risk.max_drawdown_pct: 22.0 <= 15.0 \u2192 FAIL",
+    "G2_risk.return_dd_ratio: 0.281818 >= 0.33 \u2192 FAIL"
+  ]
+}

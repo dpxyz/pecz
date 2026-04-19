@@ -1,0 +1,49 @@
+{
+  "run_id": "run_20260419_123209",
+  "completed_at": "2026-04-19T12:37:49.173900",
+  "mode": "LIVE",
+  "max_iterations": 5,
+  "iterations_run": 5,
+  "verdict": "FAIL",
+  "passed_candidate": null,
+  "iterations": [
+    {
+      "iteration": 1,
+      "n_candidates": 2,
+      "best_verdict": "FAIL",
+      "failed_gates": [
+        "G1_profitability",
+        "G2_risk",
+        "G3_robustness"
+      ]
+    },
+    {
+      "iteration": 2,
+      "n_candidates": 2,
+      "best_verdict": "FAIL",
+      "failed_gates": [
+        "G1_profitability",
+        "G2_risk",
+        "G3_robustness"
+      ]
+    },
+    {
+      "iteration": 3,
+      "n_candidates": 3,
+      "best_verdict": "FAIL",
+      "failed_gates": []
+    },
+    {
+      "iteration": 4,
+      "n_candidates": 3,
+      "best_verdict": "FAIL",
+      "failed_gates": []
+    },
+    {
+      "iteration": 5,
+      "n_candidates": 3,
+      "best_verdict": "FAIL",
+      "failed_gates": []
+    }
+  ]
+}

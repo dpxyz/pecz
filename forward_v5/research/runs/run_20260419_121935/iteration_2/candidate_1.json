@@ -1,0 +1,50 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Trend_Follower_EMA_RSI",
+    "type": "trend_following",
+    "hypothesis": "Kombination aus langfristigem Trendfilter (EMA) und kurzfristigem Momentum-Einstieg (RSI) zur Nutzung von Trendfortsetzungen in Kryptow\u00e4hrungen.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "EMA",
+        "params": {
+          "period": 200
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close > EMA(200) AND RSI(14) < 40",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": 0.5,
+      "max_hold_bars": 168
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_multiplier": 1.2
+        }
+      }
+    ]
+  }
+}

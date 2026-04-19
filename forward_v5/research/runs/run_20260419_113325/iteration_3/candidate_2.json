@@ -1,0 +1,50 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_ZScore_Bands",
+    "type": "mean_reversion",
+    "hypothesis": "Ausnutzung kurzfristiger \u00dcbertreibungen in einem 1h-Zeitrahmen durch Z-Score Extremwerte bei gleichzeitigem Trend-Filter.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "SMA",
+        "params": {
+          "period": 200
+        }
+      }
+    ],
+    "entry": {
+      "condition": "ZSCORE(20) < -2.0 AND close > SMA(200)",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 2.0,
+      "stop_loss_pct": 1.2,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_multiplier": 1.2
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Hybrid_Breakout_Improved",
+    "type": "hybrid",
+    "hypothesis": "Verbesserung des Breakout-Ansatzes durch striktere Volatilit\u00e4tsfilter und engere Stop-Loss-Management zur Reduktion des Drawdowns.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "SMA",
+        "params": {
+          "period": 50
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      },
+      {
+        "name": "ATR",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close > SMA(50) AND RSI(14) > 60 AND volume > SMA(volume, 20)",
+      "max_per_day": 1
+    },
+    "exit": {
+      "take_profit_pct": 2.5,
+      "stop_loss_pct": 1.2,
+      "trailing_stop_pct": 0.3,
+      "max_hold_bars": 48
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 0.8
+    },
+    "filters": [
+      {
+        "type": "volatility",
+        "params": {
+          "max_atr_multiplier": 1.5
+        }
+      }
+    ]
+  }
+}

@@ -42,8 +42,8 @@ DATA_PATH = os.environ.get("FOUNDRY_DATA_PATH", "/data/.openclaw/workspace/forwa
 # Import backtest engine
 sys.path.insert(0, str(Path(__file__).parent / "backtest"))
 try:
-    from backtest_engine import BacktestEngine, BacktestResult
-    from walk_forward import WalkForwardAnalyzer, WalkForwardResult
+    from backtest.backtest_engine import BacktestEngine, BacktestResult
+    from backtest.walk_forward import WalkForwardAnalyzer, WalkForwardResult
     HAS_BACKTEST = True
 except ImportError:
     HAS_BACKTEST = False

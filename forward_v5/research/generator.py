@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from strategy_dsl import validate_candidate, errors_to_feedback
 
-API_URL = os.environ.get("OLLAMA_API_URL", "http://172.17.0.1:32770/v1/chat/completions")
+API_URL = os.environ.get("OLLAMA_API_URL", "http://172.17.0.1:32769/v1/chat/completions")
 API_KEY = os.environ.get("OLLAMA_API_KEY", "ollama-cloud")
 MODEL = os.environ.get("GENERATOR_MODEL", "gemma4:31b-cloud")
 

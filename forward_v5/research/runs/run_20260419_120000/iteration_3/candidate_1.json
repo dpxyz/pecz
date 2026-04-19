@@ -1,0 +1,50 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Crypto_Trend_Momentum_Hybrid",
+    "type": "hybrid",
+    "hypothesis": "Kombination aus Trendbest\u00e4tigung via EMA und Momentum via RSI zur Erfassung von Swing-Bewegungen in BTC, ETH und SOL.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "EMA",
+        "params": {
+          "period": 50
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "Close > EMA(50) AND RSI(14) crosses above 50",
+      "max_per_day": 3
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": 0.5,
+      "max_hold_bars": 120
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_ma_ratio": 1.2
+        }
+      }
+    ]
+  }
+}

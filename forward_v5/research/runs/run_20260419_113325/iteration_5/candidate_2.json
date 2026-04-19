@@ -1,0 +1,51 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_ZScore_Bollinger",
+    "type": "mean_reversion",
+    "hypothesis": "Capturing short-term overextensions using Z-Score and Bollinger Bands on 1h timeframe for high-probability reversals.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "BB",
+        "params": {
+          "period": 20,
+          "std_dev": 2.0
+        }
+      }
+    ],
+    "entry": {
+      "condition": "ZSCORE < -2.0 and close < BB_lower",
+      "max_per_day": 3
+    },
+    "exit": {
+      "take_profit_pct": 2.0,
+      "stop_loss_pct": 1.2,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_multiplier": 1.2
+        }
+      }
+    ]
+  }
+}

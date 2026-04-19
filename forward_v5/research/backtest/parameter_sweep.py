@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Callable
 from dataclasses import dataclass, asdict
 
-from backtest_engine import BacktestEngine, BacktestResult
+from backtest.backtest_engine import BacktestEngine, BacktestResult
 
 
 @dataclass

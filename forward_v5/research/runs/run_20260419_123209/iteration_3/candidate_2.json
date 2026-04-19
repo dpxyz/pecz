@@ -1,0 +1,57 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_BB_RSI",
+    "type": "mean_reversion",
+    "hypothesis": "Ausnutzung von \u00dcberverkauftheit in einem Aufw\u00e4rtstrend durch RSI und Bollinger Band Lower Touch.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "BB",
+        "params": {
+          "period": 20,
+          "std_dev": 2.0
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      },
+      {
+        "name": "SMA",
+        "params": {
+          "period": 100
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close < BB_lower AND RSI < 30 AND close > SMA(100)",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 2.0,
+      "stop_loss_pct": 1.2,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_multiplier": 1.2
+        }
+      }
+    ]
+  }
+}

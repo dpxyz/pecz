@@ -1,0 +1,49 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_ZScore_RSI",
+    "type": "mean_reversion",
+    "hypothesis": "Overextended price moves on the 1h timeframe tend to revert to the mean when RSI indicates extreme oversold/overbought levels.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "ZSCORE < -2.0 AND RSI < 30",
+      "max_per_day": 3
+    },
+    "exit": {
+      "take_profit_pct": 1.5,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 36
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volatility",
+        "params": {
+          "max_atr_multiplier": 2.5
+        }
+      }
+    ]
+  }
+}

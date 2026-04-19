@@ -1,0 +1,50 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_RSI_ZScore",
+    "type": "mean_reversion",
+    "hypothesis": "\u00dcberverkaufte Bedingungen in einem starken Asset-Korb f\u00fchren zu kurzfristigen Erholungen; Z-Score validiert die statistische Abweichung.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      },
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      }
+    ],
+    "entry": {
+      "condition": "RSI < 30 AND ZSCORE < -2.0",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 1.8,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volume",
+        "params": {
+          "min_volume_increase": 1.2
+        }
+      }
+    ]
+  }
+}

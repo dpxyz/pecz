@@ -1,0 +1,57 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Mean_Reversion_ZScore_BB",
+    "type": "mean_reversion",
+    "hypothesis": "Price deviations beyond 2 standard deviations in 1h timeframe tend to revert to the mean.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 20
+        }
+      },
+      {
+        "name": "BB",
+        "params": {
+          "period": 20,
+          "std_dev": 2.0
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "ZSCORE < -2.0 and RSI < 30 and close < BB_lower",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 2.0,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": [
+      {
+        "type": "volatility",
+        "params": {
+          "max_atr_multiplier": 2.5
+        }
+      }
+    ]
+  }
+}
