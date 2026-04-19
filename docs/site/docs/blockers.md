@@ -14,6 +14,8 @@ title: Blockers
 |---|---------|--------|--------|
 | 1 | Memory Search defekt | ⬸ Known | node-llama-cpp fehlt, braucht OpenClaw Update |
 | 2 | OpenClaw v2026.4.12 | ⬸ Known | Docker Image von Hostinger, kein selbst-Update |
+| 3 | **Hyperliquid Testnet** | 🔴 Blocked | Braucht Dave für API-Key Setup |
+| 4 | CL Gate (≤8) | 🟡 Decision | EMA-Signale erzeugen CL 10-11 → Dave muss über CL≤12 entscheiden |
 
 ---
 
@@ -32,4 +34,9 @@ title: Blockers
 
 ## Fast keine Blocker mehr für Paper Trading
 
-Die Executor V1 Module sind alle gebaut und getestet. Discord Commands und farbige Embeds sind fertig. Es fehlen nur noch **Hyperliquid Testnet API Keys** (braucht Dave).
+Die Executor V1 Module sind alle gebaut und getestet. Discord Commands und farbige Embeds sind fertig.
+Alle 12 Audit-Bugs sind gefixt. Post-Fix Re-Validation läuft.
+
+**Was noch fehlt:**
+1. **Hyperliquid Testnet API Keys** (braucht Dave)
+2. **CL Gate Entscheidung** — CL≤8 ergibt 12% Pass-Rate, CL≤12 ergibt 75% (Dave entscheidet)

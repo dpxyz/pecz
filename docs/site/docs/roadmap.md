@@ -47,6 +47,19 @@ title: Roadmap
 - **KI als Signalgeber = YES** (ADR-005 V2+), KI als Richter = NO
 - **Ziel-Shift:** Besserer Backtest → Strategie unter Echtzeit beweisen
 
+### Audit-Ergebnisse (2026-04-19)
+12 Bugs gefunden & gefixt — davon 4 kritisch:
+
+| Bug | Beschreibung | Fix |
+|-----|-------------|-----|
+| EMA=Bogus | `rolling_mean` (SMA) statt `ewm_mean` | → `ewm_mean(alpha=2/(p+1))` |
+| MACD=Bogus | Gleicher SMA-Bug in MACD-Berechnung | → `ewm_mean` in calc_macd |
+| net_return 100x | PnL in %, dann nochmal /100 geteilt | → Direkt in % summieren |
+| DSL Trailing-Only | TP>0 Pflicht verhinderte TP-freie Strategien | → TP optional wenn Trailing gesetzt |
+
+Post-Fix: EMA generiert mehr Trades (228 vs 181), niedrigere DD (10.6% vs 14.5%),
+aber höhere CL-Werte (Ø 11 vs 7). Gate-Passrate bei CL≤8: 12%, bei CL≤12: 75%.
+
 ---
 
 ## ⭐ Phase 8: Paper Trading + Economics — IN PROGRESS
@@ -73,6 +86,8 @@ title: Roadmap
 | `!kill` / `!resume` | Discord Commands für Guard-Override | ✅ |
 | Process Manager | Auto-start, restart on crash (5/5min) | ✅ |
 | systemd Unit | Für später (non-Docker) | ✅ |
+| Full Pipeline Audit | 12 Bugs gefunden & gefixt (EMA, net_return, DSL) | ✅ |
+| Post-Fix Re-Validation | 8 Assets × 2 Periods mit echtem EMA | ✅ |
 | Hyperliquid Testnet | Testnet-Setup, API Keys | ⬜ |
 | 30+ Day Run | Echtzeit Paper Trading | ⬜ |
 

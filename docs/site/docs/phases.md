@@ -20,7 +20,7 @@ title: Phases
 | 5 | Operations | ✅ COMPLETE | systemd, CLI, Health Dashboard |
 | 6 | Test Strategy | ✅ COMPLETE | 24h Stability Test PASSED |
 | **7** | **Strategy Lab** | **✅ COMPLETE** | **Gold Standard: MACD+ADX+EMA** |
-| **8** | **Paper Trading + Economics** | **⭐ IN PROGRESS** | **Executor V1 gebaut** |
+| **8** | **Paper Trading + Economics** | **⭐ IN PROGRESS** | **Executor V1 + Audit gefixt** |
 | 9 | Final Gate | ⬜ PENDING | Go/No-Go für Live Trading |
 
 ---
@@ -35,6 +35,7 @@ title: Phases
 2026-04-05  Phase 6 COMPLETE (24h Test PASSED)
 2026-04-05  Phase 7 COMPLETE (Strategy Lab validated)
 2026-04-19  Phase 8 START (Executor V1 built)
+2026-04-19  Phase 8 Audit (12 Bugs fixed, Post-EMA Re-Validation)
 ```
 
 ---
@@ -61,7 +62,10 @@ Systemd Service, CLI Control, Health Dashboard, Alert Engine. Alles läuft stabi
 
 ### Phase 8: Paper Trading + Economics ⭐
 
-Executor V1 gebaut (7 Module, Integrationstest bestanden). Paper Trading Run als nächster Meilenstein. Economics erst nach Paper Trading Proof.
+Executor V1 gebaut (7 Module, Integrationstest bestanden). **Full Pipeline Audit:**
+12 Bugs gefunden & gefixt (4 kritisch: EMA=Bogus, MACD=Bogus, net_return 100x, DSL Trailing).
+Post-Fix Re-Validation: CL≤8 = 12%, CL≤12 = 75% Pass-Rate.
+Paper Trading Run als nächster Meilenstein. Economics erst nach Paper Trading Proof.
 
 → Details: [Roadmap](roadmap.md) | [ADR-006](architecture/adr-006.md)
 
