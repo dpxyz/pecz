@@ -95,14 +95,19 @@ def calc_zscore(df: pl.DataFrame, period: int) -> pl.Series:
 
 
 def calc_adx(df: pl.DataFrame, period: int = 14) -> pl.Series:
-    """Average Directional Index - measures trend strength."""
-    high = df["high"]
-    low = df["low"]
-    close = df["close"]
+    """Average Directional Index - measures trend strength.
+    
+    Uses Polars Expression API throughout to avoid Expr/Series mixing.
+    Returns a Polars Series.
+    """
+    # Use expression-based column references
+    high = pl.col("high")
+    low = pl.col("low")
+    close = pl.col("close")
     
     # True Range
     tr = pl.max_horizontal(
-        high - low,
+        (high - low),
         (high - close.shift(1)).abs(),
         (low - close.shift(1)).abs()
     )
@@ -113,18 +118,24 @@ def calc_adx(df: pl.DataFrame, period: int = 14) -> pl.Series:
     plus_dm = pl.when((up_move > down_move) & (up_move > 0)).then(up_move).otherwise(0)
     minus_dm = pl.when((down_move > up_move) & (down_move > 0)).then(down_move).otherwise(0)
     
-    # Smoothed
+    # Smoothed ATR and DI
     atr_smooth = tr.rolling_mean(window_size=period, min_periods=period)
-    plus_di = 100 * plus_dm.rolling_mean(window_size=period, min_periods=period) / atr_smooth
-    minus_di = 100 * minus_dm.rolling_mean(window_size=period, min_periods=period) / atr_smooth
+    plus_dm_smooth = plus_dm.rolling_mean(window_size=period, min_periods=period)
+    minus_dm_smooth = minus_dm.rolling_mean(window_size=period, min_periods=period)
+    
+    # DI = 100 * DM_smooth / ATR_smooth
+    plus_di = pl.when(atr_smooth != 0).then(100 * plus_dm_smooth / atr_smooth).otherwise(0)
+    minus_di = pl.when(atr_smooth != 0).then(100 * minus_dm_smooth / atr_smooth).otherwise(0)
     
     # DX → ADX
     di_sum = plus_di + minus_di
     di_diff = (plus_di - minus_di).abs()
-    dx = pl.when(pl.Series(di_sum) != 0).then(100 * pl.Series(di_diff) / pl.Series(di_sum)).otherwise(0)
+    dx = pl.when(di_sum != 0).then(100 * di_diff / di_sum).otherwise(0)
     adx = dx.rolling_mean(window_size=period, min_periods=period)
     
-    return adx
+    # Compute in context and return as Series
+    result = df.select(adx.alias("adx"))
+    return result["adx"]
 
 
 def calc_bb_width(df: pl.DataFrame, period: int, std_dev: float = 2.0) -> pl.Series:
@@ -157,7 +168,7 @@ _ALLOWED_COLUMNS = {"close", "open", "high", "low", "volume"}
 # Indicator reference pattern: INDICATOR_period or INDICATOR_param
 # e.g. SMA_50, RSI_14, BB_upper_20, ZSCORE_50, MACD_hist
 _IND_PATTERN = re.compile(
-    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE)(?:_(\d+))?$',
+    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE|ADX|bb_width)(?:_(\d+))?$',
     re.IGNORECASE
 )
 
