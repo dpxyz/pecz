@@ -1,0 +1,448 @@
+{
+  "timestamp": "2026-04-19T13:43:44.595156",
+  "strategy": "RSI_EMA_100_MeanRev",
+  "platform": "hyperliquid",
+  "fee_rate": 0.0001,
+  "initial_capital": 100.0,
+  "results": [
+    {
+      "period": "2023_full",
+      "symbol": "BTCUSDT",
+      "trades": 57,
+      "net_return_pct": -6.79,
+      "profit_factor": 0.528,
+      "max_drawdown_pct": 8.7,
+      "win_rate_pct": 50.9,
+      "max_consecutive_losses": 3,
+      "sharpe_ratio": -17.724,
+      "expectancy": -0.1191,
+      "bars": 8760,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_h1",
+      "symbol": "BTCUSDT",
+      "trades": 28,
+      "net_return_pct": 2.11,
+      "profit_factor": 1.461,
+      "max_drawdown_pct": 2.9,
+      "win_rate_pct": 67.9,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": 11.121,
+      "expectancy": 0.0752,
+      "bars": 4369,
+      "gate": {
+        "passed": true,
+        "checks": {
+          "return": "True",
+          "pf": "True",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2024_h2",
+      "symbol": "BTCUSDT",
+      "trades": 35,
+      "net_return_pct": -1.01,
+      "profit_factor": 0.877,
+      "max_drawdown_pct": 4.6,
+      "win_rate_pct": 60.0,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": -4.211,
+      "expectancy": -0.0289,
+      "bars": 4417,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_full",
+      "symbol": "BTCUSDT",
+      "trades": 66,
+      "net_return_pct": 1.89,
+      "profit_factor": 1.148,
+      "max_drawdown_pct": 4.6,
+      "win_rate_pct": 65.2,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": 4.257,
+      "expectancy": 0.0286,
+      "bars": 8785,
+      "gate": {
+        "passed": true,
+        "checks": {
+          "return": "True",
+          "pf": "True",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "BTCUSDT",
+      "trades": 10,
+      "net_return_pct": 0.12,
+      "profit_factor": 1.047,
+      "max_drawdown_pct": 2.5,
+      "win_rate_pct": 60.0,
+      "max_consecutive_losses": 2,
+      "sharpe_ratio": 1.221,
+      "expectancy": 0.0124,
+      "bars": 2161,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "False",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2023_full",
+      "symbol": "ETHUSDT",
+      "trades": 83,
+      "net_return_pct": -3.05,
+      "profit_factor": 0.859,
+      "max_drawdown_pct": 8.2,
+      "win_rate_pct": 62.7,
+      "max_consecutive_losses": 6,
+      "sharpe_ratio": -4.396,
+      "expectancy": -0.0368,
+      "bars": 8760,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_h1",
+      "symbol": "ETHUSDT",
+      "trades": 41,
+      "net_return_pct": -3.46,
+      "profit_factor": 0.742,
+      "max_drawdown_pct": 5.8,
+      "win_rate_pct": 65.9,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": -9.422,
+      "expectancy": -0.0844,
+      "bars": 4369,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_h2",
+      "symbol": "ETHUSDT",
+      "trades": 38,
+      "net_return_pct": -3.53,
+      "profit_factor": 0.719,
+      "max_drawdown_pct": 7.3,
+      "win_rate_pct": 47.4,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": -10.798,
+      "expectancy": -0.0929,
+      "bars": 4417,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_full",
+      "symbol": "ETHUSDT",
+      "trades": 81,
+      "net_return_pct": -7.07,
+      "profit_factor": 0.731,
+      "max_drawdown_pct": 8.9,
+      "win_rate_pct": 56.8,
+      "max_consecutive_losses": 4,
+      "sharpe_ratio": -10.038,
+      "expectancy": -0.0872,
+      "bars": 8785,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "ETHUSDT",
+      "trades": 19,
+      "net_return_pct": -3.44,
+      "profit_factor": 0.664,
+      "max_drawdown_pct": 4.9,
+      "win_rate_pct": 63.2,
+      "max_consecutive_losses": 3,
+      "sharpe_ratio": -14.647,
+      "expectancy": -0.1811,
+      "bars": 2161,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "False",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2023_full",
+      "symbol": "SOLUSDT",
+      "trades": 73,
+      "net_return_pct": 6.57,
+      "profit_factor": 1.239,
+      "max_drawdown_pct": 6.8,
+      "win_rate_pct": 60.3,
+      "max_consecutive_losses": 6,
+      "sharpe_ratio": 7.647,
+      "expectancy": 0.09,
+      "bars": 8760,
+      "gate": {
+        "passed": true,
+        "checks": {
+          "return": "True",
+          "pf": "True",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2024_h1",
+      "symbol": "SOLUSDT",
+      "trades": 23,
+      "net_return_pct": -4.37,
+      "profit_factor": 0.687,
+      "max_drawdown_pct": 5.5,
+      "win_rate_pct": 65.2,
+      "max_consecutive_losses": 2,
+      "sharpe_ratio": -13.669,
+      "expectancy": -0.1899,
+      "bars": 4369,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_h2",
+      "symbol": "SOLUSDT",
+      "trades": 27,
+      "net_return_pct": -2.0,
+      "profit_factor": 0.854,
+      "max_drawdown_pct": 6.6,
+      "win_rate_pct": 63.0,
+      "max_consecutive_losses": 3,
+      "sharpe_ratio": -5.986,
+      "expectancy": -0.0741,
+      "bars": 4417,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2024_full",
+      "symbol": "SOLUSDT",
+      "trades": 51,
+      "net_return_pct": -7.92,
+      "profit_factor": 0.729,
+      "max_drawdown_pct": 9.2,
+      "win_rate_pct": 62.7,
+      "max_consecutive_losses": 3,
+      "sharpe_ratio": -11.813,
+      "expectancy": -0.1554,
+      "bars": 8785,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "SOLUSDT",
+      "trades": 23,
+      "net_return_pct": 1.17,
+      "profit_factor": 1.124,
+      "max_drawdown_pct": 7.9,
+      "win_rate_pct": 69.6,
+      "max_consecutive_losses": 5,
+      "sharpe_ratio": 4.191,
+      "expectancy": 0.051,
+      "bars": 2161,
+      "gate": {
+        "passed": true,
+        "checks": {
+          "return": "True",
+          "pf": "True",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "BTCUSDT",
+      "trades": 10,
+      "net_return_pct": 0.12,
+      "profit_factor": 1.047,
+      "max_drawdown_pct": 2.5,
+      "win_rate_pct": 60.0,
+      "max_consecutive_losses": 2,
+      "sharpe_ratio": 1.221,
+      "expectancy": 0.0124,
+      "bars": 2161,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "False",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "ETHUSDT",
+      "trades": 19,
+      "net_return_pct": -3.44,
+      "profit_factor": 0.664,
+      "max_drawdown_pct": 4.9,
+      "win_rate_pct": 63.2,
+      "max_consecutive_losses": 3,
+      "sharpe_ratio": -14.647,
+      "expectancy": -0.1811,
+      "bars": 2161,
+      "gate": {
+        "passed": false,
+        "checks": {
+          "return": "False",
+          "pf": "False",
+          "dd": "True",
+          "trades": "False",
+          "consec_loss": "True",
+          "sharpe": "False"
+        }
+      }
+    },
+    {
+      "period": "2025_q1",
+      "symbol": "SOLUSDT",
+      "trades": 23,
+      "net_return_pct": 1.17,
+      "profit_factor": 1.124,
+      "max_drawdown_pct": 7.9,
+      "win_rate_pct": 69.6,
+      "max_consecutive_losses": 5,
+      "sharpe_ratio": 4.191,
+      "expectancy": 0.051,
+      "bars": 2161,
+      "gate": {
+        "passed": true,
+        "checks": {
+          "return": "True",
+          "pf": "True",
+          "dd": "True",
+          "trades": "True",
+          "consec_loss": "True",
+          "sharpe": "True"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total_combinations": 15,
+    "passing": 4,
+    "pass_rate": "27%",
+    "holdout_passing": 1,
+    "holdout_total": 3
+  }
+}
