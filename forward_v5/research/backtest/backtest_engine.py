@@ -376,6 +376,11 @@ class BacktestEngine:
                     highest_since_entry = highs[i]
                 # Check if price dropped below trailing stop level
                 trailing_level = highest_since_entry * (1 - trailing_stop_pct / 100)
+                # NOTE: Uses CLOSE for trailing check (not LOW).
+                # LOW-based would be more conservative but makes most strategies unprofitable
+                # with 2% trailing on 1h crypto. Paper engine uses real-time price checks
+                # which are more accurate than either OHLC approximation.
+                # See: STRATEGIC_REVIEW.md for full analysis.
                 if closes[i] <= trailing_level:
                     exit_price = trailing_level * (1 - self.slippage)
                     gross_pnl = (exit_price - entry_price) / entry_price
