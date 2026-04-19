@@ -1,0 +1,62 @@
+# Phase 7 v0.1 – Strategy Specification
+# Mensch definiert WAS, nicht WIE
+
+# ── Profitability ──
+profitability:
+  min_return_pct: 5.0          # Annualisiert, netto
+  min_profit_factor: 1.5       # Brutto-Gewinne / Brutto-Verluste
+  min_expectancy: 0.01          # Erwarteter Profit pro Trade (absolut, nicht %)
+  min_trades: 50                # Statistische Signifikanz
+
+# ── Risk ──
+risk:
+  max_drawdown_pct: 15.0        # Hartes Limit
+  min_return_dd_ratio: 0.33     # 5% Return / 15% DD = 0.33
+  max_consecutive_losses: 8     # Psychologisch tragbar
+
+# ── Robustness ──
+robustness:
+  wf_windows_profitable: 2      # Mindestens 2 von 3 Walk-Forward Windows
+  wf_max_degradation_pct: 40    # WF-Performance darf max 40% abfallen
+  min_sharpe_ratio: 0.5         # Risk-adjusted Return
+
+# ── Resources ──
+resources:
+  max_memory_mb: 256            # VPS-Limit
+  max_execution_s: 30           # Pro Run
+  max_cpu_pct: 50               # Durchschnitt
+
+# ── Guardrails ──
+guardrails:
+  max_param_combinations: 50    # Gegen Overfitting
+  max_assets: 3                 # Gegen Komplexität
+  max_lookback_bars: 500        # Gegen Data-Mining
+
+# ── Asset Universe ──
+assets:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+
+# ── Timeframe ──
+timeframe: 1h
+
+# ── Data Range ──
+backtest_period: "2024-01-01 to 2024-12-31"
+
+# ── Fees & Slippage ──
+fees:
+  fee_rate: 0.0005            # 0.05% pro Trade (Binance taker)
+  slippage_bps: 5.0          # 5 Basis-Punkte Slippage
+
+# ── Data ──
+data:
+  path: "/data/.openclaw/workspace/forward_v5/forward_v5/research/data"
+  format: "parquet"           # {SYMBOL}_{TIMEFRAME}.parquet
+  columns: ["timestamp", "open", "high", "low", "close", "volume"]
+
+# ── Evolution Settings ──
+evolution:
+  max_iterations: 5
+  candidates_per_iteration: 3
+  mode: "weekly"              # Wöchentlicher Foundry-Run

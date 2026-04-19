@@ -1,16 +1,21 @@
 # Offene Blocker
 
-## Aktueller Status 🎉
+## Aktueller Status
 
-**Keine blockierenden Issues!** Phase 6 COMPLETE, Phase 7 ready to start.
-
----
+**Phase 7 🔨 BUILD IN PROGRESS** – Foundry V1 Pipeline wird gebaut. Phase 8 blockiert.
 
 ## Aktive Blocker
 
 | ID | Blocker | Status | Owner | Impact |
 |----|---------|--------|-------|--------|
-| - | **Keine aktiven Blocker** | ✅ | - | - |
+| B11 | **Phase 7 Foundry** | 🔨 Build in Progress | Pecz | ⛔ Blockt Phase 8 |
+| B11a | Foundry-Script bauen | ✅ dsl_translator.py + evolution_runner.py v2.0 | Pecz | |
+| B11b | Echter Backtest-Runner integrieren | ✅ WalkForward + Gate Evaluator | Pecz | |
+| B11c | Wöchentlicher Cron + Discord-Report | ⬜ Not started | Pecz | |
+| B11d | Mindestens 1 Strategie die Gates besteht | ⬜ Not started | KI | |
+| B11e | Datenpfad verifizieren (Parquet-Dateien) | ⬜ Not started | Pecz | |
+| B11f | Erster Mock-Run | ⬜ Not started | Pecz | |
+| B11g | Erchter Foundry-Run | ⬜ Not started | Pecz | |
 
 ---
 
@@ -73,6 +78,7 @@
 
 | Code | Bedeutung |
 |------|-----------|
+| 🔨 | Build in Progress |
 | 🔄 | In Progress |
 | ⬜ | Not started |
 | ⏳ | Waiting for dependency |
@@ -82,5 +88,5 @@
 
 ---
 
-*Last updated: 2026-04-05*  
-*Phase 6 Status: COMPLETE ✅*
+*Last updated: 2026-04-19*  
+*Phase 7 Status: BUILD IN PROGRESS – Foundry V1 Pipeline*

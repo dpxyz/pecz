@@ -1,0 +1,62 @@
+{
+  "analyzed_at": "2026-04-18T13:46:18.528074",
+  "scorecard_file": "research/research/scorecards/scorecard_mean_reversion_panic.json",
+  "strategy_name": "mean_reversion_panic",
+  "analyst_model": "gemma4:31b-cloud",
+  "analysis": {
+    "hypothesis_valid": true,
+    "hypothesis_assessment": "",
+    "data_quality": "GOOD",
+    "data_quality_reason": "90 Trades \u00fcber 12 Monate (BTCUSDT 1h)",
+    "metric_pass": false,
+    "failed_metrics": [
+      "profit_factor",
+      "max_drawdown"
+    ],
+    "metrics_detail": {
+      "profit_factor": {
+        "value": 1.01,
+        "target": 1.5,
+        "passed": false
+      },
+      "max_drawdown": {
+        "value": 30.45,
+        "target": 20.0,
+        "passed": false
+      },
+      "win_rate": {
+        "value": 58.89,
+        "target": 45.0,
+        "passed": true
+      },
+      "expectancy": {
+        "value": 0.009,
+        "target": 0.0,
+        "passed": true
+      }
+    },
+    "walk_forward_pass": true,
+    "wf_degradation_pct": 25.0,
+    "wf_robustness_score": 0.0,
+    "wf_assessment": "Robustness score 75 indicates stability, but performance is marginal",
+    "vps_fit": true,
+    "vps_notes": {
+      "memory_mb": "unknown",
+      "execution_s": "unknown"
+    },
+    "weaknesses": [
+      "Extrem niedriger Profit Factor (nahe 1.0)",
+      "\u00dcberh\u00f6hter Max Drawdown (>30%) im Verh\u00e4ltnis zum Net Return"
+    ],
+    "hypotheses_next": [
+      "Implementierung eines Volatility-Filters zur Reduktion des Drawdowns",
+      "Optimierung der Z-Score Thresholds zur Steigerung des Profit Factors",
+      "Einf\u00fchrung eines Zeit-basierten Stop-Loss"
+    ],
+    "verdict": "TWEAK",
+    "reason": "Strategie ist statistisch signifikant (Trade Count) und WF-stabil, aber das Risk-Reward-Profil ist inakzeptabel (DD zu hoch, PF zu niedrig).",
+    "confidence": 0.7
+  },
+  "raw_response": "```json\n{\n  \"hypothesis_valid\": true,\n  \"data_quality\": \"GOOD\",\n  \"data_quality_reason\": \"90 Trades \u00fcber 12 Monate (BTCUSDT 1h)\",\n  \"metric_pass\": false,\n  \"failed_metrics\": [\n    \"profit_factor\",\n    \"max_drawdown\"\n  ],\n  \"metrics_detail\": {\n    \"profit_factor\": {\n      \"value\": 1.01,\n      \"target\": 1.5,\n      \"passed\": false\n    },\n    \"max_drawdown\": {\n      \"value\": 30.45,\n      \"target\": 20.0,\n      \"passed\": false\n    },\n    \"win_rate\": {\n      \"value\": 58.89,\n      \"target\": 45.0,\n      ",
+  "execution_time_ms": 22539
+}

@@ -1,0 +1,42 @@
+{
+  "strategy_name": "multi_asset_selector",
+  "hypothesis": "Relative strength persists. Top momentum outperforms",
+  "dataset": {
+    "symbol": "BTCUSDT",
+    "timeframe": "1h",
+    "date_range": "2024-01-01 to 2024-12-31",
+    "n_bars": 8760
+  },
+  "parameters": {
+    "momentum_period": 30,
+    "n_top": 2,
+    "momentum_threshold": 2.0
+  },
+  "backtest_results": {
+    "net_return": 1.2142248296394944,
+    "max_drawdown": 39.70614528722857,
+    "profit_factor": 1.3547333900924374,
+    "win_rate": 43.523316062176164,
+    "expectancy": 0.6291320360826397,
+    "trade_count": 193,
+    "resource_usage": {
+      "execution_time_ms": 1360,
+      "memory_peak_mb": 128.0
+    }
+  },
+  "walk_forward": {
+    "n_windows": 3,
+    "robustness_score": 75,
+    "passed": true
+  },
+  "resource_usage": {},
+  "failure_reasons": [],
+  "verdict": "PASS",
+  "next_actions": [
+    "Integrate into forward_v5 system",
+    "Paper trade validation",
+    "Prepare live-ready config"
+  ],
+  "timestamp": "2026-04-18T13:47:59.792452",
+  "scorecard_version": "1.0"
+}

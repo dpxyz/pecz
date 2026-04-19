@@ -1,7 +1,7 @@
 # Phasenplan 0–9
 
-> **📌 Aktueller Stand:** Phase 7 ✅ COMPLETE | Phase 8 ⭐ READY TO START
-> **Quick Status:** Alle Phasen 0-7 abgeschlossen!
+> **📌 Aktueller Stand:** Phase 7 🔨 BUILD IN PROGRESS | Phase 8 ⬜ BLOCKED
+> **Quick Status:** Phasen 0-6 komplett, Phase 7 Foundry V1 Pipeline wird gebaut
 
 ## Übersicht
 
@@ -14,15 +14,14 @@ graph TD
     P2 --> P3[PHASE 3: Observability ✅]
     P3 --> P4[PHASE 4: Boundaries ✅]
     P4 --> P5[PHASE 5: Operations ✅]
-    P5 --> P6[PHASE 6: Tests ✅ COMPLETE]
-    P6 --> P7[PHASE 7: Strategy Lab ✅ COMPLETE]
-    P7 --> P8[PHASE 8: Economics ⭐ NEXT]
+    P5 --> P6[PHASE 6: Tests ✅]
+    P6 --> P7[PHASE 7: Foundry 🔨 BUILD]
+    P7 --> P8[PHASE 8: Economics ⬜ BLOCKED]
     P8 --> P9[PHASE 9: Review & Gate]
     P9 --> LIVE[Manuelle Live-Freigabe]
     
-    style P6 fill:#22c55e,stroke:#15803d,stroke-width:3px,color:#fff
-    style P7 fill:#22c55e,stroke:#15803d,stroke-width:3px,color:#fff
-    style P8 fill:#f59e0b,stroke:#d97706,stroke-width:3px,color:#fff
+    style P7 fill:#f59e0b,stroke:#d97706,stroke-width:3px,color:#fff
+    style P8 fill:#ef4444,stroke:#dc2626,stroke-width:3px,color:#fff
     style LIVE fill:#ef4444,stroke:#dc2626,stroke-width:3px,color:#fff
 ```
 
@@ -33,8 +32,8 @@ graph TD
 | 0-4 | ✅ COMPLETE | Alle Done |
 | 5 | ✅ COMPLETE | systemd, CLI, Health, Alerts |
 | 6 | ✅ COMPLETE | 24h Stability Test PASSED |
-| **7** | **✅ COMPLETE** | **Strategy Lab - 3 Strategien validiert** |
-| **8** | **⭐ NEXT** | **Economics - Bereit zum Start** |
+| **7** | **🔨 BUILD** | **Foundry V1 Pipeline** |
+| **8** | **⬜ BLOCKED** | **Wartet auf Phase 7** |
 | 9 | ⬜ PENDING | Final Gate |
 
 ---
@@ -105,56 +104,88 @@ Alle früheren Phasen erfolgreich abgeschlossen:
 
 ---
 
-## Phase 7: Strategy Lab ✅ COMPLETE
+## Phase 7: Foundry 🔨 BUILD IN PROGRESS
 
-**Status:** **COMPLETE** — Alle Deliverables finished  
-**Abschluss:** 2026-04-05  
-**⚠️ BLOCKS LIVE TRADING**
+**Status:** 🔨 BUILD — Foundry V1 Pipeline wird gebaut (2026-04-18)  
+**⚠️ BLOCKS PHASE 8 & LIVE TRADING**
 
-### Deliverables ✅
+### Warum Foundry?
+
+Die 3 Strategien aus v1 FAILen unter realistischen Kriterien:
+- Profit Factor alle nahe 1.0 (Ziel: ≥ 1.5)
+- Drawdown zu hoch: 30-40% (Ziel: ≤ 15%)
+- Return zu niedrig: 0-1.2% (Ziel: ≥ 5%)
+
+### OpenClaw Foundry — 10 Prinzipien
+
+1. KI entwirft Strategien, bewertet aber nie selbst
+2. Binäre Verdicts: PASS oder FAIL
+3. FAIL = verworfen, nicht gerettet
+4. PASS → promoted zu Paper/Shadow Trading
+5. Nutzerprodukt = 1 Discord-Nachricht pro Woche
+6. Innovation durch Spec + Gates, nicht mehr KI
+7. Spec ist Wahrheit
+8. Versionierte Audit-Trails
+9. Trennung von Generierung und Bewertung
+10. Strategy Factory, keine Spielwiese
+
+### Foundry V1 Pipeline
 
 ```
-research/
-├── backtest/
-│   ├── backtest_engine.py     ✅ Polars-First, vectorized
-│   ├── parameter_sweep.py     ✅ MAX_COMBINATIONS=50
-│   └── walk_forward.py        ✅ 3-window validation
-└── strategy_lab/
-    ├── multi_asset_selector.py ✅ PASS (1.21% return)
-    ├── mean_reversion_panic.py ✅ PASS (0.85% return)
-    └── trend_pullback.py       ⚠️ FAIL expected (dummy data)
+spec.yaml (Wahrheit)
+    ↓
+generator.py → Gemma4:31b → 3 Kandidaten als DSL-JSON
+    ↓
+strategy_dsl.py → Syntax-Validierung
+    ↓
+dsl_translator.py → DSL-JSON → strategy_func(df, params)
+    ↓
+backtest_engine.py → Polars-Backtest mit Fees/Slippage
+    ↓
+walk_forward.py → Walk-Forward Analysis (3 Windows)
+    ↓
+gate_evaluator.py → 5 harte Gates, binär PASS/FAIL
+    ↓
+Discord: "1 BACKTEST_PASS, 2 FAIL"
 ```
 
-### Strategy Scorecards ✅
+### Pipeline-Dateien (V1)
 
-| Strategie | Verdict | Return | Drawdown | Trades | Scorecard |
-|-----------|---------|--------|----------|--------|-----------|
-| trend_pullback | FAIL (expected) | -0.04% | 3.59% | 3 | ✅ Generated |
-| mean_reversion_panic | **PASS** | 0.85% | 30.45% | 90 | ✅ Generated |
-| multi_asset_selector | **PASS** | 1.21% | 39.71% | 193 | ✅ Generated |
+| Datei | Funktion | Status |
+|-------|----------|--------|
+| `spec.yaml` | Spezifikation (Wahrheit) | ✅ Aktualisiert |
+| `strategy_dsl.py` | DSL-Definition + Validierung | ✅ Vorhanden |
+| `generator.py` | Gemma4-Generator | ✅ Vorhanden |
+| `dsl_translator.py` | DSL-JSON → strategy_func | ✅ **NEU gebaut** |
+| `backtest_engine.py` | Polars-Backtest | ✅ Vorhanden |
+| `walk_forward.py` | Walk-Forward Analysis | ✅ Vorhanden |
+| `gate_evaluator.py` | 5 Gates, binäre Verdicts | ✅ Vorhanden |
+| `evolution_runner.py` | Orchestrierung v2.0 | ✅ **NEU gebaut** |
 
-### Performance Metrics (VPS)
+### Definition of Done
 
-| Strategie | Execution Time | Memory Peak | Status |
-|-----------|---------------|-------------|--------|
-| trend_pullback | ~967ms | 128 MB | ✅ Stable |
-| mean_reversion_panic | ~1,930ms | 128 MB | ✅ Stable |
-| multi_asset_selector | ~1,358ms | 128 MB | ✅ Stable |
+- [x] Foundry-Script bauen (dsl_translator + evolution_runner v2.0)
+- [x] Echter Backtest-Runner integriert (WalkForward + Gate Evaluator)
+- [ ] Datenpfad verifizieren (Parquet-Dateien)
+- [ ] Erster Mock-Run
+- [ ] Echter Foundry-Run
+- [ ] Wöchentlicher Cron + Discord-Report
+- [ ] Mindestens 1 Strategie die alle Gates besteht
 
-### Definition of Done ✅
+### Alte Strategien (v1, archiviert)
 
-- [x] Mindestens 3 Strategien mit Scorecards
-- [x] Jede Strategie: Walk-forward validated
-- [x] Multi-Asset-Selektor implementiert
-- [x] Guardrails: MAX_COMBINATIONS=50, MAX_ASSETS=3
-- [x] Kimi-2.5 Integration: Parser robust, Fallback verfügbar
+| Strategie | Verdict v1 | Verdict v2 (Gates) | Grund |
+|-----------|-----------|-------------------|-------|
+| trend_pullback | FAIL | FAIL | -0.04% Return, 3 Trades |
+| mean_reversion_panic | PASS | FAIL | PF 1.007, DD 30.45% |
+| multi_asset_selector | PASS | FAIL | DD 39.71%, Return 1.21% |
 
 ---
 
-## Phase 8: Economics ⭐ NEXT
+## Phase 8: Economics ⬜ BLOCKED
 
-**Status:** Ready to start  
-**Depends:** Phase 7 COMPLETE ✅
+**Status:** Blocked by Phase 7  
+**Depends:** Phase 7 Foundry COMPLETE
 
 ### Deliverables
 
@@ -212,8 +243,9 @@ research/
 2026-03-27: Phase 3 COMPLETE (Observability)
 2026-04-01: Phase 5 COMPLETE (Operations)
 2026-04-05: Phase 6 COMPLETE (24h Test PASSED!) 🎉
-2026-04-05: Phase 7 COMPLETE (Strategy Lab validated!) ✅
-2026-04-??: Phase 8 START (Economics) ⭐
+2026-04-05: Phase 7 v1 COMPLETE (Strategy Lab validated)
+2026-04-18: Phase 7 RE-OPENED → Foundry-Redesign beschlossen
+2026-04-19: Phase 7 BUILD IN PROGRESS → Foundry V1 Pipeline
 ```
 
 ---

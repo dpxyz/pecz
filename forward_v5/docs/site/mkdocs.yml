@@ -66,6 +66,8 @@ nav:
   - Strategy Lab:
     - Overview: strategy-lab/index.md
     - Phase 7 Report: strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
+    - Foundry Charter: strategy-lab/FOUNDRY_CHARTER.md
+    - Phase 7 Redesign: strategy-lab/PHASE7_REDESIGN.md
     - Test: strategy-lab/test.md
   - Test Reports: test-reports.md
   - Economics: economics.md

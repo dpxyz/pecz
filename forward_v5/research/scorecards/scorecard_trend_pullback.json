@@ -1,0 +1,42 @@
+{
+  "strategy_name": "trend_pullback",
+  "hypothesis": "Trend + Pullback = Continuation. EMA above + RSI oversold = entry",
+  "dataset": {
+    "symbol": "BTCUSDT",
+    "timeframe": "1h",
+    "date_range": "2024-01-01 to 2024-12-31",
+    "n_bars": 8760
+  },
+  "parameters": {
+    "ema_period": 20,
+    "rsi_period": 14,
+    "rsi_threshold_long": 35,
+    "rsi_threshold_short": 60
+  },
+  "backtest_results": {
+    "net_return": -0.0362294072061311,
+    "max_drawdown": 3.588829467743817,
+    "profit_factor": 0.0,
+    "win_rate": 0.0,
+    "expectancy": -1.2076469068710367,
+    "trade_count": 3,
+    "resource_usage": {
+      "execution_time_ms": 958,
+      "memory_peak_mb": 128.0
+    }
+  },
+  "walk_forward": {
+    "n_windows": 3,
+    "robustness_score": 75,
+    "passed": true
+  },
+  "resource_usage": {},
+  "failure_reasons": [],
+  "verdict": "FAIL",
+  "next_actions": [
+    "Increase trade frequency",
+    "Refine entry/exit logic"
+  ],
+  "timestamp": "2026-04-18T13:47:11.582754",
+  "scorecard_version": "1.0"
+}

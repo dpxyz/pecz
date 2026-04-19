@@ -1,28 +1,41 @@
 # Roadmap
 
-## Aktueller Status 🎉
+## Aktueller Status 🔨
 
-**Phase 6: Test Strategy — ✅ COMPLETE**  
-*24h Stability Test PASSED (2026-04-05)*
+**Phase 7: Foundry — 🔨 BUILD IN PROGRESS**  
+*Foundry V1 Pipeline wird gebaut (2026-04-19)*
 
 ---
 
-## Test Results Summary ✅
+## Foundry V1 Pipeline — Status
 
-### 24h Stability Test — PASSED
+### Pipeline-Komponenten
 
-| Metrik | Wert |
-|--------|------|
-| Status | ✅ **PASSED** |
-| Dauer | 24h (86,409,577 ms) |
-| Health Success Rate | 100.0% (96/96 checks) |
-| Max Memory | 83.4% |
-| Circuit Breaker Changes | 0 |
-| Total Errors | 0 |
-| Start | 2026-04-04 09:40 GMT+2 |
-| Ende | 2026-04-05 09:40 GMT+2 |
+| Komponente | Datei | Status |
+|------------|-------|--------|
+| Spezifikation | `spec.yaml` | ✅ Aktualisiert (Fees, Data-Pfade) |
+| DSL-Definition | `strategy_dsl.py` | ✅ Vorhanden |
+| KI-Generator | `generator.py` | ✅ Vorhanden (Gemma4:31b) |
+| DSL-Translator | `dsl_translator.py` | ✅ **NEU gebaut** |
+| Backtest Engine | `backtest_engine.py` | ✅ Vorhanden (Polars) |
+| Walk-Forward | `walk_forward.py` | ✅ Vorhanden |
+| Gate Evaluator | `gate_evaluator.py` | ✅ Vorhanden (5 Gates) |
+| Orchestrierung | `evolution_runner.py` | ✅ **NEU v2.0** |
 
-**Alle Acceptance Gates G1-G5:** ✅ PASSED
+### Noch offen (vor erstem Run)
+
+- [ ] Datenpfad verifizieren – Parquet-Dateien existieren?
+- [ ] Walk-Forward Integration testen
+- [ ] Discord-Webhook für Report konfigurieren
+- [ ] Erster Foundry-Run: `python3 evolution_runner.py --mock`
+- [ ] Echter Foundry-Run: `python3 evolution_runner.py`
+- [ ] Wöchentlicher Cron-Job (z.B. Sonntag 10:00 UTC)
+
+### Noch offen (V2)
+
+- [ ] Paper/Shadow Trading Interface
+- [ ] Promoted-Status statt nur BACKTEST_PASS
+- [ ] Live-Feed-Handler für Paper Trading
 
 ---
 
@@ -54,51 +67,31 @@
 - **24h Stability Test: ✅ PASSED (2026-04-05)**
 - 7d Stability Test: ⬜ Optional
 
----
+### 🔨 Phase 7: Foundry — BUILD IN PROGRESS
 
-## ⭐ Phase 7: Strategy Lab — NEXT
-
-**Status:** 🚀 **READY TO START**  
+**Status:** 🔨 Foundry V1 Pipeline wird gebaut  
 **⚠️ MANDATORY — Blocks Live Trading**
 
-### Backtest Engine
+Foundry Charter beschlossen am 2026-04-18:
+- KI generiert Strategien, harte Gates bewerten
+- Binäre Verdicts: PASS oder FAIL
+- FAIL = verworfen, nicht gerettet
+- Nutzerprodukt = 1 Discord-Nachricht/Woche
 
-| Komponente | Status | Beschreibung |
-|------------|--------|--------------|
-| backtest_engine.py | ⬜ TODO | Haupt-Backtest-Framework |
-| parameter_sweep.py | ⬜ TODO | Parameter-Optimierung |
-| walk_forward.py | ⬜ TODO | Walk-forward Validierung |
-
-### Strategien
-
-| Strategie | Status | Notizen |
-|-----------|--------|---------|
-| rsi_regime_filter.py | ⬜ TODO | RSI mit Regime-Erkennung |
-| volatility_filter.py | ⬜ TODO | Volatilitäts-basierte Filter |
-| multi_asset_selector.py | ⬜ TODO | Asset-Auswahl-Logik |
-| mean_reversion_panic.py | ⬜ TODO | Mean Reversion Panic-Detection |
-| trend_pullback.py | ⬜ TODO | Trend-Pullback Entries |
-
-### Definition of Done
-
-- [ ] Mindestens 3 Strategien mit Scorecards
-- [ ] Jede Strategie: Hypothesis → Backtest → Walk-forward
-- [ ] Alle Scorecards als JSON gespeichert
-- [ ] Multi-Asset-Selektor implementiert
-- [ ] Regime-Filter getestet
+Alte v1-Strategien: alle FAIL unter realistischen Kriterien.
 
 ---
 
-## Parallel Tasks
+## Blocker Summary
 
-### Systemd Host Test (5.1)
-
-| Teil | Status | Next Action |
-|------|--------|-------------|
-| Code | ✅ Complete | Service-Files ready |
-| Host Test | ⏳ Deferred | VPS-Deploy pending |
-
-Kein Blocker für Phase 7 — kann parallel laufen.
+| ID | Blocker | Status | Impact |
+|----|---------|--------|--------|
+| B11 | **Phase 7 Foundry** | 🔨 Build | ⛔ Blockt Phase 8 |
+| B11a | Pipeline-Skripte bauen | ✅ Done | |
+| B11b | Backtest-Runner integriert | ✅ Done | |
+| B11c | Wöchentlicher Cron + Discord | ⬜ Open | |
+| B11d | 1 Strategie die Gates besteht | ⬜ Open | |
+| 5.1 | Host Validation | ⏳ Deferred | Kein Blocker |
 
 ---
 
@@ -112,27 +105,15 @@ Mar 27: Phase 3 Complete (Observability)
 Apr 01: Phase 5 Complete (Operations)
 Apr 05: Phase 6 Complete (24h Test) 🎉
 
-🚀 NEXT:
-Apr 05-12: Phase 7 — Strategy Lab ⭐
-Apr 12-19: Phase 8 — Economics
-Apr 19-26: Phase 9 — Review & Gate
-May 01:    ⛔ Manual Sign-off target
+🔨 IN PROGRESS:
+Apr 18: Phase 7 Foundry-Redesign beschlossen
+Apr 19: Phase 7 Foundry V1 Build
+
+⬜ NEXT:
+Phase 7 Foundry-Run → Phase 8 Economics → Phase 9 Final Gate → Live
 ```
 
 ---
 
-## Blocker Summary
-
-| ID | Blocker | Status | Impact |
-|----|---------|--------|--------|
-| B10 | Memory Monitoring Fix | ✅ Gelöst | - |
-| **Phase 6** | **Alle Tests** | **✅ Complete** | **-** |
-| **Phase 7** | **Strategy Lab** | **⭐ Ready** | **Blocks Live** |
-| 5.1 | Host Validation | ⏳ Deferred | Kein Blocker |
-
-**Keine blockierenden Issues!** 🎉
-
----
-
-*Last updated: 2026-04-05*  
-*24h Test: PASSED ✅*
+*Last updated: 2026-04-19*  
+*Phase 7: Foundry V1 Build in Progress*

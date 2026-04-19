@@ -1,0 +1,63 @@
+{
+  "analyzed_at": "2026-04-18T13:49:35.335323",
+  "scorecard_file": "research/research/scorecards/scorecard_mean_reversion_panic.json",
+  "strategy_name": "mean_reversion_panic",
+  "analyst_model": "gemma4:31b-cloud",
+  "analysis": {
+    "hypothesis_valid": true,
+    "hypothesis_assessment": "",
+    "data_quality": "GOOD",
+    "data_quality_reason": "90 Trades \u00fcber 12 Monate (BTCUSDT 1h)",
+    "metric_pass": false,
+    "failed_metrics": [
+      "profit_factor",
+      "max_drawdown"
+    ],
+    "metrics_detail": {
+      "profit_factor": {
+        "value": 1.007,
+        "target": 1.5,
+        "passed": false
+      },
+      "max_drawdown": {
+        "value": 30.45,
+        "target": 20.0,
+        "passed": false
+      },
+      "win_rate": {
+        "value": 58.89,
+        "target": 45.0,
+        "passed": true
+      },
+      "expectancy": {
+        "value": 0.0095,
+        "target": 0.0,
+        "passed": true
+      }
+    },
+    "walk_forward_pass": true,
+    "wf_degradation_pct": 25.0,
+    "wf_robustness_score": 0.0,
+    "wf_assessment": "Robustness score 75 indicates stability, but overall performance is marginal",
+    "vps_fit": true,
+    "vps_notes": {
+      "memory_mb": "N/A",
+      "execution_s": "N/A"
+    },
+    "weaknesses": [
+      "Extrem niedriger Profit Factor nahe 1.0",
+      "Max Drawdown \u00fcberschreitet Limit deutlich (30.45%)",
+      "Net Return marginal im Verh\u00e4ltnis zum Risiko"
+    ],
+    "hypotheses_next": [
+      "Implementierung eines Volatilit\u00e4ts-Filters zur Reduktion des Drawdowns",
+      "Optimierung des Z-Score Schwellenwerts zur Steigerung des Profit Factors",
+      "Anpassung der Exit-Strategie zur Verbesserung des Risk-Reward-Verh\u00e4ltnisses"
+    ],
+    "verdict": "TWEAK",
+    "reason": "Strategie ist statistisch robust (WF pass, WR gut), aber die Performance-Metriken (PF, DD) sind unzureichend f\u00fcr einen Live-Einsatz.",
+    "confidence": 0.9
+  },
+  "raw_response": "```json\n{\n  \"hypothesis_valid\": true,\n  \"data_quality\": \"GOOD\",\n  \"data_quality_reason\": \"90 Trades \u00fcber 12 Monate (BTCUSDT 1h)\",\n  \"metric_pass\": false,\n  \"failed_metrics\": [\n    \"profit_factor\",\n    \"max_drawdown\"\n  ],\n  \"metrics_detail\": {\n    \"profit_factor\": {\n      \"value\": 1.007,\n      \"target\": 1.5,\n      \"passed\": false\n    },\n    \"max_drawdown\": {\n      \"value\": 30.45,\n      \"target\": 20.0,\n      \"passed\": false\n    },\n    \"win_rate\": {\n      \"value\": 58.89,\n      \"target\": 45.0,\n     ",
+  "execution_time_ms": 26716
+}

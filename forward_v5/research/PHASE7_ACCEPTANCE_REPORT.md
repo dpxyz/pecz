@@ -21,6 +21,20 @@ Phase 7 Strategy Lab erfolgreich abgeschlossen. Alle 3 Strategien validiert, Pol
 
 ---
 
+## Nachträglich Ergänzt: Recovery der fehlenden Rohbelege (2026-04-18)
+
+Am 2026-04-18 wurden drei fehlende Rohbelegkategorien nachträglich erzeugt und unter `research/evidence/phase7/` archiviert:
+
+1. **KI-End-to-End-Analyse:** Statt Kimi-2.5 (nach Docker-Update mit leerem Content-Feld) wurde **Gemma4:31b-cloud** auf Port 32770 verwendet. Die Analyse lieferte ein vollständiges, strukturiertes Ergebnis (Verdict: TWEAK, Konfidenz: 70%). Artefakt: `meta_analysis_gemma4_20260418.json`.
+
+2. **3×3 Stabilitätstests:** Alle 9 Konsolenoutputs (trend_pullback, mean_reversion_panic, multi_asset_selector × je 3 Runs) wurden als Roh-Logs archiviert. Ergebnisse vollständig konsistent mit den ursprünglichen Phase-7-Resultaten.
+
+3. **Guardrail-/Failure-Path-Tests:** MAX_COMBINATIONS>50 und MAX_ASSETS>3 sind als Sammelbeleg dokumentiert in `guardrail_sammelbeleg_20260418_135000.log`. Zusätzlich: Missing-API-Key-Fallback-Output (`fallback_missing_api_key_*.log/json`) und Parser-Failure-Output (`parser_failure_stdout_*.log`).
+
+**Warum Gemma4 statt Kimi:** Nach Update des Ollama-Docker-Containers (Port-Wechsel 32768→32770) lieferte Kimi-2.5 leere Content-Felder zurück. Gemma4:31b-cloud funktionierte zuverlässig mit korrektem JSON-Output im Content-Feld und wurde daher als Ersatz für die KI-Analyse verwendet.
+
+---
+
 ## 1. Backtest Engine Validation
 
 ### 1.1 Polars-First Architecture

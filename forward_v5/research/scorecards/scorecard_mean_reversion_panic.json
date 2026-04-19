@@ -1,0 +1,43 @@
+{
+  "strategy_name": "mean_reversion_panic",
+  "hypothesis": "Panic moves revert to mean. Z-score extreme = entry",
+  "dataset": {
+    "symbol": "BTCUSDT",
+    "timeframe": "1h",
+    "date_range": "2024-01-01 to 2024-12-31",
+    "n_bars": 8760
+  },
+  "parameters": {
+    "sma_period": 60,
+    "std_period": 50,
+    "z_entry_long": -2.0,
+    "z_entry_short": 2.0
+  },
+  "backtest_results": {
+    "net_return": 0.008524694450827328,
+    "max_drawdown": 30.451079689795446,
+    "profit_factor": 1.0070217280614941,
+    "win_rate": 58.88888888888889,
+    "expectancy": 0.009471882723141476,
+    "trade_count": 90,
+    "resource_usage": {
+      "execution_time_ms": 1938,
+      "memory_peak_mb": 128.0
+    }
+  },
+  "walk_forward": {
+    "n_windows": 3,
+    "robustness_score": 75,
+    "passed": true
+  },
+  "resource_usage": {},
+  "failure_reasons": [],
+  "verdict": "PASS",
+  "next_actions": [
+    "Integrate into forward_v5 system",
+    "Paper trade validation",
+    "Prepare live-ready config"
+  ],
+  "timestamp": "2026-04-18T13:47:38.559071",
+  "scorecard_version": "1.0"
+}

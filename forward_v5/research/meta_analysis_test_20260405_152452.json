@@ -1,0 +1,28 @@
+{
+  "analyzed_at": "2026-04-05T15:24:52.535159",
+  "scorecard_file": "test_scorecard.json",
+  "strategy_name": "test",
+  "analyst_model": "heuristic_fallback",
+  "analysis": {
+    "hypothesis_valid": true,
+    "hypothesis_assessment": "Hypothese nicht bewertet (Fallback)",
+    "data_quality": "WARNING",
+    "data_quality_reason": "10 Trades",
+    "metric_pass": false,
+    "failed_metrics": [],
+    "metrics_detail": {},
+    "walk_forward_pass": false,
+    "wf_degradation_pct": 0.0,
+    "wf_robustness_score": 0.0,
+    "wf_assessment": "",
+    "vps_fit": true,
+    "vps_notes": {},
+    "weaknesses": [],
+    "hypotheses_next": [],
+    "verdict": "TWEAK",
+    "reason": "Automatische Bewertung (KI nicht verf\u00fcgbar)",
+    "confidence": 0.5
+  },
+  "raw_response": "",
+  "execution_time_ms": 100
+}
