@@ -15,7 +15,7 @@ title: Blockers
 | 1 | Memory Search defekt | ⬸ Known | node-llama-cpp fehlt, braucht OpenClaw Update |
 | 2 | OpenClaw v2026.4.12 | ⬸ Known | Docker Image von Hostinger, kein selbst-Update |
 | 3 | **Hyperliquid Testnet** | 🔴 Blocked | Braucht Dave für API-Key Setup |
-| 4 | CL Gate (≤8) | 🟡 Decision | EMA-Signale erzeugen CL 10-11 → Dave muss über CL≤12 entscheiden |
+| 4 | CL Gate (≤8) | ✅ Fixed | CL≤12 approved (Dave) — 75% Pass-Rate, EMA produces more trades |
 
 ---
 

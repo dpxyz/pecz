@@ -43,7 +43,7 @@ macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20
 | Min Return | ≥ 1% | |
 | Min Profit Factor | ≥ 1.05 | |
 | Max Drawdown | ≤ 20% | |
-| Max Consecutive Losses | ≤ 8 | ⚠️ See CL analysis below |
+| Max Consecutive Losses | ≤ 12 | Adjusted from 8 — EMA signals produce more trades, CL center at 10-11 |
 | Min Trades | ≥ 20 | |
 | Min Sharpe | ≥ 0.1 | |
 
@@ -55,7 +55,7 @@ The CL≤8 gate is the primary failure point with true EMA signals:
 |-------------|-----------|-------|
 | CL ≤ 8 | 2/16 (12%) | Current v0.3 spec — very strict |
 | CL ≤ 10 | 7/16 (44%) | Reasonable for trend strategy |
-| CL ≤ 12 | 12/16 (75%) | Recommended for V1 |
+| CL ≤ 12 | 12/16 (75%) | ✅ APPROVED (Dave, 2026-04-19) |
 | CL ≤ 15 | 13/16 (81%) | Too lenient |
 
 **CL Distribution across 16 tests:** CL=8 (×2), 9 (×1), 10 (×4), 11 (×5), 12 (×1), 13 (×1), 15 (×1), 18 (×1)
@@ -87,7 +87,7 @@ CL=8 was calibrated for SMA-based signals which had fewer but larger trades.
 | ADAUSDT | 2024 | 204 | +87.3% | 1.58 | 12.3% | 39.7% | 10 | — | ❌ CL |
 | ADAUSDT | 2yr | 447 | +197.5% | 1.70 | 17.5% | — | 10 | — | ❌ CL |
 
-**Pass Rate (CL≤8): 2/16 (12%)** | **Pass Rate (CL≤12): 12/16 (75%)**
+**Pass Rate (CL≤8): 2/16 (12%)** | **Pass Rate (CL≤12): 12/16 (75%)** ✅
 
 ### Comparison: SMA vs EMA (BTC 2024)
 

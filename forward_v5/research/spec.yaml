@@ -12,7 +12,7 @@ profitability:
 risk:
   max_drawdown_pct: 20.0        # V1: 20% DD (aggressiv für 100€, aber Perps)
   min_return_dd_ratio: 0.05     # V1: 1%/20% = 0.05
-  max_consecutive_losses: 8     # V1: 8 max
+  max_consecutive_losses: 12    # V1: 12 (adjusted from 8 — EMA signals produce more trades, CL center at 10-11. Guard stops at CL≥5 anyway)
 
 # ── Robustness ──
 robustness:

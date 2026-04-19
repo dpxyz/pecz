@@ -40,7 +40,7 @@ AND adx_14 > 20         # Echter Trend (kein Chop)
 | XRP | ❌ CL+DD | ❌ CL+DD | 272/515 | +117%/+207% | 28/28 | 12/18 |
 | ADA | ❌ CL | ❌ CL | 204/447 | +87%/+198% | 12/18 | 10/10 |
 
-**Pass Rate (CL≤8): 2/16 (12%)** | **Pass Rate (CL≤12): 12/16 (75%)**
+**Pass Rate (CL≤12): 12/16 (75%)** ✅
 
 ### SMA vs EMA Vergleich (BTC 2024)
 
@@ -74,7 +74,7 @@ haben natürlicherweise längere Verlustserien als der CL≤8-Threshold erlaubt.
 | Min Return | 1% | |
 | Profit Factor | ≥ 1.05 | |
 | Max Drawdown | ≤ 20% | |
-| Max Consecutive Losses | ≤ 8 | ⚠️ Zur Diskussion: CL≤12 → 75% Pass |
+| Max Consecutive Losses | ≤ 12 | ✅ Adjusted (was 8) — EMA produces more trades |
 | Min Sharpe | ≥ 0.1 | |
 | Min Trades | 20 | |
 
