@@ -176,7 +176,8 @@ def real_backtest(candidate: dict, spec: dict) -> dict:
             strategy_func=strat_func,
             param_grid=param_grid,
             symbol=symbol,
-            timeframe=timeframe
+            timeframe=timeframe,
+            exit_config=exit_config if exit_config else None
         )
     except Exception as e:
         print(f"  [WARN] Walk-Forward failed: {e}")

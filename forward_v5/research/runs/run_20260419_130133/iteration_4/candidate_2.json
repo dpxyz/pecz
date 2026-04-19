@@ -1,0 +1,44 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "BB_RSI_Aggressive_Bounce",
+    "type": "mean_reversion",
+    "hypothesis": "Combining Bollinger Band lower breach with a moderately oversold RSI (35) increases signal frequency while maintaining quality, targeting a return to the mean.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "BB",
+        "params": {
+          "period": 20,
+          "std_dev": 2.0
+        }
+      },
+      {
+        "name": "RSI",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "close < bb_lower_20 AND rsi_14 < 35",
+      "max_per_day": 3
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 1.5,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 24
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": []
+  }
+}

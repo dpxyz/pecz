@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-Walk-Forward Analysis V1 - VPS-Safe
+Walk-Forward Analysis V2 - Full Exit Logic Support
+
+- Nutzt BacktestEngine.run() statt _quick_simulate
+- TP/SL/max-hold Exit-Logik wird im Walk-Forward berücksichtigt
 - Kleine Fenster (VPS-RAM)
 - Wenige Kombinationen
 - Strikte Train/Validate/OOS Trennung
@@ -55,13 +58,13 @@ class WalkForwardResult:
 
 class WalkForwardAnalyzer:
     """
-    Walk-Forward Analyse - VPS First
+    Walk-Forward Analyse V2 - Full Engine
     
     Konzept:
     1. Teile Daten in Windows (z.B. 70% Train, 30% OOS)
-    2. Optimiere auf Train (mit Parameter Sweep)
-    3. Teste besten Parameter auf OOS
-    4. Wiederhole für mehrere Windows
+    2. Optimiere auf Train (mit BacktestEngine inkl. Exit-Logik)
+    3. Teste besten Parameter auf OOS (mit BacktestEngine inkl. Exit-Logik)
+    4. Wiederhole für mehrere Window
     5. Berechne Robustness Score
     
     VPS-Limits:
@@ -87,25 +90,19 @@ class WalkForwardAnalyzer:
     def _split_data(self, symbol: str, timeframe: str) -> List[tuple]:
         """
         Teile Daten in Windows
-        Returns: List of (train_lf, test_lf) LazyFrames
+        Returns: List of (train_df, test_lf) LazyFrames
         """
         file_path = self.data_path / f"{symbol}_{timeframe}.parquet"
         
         if not file_path.exists():
             raise FileNotFoundError(f"Data not found: {file_path}")
         
-        # Lade als LazyFrame
-        lf = pl.scan_parquet(file_path)
-        
-        # Collect for splitting (not ideal but necessary for windowing)
-        # For very large datasets, use streaming=True
-        df = lf.collect()
+        df = pl.read_parquet(file_path)
         n_rows = len(df)
         
         # Berechne Window-Größe
         window_size = n_rows // self.n_windows
         train_size = int(window_size * self.train_pct)
-        test_size = window_size - train_size
         
         windows = []
         for i in range(self.n_windows):
@@ -130,12 +127,16 @@ class WalkForwardAnalyzer:
         param_grid: Dict[str, List[Any]],
         symbol: str = "BTCUSDT",
         timeframe: str = "1h",
-        robustness_threshold: float = 0.6  # 60% = passed
+        robustness_threshold: float = 0.6,  # 60% = passed
+        exit_config: Dict = None
     ) -> WalkForwardResult:
         """
-        Führe Walk-Forward Analyse durch
+        Führe Walk-Forward Analyse durch (V2: Full Engine)
         """
         start_time = time.time()
+        
+        if exit_config is None:
+            exit_config = {}
         
         # Reduziere Grid für VPS-Safety
         param_grid = self._reduce_grid(param_grid)
@@ -146,24 +147,19 @@ class WalkForwardAnalyzer:
         is_results = []
         oos_results = []
         
-        print(f"Walk-Forward Analysis: {len(windows)} windows")
+        print(f"Walk-Forward Analysis V2 (Full Engine): {len(windows)} windows")
         print(f"Train: {self.train_pct*100:.0f}%, Test: {(1-self.train_pct)*100:.0f}%")
+        print(f"Exit config: {exit_config}")
         print("=" * 60)
         
         for i, (train_df, test_df) in enumerate(windows, 1):
             print(f"\n--- Window {i}/{len(windows)} ---")
-            
-            # 1. Train: Finde beste Parameter
             print(f"Train size: {len(train_df)}, Test size: {len(test_df)}")
             
-            # Temporäres Engine für dieses Window
-            # (In real usage, engine needs to accept DataFrames directly)
-            # For now, we'll use a simplified approach
-            
+            # 1. Train: Finde beste Parameter mit VOLLER BacktestEngine
             best_return = -float('inf')
             best_params = None
             
-            # Einfache Grid-Suche (kein voller Sweep)
             keys = list(param_grid.keys())
             values = [param_grid[k] for k in keys]
             
@@ -171,13 +167,19 @@ class WalkForwardAnalyzer:
             for combo in itertools.product(*values):
                 params = dict(zip(keys, combo))
                 
-                # Simuliere Backtest auf Train (simplified)
-                # In production, this would use the actual engine
-                result = self._quick_simulate(train_df, strategy_func, params)
+                result = self.engine.run(
+                    strategy_name, strategy_func, params, symbol, timeframe,
+                    exit_config=exit_config, df=train_df
+                )
                 
-                if result > best_return:
-                    best_return = result
+                if result.trade_count > 0 and result.net_return > best_return:
+                    best_return = result.net_return
                     best_params = params
+            
+            if best_params is None:
+                # No params produced trades - use first combo
+                best_params = dict(zip(keys, values[0] if values else []))
+                best_return = 0.0
             
             print(f"Best train params: {best_params}, Return: {best_return:.2f}%")
             
@@ -187,16 +189,26 @@ class WalkForwardAnalyzer:
                 'params': best_params
             })
             
-            # 2. Test: Validiere auf OOS
-            oos_return = self._quick_simulate(test_df, strategy_func, best_params)
+            # 2. Test: Validiere auf OOS mit VOLLER BacktestEngine
+            oos_result = self.engine.run(
+                strategy_name, strategy_func, best_params, symbol, timeframe,
+                exit_config=exit_config, df=test_df
+            )
             
-            print(f"OOS return: {oos_return:.2f}%")
+            oos_return = oos_result.net_return if oos_result.trade_count > 0 else 0.0
+            
+            degradation = (best_return - oos_return) / abs(best_return) if best_return != 0 else 0
+            
+            print(f"OOS return: {oos_return:.2f}% (trades: {oos_result.trade_count})")
             
             oos_results.append({
                 'window': i,
                 'return': oos_return,
                 'params': best_params,
-                'degradation': (best_return - oos_return) / abs(best_return) if best_return != 0 else 0
+                'degradation': degradation,
+                'trades': oos_result.trade_count,
+                'profit_factor': oos_result.profit_factor,
+                'max_drawdown': oos_result.max_drawdown
             })
         
         # Berechne Robustness Score
@@ -221,7 +233,6 @@ class WalkForwardAnalyzer:
         """Reduziere Grid auf MAX_PARAMS_PER_WINDOW"""
         import itertools
         
-        # Berechne Kombinationen
         total = 1
         for v in grid.values():
             total *= len(v)
@@ -247,40 +258,6 @@ class WalkForwardAnalyzer:
         for v in grid.values():
             total *= len(v)
         return total
-    
-    def _quick_simulate(self, df: pl.DataFrame, strategy_func: Callable, params: Dict) -> float:
-        """
-        Schnelle Simulation mit Polars-native Operations
-        """
-        try:
-            # Apply strategy
-            result = strategy_func(df, params)
-            
-            if 'signal' not in result.columns or 'close' not in result.columns:
-                return 0.0
-            
-            # Polars-native: compute returns
-            result = result.with_columns([
-                pl.col('close').pct_change().alias('returns'),
-                pl.col('signal').shift(1).alias('signal_lag')
-            ])
-            
-            # Strategy returns = signal * market returns
-            result = result.with_columns(
-                (pl.col('signal_lag') * pl.col('returns')).alias('strategy_returns')
-            )
-            
-            total_return = result['strategy_returns'].sum() * 100
-            
-            # Python float, not Polars scalar
-            if hasattr(total_return, 'item'):
-                total_return = total_return.item()
-            
-            return float(total_return)
-            
-        except Exception as e:
-            print(f"Simulation error: {e}")
-            return -999.0  # Signal failure
     
     def _calc_robustness(self, is_results: List, oos_results: List) -> float:
         """
@@ -324,6 +301,6 @@ class WalkForwardAnalyzer:
 
 
 if __name__ == "__main__":
-    print("Walk-Forward Analyzer V1")
+    print("Walk-Forward Analyzer V2")
     print(f"Max windows: {WalkForwardAnalyzer.MAX_WINDOWS}")
     print(f"Max params/window: {WalkForwardAnalyzer.MAX_PARAMS_PER_WINDOW}")

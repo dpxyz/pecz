@@ -34,7 +34,7 @@ class BacktestResult:
     params: Dict
     trades: List[Trade] = field(default_factory=list)
     equity_curve: List[float] = field(default_factory=list)
-    
+
     # Performance Metrics
     net_return: float = 0.0
     max_drawdown: float = 0.0
@@ -42,43 +42,43 @@ class BacktestResult:
     win_rate: float = 0.0
     expectancy: float = 0.0
     trade_count: int = 0
-    
+
     # Metadata
     execution_time_ms: int = 0
     memory_peak_mb: float = 0.0
     failure_reasons: List[str] = field(default_factory=list)
-    
+
     def calculate_metrics(self, initial_capital: float = 10000.0):
         """Berechne alle Performance-Metriken"""
         self.trade_count = len(self.trades)
-        
+
         if self.trade_count == 0:
             self.failure_reasons.append("No trades generated")
             return self
-        
+
         # PnL
         pnls = [t.pnl for t in self.trades if t.pnl is not None]
         gross_profit = sum(p for p in pnls if p > 0)
         gross_loss = sum(abs(p) for p in pnls if p < 0)
         net_pnl = sum(pnls)
-        
+
         self.net_return = (net_pnl / initial_capital) * 100
-        
+
         # Win Rate
         wins = sum(1 for p in pnls if p > 0)
         self.win_rate = (wins / len(pnls)) * 100 if pnls else 0
-        
+
         # Profit Factor
         self.profit_factor = gross_profit / gross_loss if gross_loss > 0 else float('inf') if gross_profit > 0 else 0
-        
+
         # Expectancy
         self.expectancy = net_pnl / len(pnls) if pnls else 0
-        
+
         # Max Drawdown
         self.max_drawdown = self._calc_max_drawdown()
-        
+
         return self
-    
+
     def _calc_max_drawdown(self) -> float:
         """
         Calculate maximum drawdown from equity curve.
@@ -96,7 +96,7 @@ class BacktestResult:
         max_dd = np.max(drawdowns)
 
         return float(max_dd) * 100
-    
+
     def to_dict(self) -> Dict:
         return {
             'strategy_name': self.strategy_name,
@@ -115,7 +115,7 @@ class BacktestResult:
 
 class BacktestEngine:
     """Minimalistische Backtest Engine - VPS First, Polars Native"""
-    
+
     def __init__(
         self,
         data_path: str,
@@ -128,17 +128,17 @@ class BacktestEngine:
         self.slippage = slippage_bps / 10000  # bps -> decimal
         self.initial_capital = initial_capital
         self.data: Optional[pl.DataFrame] = None
-    
+
     def load_data(self, symbol: str, timeframe: str = "1h") -> pl.LazyFrame:
         """Lade OHLCV Daten als LazyFrame"""
         file_path = self.data_path / f"{symbol}_{timeframe}.parquet"
-        
+
         if not file_path.exists():
             raise FileNotFoundError(f"Data not found: {file_path}")
-        
+
         # Polars LazyFrame - Memory-efficient
         return pl.scan_parquet(file_path)
-    
+
     def run(
         self,
         strategy_name: str,
@@ -146,7 +146,8 @@ class BacktestEngine:
         params: Dict,
         symbol: str = "BTCUSDT",
         timeframe: str = "1h",
-        exit_config: Dict = None
+        exit_config: Dict = None,
+        df: pl.DataFrame = None
     ) -> BacktestResult:
         """
         Führe Backtest aus
@@ -155,6 +156,7 @@ class BacktestEngine:
             strategy_func: Callable(df: pl.DataFrame, params: dict) -> pl.DataFrame
                           Muss 'signal' Column zurückgeben (-1, 0, 1)
             exit_config: Dict with take_profit_pct, stop_loss_pct, max_hold_bars
+            df: Pre-loaded DataFrame (wenn gesetzt, wird symbol/timeframe nicht geladen)
         """
         if exit_config is None:
             exit_config = {}
@@ -170,16 +172,19 @@ class BacktestEngine:
         )
         
         try:
-            # Lade Daten (Lazy -> Collect bei Bedarf)
-            lf = self.load_data(symbol, timeframe)
-            df = lf.collect()
+            # Lade Daten: entweder übergebenes DataFrame oder aus Datei
+            if df is not None:
+                data = df
+            else:
+                lf = self.load_data(symbol, timeframe)
+                data = lf.collect()
             
-            if len(df) < 100:
-                result.failure_reasons.append("Insufficient data (< 100 bars)")
+            if len(data) < 50:
+                result.failure_reasons.append("Insufficient data (< 50 bars)")
                 return result
             
             # Generiere Signale
-            df_signals = strategy_func(df, params)
+            df_signals = strategy_func(data, params)
             
             if 'signal' not in df_signals.columns:
                 result.failure_reasons.append("Strategy did not produce 'signal' column")
@@ -193,7 +198,7 @@ class BacktestEngine:
             
         except Exception as e:
             result.failure_reasons.append(f"Execution error: {str(e)}")
-        
+            
         finally:
             # Performance Tracking
             result.execution_time_ms = int((time.time() - start_time) * 1000)
@@ -202,7 +207,7 @@ class BacktestEngine:
             tracemalloc.stop()
         
         return result
-    
+
     def _simulate_trades_polars(
         self,
         df: pl.DataFrame,
@@ -211,34 +216,34 @@ class BacktestEngine:
     ) -> BacktestResult:
         """
         Simuliere Trades aus Signalen - mit Exit-Logik (TP/SL/Max-Hold)
-        
+
         Exit Priority:
         1. Stop-Loss (bar-wise check)
         2. Take-Profit (bar-wise check)
         3. Max-Hold-Bars (time-based exit)
         4. Signal Exit (strategy flips from 1 to 0/-1)
-        
+
         - Entry on signal edge (0->1), executed at next open + slippage
         - No lookahead bias
         """
         if exit_config is None:
             exit_config = {}
-        
+
         tp_pct = exit_config.get("take_profit_pct", None)
         sl_pct = exit_config.get("stop_loss_pct", None)
         max_hold = exit_config.get("max_hold_bars", None)
-        
+
         # Hole timestamp Column Name
         timestamp_col = None
         for col in ['timestamp', 'datetime', 'date', 'time']:
             if col in df.columns:
                 timestamp_col = col
                 break
-        
+
         if timestamp_col is None:
             df = df.with_row_index("_row_idx")
             timestamp_col = "_row_idx"
-        
+
         # Convert to numpy arrays for fast bar-wise iteration
         signals = df["signal"].to_numpy()
         opens = df["open"].to_numpy()
@@ -246,16 +251,16 @@ class BacktestEngine:
         lows = df["low"].to_numpy()
         closes = df["close"].to_numpy()
         n = len(df)
-        
+
         trades = []
         equity = self.initial_capital
         equity_curve = [equity]
-        
+
         i = 0
         in_position = False
         entry_price = 0.0
         entry_bar = 0
-        
+
         while i < n - 1:
             # Check for entry signal (0 or not-in-position -> 1)
             if not in_position and signals[i] == 1:
@@ -265,15 +270,15 @@ class BacktestEngine:
                 in_position = True
                 i += 1
                 continue
-            
+
             # If not in position, advance
             if not in_position:
                 i += 1
                 continue
-            
+
             # We're in a position - check exits bar by bar
             # Priority: SL > TP > Max-Hold > Signal Exit
-            
+
             # 1. Stop-Loss check
             if sl_pct is not None and lows[i] <= entry_price * (1 - sl_pct / 100):
                 exit_price = entry_price * (1 - sl_pct / 100) * (1 - self.slippage)
@@ -293,7 +298,7 @@ class BacktestEngine:
                 in_position = False
                 i += 1
                 continue
-            
+
             # 2. Take-Profit check
             if tp_pct is not None and highs[i] >= entry_price * (1 + tp_pct / 100):
                 exit_price = entry_price * (1 + tp_pct / 100) * (1 - self.slippage)
@@ -313,7 +318,7 @@ class BacktestEngine:
                 in_position = False
                 i += 1
                 continue
-            
+
             # 3. Max hold bars
             bars_held = i - entry_bar
             if max_hold is not None and bars_held >= max_hold:
@@ -334,7 +339,7 @@ class BacktestEngine:
                 in_position = False
                 i += 1
                 continue
-            
+
             # 4. Signal exit (signal flips from 1 to 0 or -1)
             if signals[i] != 1:
                 exit_price = opens[i + 1] * (1 - self.slippage) if i + 1 < n else closes[i] * (1 - self.slippage)
@@ -352,9 +357,9 @@ class BacktestEngine:
                 equity *= (1 + net_pnl)
                 equity_curve.append(equity)
                 in_position = False
-            
+
             i += 1
-        
+
         # Close open position at end of data
         if in_position:
             exit_price = closes[-1] * (1 - self.slippage)
@@ -371,14 +376,14 @@ class BacktestEngine:
             ))
             equity *= (1 + net_pnl)
             equity_curve.append(equity)
-        
+
         # Falls keine Trades, füge zumindest initiales Equity hinzu
         if len(equity_curve) == 1:
             equity_curve.append(equity)
-        
+
         result.trades = trades
         result.equity_curve = equity_curve
-        
+
         return result
 
 
@@ -388,15 +393,15 @@ class BacktestEngine:
 
 if __name__ == "__main__":
     import argparse
-    
+
     parser = argparse.ArgumentParser(description='Backtest Engine V2 - Polars Native')
     parser.add_argument('--data', required=True, help='Path to data directory')
     parser.add_argument('--symbol', default='BTCUSDT', help='Trading pair')
     parser.add_argument('--timeframe', default='1h', help='Timeframe')
     parser.add_argument('--output', help='Output JSON file')
-    
+
     args = parser.parse_args()
-    
+
     # Beispiel-Usage
     engine = BacktestEngine(args.data)
     print(f"Backtest Engine V2 initialized (Polars Native)")

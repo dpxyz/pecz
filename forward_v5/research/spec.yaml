@@ -46,8 +46,8 @@ backtest_period: "2024-01-01 to 2024-12-31"
 
 # ── Fees & Slippage ──
 fees:
-  fee_rate: 0.0005            # 0.05% pro Trade (Binance taker)
-  slippage_bps: 5.0          # 5 Basis-Punkte Slippage
+  fee_rate: 0.0002            # 0.02% pro Trade (Binance maker)
+  slippage_bps: 2.0           # 2 Basis-Punkte Slippage (limit orders)
 
 # ── Data ──
 data:
