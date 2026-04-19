@@ -1,119 +1,137 @@
-# Roadmap
+---
+title: Roadmap
+---
 
-## Aktueller Status 🔨
+# 🗺️ Roadmap — Forward V5
 
-**Phase 7: Foundry — 🔨 BUILD IN PROGRESS**  
-*Foundry V1 Pipeline wird gebaut (2026-04-19)*
+> Jede Phase muss vollständig abgeschlossen sein bevor die nächste beginnt. Keine Ausnahmen.
 
 ---
 
-## Foundry V1 Pipeline — Status
+## ✅ Phase 0–6: Foundation COMPLETE
 
-### Pipeline-Komponenten
-
-| Komponente | Datei | Status |
-|------------|-------|--------|
-| Spezifikation | `spec.yaml` | ✅ Aktualisiert (Fees, Data-Pfade) |
-| DSL-Definition | `strategy_dsl.py` | ✅ Vorhanden |
-| KI-Generator | `generator.py` | ✅ Vorhanden (Gemma4:31b) |
-| DSL-Translator | `dsl_translator.py` | ✅ **NEU gebaut** |
-| Backtest Engine | `backtest_engine.py` | ✅ Vorhanden (Polars) |
-| Walk-Forward | `walk_forward.py` | ✅ Vorhanden |
-| Gate Evaluator | `gate_evaluator.py` | ✅ Vorhanden (5 Gates) |
-| Orchestrierung | `evolution_runner.py` | ✅ **NEU v2.0** |
-
-### Noch offen (vor erstem Run)
-
-- [ ] Datenpfad verifizieren – Parquet-Dateien existieren?
-- [ ] Walk-Forward Integration testen
-- [ ] Discord-Webhook für Report konfigurieren
-- [ ] Erster Foundry-Run: `python3 evolution_runner.py --mock`
-- [ ] Echter Foundry-Run: `python3 evolution_runner.py`
-- [ ] Wöchentlicher Cron-Job (z.B. Sonntag 10:00 UTC)
-
-### Noch offen (V2)
-
-- [ ] Paper/Shadow Trading Interface
-- [ ] Promoted-Status statt nur BACKTEST_PASS
-- [ ] Live-Feed-Handler für Paper Trading
+| Phase | Name | Ergebnis |
+|-------|------|----------|
+| 0 | Freeze & Archive | Alte Systeme eingefroren |
+| 1 | Skeleton | Grundstruktur, ADRs |
+| 2 | Core | 103 Tests, Projektions-Engine |
+| 3 | Observability | Monitoring, Logging |
+| 4 | Boundaries | Error Handling, Circuit Breaker |
+| 5 | Operations | systemd, CLI, Health Dashboard |
+| 6 | Test Strategy | 24h Stability Test PASSED |
 
 ---
 
-## Phase-by-Phase Status
+## ✅ Phase 7: Strategy Lab — COMPLETE
 
-### ✅ Phase 0-5: COMPLETE
+**Ziel:** Mindestens eine robuste, validierte Strategie für Paper Trading finden.
 
-| Phase | Status | Tests | Notizen |
-|-------|--------|-------|---------|
-| 0 | ✅ Freeze & Archive | - | Legacy archiviert |
-| 1 | ✅ Skeleton & ADRs | - | 5 ADRs complete |
-| 2 | ✅ Core Reliability | **103/103** | Event, Projection, Risk, Reconcile |
-| 3 | ✅ Observability | **68/68** | Logger, Health, Reports, Rebuild |
-| 4 | ✅ System Boundaries | **10/10** | Circuit Breaker, Safety/Observability |
-| 5 | ✅ Operations | - | CLI, Dashboard, Alerts |
+### Was wurde gemacht
+- Backtest Engine v2 (Polars, Walk-Forward, vectorized)
+- DSL Translator (8 Indikatoren, Condition Parser, kein eval/exec)
+- 6 Strategie-Typen über 3 Assets × 5 Zeiträume validiert (90 Tests)
+- Regime-Filter Breakthrough: ADX+EMA verdoppelt Pass-Rate (12%→50%)
+- ATR-Filter getestet und abgelehnt
+- Gold Standard identifiziert: **MACD Momentum + ADX+EMA**
 
-### ✅ Phase 6: Test Strategy — COMPLETE
+### Ergebnis
+| | Unfiltered | ADX+EMA Filter |
+|---|---|---|
+| Pass Rate | 12% | **50%** |
+| Avg Drawdown | 22.7% | **14.1%** |
+| Max Consec. Losses | 9.9 | **6.5** |
 
-| Gate | Name | Status |
-|------|------|--------|
-| G1 | Zero unmanaged positions | ✅ PASSED |
-| G2 | Projection parity | ✅ PASSED |
-| G3 | Recovery from restart | ✅ PASSED |
-| G4 | No duplicated trade IDs | ✅ PASSED |
-| G5 | Discord Failover blockiert nicht | ✅ PASSED |
-
-**Simulation:**
-- 1h Smoke Test: ✅ PASSED
-- **24h Stability Test: ✅ PASSED (2026-04-05)**
-- 7d Stability Test: ⬜ Optional
-
-### 🔨 Phase 7: Foundry — BUILD IN PROGRESS
-
-**Status:** 🔨 Foundry V1 Pipeline wird gebaut  
-**⚠️ MANDATORY — Blocks Live Trading**
-
-Foundry Charter beschlossen am 2026-04-18:
-- KI generiert Strategien, harte Gates bewerten
-- Binäre Verdicts: PASS oder FAIL
-- FAIL = verworfen, nicht gerettet
-- Nutzerprodukt = 1 Discord-Nachricht/Woche
-
-Alte v1-Strategien: alle FAIL unter realistischen Kriterien.
+### Entscheidungen
+- **Keine weitere Gate-Relaxation** — Thresholds bleiben wie sie sind
+- **Keine weiteren Filter-Tests** — ATR getestet, abgelehnt
+- **KI als Signalgeber = YES** (ADR-005 V2+), KI als Richter = NO
+- **Ziel-Shift:** Besserer Backtest → Strategie unter Echtzeit beweisen
 
 ---
 
-## Blocker Summary
+## ⭐ Phase 8: Paper Trading + Economics — IN PROGRESS
 
-| ID | Blocker | Status | Impact |
-|----|---------|--------|--------|
-| B11 | **Phase 7 Foundry** | 🔨 Build | ⛔ Blockt Phase 8 |
-| B11a | Pipeline-Skripte bauen | ✅ Done | |
-| B11b | Backtest-Runner integriert | ✅ Done | |
-| B11c | Wöchentlicher Cron + Discord | ⬜ Open | |
-| B11d | 1 Strategie die Gates besteht | ⬜ Open | |
-| 5.1 | Host Validation | ⏳ Deferred | Kein Blocker |
+**Ziel:** Beweisen dass die Strategie unter echten Bedingungen funktioniert.
+
+### 8.1: Executor V1 ✅ BUILD COMPLETE
+
+| Modul | Beschreibung | Status |
+|-------|-------------|--------|
+| data_feed.py | Hyperliquid WebSocket, 1h Candles, SQLite | ✅ |
+| signal_generator.py | MACD+ADX+EMA, deterministic | ✅ |
+| state_manager.py | Position, Equity, Guard State (SQLite) | ✅ |
+| risk_guard.py | 5 Guard States, hardcoded thresholds | ✅ |
+| paper_engine.py | Orchestrator, Backfill, Slippage, Fees | ✅ |
+| discord_reporter.py | #foundry-reports, OpenClaw message tool | ✅ |
+| test_integration.py | 376 Trades auf BTC+ETH 2024 | ✅ |
+
+### 8.2: Paper Trading Setup — TODO
+
+| Task | Beschreibung | Status |
+|------|-------------|--------|
+| Embed-Formatierung | Farbige Discord Reports | ⬜ |
+| `!kill` / `!resume` | Discord Commands für Guard-Override | ⬜ |
+| systemd Service | Auto-start, restart on crash | ⬜ |
+| Hyperliquid Testnet | Testnet-Setup, API Keys | ⬜ |
+| 30+ Day Run | Echtzeit Paper Trading | ⬜ |
+
+### Success Criteria (ADR-006)
+- ≥30 Trades
+- ≤25% Drawdown
+- ≤10pp Win-Rate Deviation vs. Backtest
+- ≥30 Tage Laufzeit
+- ≥95% Signal Execution Rate
+- ≤60s Kill-Switch Response
+
+### 8.3: Economics — NACH Paper Trading
+
+| Report | Inhalt |
+|--------|--------|
+| Monthly PnL Projection | Erwarteter Return bei 100€ |
+| Infra Costs | Server, API, Monitoring |
+| Break-even Analysis | Trades/Tag für Profitabilität |
+| Risk-adjusted Returns | Sharpe, Sortino, Calmar |
 
 ---
 
-## Timeline
+## ⬜ Phase 9: Final Gate — PENDING
+
+**Ziel:** Endgültige Go/No-Go Entscheidung für Live Trading.
+
+### Checklist
+
+| # | Item | Status |
+|---|------|--------|
+| 1 | Alle Phasen 0-8 abgeschlossen | ⬜ |
+| 2 | Paper Trading Success Criteria erfüllt | ⬜ |
+| 3 | Economics positiv | ⬜ |
+| 4 | Security Audit | ⬜ |
+| 5 | On-Call Setup | ⬜ |
+| 6 | Rollback getestet | ⬜ |
+| 7 | **Manuelle Freigabe (Dave)** | ⬜ |
+
+### Go/No-Go
 
 ```
-✅ COMPLETED:
-Mar 06: Phase 0-1 Complete
-Mar 08: Phase 2 Complete (103 Tests)
-Mar 27: Phase 3 Complete (Observability)
-Apr 01: Phase 5 Complete (Operations)
-Apr 05: Phase 6 Complete (24h Test) 🎉
-
-🔨 IN PROGRESS:
-Apr 18: Phase 7 Foundry-Redesign beschlossen
-Apr 19: Phase 7 Foundry V1 Build
-
-⬜ NEXT:
-Phase 7 Foundry-Run → Phase 8 Economics → Phase 9 Final Gate → Live
+╔══════════════════════════════════════════════╗
+║  LIVE TRADING GO/NO-GO                       ║
+║                                               ║
+║  Decision:  [ ] GO    [ ] NO-GO              ║
+║                                               ║
+║  If GO:                                       ║
+║  [ ] ENABLE_EXECUTION_LIVE=true              ║
+║  [ ] MAINNET_TRADING_ALLOWED=true            ║
+║                                               ║
+║  Signature: ___________  Date: __________     ║
+╚══════════════════════════════════════════════╝
 ```
 
 ---
 
-*Last updated: 2026-04-19*  
-*Phase 7: Foundry V1 Build in Progress*
+## 🚫 Was wir NICHT machen
+
+- Keine Gate-Relaxation (Thresholds bleiben)
+- Keine weiteren Filter-Tests (ATR abgelehnt)
+- Kein KI-Richter (nur KI-Signalgeber in V2+)
+- Kein Live Trading ohne Paper Trading Proof
+- Kein Phase-Skipping

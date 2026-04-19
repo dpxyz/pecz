@@ -2,7 +2,7 @@ site_name: Forward V5 Mission Control
 site_description: Trading System Status & Documentation
 site_url: https://pecz.pages.dev
 repo_url: https://github.com/dpxyz/pecz
-copyright: Copyright &copy; 2026
+copyright: "Copyright &copy; 2026"
 
 theme:
   name: material
@@ -20,7 +20,7 @@ theme:
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to dark mode
   features:
     - navigation.top
     - search.suggest
@@ -51,28 +51,21 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
-  - Mission Control: index.md
-  - Phases: phases.md
-  - Roadmap: roadmap.md
-  - Blockers: blockers.md
-  - Architecture:
-    - Overview: architecture/index.md
-    - ADR-001: architecture/adr-001.md
-    - ADR-002: architecture/adr-002.md
-    - ADR-003: architecture/adr-003.md
-    - ADR-004: architecture/adr-004.md
-    - ADR-005: architecture/adr-005.md
-  - Runbooks:
-    - Overview: runbooks/index.md
-  - Strategy Lab:
-    - Overview: strategy-lab/index.md
-    - Phase 7 Report: strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
-    - Foundry Charter: strategy-lab/FOUNDRY_CHARTER.md
-    - Phase 7 Redesign: strategy-lab/PHASE7_REDESIGN.md
-    - Test: strategy-lab/test.md
-  - Test Reports: test-reports.md
-  - Economics: economics.md
-  - Changelog: changelog.md
+  - "🎯 Mission Control": index.md
+  - "🗺️ Roadmap": roadmap.md
+  - "📋 Phases": phases.md
+  - "🚧 Blockers": blockers.md
+  - "🏗️ Architecture":
+    - "ADR-001: Target Architecture": architecture/adr-001.md
+    - "ADR-002: Observability": architecture/adr-002.md
+    - "ADR-003: State Model": architecture/adr-003.md
+    - "ADR-004: Risk Controls": architecture/adr-004.md
+    - "ADR-005: Three-Layer": architecture/adr-005.md
+    - "ADR-006: Paper Trading": architecture/adr-006.md
+  - "🔬 Strategy Lab":
+    - "Overview": strategy-lab/index.md
+    - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
+    - "Baseline Strategy": strategy-lab/baseline.md
 
 extra:
   generator: false
