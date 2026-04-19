@@ -1,169 +1,137 @@
-# Roadmap
+---
+title: Roadmap
+---
 
-## Aktueller Status 🎉
+# 🗺️ Roadmap — Forward V5
 
-**Phase 6: Test Strategy — ✅ COMPLETE**  
-*24h Stability Test PASSED (2026-04-05)*
+> Jede Phase muss vollständig abgeschlossen sein bevor die nächste beginnt. Keine Ausnahmen.
 
 ---
 
-## Test Results Summary ✅
+## ✅ Phase 0–6: Foundation COMPLETE
 
-### 24h Stability Test — PASSED
-
-| Metrik | Wert |
-|--------|------|
-| Status | ✅ **PASSED** |
-| Dauer | 24h (86,409,577 ms) |
-| Health Success Rate | 100.0% (96/96 checks) |
-| Max Memory | 83.4% |
-| Circuit Breaker Changes | 0 |
-| Total Errors | 0 |
-| Start | 2026-04-04 09:40 GMT+2 |
-| Ende | 2026-04-05 09:40 GMT+2 |
-
-**Alle Acceptance Gates G1-G5:** ✅ PASSED
+| Phase | Name | Ergebnis |
+|-------|------|----------|
+| 0 | Freeze & Archive | Alte Systeme eingefroren |
+| 1 | Skeleton | Grundstruktur, ADRs |
+| 2 | Core | 103 Tests, Projektions-Engine |
+| 3 | Observability | Monitoring, Logging |
+| 4 | Boundaries | Error Handling, Circuit Breaker |
+| 5 | Operations | systemd, CLI, Health Dashboard |
+| 6 | Test Strategy | 24h Stability Test PASSED |
 
 ---
 
-## Phase-by-Phase Status
+## ✅ Phase 7: Strategy Lab — COMPLETE
 
-### ✅ Phase 0-5: COMPLETE
+**Ziel:** Mindestens eine robuste, validierte Strategie für Paper Trading finden.
 
-| Phase | Status | Tests | Notizen |
-|-------|--------|-------|---------|
-| 0 | ✅ Freeze & Archive | - | Legacy archiviert |
-| 1 | ✅ Skeleton & ADRs | - | 5 ADRs complete |
-| 2 | ✅ Core Reliability | **103/103** | Event, Projection, Risk, Reconcile |
-| 3 | ✅ Observability | **68/68** | Logger, Health, Reports, Rebuild |
-| 4 | ✅ System Boundaries | **10/10** | Circuit Breaker, Safety/Observability |
-| 5 | ✅ Operations | - | CLI, Dashboard, Alerts |
+### Was wurde gemacht
+- Backtest Engine v2 (Polars, Walk-Forward, vectorized)
+- DSL Translator (8 Indikatoren, Condition Parser, kein eval/exec)
+- 6 Strategie-Typen über 3 Assets × 5 Zeiträume validiert (90 Tests)
+- Regime-Filter Breakthrough: ADX+EMA verdoppelt Pass-Rate (12%→50%)
+- ATR-Filter getestet und abgelehnt
+- Gold Standard identifiziert: **MACD Momentum + ADX+EMA**
 
-### ✅ Phase 6: Test Strategy — COMPLETE
+### Ergebnis
+| | Unfiltered | ADX+EMA Filter |
+|---|---|---|
+| Pass Rate | 12% | **50%** |
+| Avg Drawdown | 22.7% | **14.1%** |
+| Max Consec. Losses | 9.9 | **6.5** |
 
-| Gate | Name | Status |
-|------|------|--------|
-| G1 | Zero unmanaged positions | ✅ PASSED |
-| G2 | Projection parity | ✅ PASSED |
-| G3 | Recovery from restart | ✅ PASSED |
-| G4 | No duplicated trade IDs | ✅ PASSED |
-| G5 | Discord Failover blockiert nicht | ✅ PASSED |
-
-**Simulation:**
-- 1h Smoke Test: ✅ PASSED
-- **24h Stability Test: ✅ PASSED (2026-04-05)**
-- 7d Stability Test: ⬜ Optional
+### Entscheidungen
+- **Keine weitere Gate-Relaxation** — Thresholds bleiben wie sie sind
+- **Keine weiteren Filter-Tests** — ATR getestet, abgelehnt
+- **KI als Signalgeber = YES** (ADR-005 V2+), KI als Richter = NO
+- **Ziel-Shift:** Besserer Backtest → Strategie unter Echtzeit beweisen
 
 ---
 
-## ⭐ Phase 7: Strategy Lab — REGIME FILTER VALIDATED
+## ⭐ Phase 8: Paper Trading + Economics — IN PROGRESS
 
-**Status:** 🎯 **BASELINE COMMITTED — PAPER TRADING NEXT**
+**Ziel:** Beweisen dass die Strategie unter echten Bedingungen funktioniert.
 
-### Baseline Strategy: MACD Momentum + ADX+EMA
+### 8.1: Executor V1 ✅ BUILD COMPLETE
+
+| Modul | Beschreibung | Status |
+|-------|-------------|--------|
+| data_feed.py | Hyperliquid WebSocket, 1h Candles, SQLite | ✅ |
+| signal_generator.py | MACD+ADX+EMA, deterministic | ✅ |
+| state_manager.py | Position, Equity, Guard State (SQLite) | ✅ |
+| risk_guard.py | 5 Guard States, hardcoded thresholds | ✅ |
+| paper_engine.py | Orchestrator, Backfill, Slippage, Fees | ✅ |
+| discord_reporter.py | #foundry-reports, OpenClaw message tool | ✅ |
+| test_integration.py | 376 Trades auf BTC+ETH 2024 | ✅ |
+
+### 8.2: Paper Trading Setup — TODO
+
+| Task | Beschreibung | Status |
+|------|-------------|--------|
+| Embed-Formatierung | Farbige Discord Reports | ⬜ |
+| `!kill` / `!resume` | Discord Commands für Guard-Override | ⬜ |
+| systemd Service | Auto-start, restart on crash | ⬜ |
+| Hyperliquid Testnet | Testnet-Setup, API Keys | ⬜ |
+| 30+ Day Run | Echtzeit Paper Trading | ⬜ |
+
+### Success Criteria (ADR-006)
+- ≥30 Trades
+- ≤25% Drawdown
+- ≤10pp Win-Rate Deviation vs. Backtest
+- ≥30 Tage Laufzeit
+- ≥95% Signal Execution Rate
+- ≤60s Kill-Switch Response
+
+### 8.3: Economics — NACH Paper Trading
+
+| Report | Inhalt |
+|--------|--------|
+| Monthly PnL Projection | Erwarteter Return bei 100€ |
+| Infra Costs | Server, API, Monitoring |
+| Break-even Analysis | Trades/Tag für Profitabilität |
+| Risk-adjusted Returns | Sharpe, Sortino, Calmar |
+
+---
+
+## ⬜ Phase 9: Final Gate — PENDING
+
+**Ziel:** Endgültige Go/No-Go Entscheidung für Live Trading.
+
+### Checklist
+
+| # | Item | Status |
+|---|------|--------|
+| 1 | Alle Phasen 0-8 abgeschlossen | ⬜ |
+| 2 | Paper Trading Success Criteria erfüllt | ⬜ |
+| 3 | Economics positiv | ⬜ |
+| 4 | Security Audit | ⬜ |
+| 5 | On-Call Setup | ⬜ |
+| 6 | Rollback getestet | ⬜ |
+| 7 | **Manuelle Freigabe (Dave)** | ⬜ |
+
+### Go/No-Go
 
 ```
-Entry: macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20
-Exit:  trailing_stop 2%, stop_loss 2.5%, max_hold 48 bars
-```
-
-| Metrik | Wert |
-|--------|------|
-| Pass Rate | 8/16 (50%) |
-| Avg Return | +35.9% |
-| Avg Drawdown | 14.1% |
-| Avg Consecutive Losses | 6.5 |
-| ATR-Filter getestet | ❌ Keine Verbesserung |
-| Gate-Lockerung | ❌ Abgelehnt |
-
-### Foundry V1 Status
-
-| Komponente | Status | Beschreibung |
-|------------|--------|--------------|
-| backtest_engine.py | ✅ | Mit Trailing Stop + Sharpe + CL |
-| walk_forward.py | ✅ | Walk-Forward Validierung |
-| dsl_translator.py v3 | ✅ | 8+ Indikatoren, ADX+ATR+bb_width Fix |
-| evolution_runner.py v2 | ✅ | 3 Modi (mock/dry-run/live) |
-| gate_evaluator.py | ✅ | Standalone Functions + GateResult |
-| Regime Filter | ✅ | ADX+EMA (50% Pass), ATR getestet (kein Gewinn) |
-| Broad Validation | ✅ | 8 Assets × 2 Perioden × 5 Filter = 80 Tests |
-
-### Nächster Schritt: Paper/Forward Trading (ADR-006)
-
-→ Siehe ADR-006: Executor V1 mit Kill-Switches, Runtime Guards, Discord-Reporting
-
-### Backtest Engine
-
-| Komponente | Status | Beschreibung |
-|------------|--------|--------------|
-| backtest_engine.py | ⬜ TODO | Haupt-Backtest-Framework |
-| parameter_sweep.py | ⬜ TODO | Parameter-Optimierung |
-| walk_forward.py | ⬜ TODO | Walk-forward Validierung |
-
-### Strategien
-
-| Strategie | Status | Notizen |
-|-----------|--------|---------|
-| rsi_regime_filter.py | ⬜ TODO | RSI mit Regime-Erkennung |
-| volatility_filter.py | ⬜ TODO | Volatilitäts-basierte Filter |
-| multi_asset_selector.py | ⬜ TODO | Asset-Auswahl-Logik |
-| mean_reversion_panic.py | ⬜ TODO | Mean Reversion Panic-Detection |
-| trend_pullback.py | ⬜ TODO | Trend-Pullback Entries |
-
-### Definition of Done
-
-- [ ] Mindestens 3 Strategien mit Scorecards
-- [ ] Jede Strategie: Hypothesis → Backtest → Walk-forward
-- [ ] Alle Scorecards als JSON gespeichert
-- [ ] Multi-Asset-Selektor implementiert
-- [ ] Regime-Filter getestet
-
----
-
-## Parallel Tasks
-
-### Systemd Host Test (5.1)
-
-| Teil | Status | Next Action |
-|------|--------|-------------|
-| Code | ✅ Complete | Service-Files ready |
-| Host Test | ⏳ Deferred | VPS-Deploy pending |
-
-Kein Blocker für Phase 7 — kann parallel laufen.
-
----
-
-## Timeline
-
-```
-✅ COMPLETED:
-Mar 06: Phase 0-1 Complete
-Mar 08: Phase 2 Complete (103 Tests)
-Mar 27: Phase 3 Complete (Observability)
-Apr 01: Phase 5 Complete (Operations)
-Apr 05: Phase 6 Complete (24h Test) 🎉
-
-🚀 NEXT:
-Apr 05-12: Phase 7 — Strategy Lab ⭐
-Apr 12-19: Phase 8 — Economics
-Apr 19-26: Phase 9 — Review & Gate
-May 01:    ⛔ Manual Sign-off target
+╔══════════════════════════════════════════════╗
+║  LIVE TRADING GO/NO-GO                       ║
+║                                               ║
+║  Decision:  [ ] GO    [ ] NO-GO              ║
+║                                               ║
+║  If GO:                                       ║
+║  [ ] ENABLE_EXECUTION_LIVE=true              ║
+║  [ ] MAINNET_TRADING_ALLOWED=true            ║
+║                                               ║
+║  Signature: ___________  Date: __________     ║
+╚══════════════════════════════════════════════╝
 ```
 
 ---
 
-## Blocker Summary
+## 🚫 Was wir NICHT machen
 
-| ID | Blocker | Status | Impact |
-|----|---------|--------|--------|
-| B10 | Memory Monitoring Fix | ✅ Gelöst | - |
-| **Phase 6** | **Alle Tests** | **✅ Complete** | **-** |
-| **Phase 7** | **Strategy Lab** | **⭐ Ready** | **Blocks Live** |
-| 5.1 | Host Validation | ⏳ Deferred | Kein Blocker |
-
-**Keine blockierenden Issues!** 🎉
-
----
-
-*Last updated: 2026-04-05*  
-*24h Test: PASSED ✅*
+- Keine Gate-Relaxation (Thresholds bleiben)
+- Keine weiteren Filter-Tests (ATR abgelehnt)
+- Kein KI-Richter (nur KI-Signalgeber in V2+)
+- Kein Live Trading ohne Paper Trading Proof
+- Kein Phase-Skipping
