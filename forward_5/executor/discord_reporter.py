@@ -14,8 +14,25 @@ log = logging.getLogger("discord_reporter")
 
 # ── Message Templates ──
 
-def format_entry(event: dict) -> str:
-    """Format a trade entry event."""
+def _build_container(text_header: str, body: str, color: str) -> dict:
+    """Build a Discord Components v2 container with accent color."""
+    return {
+        "text": text_header,
+        "container": {"accentColor": color},
+        "blocks": [{"type": "text", "text": body}]
+    }
+
+
+# Color scheme for event types
+COLOR_BLUE = "#3b82f6"    # Info / Entry
+COLOR_GREEN = "#22c55e"   # Win / Resume
+COLOR_RED = "#ef4444"     # Kill / Loss / Blocked
+COLOR_AMBER = "#f59e0b"  # Warning / Pause
+COLOR_GRAY = "#6b7280"   # Status / Neutral
+
+
+def format_entry(event: dict) -> tuple:
+    """Format a trade entry event. Returns (header, body, color)."""
     symbol = event.get("symbol", "?")
     price = event.get("price", 0)
     indicators = event.get("indicators", {})
@@ -24,78 +41,99 @@ def format_entry(event: dict) -> str:
     ema50 = indicators.get("ema_50", "?")
     equity = event.get("equity", 0)
     
-    return (
-        f"🟢 **ENTRY LONG** {symbol}\n"
+    header = "🟢 **ENTRY LONG**"
+    body = (
+        f"**{symbol}**\n"
         f"Price: ${price:,.2f}\n"
         f"ADX: {adx} | EMA50: {ema50}\n"
         f"Equity: {equity:.2f}€\n"
         f"_{reason}_"
     )
+    return header, body, COLOR_BLUE
 
 
-def format_exit(event: dict) -> str:
-    """Format a trade exit event."""
+def format_exit(event: dict) -> tuple:
+    """Format a trade exit event. Returns (header, body, color)."""
     symbol = event.get("symbol", "?")
     price = event.get("price", 0)
     pnl = event.get("pnl", 0)
     reason = event.get("reason", "")
     equity = event.get("equity", 0)
     
-    emoji = "✅" if pnl >= 0 else "❌"
-    pnl_str = f"+{pnl:.2f}" if pnl >= 0 else f"{pnl:.2f}"
+    if pnl >= 0:
+        header = "✅ **WIN**"
+        color = COLOR_GREEN
+        pnl_str = f"+{pnl:.2f}"
+    else:
+        header = "❌ **LOSS**"
+        color = COLOR_RED
+        pnl_str = f"{pnl:.2f}"
     
-    return (
-        f"{emoji} **EXIT** {symbol}\n"
+    body = (
+        f"**EXIT {symbol}**\n"
         f"Price: ${price:,.2f}\n"
         f"PnL: {pnl_str}€\n"
         f"Equity: {equity:.2f}€\n"
         f"_{reason}_"
     )
+    return header, body, color
 
 
-def format_guard_change(event: dict) -> str:
-    """Format a guard state change."""
+def format_guard_change(event: dict) -> tuple:
+    """Format a guard state change. Returns (header, body, color)."""
     reason = event.get("reason", "")
     
     if "KILL_SWITCH" in reason:
         return (
-            f"🚨 **KILL SWITCH ACTIVATED**\n"
-            f"{reason}\n"
-            f"All trading halted. Use `!resume` to restart after cooldown."
+            "🚨 **CRITICAL**",
+            f"**KILL SWITCH ACTIVATED**\n{reason}\nAll trading halted. Use `!resume` to restart.",
+            COLOR_RED
         )
     elif "SOFT_PAUSE" in reason:
         return (
-            f"⚠️ **SOFT PAUSE**\n"
-            f"{reason}\n"
-            f"No new entries for 24h. Existing positions managed normally."
+            "⚠️ **WARNING**",
+            f"**SOFT PAUSE**\n{reason}\nNo new entries for 24h.",
+            COLOR_AMBER
         )
     elif "STOP_NEW" in reason:
         return (
-            f"🛑 **STOP NEW ENTRIES**\n"
-            f"{reason}\n"
-            f"No new entries for 24h due to daily loss limit."
+            "🛑 **STOP NEW**",
+            f"**NO NEW ENTRIES**\n{reason}\nDaily loss limit reached.",
+            COLOR_AMBER
         )
     elif "Cooldown" in reason or "COOLDOWN" in reason:
         return (
-            f"⏳ **COOLDOWN**\n"
-            f"{reason}\n"
-            f"24h waiting period after kill switch."
+            "⏳ **COOLDOWN**",
+            f"**COOLDOWN**\n{reason}\n24h waiting period.",
+            COLOR_GRAY
         )
     elif "RUNNING" in reason:
-        return f"✅ **RESUMED**\n{reason}"
+        return (
+            "✅ **RESUMED**",
+            f"{reason}",
+            COLOR_GREEN
+        )
     else:
-        return f"🔄 **Guard: {reason}**"
+        return (
+            "🔄 **GUARD**",
+            f"{reason}",
+            COLOR_GRAY
+        )
 
 
-def format_entry_blocked(event: dict) -> str:
-    """Format a blocked entry."""
+def format_entry_blocked(event: dict) -> tuple:
+    """Format a blocked entry. Returns (header, body, color)."""
     reason = event.get("reason", "")
     symbol = event.get("symbol", "?")
-    return f"🛑 **ENTRY BLOCKED** {symbol}: {reason}"
+    return (
+        "🛑 **BLOCKED**",
+        f"**ENTRY BLOCKED** {symbol}\n{reason}",
+        COLOR_RED
+    )
 
 
-def format_hourly_status(state_manager) -> str:
-    """Format hourly status report."""
+def format_hourly_status(state_manager) -> tuple:
+    """Format hourly status report. Returns (header, body, color)."""
     from state_manager import GuardState
     
     equity = state_manager.get_equity()
@@ -108,7 +146,6 @@ def format_hourly_status(state_manager) -> str:
     pnl_total = equity - start_equity
     pnl_pct = (pnl_total / start_equity) * 100 if start_equity > 0 else 0
     
-    # Position info
     pos_btc = state_manager.get_open_position("BTCUSDT")
     pos_eth = state_manager.get_open_position("ETHUSDT")
     positions = []
@@ -126,8 +163,8 @@ def format_hourly_status(state_manager) -> str:
         GuardState.COOLDOWN: "⏳",
     }
     
-    return (
-        f"📊 **Hourly Status**\n"
+    header = "📊 **Hourly Status**"
+    body = (
         f"Equity: {equity:.2f}€ ({pnl_pct:+.1f}%)\n"
         f"Daily PnL: {daily_pnl:+.2f}€\n"
         f"Positions: {pos_str}\n"
@@ -135,10 +172,11 @@ def format_hourly_status(state_manager) -> str:
         f"Consecutive Losses: {cl}\n"
         f"Trades: {stats['total_trades']} ({stats['win_rate']:.0f}% win)"
     )
+    return header, body, COLOR_BLUE
 
 
-def format_daily_summary(state_manager) -> str:
-    """Format daily summary report."""
+def format_daily_summary(state_manager) -> tuple:
+    """Format daily summary report. Returns (header, body, color)."""
     equity = state_manager.get_equity()
     start_equity = state_manager.get_start_equity()
     stats = state_manager.get_trade_stats()
@@ -149,27 +187,26 @@ def format_daily_summary(state_manager) -> str:
     peak = state_manager.get_state("peak_equity", start_equity)
     dd = (peak - equity) / peak * 100 if peak > 0 else 0
     
-    return (
-        f"📋 **Daily Summary**\n"
-        f"━━━━━━━━━━━━━━━━━━\n"
+    color = COLOR_GREEN if total_pnl >= 0 else COLOR_RED
+    
+    header = "📋 **Daily Summary**"
+    body = (
         f"Equity: {equity:.2f}€ ({total_pct:+.1f}%)\n"
         f"Daily PnL: {daily_pnl:+.2f}€\n"
         f"Peak: {peak:.2f}€ | DD: {dd:.1f}%\n"
         f"Trades: {stats['total_trades']} | W: {stats['wins']} | L: {stats['losses']}\n"
-        f"Win Rate: {stats['win_rate']:.0f}%\n"
-        f"━━━━━━━━━━━━━━━━━━"
+        f"Win Rate: {stats['win_rate']:.0f}%"
     )
+    return header, body, color
 
 
 # ── Discord Sender ──
 
 def send_to_discord(message: str, channel_id: str = None):
     """
-    Send a message to Discord via OpenClaw message tool.
-    Primary path: OpenClaw message API → Discord channel.
-    Fallback: Direct Discord Bot API.
+    Send a plain text message to Discord via OpenClaw message tool.
+    Used for custom/freeform messages.
     """
-    # Primary: OpenClaw subprocess (uses configured bot)
     try:
         import subprocess
         cmd = ["openclaw", "message", "send", "--channel", "discord",
@@ -186,57 +223,96 @@ def send_to_discord(message: str, channel_id: str = None):
     # Fallback: Direct Discord API via bot token
     import os
     bot_token = os.environ.get("DISCORD_BOT_TOKEN")
-    channel_id = os.environ.get("DISCORD_CHANNEL_ID")
+    ch_id = os.environ.get("DISCORD_CHANNEL_ID", channel_id)
     
-    if bot_token and channel_id:
+    if bot_token and ch_id:
         try:
             import urllib.request
-            url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
+            url = f"https://discord.com/api/v10/channels/{ch_id}/messages"
             payload = json.dumps({"content": message}).encode()
             req = urllib.request.Request(url, data=payload, method="POST")
             req.add_header("Authorization", f"Bot {bot_token}")
             req.add_header("Content-Type", "application/json")
             with urllib.request.urlopen(req, timeout=10) as resp:
-                if resp.status == 200 or resp.status == 201:
+                if resp.status in (200, 201):
                     log.debug("Discord message sent via Bot API")
                     return True
         except Exception as e:
             log.warning(f"Discord Bot API send failed: {e}")
 
-    # Last resort: log it
     log.info(f"DISCORD (not sent): {message[:100]}...")
     return False
 
 
+def send_container_to_discord(header: str, body: str, color: str,
+                               channel_id: str = None):
+    """
+    Send a colored container (Components v2) to Discord via OpenClaw.
+    Falls back to plain text if components fail.
+    """
+    components = _build_container(header, body, color)
+    
+    # Try Components v2 via OpenClaw subprocess
+    try:
+        import subprocess
+        cmd = [
+            "openclaw", "message", "send",
+            "--channel", "discord",
+            "--components", json.dumps(components),
+        ]
+        if channel_id:
+            cmd.extend(["--target", channel_id])
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+        if result.returncode == 0:
+            log.debug("Discord container sent via OpenClaw")
+            return True
+        log.debug(f"Components send failed: {result.stderr[:200]}")
+    except Exception as e:
+        log.debug(f"Components send error: {e}")
+
+    # Fallback: plain text
+    plain_msg = f"{header}\n{body}"
+    return send_to_discord(plain_msg, channel_id=channel_id)
+
+
 class DiscordReporter:
-    """Send formatted trade events to Discord via OpenClaw message tool."""
+    """Send formatted trade events to Discord with colored containers."""
     
     def __init__(self, channel_id: str = None):
         self.channel_id = channel_id
     
-    def _send(self, msg: str):
+    def _send_text(self, msg: str):
         send_to_discord(msg, channel_id=self.channel_id)
     
+    def _send_container(self, header: str, body: str, color: str):
+        send_container_to_discord(header, body, color, channel_id=self.channel_id)
+    
     def report_entry(self, event: dict):
-        self._send(format_entry(event))
+        header, body, color = format_entry(event)
+        self._send_container(header, body, color)
     
     def report_exit(self, event: dict):
-        self._send(format_exit(event))
+        header, body, color = format_exit(event)
+        self._send_container(header, body, color)
     
     def report_guard_change(self, event: dict):
-        self._send(format_guard_change(event))
+        header, body, color = format_guard_change(event)
+        self._send_container(header, body, color)
     
     def report_entry_blocked(self, event: dict):
-        self._send(format_entry_blocked(event))
+        header, body, color = format_entry_blocked(event)
+        self._send_container(header, body, color)
     
     def report_hourly(self, state_manager):
-        self._send(format_hourly_status(state_manager))
+        header, body, color = format_hourly_status(state_manager)
+        self._send_container(header, body, color)
     
     def report_daily(self, state_manager):
-        self._send(format_daily_summary(state_manager))
+        header, body, color = format_daily_summary(state_manager)
+        self._send_container(header, body, color)
     
     def report_custom(self, message: str):
-        self._send(message)
+        self._send_text(message)
 
 
 # ── Test ──

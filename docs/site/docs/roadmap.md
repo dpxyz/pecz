@@ -69,9 +69,10 @@ title: Roadmap
 
 | Task | Beschreibung | Status |
 |------|-------------|--------|
-| Embed-Formatierung | Farbige Discord Reports | ⬜ |
-| `!kill` / `!resume` | Discord Commands für Guard-Override | ⬜ |
-| systemd Service | Auto-start, restart on crash | ⬜ |
+| Embed-Formatierung | Farbige Discord Reports (Components v2) | ✅ |
+| `!kill` / `!resume` | Discord Commands für Guard-Override | ✅ |
+| Process Manager | Auto-start, restart on crash (5/5min) | ✅ |
+| systemd Unit | Für später (non-Docker) | ✅ |
 | Hyperliquid Testnet | Testnet-Setup, API Keys | ⬜ |
 | 30+ Day Run | Echtzeit Paper Trading | ⬜ |
 

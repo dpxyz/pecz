@@ -12,9 +12,8 @@ title: Blockers
 
 | # | Blocker | Status | Lösung |
 |---|---------|--------|--------|
-| 1 | Discord Embed-Formatierung | 🔨 In Arbeit | Bot API 403 → Alternative finden |
-| 2 | Memory Search defekt | ⬸ Known | node-llama-cpp fehlt, braucht OpenClaw Update |
-| 3 | OpenClaw v2026.4.12 | ⬸ Known | Docker Image von Hostinger, kein selbst-Update |
+| 1 | Memory Search defekt | ⬸ Known | node-llama-cpp fehlt, braucht OpenClaw Update |
+| 2 | OpenClaw v2026.4.12 | ⬸ Known | Docker Image von Hostinger, kein selbst-Update |
 
 ---
 
@@ -27,9 +26,10 @@ title: Blockers
 | 3 | Korrupte Marktdaten | 2026-04-18 | Frisch von Binance geladen |
 | 4 | Discord Webhook 403 | 2026-04-19 | Auf OpenClaw message tool umgestellt |
 | 5 | ATR-Filter | 2026-04-19 | Getestet und abgelehnt — ADX+EMA bleibt Gold Standard |
+| 6 | Discord Embed-Formatierung | 2026-04-19 | Components v2 Container mit Farbaccent |
 
 ---
 
-## Keine Blockers für Paper Trading
+## Fast keine Blocker mehr für Paper Trading
 
-Die Executor V1 Module sind alle gebaut und getestet. Die verbleibenden Punkte (Embeds, Commands, systemd) sind **Enhancements**, keine Blocker.
+Die Executor V1 Module sind alle gebaut und getestet. Discord Commands und farbige Embeds sind fertig. Es fehlen nur noch **Hyperliquid Testnet API Keys** (braucht Dave).
