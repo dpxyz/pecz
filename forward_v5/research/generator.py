@@ -1,9 +1,12 @@
 """
-Generator v0.1 – KI-gestützter Strategie-Generator
+Generator v0.2 – KI-gestützter Strategie-Generator
 
 Liest Spec + (optional) Feedback von vorherigem FAIL.
 Generiert Kandidaten im DSL-Format.
 Nutzt Gemma4:31b über Ollama API.
+
+v0.2: Verbesserter Prompt mit konkreten DSL-Beispielen, Exit-Regeln,
+      Fokus auf Mean-Reversion, verhindert period=0 und Trend-Following.
 """
 
 import json
@@ -33,28 +36,52 @@ REGELN:
 1. Generiere genau {spec.get('evolution', {}).get('candidates_per_iteration', 3)} Kandidaten
 2. Jeder Kandidat MUSS im DSL-Format sein (siehe unten)
 3. Jeder Kandidat MUSS gegen die Spec-Kriterien konstruiert sein
-4. Verschiedene Ansätze: mean_reversion, trend_following, breakout, hybrid
-5. Realistische Parameter – kein Overfitting
+
+KRITISCHE REGELN (VERLETZUNG = INVALID):
+- NIEMALS period=0 oder period=1! Minimum ist period=2
+- entry.condition MUSS ein konkreter DSL-Ausdruck sein, KEIN Freitext!
+- entry.condition MUSS Indikatoren referenzieren, die unter indicators: gelistet sind
+- Bevorzuge mean_reversion und breakout-Strategien – trend_following funktioniert schlecht auf 1h-Data
+- Nutze IMMER exit-Regeln: take_profit_pct (1.5-3.0) und stop_loss_pct (1.5-3.0) und max_hold_bars (24-72)
+
+DSL-AUSDRÜCKE FÜR CONDITIONS:
+- Vergleich: INDICATOR OP VALUE (z.B. rsi_14 < 30)
+- Logisch: AND, OR (z.B. rsi_14 < 30 AND close < ema_20)
+- WICHTIG: Indikator-Name MUSS mit period-Nummer matchen!
+  - Richtig: rsi_14 < 30 (wenn indicators: [{{"name": "RSI", "params": {{"period": 14}}}}])
+  - Falsch: rsi < 30 (ohne Nummer)
+  - Richtig: close < ema_20 (wenn indicators: [{{"name": "EMA", "params": {{"period": 20}}}}])
+  - Richtig: close > bb_upper_20 (wenn indicators: [{{"name": "BB", "params": {{"period": 20, "std_dev": 2.0}}}}])
+
+ERPROBTE STRATEGIE-MUSTER (bevorzuge diese):
+1. RSI Mean Reversion: rsi_14 < 30 AND close < bb_lower_20 (entry) → rsi_14 > 70 (exit condition)
+2. ZScore Reversion: zscore_50 < -2.0 AND close < bb_lower_20 → zscore_50 > 2.0
+3. BB Bounce: close < bb_lower_20 AND rsi_14 < 35 → close > bb_mid_20
+4. RSI + EMA Filter: rsi_14 < 30 AND close > ema_50 (trend filter) → rsi_14 > 65
+5. ZScore + ATR Volatility: zscore_20 < -1.5 AND atr_14 > close * 0.02 → zscore_20 > 1.5
+
+MEIDE: Reine Trend-Following (SMA/EMA Crossover) – generiert zu wenige Signale auf 1h-Data!
 
 DSL-FORMAT (genau dieses JSON-Format, kein Markdown, keine Code-Blöcke):
 {{
   "dsl_version": "0.1",
   "strategy": {{
     "name": "deskriptiver_name",
-    "type": "mean_reversion|trend_following|breakout|hybrid",
+    "type": "mean_reversion|breakout|hybrid",
     "hypothesis": "Warum diese Strategie funktionieren sollte",
     "assets": ["BTCUSDT"],
     "timeframe": "1h",
     "indicators": [
-      {{"name": "SMA", "params": {{"period": 60}}}}
+      {{"name": "RSI", "params": {{"period": 14}}}},
+      {{"name": "BB", "params": {{"period": 20, "std_dev": 2.0}}}}
     ],
     "entry": {{
-      "condition": "Beschreibung der Einstiegsbedingung",
+      "condition": "rsi_14 < 30 AND close < bb_lower_20",
       "max_per_day": 3
     }},
     "exit": {{
-      "take_profit_pct": 1.5,
-      "stop_loss_pct": 2.0,
+      "take_profit_pct": 2.0,
+      "stop_loss_pct": 1.5,
       "trailing_stop_pct": null,
       "max_hold_bars": 48
     }},
@@ -62,21 +89,16 @@ DSL-FORMAT (genau dieses JSON-Format, kein Markdown, keine Code-Blöcke):
       "method": "fixed_frac",
       "risk_per_trade_pct": 1.0
     }},
-    "filters": [
-      {{"type": "volatility", "params": {{"max_atr_multiplier": 2.0}}}}
-    ]
+    "filters": []
   }}
 }}
 
 Gültige Indikatoren: SMA, EMA, RSI, BB, ATR, VWAP, MACD, ZSCORE
-Gültige Zeitrahmen: 15m, 1h, 4h
+Gültige Zeitrahmen: 1h
 Gültige Assets: BTCUSDT, ETHUSDT, SOLUSDT
-Gültige Position-Sizing: fixed_frac, kelly, fixed_qty
-Gültige Filter: time, volatility, volume, trend
 
 AUSGABE: Nur ein JSON-Array mit den Kandidaten. Kein Text davor oder danach.
-Beispiel: [{{"dsl_version": "0.1", "strategy": {{...}}}}, ...]
-"""
+Beispiel: [{{"dsl_version": "0.1", "strategy": {{...}}}}, ...]"""
 
     if feedback:
         prompt += f"""
@@ -85,7 +107,9 @@ FEEDBACK VON VORHERIGEM VERSUCH (Iteration {iteration - 1}):
 {feedback}
 
 BERÜCKSICHTIGE dieses Feedback. Verbessere die Strategie basierend auf den FAIL-Gates.
-Ändere die Parameter, nicht den Grundansatz – es sei denn, der Ansatz ist fundamental fehlerhaft.
+Wenn "No trades generated": Nutze weniger restriktive Entry-Conditions oder Mean-Reversion.
+Wenn G1_profitability FAIL: Erhöhe take_profit_pct oder wähle volatilere Entry-Bedingungen.
+Wenn G2_risk FAIL: Reduziere stop_loss_pct oder kürze max_hold_bars.
 """
 
     return prompt

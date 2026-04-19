@@ -139,7 +139,18 @@ def real_backtest(candidate: dict, spec: dict) -> dict:
         initial_capital=10000.0
     )
     
-    bt_result = engine.run(strat_name, strat_func, strategy.get("params", {}), symbol, timeframe)
+    # Extract exit config from candidate DSL
+    exit_cfg = strategy.get("exit", {})
+    exit_config = {}
+    if exit_cfg.get("take_profit_pct"):
+        exit_config["take_profit_pct"] = exit_cfg["take_profit_pct"]
+    if exit_cfg.get("stop_loss_pct"):
+        exit_config["stop_loss_pct"] = exit_cfg["stop_loss_pct"]
+    if exit_cfg.get("max_hold_bars"):
+        exit_config["max_hold_bars"] = exit_cfg["max_hold_bars"]
+    
+    bt_result = engine.run(strat_name, strat_func, strategy.get("params", {}), symbol, timeframe,
+                           exit_config=exit_config if exit_config else None)
     
     # 3. Walk-Forward Analysis
     wf_result = None
@@ -382,7 +393,7 @@ def run_evolution(use_mock: bool = False, dry_run: bool = False):
             
             # Save gate result
             with open(iter_dir / f"gate_{i+1}.json", "w") as f:
-                json.dump(gate_result, f, indent=2)
+                json.dump(gate_result, f, indent=2, default=str)
             
             verdict = gate_result["verdict"]
             print(f"  Kandidat {i+1} '{cand_name}': {verdict}")
@@ -430,7 +441,7 @@ def run_evolution(use_mock: bool = False, dry_run: bool = False):
     }
     
     with open(run_dir / "summary.json", "w") as f:
-        json.dump(summary, f, indent=2)
+        json.dump(summary, f, indent=2, default=str)
     
     # Discord report
     discord_msg = format_discord_report(summary, run_id)

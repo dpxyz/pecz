@@ -145,7 +145,8 @@ class BacktestEngine:
         strategy_func: Callable,
         params: Dict,
         symbol: str = "BTCUSDT",
-        timeframe: str = "1h"
+        timeframe: str = "1h",
+        exit_config: Dict = None
     ) -> BacktestResult:
         """
         Führe Backtest aus
@@ -153,7 +154,10 @@ class BacktestEngine:
         Args:
             strategy_func: Callable(df: pl.DataFrame, params: dict) -> pl.DataFrame
                           Muss 'signal' Column zurückgeben (-1, 0, 1)
+            exit_config: Dict with take_profit_pct, stop_loss_pct, max_hold_bars
         """
+        if exit_config is None:
+            exit_config = {}
         import time
         import tracemalloc
         
@@ -182,7 +186,7 @@ class BacktestEngine:
                 return result
             
             # Simuliere Trades (Polars-native)
-            result = self._simulate_trades_polars(df_signals, result)
+            result = self._simulate_trades_polars(df_signals, result, exit_config)
             
             # Metriken berechnen
             result.calculate_metrics(self.initial_capital)
@@ -202,18 +206,29 @@ class BacktestEngine:
     def _simulate_trades_polars(
         self,
         df: pl.DataFrame,
-        result: BacktestResult
+        result: BacktestResult,
+        exit_config: Dict = None
     ) -> BacktestResult:
         """
-        Simuliere Trades aus Signalen - Polars-Native Implementation
+        Simuliere Trades aus Signalen - mit Exit-Logik (TP/SL/Max-Hold)
         
-        Logik:
-        - Signal wird auf Bar t erzeugt (close)
-        - Entry/Exit auf Bar t+1 (open + slippage)
-        - Kein Lookahead-Bias
-        - Vektorisiert mit Polars
+        Exit Priority:
+        1. Stop-Loss (bar-wise check)
+        2. Take-Profit (bar-wise check)
+        3. Max-Hold-Bars (time-based exit)
+        4. Signal Exit (strategy flips from 1 to 0/-1)
+        
+        - Entry on signal edge (0->1), executed at next open + slippage
+        - No lookahead bias
         """
-        # Hole timestamp Column Name (kann verschieden sein)
+        if exit_config is None:
+            exit_config = {}
+        
+        tp_pct = exit_config.get("take_profit_pct", None)
+        sl_pct = exit_config.get("stop_loss_pct", None)
+        max_hold = exit_config.get("max_hold_bars", None)
+        
+        # Hole timestamp Column Name
         timestamp_col = None
         for col in ['timestamp', 'datetime', 'date', 'time']:
             if col in df.columns:
@@ -221,143 +236,139 @@ class BacktestEngine:
                 break
         
         if timestamp_col is None:
-            # Erstelle Index als timestamp falls keine Zeitspalte existiert
             df = df.with_row_index("_row_idx")
             timestamp_col = "_row_idx"
         
-        # ============================================
-        # Schritt 1: Next-Bar Vorbereitung
-        # ============================================
-        # Shift(-1) holt den Wert der nächsten Zeile (next bar)
-        df = df.with_columns([
-            pl.col("open").shift(-1).alias("next_open"),
-            pl.col(timestamp_col).shift(-1).alias("next_timestamp")
-        ])
-        
-        # ============================================
-        # Schritt 2: Signal-Edge Detection
-        # ============================================
-        # Finde wo Long-Entry (signal wechselt von 0 zu 1)
-        # Finde wo Long-Exit (signal wechselt von 1 zu -1 oder 0)
-        df = df.with_columns([
-            pl.col("signal").shift(1).alias("prev_signal")
-        ])
-        
-        df = df.with_columns([
-            # Long Entry: prev war 0/Fehlt, jetzt ist 1
-            pl.when(
-                (pl.col("prev_signal").is_null() | (pl.col("prev_signal") == 0)) & 
-                (pl.col("signal") == 1)
-            ).then(1).otherwise(0).alias("long_entry_signal"),
-            
-            # Long Exit: prev war 1, jetzt ist -1 oder 0
-            pl.when(
-                (pl.col("prev_signal") == 1) & 
-                (pl.col("signal").is_null() | (pl.col("signal") != 1))
-            ).then(1).otherwise(0).alias("long_exit_signal")
-        ])
-        
-        # ============================================
-        # Schritt 3: Trade Points Extraktion
-        # ============================================
-        # Entry-Points: wo long_entry_signal == 1
-        entry_points = df.filter(pl.col("long_entry_signal") == 1).select([
-            pl.col(timestamp_col).alias("entry_time"),
-            pl.col("next_open").alias("entry_price_raw"),
-            pl.col("next_timestamp").alias("entry_exec_time")
-        ])
-        
-        # Exit-Points: wo long_exit_signal == 1  
-        exit_points = df.filter(pl.col("long_exit_signal") == 1).select([
-            pl.col(timestamp_col).alias("exit_time"),
-            pl.col("next_open").alias("exit_price_raw"),
-            pl.col("next_timestamp").alias("exit_exec_time")
-        ])
-        
-        # ============================================
-        # Schritt 4: Trade Matching
-        # ============================================
-        # Konvertiere zu Python Listen für Paar-Matching
-        # (Dies ist kein row-wise DataFrame iteration sondern Listen-Verarbeitung)
-        entries = entry_points.to_numpy().tolist() if len(entry_points) > 0 else []
-        exits = exit_points.to_numpy().tolist() if len(exit_points) > 0 else []
+        # Convert to numpy arrays for fast bar-wise iteration
+        signals = df["signal"].to_numpy()
+        opens = df["open"].to_numpy()
+        highs = df["high"].to_numpy()
+        lows = df["low"].to_numpy()
+        closes = df["close"].to_numpy()
+        n = len(df)
         
         trades = []
         equity = self.initial_capital
         equity_curve = [equity]
         
-        entry_idx = 0
-        exit_idx = 0
+        i = 0
+        in_position = False
+        entry_price = 0.0
+        entry_bar = 0
         
-        # Paare Entries mit nächsten Exits
-        while entry_idx < len(entries) and exit_idx < len(exits):
-            entry = entries[entry_idx]
-            exit = exits[exit_idx]
+        while i < n - 1:
+            # Check for entry signal (0 or not-in-position -> 1)
+            if not in_position and signals[i] == 1:
+                # Enter at next bar's open
+                entry_price = opens[i + 1] * (1 + self.slippage)
+                entry_bar = i + 1
+                in_position = True
+                i += 1
+                continue
             
-            # Prüfe ob Exit nach Entry kommt
-            # Sicherstellen, dass wir skalare Werte vergleichen, nicht Series
-            exit_time_val = float(exit[2]) if hasattr(exit[2], '__float__') else exit[2]
-            entry_time_val = float(entry[2]) if hasattr(entry[2], '__float__') else entry[2]
-            if exit_time_val > entry_time_val:  # exit_exec_time > entry_exec_time
-                # Berechne Trade
-                entry_price = entry[1] * (1 + self.slippage)  # + slippage
-                exit_price = exit[1] * (1 - self.slippage)    # - slippage
-                
+            # If not in position, advance
+            if not in_position:
+                i += 1
+                continue
+            
+            # We're in a position - check exits bar by bar
+            # Priority: SL > TP > Max-Hold > Signal Exit
+            
+            # 1. Stop-Loss check
+            if sl_pct is not None and lows[i] <= entry_price * (1 - sl_pct / 100):
+                exit_price = entry_price * (1 - sl_pct / 100) * (1 - self.slippage)
                 gross_pnl = (exit_price - entry_price) / entry_price
-                fees = self.fee_rate * 2  # Entry + Exit
-                net_pnl = gross_pnl - fees
-                
-                trade = Trade(
-                    entry_time=str(entry[2]),
-                    exit_time=str(exit[2]),
+                net_pnl = gross_pnl - self.fee_rate * 2
+                trades.append(Trade(
+                    entry_time=str(entry_bar),
+                    exit_time=str(i),
                     entry_price=entry_price,
                     exit_price=exit_price,
                     side='long',
-                    pnl=net_pnl * 100  # Prozent
-                )
-                trades.append(trade)
-                
-                # Equity Update
+                    pnl=net_pnl * 100,
+                    exit_reason='stop_loss'
+                ))
                 equity *= (1 + net_pnl)
-                
-                entry_idx += 1
-                exit_idx += 1
-            else:
-                # Exit ist vor Entry (sollte nicht passieren, aber sicherheitshalber)
-                exit_idx += 1
+                equity_curve.append(equity)
+                in_position = False
+                i += 1
+                continue
             
-            equity_curve.append(equity)
+            # 2. Take-Profit check
+            if tp_pct is not None and highs[i] >= entry_price * (1 + tp_pct / 100):
+                exit_price = entry_price * (1 + tp_pct / 100) * (1 - self.slippage)
+                gross_pnl = (exit_price - entry_price) / entry_price
+                net_pnl = gross_pnl - self.fee_rate * 2
+                trades.append(Trade(
+                    entry_time=str(entry_bar),
+                    exit_time=str(i),
+                    entry_price=entry_price,
+                    exit_price=exit_price,
+                    side='long',
+                    pnl=net_pnl * 100,
+                    exit_reason='take_profit'
+                ))
+                equity *= (1 + net_pnl)
+                equity_curve.append(equity)
+                in_position = False
+                i += 1
+                continue
+            
+            # 3. Max hold bars
+            bars_held = i - entry_bar
+            if max_hold is not None and bars_held >= max_hold:
+                exit_price = closes[i] * (1 - self.slippage)
+                gross_pnl = (exit_price - entry_price) / entry_price
+                net_pnl = gross_pnl - self.fee_rate * 2
+                trades.append(Trade(
+                    entry_time=str(entry_bar),
+                    exit_time=str(i),
+                    entry_price=entry_price,
+                    exit_price=exit_price,
+                    side='long',
+                    pnl=net_pnl * 100,
+                    exit_reason='max_hold'
+                ))
+                equity *= (1 + net_pnl)
+                equity_curve.append(equity)
+                in_position = False
+                i += 1
+                continue
+            
+            # 4. Signal exit (signal flips from 1 to 0 or -1)
+            if signals[i] != 1:
+                exit_price = opens[i + 1] * (1 - self.slippage) if i + 1 < n else closes[i] * (1 - self.slippage)
+                gross_pnl = (exit_price - entry_price) / entry_price
+                net_pnl = gross_pnl - self.fee_rate * 2
+                trades.append(Trade(
+                    entry_time=str(entry_bar),
+                    exit_time=str(i),
+                    entry_price=entry_price,
+                    exit_price=exit_price,
+                    side='long',
+                    pnl=net_pnl * 100,
+                    exit_reason='signal_exit'
+                ))
+                equity *= (1 + net_pnl)
+                equity_curve.append(equity)
+                in_position = False
+            
+            i += 1
         
-        # ============================================
-        # Schritt 5: Offene Position am Ende schließen
-        # ============================================
-        if entry_idx < len(entries):
-            # Es gibt eine offene Position
-            entry = entries[entry_idx]
-            # In Polars muss man .item() verwenden um skalare Werte zu bekommen
-            close_val = df.tail(1).select(pl.col("close")).to_numpy()[0][0]
-            last_time_val = df.tail(1).select(pl.col(timestamp_col)).to_numpy()[0][0]
-            
-            entry_price = entry[1] * (1 + self.slippage)
-            close_price = close_val * (1 - self.slippage)
-            
-            gross_pnl = (close_price - entry_price) / entry_price
-            fees = self.fee_rate * 2
-            net_pnl = gross_pnl - fees
-            
-            last_time = last_time_val
-            
-            trade = Trade(
-                entry_time=str(entry[2]),
-                exit_time=str(last_time),
+        # Close open position at end of data
+        if in_position:
+            exit_price = closes[-1] * (1 - self.slippage)
+            gross_pnl = (exit_price - entry_price) / entry_price
+            net_pnl = gross_pnl - self.fee_rate * 2
+            trades.append(Trade(
+                entry_time=str(entry_bar),
+                exit_time=str(n - 1),
                 entry_price=entry_price,
-                exit_price=close_price,
+                exit_price=exit_price,
                 side='long',
                 pnl=net_pnl * 100,
                 exit_reason='end_of_data'
-            )
-            trades.append(trade)
-            
+            ))
             equity *= (1 + net_pnl)
             equity_curve.append(equity)
         

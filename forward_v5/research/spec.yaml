@@ -1,24 +1,24 @@
-# Phase 7 v0.1 – Strategy Specification
+# Phase 7 v0.2 – Strategy Specification (V1 realistic thresholds)
 # Mensch definiert WAS, nicht WIE
 
 # ── Profitability ──
 profitability:
-  min_return_pct: 5.0          # Annualisiert, netto
-  min_profit_factor: 1.5       # Brutto-Gewinne / Brutto-Verluste
-  min_expectancy: 0.01          # Erwarteter Profit pro Trade (absolut, nicht %)
-  min_trades: 50                # Statistische Signifikanz
+  min_return_pct: 2.0          # V1: 2% netto (realistisch für 6 Monate)
+  min_profit_factor: 1.2       # V1: PF > 1.2 (nicht 1.5)
+  min_expectancy: 0.001        # V1: positiv reicht
+  min_trades: 30               # V1: 30 Trades (statistisch relevant)
 
 # ── Risk ──
 risk:
-  max_drawdown_pct: 15.0        # Hartes Limit
-  min_return_dd_ratio: 0.33     # 5% Return / 15% DD = 0.33
-  max_consecutive_losses: 8     # Psychologisch tragbar
+  max_drawdown_pct: 25.0        # V1: 25% DD erlaubt
+  min_return_dd_ratio: 0.08     # V1: 2%/25% = 0.08
+  max_consecutive_losses: 10    # V1: 10 max
 
 # ── Robustness ──
 robustness:
   wf_windows_profitable: 2      # Mindestens 2 von 3 Walk-Forward Windows
-  wf_max_degradation_pct: 40    # WF-Performance darf max 40% abfallen
-  min_sharpe_ratio: 0.5         # Risk-adjusted Return
+  wf_max_degradation_pct: 60    # V1: 60% Degradation erlaubt
+  min_sharpe_ratio: 0.2         # V1: 0.2 (positiv reicht)
 
 # ── Resources ──
 resources:

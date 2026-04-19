@@ -1,0 +1,22 @@
+{
+  "backtest_results": {
+    "net_return": -0.00025415390749792345,
+    "max_drawdown": 7.837886052112032,
+    "profit_factor": 0.8173827522248577,
+    "win_rate": 53.44827586206896,
+    "expectancy": -0.043819639223779905,
+    "trade_count": 58,
+    "sharpe_ratio": 0,
+    "max_consecutive_losses": 99,
+    "failure_reasons": [],
+    "resource_usage": {
+      "execution_time_ms": 13,
+      "memory_peak_mb": 0.029862403869628906,
+      "cpu_avg_pct": 0
+    }
+  },
+  "walk_forward": {
+    "windows_profitable": 2,
+    "degradation_pct": 25.379418071889493
+  }
+}

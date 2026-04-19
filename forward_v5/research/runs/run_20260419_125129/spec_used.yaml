@@ -1,0 +1,44 @@
+assets:
+- BTCUSDT
+- ETHUSDT
+- SOLUSDT
+backtest_period: 2024-01-01 to 2024-12-31
+data:
+  columns:
+  - timestamp
+  - open
+  - high
+  - low
+  - close
+  - volume
+  format: parquet
+  path: /data/.openclaw/workspace/forward_v5/forward_v5/research/data
+evolution:
+  candidates_per_iteration: 3
+  max_iterations: 5
+  mode: weekly
+fees:
+  fee_rate: 0.0005
+  slippage_bps: 5.0
+guardrails:
+  max_assets: 3
+  max_lookback_bars: 500
+  max_param_combinations: 50
+profitability:
+  min_expectancy: 0.001
+  min_profit_factor: 1.2
+  min_return_pct: 2.0
+  min_trades: 30
+resources:
+  max_cpu_pct: 50
+  max_execution_s: 30
+  max_memory_mb: 256
+risk:
+  max_consecutive_losses: 10
+  max_drawdown_pct: 25.0
+  min_return_dd_ratio: 0.08
+robustness:
+  min_sharpe_ratio: 0.2
+  wf_max_degradation_pct: 60
+  wf_windows_profitable: 2
+timeframe: 1h
