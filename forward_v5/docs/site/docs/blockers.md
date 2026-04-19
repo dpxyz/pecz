@@ -2,20 +2,42 @@
 
 ## Aktueller Status
 
-**Phase 7 🔨 BUILD IN PROGRESS** – Foundry V1 Pipeline wird gebaut. Phase 8 blockiert.
+**Phase 7 🔨 BUILD — Regime-Filter Validierung** – 50% Pass-Rate erreicht, Ziel: ≥60%. Phase 8 blockiert.
 
 ## Aktive Blocker
 
 | ID | Blocker | Status | Owner | Impact |
 |----|---------|--------|-------|--------|
-| B11 | **Phase 7 Foundry** | 🔨 Build in Progress | Pecz | ⛔ Blockt Phase 8 |
+| B11 | **Phase 7 Foundry** | 🔨 Build — Regime-Filter | Pecz | ⛔ Blockt Phase 8 |
 | B11a | Foundry-Script bauen | ✅ dsl_translator.py + evolution_runner.py v2.0 | Pecz | |
-| B11b | Echter Backtest-Runner integrieren | ✅ WalkForward + Gate Evaluator | Pecz | |
-| B11c | Wöchentlicher Cron + Discord-Report | ⬜ Not started | Pecz | |
-| B11d | Mindestens 1 Strategie die Gates besteht | ⬜ Not started | KI | |
-| B11e | Datenpfad verifizieren (Parquet-Dateien) | ⬜ Not started | Pecz | |
-| B11f | Erster Mock-Run | ⬜ Not started | Pecz | |
-| B11g | Erchter Foundry-Run | ⬜ Not started | Pecz | |
+| B11b | Echter Backtest-Runner | ✅ WalkForward + Gate Evaluator | Pecz | |
+| B11c | Datenpfad verifiziert | ✅ 8 Assets, je ~20K hourly candles | Pecz | |
+| B11d | Erster Foundry-Run | ✅ MACD Momentum + Regime-Filter | Pecz | |
+| B11e | Breite Validierung | ✅ 90 Tests (6 Strategien × 3 Assets × 5 Perioden) | Pecz | |
+| B11f | Regime-Filter Validierung | ✅ 80 Tests (5 Filter × 8 Assets × 2 Perioden) | Pecz | |
+| B11g | ADX+EMA Filter erreicht 50% Pass-Rate | ✅ DD -47%, CL -34% vs Unfiltered | Pecz | |
+| B11h | **≥60% Pass-Rate** | 🔨 Nächstes Ziel | Pecz | |
+| B11i | Paper/Shadow-Trading auf HL Testnet | ⬜ Nach ≥60% Pass-Rate | Pecz | |
+| B11j | Wöchentlicher Cron + Discord-Report | ⬜ Nach Paper-Trading | Pecz | |
+| B11k | ADR-005 Layer-Interfaces finalisiert | ⬜ Architecture definiert | Dave+Pecz | |
+
+---
+
+## ADR-005: Three-Layer Architecture
+
+```
+LAYER 1: FOUNDRY (Pre-Trade)          ← WIR SIND HIER
+  Strategy → Backtest → Walk-Forward → Gates → Paper Trading
+
+LAYER 2: EXECUTOR (During Trade)      ← NACH FOUNDARY
+  Order Mgmt → Kill-Switches → Position Sizing → Exits
+  Deterministisch, kein LLM during trading
+
+LAYER 3: MONITOR (Post-Trade)          ← NACH EXECUTOR
+  PnL Tracking → Regime Detection → Retirement → Alerts
+```
+
+**Key Principle:** Keine zweite freie KI als Richter. Deterministische Gates, dann deterministischer Executor.
 
 ---
 
@@ -60,18 +82,6 @@
 |----|---------|--------|-----------|
 | 5.1 | Block 5.1 Host-Test auf systemd-Maschine | ⏳ Code ✅ / Runtime ⏳ | VPS-Zugang oder manuelles Deploy |
 
-**Block 5.1 Status:**
-```
-┌─────────────────────────────────────────┐
-│ Block 5.1: Systemd Integration         │
-├─────────────────────────────────────────┤
-│ Code:        ✅ COMPLETE (v1.1)          │
-│ Syntax:      ✅ VALIDATED               │
-│ Host Test:   ⏳ PENDING                 │
-│ Impact:      ⏸️ Non-blocking            │
-└─────────────────────────────────────────┘
-```
-
 ---
 
 ## Blocker-Policy
@@ -89,4 +99,4 @@
 ---
 
 *Last updated: 2026-04-19*  
-*Phase 7 Status: BUILD IN PROGRESS – Foundry V1 Pipeline*
+*Phase 7 Status: BUILD — Regime-Filter Validierung (50% Pass-Rate)*

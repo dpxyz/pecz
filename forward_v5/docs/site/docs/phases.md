@@ -1,7 +1,8 @@
 # Phasenplan 0–9
 
-> **📌 Aktueller Stand:** Phase 7 🔨 BUILD IN PROGRESS | Phase 8 ⬜ BLOCKED
-> **Quick Status:** Phasen 0-6 komplett, Phase 7 Foundry V1 Pipeline wird gebaut
+> **📌 Aktueller Stand:** Phase 7 🔨 BUILD — Regime-Filter Validierung | Phase 8 ⬜ BLOCKED
+> **Quick Status:** Phasen 0-6 komplett, Foundry V1 Pipeline läuft, ADX+EMA Filter erreicht 50% Pass-Rate
+> **🏗️ Architecture:** [ADR-005](architecture/adr-005.md) — Three-Layer (Foundry → Executor → Monitor)
 
 ## Übersicht
 
@@ -166,11 +167,29 @@ Discord: "1 BACKTEST_PASS, 2 FAIL"
 
 - [x] Foundry-Script bauen (dsl_translator + evolution_runner v2.0)
 - [x] Echter Backtest-Runner integriert (WalkForward + Gate Evaluator)
-- [ ] Datenpfad verifizieren (Parquet-Dateien)
-- [ ] Erster Mock-Run
-- [ ] Echter Foundry-Run
+- [x] Datenpfad verifiziert (8 Assets, je ~20K hourly candles)
+- [x] Erster Foundry-Run (MACD Momentum + Regime-Filter)
+- [x] Breite Validierung (6 Strategien × 3 Assets × 5 Perioden = 90 Tests)
+- [x] Regime-Filter Validierung (5 Varianten × 8 Assets × 2 Perioden = 80 Tests)
+- [x] Bug-Fixes: ADX (Expression API), _IND_PATTERN (ADX + bb_width)
+- [ ] ≥60% Pass-Rate mit optimiertem Regime-Filter
+- [ ] Paper/Shadow-Trading auf Hyperliquid Testnet
 - [ ] Wöchentlicher Cron + Discord-Report
-- [ ] Mindestens 1 Strategie die alle Gates besteht
+- [ ] ADR-005 Layer-Interfaces finalisiert
+
+### Current Best Strategy: MACD Momentum + ADX+EMA
+
+**Entry:** `macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20`
+**Exit:** trailing_stop 2%, stop_loss 2.5%, max_hold 48 bars
+
+| Metric | Unfiltered | ADX+EMA Filter |
+|--------|-----------|----------------|
+| Pass Rate | 12% (2/16) | **50% (8/16)** |
+| Avg DD | 22.7% | **14.1%** |
+| Avg CL | 9.9 | **6.5** |
+| Avg Return | +53.4% | +35.9% |
+
+**ETH 2025Q1: -16.4% → +4.0%** (Regime-Filter avoids bear market)
 
 ### Alte Strategien (v1, archiviert)
 
@@ -182,10 +201,10 @@ Discord: "1 BACKTEST_PASS, 2 FAIL"
 
 ---
 
-## Phase 8: Economics ⬜ BLOCKED
+## Phase 8: Economics + Executor Setup ⬜ BLOCKED
 
-**Status:** Blocked by Phase 7  
-**Depends:** Phase 7 Foundry COMPLETE
+**Status:** Blocked by Phase 7 (≥60% Pass-Rate)  
+**Depends:** Phase 7 Foundry ≥60% Pass-Rate + Paper Trading
 
 ### Deliverables
 
@@ -195,6 +214,16 @@ Discord: "1 BACKTEST_PASS, 2 FAIL"
 | Infra Cost Estimate | Server, API, etc. |
 | Break-even Analysis | Trades/day needed |
 | Risk-adjusted Returns | Sharpe, Sortino |
+
+### Executor V1 (Layer 2) — Nach Phase 7
+
+| Komponente | Beschreibung |
+|-----------|-------------|
+| Hyperliquid SDK | Order execution, position tracking |
+| Kill-Switches | Daily-loss 5%, max DD 20%, 1 position max |
+| Position Sizing | 2% per trade, Kelly 1/4 |
+| Deterministic Rules | Kein LLM during trading |
+| Discord Alerts | Trade entries/exits, kill-switch activations |
 
 ---
 
@@ -245,7 +274,8 @@ Discord: "1 BACKTEST_PASS, 2 FAIL"
 2026-04-05: Phase 6 COMPLETE (24h Test PASSED!) 🎉
 2026-04-05: Phase 7 v1 COMPLETE (Strategy Lab validated)
 2026-04-18: Phase 7 RE-OPENED → Foundry-Redesign beschlossen
-2026-04-19: Phase 7 BUILD IN PROGRESS → Foundry V1 Pipeline
+2026-04-19: Phase 7 BUILD — Regime-Filter Validation (50% Pass-Rate)
+2026-04-19: ADR-005 — Three-Layer Architecture (Foundry → Executor → Monitor)
 ```
 
 ---

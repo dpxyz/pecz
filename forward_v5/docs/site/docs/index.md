@@ -628,11 +628,12 @@ title: OpenClaw Strategic Cockpit
   </div>
   
   <div class="dependency-notice">
-    <strong>🔨 Status Update (19. April 2026):</strong> Phase 7 Foundry V1 Pipeline gebaut!
-    <code>dsl_translator.py</code> + <code>evolution_runner.py</code> v2.0 implementiert.
-    Nächster Schritt: Datenpfad verifizieren, dann erster Mock-Run.
-    Siehe <code>PHASE7_REDESIGN.md</code> und <code>FOUNDRY_CHARTER.md</code>.
-    Phase 8 blockiert bis Phase 7 Foundry abgeschlossen.
+    <strong>🎯 Status Update (19. April 2026):</strong> Regime-Filter Durchbruch!
+    <code>ADX+EMA</code> Filter verdoppelt Pass-Rate (12% → 50%), halbiert DD (22.7% → 14.1%).
+    <strong>ADR-005:</strong> Three-Layer Architecture (Foundry → Executor → Monitor).
+    8 Assets validiert (BTC, ETH, SOL, DOGE, AVAX, LINK, XRP, ADA).
+    Nächster Schritt: ≥60% Pass-Rate → Paper Trading.
+    Phase 8 blockiert bis Phase 7 ≥60% Pass-Rate erreicht.
   </div>
 </div>
 
@@ -643,20 +644,24 @@ title: OpenClaw Strategic Cockpit
 
 <div class="status-grid">
   <div class="status-panel highlight">
-    <div class="status-panel-title">🔨 Phase 7 Foundry BUILD</div>
-    <div class="status-main active">V1 Pipeline gebaut – Mock-Run steht an</div>
+    <div class="status-panel-title">🎯 Phase 7 Foundry — Regime-Filter Validierung</div>
+    <div class="status-main active">50% Pass-Rate erreicht (ADX+EMA Filter)</div>
     <div class="status-desc">
-      Foundry V1 Pipeline implementiert:
-      <code>dsl_translator.py</code> (8 Indikatoren, sichere DSL→Python-Übersetzung)<br>
-      <code>evolution_runner.py</code> v2.0 (3 Modi: mock/dry-run/live)
+      <strong>Beste Strategie:</strong> MACD Momentum + ADX+EMA Regime-Filter<br>
+      <code>Entry: macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20</code><br>
+      <code>Exit: trailing_stop 2%, stop_loss 2.5%, max_hold 48 bars</code>
       <br><br>
+      <strong>Regime-Filter Vergleich (8 Assets × 2 Perioden):</strong>
+      <table>
+        <tr><th>Filter</th><th>Pass</th><th>Avg DD</th><th>Avg CL</th></tr>
+        <tr><td>Unfiltered</td><td>12%</td><td>22.7%</td><td>9.9</td></tr>
+        <tr><td><strong>ADX+EMA</strong></td><td><strong>50%</strong></td><td><strong>14.1%</strong></td><td><strong>6.5</strong></td></tr>
+      </table>
+      <br>
       <strong>Nächste Schritte:</strong><br>
-      1️⃣ Datenpfad verifizieren (Parquet-Dateien)<br>
-      2️⃣ Erster Mock-Run<br>
-      3️⃣ Echter Foundry-Run<br>
-      4️⃣ Wöchentlicher Cron + Discord-Report
-      <br><br>
-      Phase 8 ⬜ blockiert bis Foundry läuft.
+      1️⃣ Weitere Optimierung (ATR-Filter, mehr Perioden) → ≥60%<br>
+      2️⃣ Paper/Shadow-Trading auf Hyperliquid Testnet<br>
+      3️⃣ Executor V1 (Layer 2) bauen
     </div>
   </div>
   
