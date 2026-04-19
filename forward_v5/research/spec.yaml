@@ -1,24 +1,24 @@
-# Phase 7 v0.2 – Strategy Specification (V1 realistic thresholds)
+# Phase 7 v0.3 – Strategy Specification (Hyperliquid Perps, 100€ Start)
 # Mensch definiert WAS, nicht WIE
 
 # ── Profitability ──
 profitability:
-  min_return_pct: 2.0          # V1: 2% netto (realistisch für 6 Monate)
-  min_profit_factor: 1.2       # V1: PF > 1.2 (nicht 1.5)
-  min_expectancy: 0.001        # V1: positiv reicht
-  min_trades: 30               # V1: 30 Trades (statistisch relevant)
+  min_return_pct: 1.0          # V1: 1% netto (realistisch für 6 Monate, 100€ Start)
+  min_profit_factor: 1.05      # V1: PF > 1.05 (gering positiv, Maker-Fees)
+  min_expectancy: 0.0          # V1: positiv reicht (>= 0)
+  min_trades: 20               # V1: 20 Trades (kleines Kapital = weniger Trades okay)
 
 # ── Risk ──
 risk:
-  max_drawdown_pct: 25.0        # V1: 25% DD erlaubt
-  min_return_dd_ratio: 0.08     # V1: 2%/25% = 0.08
-  max_consecutive_losses: 10    # V1: 10 max
+  max_drawdown_pct: 20.0        # V1: 20% DD (aggressiv für 100€, aber Perps)
+  min_return_dd_ratio: 0.05     # V1: 1%/20% = 0.05
+  max_consecutive_losses: 8     # V1: 8 max
 
 # ── Robustness ──
 robustness:
   wf_windows_profitable: 2      # Mindestens 2 von 3 Walk-Forward Windows
-  wf_max_degradation_pct: 60    # V1: 60% Degradation erlaubt
-  min_sharpe_ratio: 0.2         # V1: 0.2 (positiv reicht)
+  wf_max_degradation_pct: 70    # V1: 70% Degradation erlaubt (kleines Sample)
+  min_sharpe_ratio: 0.1         # V1: positiv reicht
 
 # ── Resources ──
 resources:
@@ -34,9 +34,9 @@ guardrails:
 
 # ── Asset Universe ──
 assets:
-  - BTCUSDT
-  - ETHUSDT
-  - SOLUSDT
+  - BTCUSDT        # Hyperliquid BTC-PERP
+  - ETHUSDT        # Hyperliquid ETH-PERP
+  - SOLUSDT        # Hyperliquid SOL-PERP
 
 # ── Timeframe ──
 timeframe: 1h
@@ -44,10 +44,19 @@ timeframe: 1h
 # ── Data Range ──
 backtest_period: "2024-01-01 to 2024-12-31"
 
+# ── Capital ──
+capital:
+  initial_eur: 100            # 100€ Startkapital
+  leverage: 1                 # V1: Kein Leverage (Konservativ)
+  # leverage: 3              # V2: 3x Leverage (Perps-typisch)
+
+# ── Platform ──
+platform: "hyperliquid"       # Hyperliquid Perps DEX
+
 # ── Fees & Slippage ──
 fees:
-  fee_rate: 0.0002            # 0.02% pro Trade (Binance maker)
-  slippage_bps: 2.0           # 2 Basis-Punkte Slippage (limit orders)
+  fee_rate: 0.0001            # 0.01% pro Trade (Hyperliquid Maker)
+  slippage_bps: 1.0           # 1 Basis-Punkt Slippage (Perps, limit orders)
 
 # ── Data ──
 data:

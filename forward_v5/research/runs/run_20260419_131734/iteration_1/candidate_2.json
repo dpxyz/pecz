@@ -1,0 +1,43 @@
+{
+  "dsl_version": "0.1",
+  "strategy": {
+    "name": "Crypto_ZScore_Volatility_Reversion",
+    "type": "mean_reversion",
+    "hypothesis": "Extreme Z-Score deviations combined with high relative volatility signal a local bottom for a bounce.",
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT"
+    ],
+    "timeframe": "1h",
+    "indicators": [
+      {
+        "name": "ZSCORE",
+        "params": {
+          "period": 50
+        }
+      },
+      {
+        "name": "ATR",
+        "params": {
+          "period": 14
+        }
+      }
+    ],
+    "entry": {
+      "condition": "zscore_50 < -2.0 AND atr_14 > (close * 0.01)",
+      "max_per_day": 2
+    },
+    "exit": {
+      "take_profit_pct": 3.0,
+      "stop_loss_pct": 2.5,
+      "trailing_stop_pct": null,
+      "max_hold_bars": 72
+    },
+    "position_sizing": {
+      "method": "fixed_frac",
+      "risk_per_trade_pct": 1.0
+    },
+    "filters": []
+  }
+}

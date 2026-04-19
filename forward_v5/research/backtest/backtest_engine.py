@@ -42,6 +42,8 @@ class BacktestResult:
     win_rate: float = 0.0
     expectancy: float = 0.0
     trade_count: int = 0
+    max_consecutive_losses: int = 0
+    sharpe_ratio: float = 0.0
 
     # Metadata
     execution_time_ms: int = 0
@@ -76,6 +78,12 @@ class BacktestResult:
 
         # Max Drawdown
         self.max_drawdown = self._calc_max_drawdown()
+        
+        # Max Consecutive Losses
+        self.max_consecutive_losses = self._calc_max_consecutive_losses(pnls)
+        
+        # Sharpe Ratio (from equity curve)
+        self.sharpe_ratio = self._calc_sharpe_ratio()
 
         return self
 
@@ -96,6 +104,42 @@ class BacktestResult:
         max_dd = np.max(drawdowns)
 
         return float(max_dd) * 100
+    
+    def _calc_max_consecutive_losses(self, pnls: list) -> int:
+        """Berechne maximale aufeinanderfolgende Verluste"""
+        max_streak = 0
+        current_streak = 0
+        for pnl in pnls:
+            if pnl < 0:
+                current_streak += 1
+                max_streak = max(max_streak, current_streak)
+            else:
+                current_streak = 0
+        return max_streak
+    
+    def _calc_sharpe_ratio(self) -> float:
+        """Berechne Sharpe Ratio aus der Equity-Kurve"""
+        if not self.equity_curve or len(self.equity_curve) < 2:
+            return 0.0
+        
+        # Tägliche Returns aus Equity-Kurve
+        equity = np.array(self.equity_curve)
+        returns = np.diff(equity) / equity[:-1]
+        
+        if len(returns) == 0 or np.std(returns) == 0:
+            return 0.0
+        
+        # Annualisiere: ~365 Tage / 24 Stunden = Bar-Returns für 1h
+        # Sharpe = mean(returns) / std(returns) * sqrt(bars_per_year)
+        mean_ret = np.mean(returns)
+        std_ret = np.std(returns)
+        
+        if std_ret == 0:
+            return 0.0
+        
+        # Annualisierter Sharpe (8760 Bars/Jahr für 1h)
+        sharpe = mean_ret / std_ret * np.sqrt(8760)
+        return float(sharpe)
 
     def to_dict(self) -> Dict:
         return {
@@ -107,6 +151,8 @@ class BacktestResult:
             'win_rate': self.win_rate,
             'expectancy': self.expectancy,
             'trade_count': self.trade_count,
+            'max_consecutive_losses': self.max_consecutive_losses,
+            'sharpe_ratio': self.sharpe_ratio,
             'execution_time_ms': self.execution_time_ms,
             'memory_peak_mb': self.memory_peak_mb,
             'failure_reasons': self.failure_reasons
