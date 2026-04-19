@@ -55,7 +55,7 @@ Systemd Service, CLI Control, Health Dashboard, Alert Engine. Alles läuft stabi
 
 ### Phase 7: Strategy Lab ✅
 
-3 Strategie-Typen validiert. Breakthrough: ADX+EMA Regime-Filter verdoppelt Pass-Rate auf 50%. Gold Standard: MACD Momentum + ADX+EMA.
+6 Strategie-Typen validiert (90 Tests). 8 Assets × 2 Perioden. Breakthrough: ADX+EMA Regime-Filter verdoppelt Pass-Rate auf 50%, halbiert Drawdown. Gold Standard: MACD Momentum + ADX+EMA.
 
 → Details: [Roadmap](roadmap.md) | [Baseline Strategy](strategy-lab/baseline.md)
 

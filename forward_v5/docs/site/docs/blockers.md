@@ -12,7 +12,7 @@ title: Blockers
 
 | # | Blocker | Status | Lösung |
 |---|---------|--------|--------|
-| 1 | Discord Embed-Formatierung | 🔨 In Arbeit | Bot API 403 → Alternative finden |
+| 1 | Discord Embed-Formatierung | ⬜ Open | Bot API 403 → Alternative finden |
 | 2 | Memory Search defekt | ⬸ Known | node-llama-cpp fehlt, braucht OpenClaw Update |
 | 3 | OpenClaw v2026.4.12 | ⬸ Known | Docker Image von Hostinger, kein selbst-Update |
 
