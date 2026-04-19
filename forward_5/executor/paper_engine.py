@@ -257,10 +257,21 @@ async def backfill_from_parquet(engine: PaperTradingEngine):
         # Insert into data_feed's candle table
         with sqlite3.connect(engine.feed.db_path) as conn:
             for row in df.iter_rows(named=True):
+                # Handle datetime vs integer timestamps
+                ts = row["timestamp"]
+                if hasattr(ts, 'timestamp'):
+                    # datetime object → convert to ms epoch
+                    ts = int(ts.timestamp() * 1000)
+                elif ts < 1e12:
+                    # seconds epoch → convert to ms
+                    ts = int(ts * 1000)
+                else:
+                    ts = int(ts)
+                
                 conn.execute("""
                     INSERT OR REPLACE INTO candles (symbol, ts, open, high, low, close, volume)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (symbol, row["timestamp"], row["open"], row["high"],
+                """, (symbol, ts, row["open"], row["high"],
                       row["low"], row["close"], row.get("volume", 0)))
         log.info(f"  ✅ {symbol}: {len(df)} candles backfilled")
 

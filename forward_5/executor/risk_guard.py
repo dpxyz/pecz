@@ -149,10 +149,14 @@ class RiskGuard:
         self._trigger_kill(reason)
 
     def manual_resume(self, reason: str = "Manual resume via Discord"):
-        """Manual resume from Discord command (after cooldown)."""
+        """Manual resume from Discord command (bypasses cooldown)."""
+        prev_state = self.state.get_guard_state()
         self.state.set_guard_state(GuardState.RUNNING, reason)
         self.state.reset_consecutive_losses()
-        log.info(f"✅ Manual resume: {reason}")
+        if prev_state in (GuardState.KILL_SWITCH, GuardState.COOLDOWN):
+            log.warning(f"✅ Manual resume (COOLDOWN BYPASSED): {reason}")
+        else:
+            log.info(f"✅ Manual resume: {reason}")
 
 
 # ── Test ──

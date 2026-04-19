@@ -13,6 +13,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from discord_reporter import format_hourly_status
+
 log = logging.getLogger("command_listener")
 
 # ── Discord Command Polling ──
@@ -183,54 +185,63 @@ class CommandListener:
     async def _cmd_kill(self, author: str):
         """!kill — Activate kill switch immediately."""
         from state_manager import GuardState
+        from discord_reporter import COLOR_RED
         
         current = self.engine.state.get_guard_state()
         if current == GuardState.KILL_SWITCH:
-            self.engine.reporter.report_custom(
-                "🚨 **Kill switch already active**\nUse `!resume` to restart after review."
+            self.engine.reporter._send_container(
+                "🚨 **KILL SWITCH**",
+                "Kill switch already active.\nUse `!resume` to restart after review.",
+                COLOR_RED
             )
             return
 
         self.engine.risk.manual_kill(f"Manual !kill by {author}")
-        self.engine.reporter.report_custom(
-            f"🚨 **KILL SWITCH ACTIVATED** by {author}\n"
+        self.engine.reporter._send_container(
+            "🚨 **CRITICAL**",
+            f"**KILL SWITCH ACTIVATED** by {author}\n"
             f"All trading halted immediately.\n"
             f"Any open positions will be managed to close.\n"
-            f"Use `!resume` to restart after review."
+            f"Use `!resume` to restart after review.",
+            COLOR_RED
         )
         log.critical(f"🚨 Manual kill switch activated by {author}")
 
     async def _cmd_resume(self, author: str):
         """!resume — Resume from kill switch / pause."""
         from state_manager import GuardState
+        from discord_reporter import COLOR_GREEN, COLOR_AMBER
         
         current = self.engine.state.get_guard_state()
         if current == GuardState.RUNNING:
-            self.engine.reporter.report_custom(
-                "✅ **Already running** — no pause active."
+            self.engine.reporter._send_container(
+                "✅ **RUNNING**",
+                "Already running — no pause active.",
+                COLOR_GREEN
             )
             return
 
         self.engine.risk.manual_resume(f"Manual !resume by {author}")
-        self.engine.reporter.report_custom(
-            f"✅ **RESUMED** by {author}\n"
+        self.engine.reporter._send_container(
+            "✅ **RESUMED**",
             f"Guard state → RUNNING\n"
             f"Consecutive losses reset to 0.\n"
-            f"New entries allowed."
+            f"New entries allowed.\n"
+            f"_By {author}_",
+            COLOR_GREEN
         )
         log.info(f"✅ Manual resume by {author}")
 
     async def _cmd_status(self):
         """!status — Show current engine status."""
-        from discord_reporter import format_hourly_status
-        status_msg = format_hourly_status(self.engine.state)
+        header, body, color = format_hourly_status(self.engine.state)
         # Add uptime info
         start_time = self.engine.state.get_state("engine_start_time")
         if start_time:
             now = int(datetime.now(timezone.utc).timestamp())
             uptime_h = (now - start_time) / 3600
-            status_msg += f"\nUptime: {uptime_h:.1f}h"
-        self.engine.reporter.report_custom(status_msg)
+            body += f"\nUptime: {uptime_h:.1f}h"
+        self.engine.reporter._send_container(header, body, color)
 
     async def _cmd_help(self):
         """!help — Show available commands."""
