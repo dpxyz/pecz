@@ -146,13 +146,12 @@ def format_hourly_status(state_manager) -> tuple:
     pnl_total = equity - start_equity
     pnl_pct = (pnl_total / start_equity) * 100 if start_equity > 0 else 0
     
-    pos_btc = state_manager.get_open_position("BTCUSDT")
-    pos_eth = state_manager.get_open_position("ETHUSDT")
+    # Iterate ALL tracked assets for open positions
     positions = []
-    if pos_btc:
-        positions.append(f"BTC: ${pos_btc['entry_price']:,.0f}")
-    if pos_eth:
-        positions.append(f"ETH: ${pos_eth['entry_price']:,.0f}")
+    for sym in ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]:
+        pos = state_manager.get_open_position(sym)
+        if pos:
+            positions.append(f"{sym.split('USDT')[0]}: ${pos['entry_price']:,.0f}")
     pos_str = ", ".join(positions) if positions else "None"
     
     guard_emoji = {

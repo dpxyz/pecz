@@ -221,8 +221,11 @@ class PaperTradingEngine:
                 fee = open_pos["size"] * exit_price * FEE_RATE * leverage
 
                 pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
+                # ⚠️ BUG 2 FIX: Pass NET PnL to close_position so trades table is correct
+                # (Previously close_position recalculated GROSS PnL, missing the exit fee)
                 self.state.close_position(symbol, exit_price, current_candle["timestamp"],
-                                           exit_signal.reason, guard_state.value)
+                                           exit_signal.reason, guard_state.value,
+                                           net_pnl=pnl)
                 self.risk.on_trade_closed(pnl)
 
                 exit_event = {
@@ -280,6 +283,11 @@ class PaperTradingEngine:
             entry_price = current_price * (1 + SLIPPAGE_BPS / 10000)  # Slippage on entry
             size = (allocation * leverage) / (entry_price * (1 + FEE_RATE * leverage))
             fee = size * entry_price * FEE_RATE * leverage  # Actual fee on leveraged position
+
+            # ⚠️ BUG 1 FIX: Deduct entry fee from equity immediately
+            # The fee is real money spent on the trade — must reduce equity.
+            # (Previously only exit fee was deducted on close, overstating equity.)
+            self.state.set_equity(equity - fee)
 
             self.state.open_position(symbol, entry_price, current_candle["timestamp"],
                                      size, guard_state.value)
@@ -372,6 +380,16 @@ async def backfill_from_api(engine: PaperTradingEngine):
         log.info(f"  ✅ {symbol}: {inserted} candles backfilled from API")
     
     log.info(f"Backfill complete: {total_inserted} candles total")
+    
+    # ⚠️ BUG 10 FIX: Verify each asset has enough candles for warmup
+    min_required = 210  # EMA-200 + 10 buffer
+    for symbol in engine.assets:
+        count = len(engine.feed.get_candles(symbol, limit=500))
+        if count < min_required:
+            log.error(f"⚠️ {symbol}: Only {count} candles after backfill (need {min_required})!")
+            log.error(f"  Engine will not produce signals until {min_required - count} more hours pass")
+        else:
+            log.info(f"  ✅ {symbol}: {count} candles — warmup OK")
 
 
 # ── Main ──

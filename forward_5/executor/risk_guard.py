@@ -91,10 +91,11 @@ class RiskGuard:
             return False, f"Already in position — max {MAX_OPEN_POSITIONS} position(s)"
 
         # ── Daily loss check ──
+        # BUG 4 FIX: Use current equity as denominator (not start_equity).
+        # start_equity makes the threshold easier to trigger after profits.
         equity = self.state.get_equity()
-        start_equity = self.state.get_start_equity()
         daily_pnl = self.state.get_daily_pnl()
-        daily_loss_pct = abs(daily_pnl) / start_equity * 100 if daily_pnl < 0 else 0
+        daily_loss_pct = abs(daily_pnl) / equity * 100 if daily_pnl < 0 else 0
 
         if daily_loss_pct > DAILY_LOSS_PCT:
             self.state.set_guard_state(GuardState.STOP_NEW,
@@ -102,7 +103,7 @@ class RiskGuard:
             return False, f"Daily loss {daily_loss_pct:.1f}% exceeds {DAILY_LOSS_PCT}%"
 
         # ── Drawdown check ──
-        peak_equity = self.state.get_state("peak_equity", start_equity)
+        peak_equity = self.state.get_state("peak_equity", self.state.get_start_equity())
         if peak_equity > 0:
             drawdown_pct = (peak_equity - equity) / peak_equity * 100
             if drawdown_pct > MAX_DRAWDOWN_PCT:

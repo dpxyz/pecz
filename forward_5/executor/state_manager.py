@@ -154,13 +154,18 @@ class StateManager:
         return pos_id
 
     def close_position(self, symbol: str, exit_price: float, exit_time: int,
-                       reason: str, guard_state: str = "RUNNING"):
+                       reason: str, guard_state: str = "RUNNING", net_pnl: float = None):
         pos = self.get_open_position(symbol)
         if not pos:
             log.warning(f"No open position for {symbol}")
             return None
 
-        pnl = (exit_price - pos["entry_price"]) * pos["size"]
+        # Use pre-calculated NET PnL if provided (includes exit fee)
+        # Otherwise fall back to gross PnL calculation
+        if net_pnl is not None:
+            pnl = net_pnl
+        else:
+            pnl = (exit_price - pos["entry_price"]) * pos["size"]
         now = datetime.now(timezone.utc).isoformat()
 
         with sqlite3.connect(self.db_path) as conn:
