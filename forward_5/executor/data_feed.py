@@ -17,8 +17,14 @@ import websockets
 log = logging.getLogger("data_feed")
 
 WS_URL = "wss://api.hyperliquid.xyz/ws"
+WS_URL_TESTNET = "wss://api.hyperliquid-testnet.xyz/ws"
 RECONNECT_DELAY = 1  # seconds, doubles on each failure
 MAX_RECONNECT_DELAY = 60
+
+# ⛔ PAPER MODE — use Testnet WebSocket
+# When PAPER_MODE=True, connect to Testnet (fake money)
+# When PAPER_MODE=False, connect to Mainnet (REAL MONEY)
+PAPER_MODE = True  # MUST match paper_engine.py PAPER_MODE
 
 # Hyperliquid candle intervals
 INTERVAL = "1h"
@@ -36,6 +42,9 @@ SYMBOL_MAP = {
     "BTCUSDT": "BTC",
     "ETHUSDT": "ETH",
     "SOLUSDT": "SOL",
+    "AVAXUSDT": "AVAX",
+    "DOGEUSDT": "DOGE",  # Replaces LINK (not on Testnet)
+    "ADAUSDT": "ADA",
 }
 
 
@@ -90,7 +99,10 @@ class DataFeed:
             await self._ws.close()
 
     async def _connect_and_listen(self):
-        async with websockets.connect(WS_URL) as ws:
+        ws_url = WS_URL_TESTNET if PAPER_MODE else WS_URL
+        mode_str = "⛔ TESTNET (Paper)" if PAPER_MODE else "🔴 MAINNET (REAL MONEY)"
+        log.info(f"Connecting to {mode_str}: {ws_url}")
+        async with websockets.connect(ws_url) as ws:
             self._ws = ws
             self._reconnect_delay = RECONNECT_DELAY  # reset on success
             log.info("WebSocket connected")

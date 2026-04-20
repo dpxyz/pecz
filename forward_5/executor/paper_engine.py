@@ -29,7 +29,18 @@ log = logging.getLogger("paper_engine")
 INITIAL_CAPITAL = 100.0
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
-ASSETS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "LINKUSDT", "ADAUSDT"]
+
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  ⛔ PAPER MODE — HARD SWITCH                               ║
+# ║  When PAPER_MODE=True, the engine NEVER sends real orders. ║
+# ║  All trades are simulated locally. No real money at risk.  ║
+# ║  Set to False ONLY after explicit human approval.          ║
+# ╚══════════════════════════════════════════════════════════════╝
+PAPER_MODE = True  # ⛔ NEVER set to False without Dave's explicit OK
+
+ASSETS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]
+# LINK replaced by DOGE — LINK not available on Hyperliquid Testnet
+
 DISCORD_CHANNEL_ID = None  # Loaded from .env at runtime
 DISCORD_WEBHOOK_URL = None  # Not used — OpenClaw message tool instead of webhook
 
@@ -43,7 +54,7 @@ LEVERAGE_TIERS = {
     "ETHUSDT":  1.8,
     "SOLUSDT":  1.5,
     "AVAXUSDT": 1.0,
-    "LINKUSDT": 1.5,
+    "DOGEUSDT": 1.5,  # Replaces LINK (not on Testnet)
     "ADAUSDT":  1.5,
 }
 
@@ -88,8 +99,15 @@ class PaperTradingEngine:
 
     async def start(self):
         """Start the engine — connects to Hyperliquid WebSocket."""
+        # ⛔ PAPER MODE GATE — abort if someone accidentally disabled it
+        if not PAPER_MODE:
+            log.critical("⛔⛔⛔ PAPER_MODE is OFF — REAL MONEY AT RISK ⛔⛔⛔")
+            log.critical("Set PAPER_MODE=True in paper_engine.py or confirm with Dave first!")
+            raise RuntimeError("PAPER_MODE=False requires explicit human approval. Engine aborted.")
+
         self._running = True
         log.info("🚀 Paper Trading Engine starting...")
+        log.info("   ⛔ PAPER_MODE=TRUE — No real orders will be placed")
         log.info(f"   Assets: {self.assets}")
         log.info(f"   Strategy: MACD Momentum + ADX+EMA regime filter")
         log.info(f"   Capital: {INITIAL_CAPITAL}€ | Fee: {FEE_RATE*100}% | Slippage: {SLIPPAGE_BPS}bps")
@@ -100,9 +118,12 @@ class PaperTradingEngine:
         self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
 
         # Send startup message to Discord
+        # ⛔ PAPER MODE SAFETY — startup message
         tier_str = ', '.join(f"{s}@{LEVERAGE_TIERS.get(s, 1.0)}x" for s in self.assets)
         self.reporter.report_custom(
             f"🚀 **Paper Trading Engine V1 Started**\n"
+            f"⛔ **PAPER MODE — NO REAL ORDERS**\n"
+            f"Assets: {tier_str}\n"
             f"Assets: {tier_str}\n"
             f"Strategy: MACD+ADX+EMA Baseline (ADR-007 tiers)\n"
             f"Capital: {INITIAL_CAPITAL}€ per asset\n"
