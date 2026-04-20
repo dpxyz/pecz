@@ -61,7 +61,7 @@ title: Mission Control
 **Entry:** `macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20`
 **Exit:** Trailing Stop 2%, SL 2.5%, Max Hold 48 Bars
 
-Details: [Baseline Strategy](strategy-lab/baseline/) | [ADR-005](architecture/adr-005/) | [ADR-007](architecture/adr-007/)
+Details: [Baseline Strategy](strategy-lab/baseline.md) | [ADR-005](architecture/adr-005.md) | [ADR-007](architecture/adr-007.md)
 
 ---
 
@@ -91,7 +91,7 @@ Kill-Switches sind non-negotiable und hardcoded.
 | discord_reporter | ✅ | Components v2 Container mit Farbaccent |
 | command_listener | ✅ | !kill, !resume, !status, !help |
 
-Details: [ADR-006](architecture/adr-006/)
+Details: [ADR-006](architecture/adr-006.md)
 
 ---
 

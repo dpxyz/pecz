@@ -86,4 +86,4 @@ Go/No-Go Entscheidung. Alle Kriterien aus Phase 8 müssen erfüllt sein.
 ## ⬜ Phase 10: V2 Strategy
 
 Regime-Erkennung + Volatility-Parity + Sentiment-Kill-Switch.
-Siehe [V2 Design Principles](#) und [ADR-008](architecture/adr-008/) (wird nach Paper Trading geschrieben).
+Siehe [V2 Design](v2-design.md) — ADR-008 wird nach Paper Trading geschrieben.
