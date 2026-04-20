@@ -88,6 +88,7 @@ class PaperTradingEngine:
         self.commands = CommandListener(self, channel_id=channel_id)
         self._running = False
         self._last_candle_hour = {}  # track which hours we've processed
+        self._last_summary_hour = -1  # track 4h summary reporting
 
         # Initialize equity
         if not self.state.get_state("start_equity"):
@@ -179,6 +180,14 @@ class PaperTradingEngine:
 
         # Evaluate signal using DB candle history
         await self._evaluate_symbol(symbol, candle)
+
+        # ── 4-hourly summary report ──
+        candle_hour_utc = (ts // 3600000) % 24  # 0-23 UTC hour
+        # Report at 0, 4, 8, 12, 16, 20 UTC (= 1, 5, 9, 13, 17, 21 Berlin)
+        if candle_hour_utc % 4 == 0 and candle_hour_utc != self._last_summary_hour:
+            self._last_summary_hour = candle_hour_utc
+            self.reporter.report_hourly(self.state)
+            log.info(f"📋 4h summary sent (hour {candle_hour_utc} UTC)")
 
     async def _evaluate_symbol(self, symbol: str, current_candle: dict):
         """Evaluate signal for a symbol using buffered candles."""
