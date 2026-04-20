@@ -125,10 +125,18 @@ class DataFeed:
                 await self._handle_message(msg)
 
     async def _handle_message(self, msg):
-        # Hyperliquid WS message format:
-        #   {"channel": "candle", "data": {"coin": "BTC", "candle": [t, o, h, l, c, v]}}
-        #   {"channel": "subscriptionResponse", "data": {...}}
-        #   {"channel": "error", "data": "..."}
+        # Hyperliquid WS message formats:
+        #   Subscription response: {"channel": "subscriptionResponse", "data": {...}}
+        #   Candle update: {"channel": "candle", "data": {"t": 1776682800000, "T": 1776686399999, "s": "BTC", "i": "1h", "o": "75303.0", "c": "75364.0", "h": "75473.0", "l": "75228.0", "v": "0.26901", "n": 246}}
+        #   Error: {"channel": "error", "data": "..."}
+        #
+        # Key insight: Hyperliquid sends PARTIAL candle updates throughout the hour.
+        #   - t = open time, T = close time, s = symbol, i = interval
+        #   - o/c/h/l/v are STRINGS, not numbers
+        #   - n = number of trades (tick count)
+        #   - Multiple updates per hour (not just on close)
+        #   - We must ONLY process CLOSED candles (t < current hour start)
+
         channel = msg.get("channel", "")
 
         # Log subscription confirmations
@@ -146,7 +154,10 @@ class DataFeed:
             return
 
         data = msg.get("data", {})
-        coin = data.get("coin", "")
+
+        # ── Parse Hyperliquid candle format ──
+        # Symbol: "s" field (e.g. "BTC"), not "coin"
+        coin = data.get("s", "")
         # Reverse-map coin to our symbol
         symbol = None
         for s, c in SYMBOL_MAP.items():
@@ -154,24 +165,56 @@ class DataFeed:
                 symbol = s
                 break
         if not symbol:
-            symbol = coin + "USDT"
-
-        # Hyperliquid candle format: [t, o, h, l, c, v]
-        candle = data.get("candle", [])
-        if not candle or len(candle) < 6:
+            symbol = coin + "USDT" if coin else None
+        if not symbol:
             return
 
-        ts, o, h, l, c, v = candle[0], float(candle[1]), float(candle[2]), \
-                              float(candle[3]), float(candle[4]), float(candle[5])
+        # Candle fields are flat in data, not in a "candle" array
+        # All price/volume fields are STRINGS
+        t_str = data.get("t")   # open time (ms epoch)
+        T_str = data.get("T")   # close time (ms epoch)
+        o_str = data.get("o")   # open price
+        c_str = data.get("c")   # close price
+        h_str = data.get("h")   # high price
+        l_str = data.get("l")   # low price
+        v_str = data.get("v")   # volume
 
-        # Store
-        self._store_candle(symbol, ts, o, h, l, c, v)
+        if not t_str or not c_str:
+            return
+
+        try:
+            ts = int(t_str)
+            o = float(o_str)
+            h = float(h_str)
+            low = float(l_str)
+            c = float(c_str)
+            v = float(v_str) if v_str else 0.0
+        except (ValueError, TypeError) as e:
+            log.warning(f"Failed to parse candle fields: {e}")
+            return
+
+        # ── CRITICAL: Only process CLOSED candles ──
+        # Hyperliquid sends partial updates throughout the hour.
+        # We must only evaluate signals on COMPLETE candles.
+        # A candle is "closed" if its close time (T) is in the past.
+        now_ms = int(time.time() * 1000)
+        candle_close_time = int(data.get("T", ts + 3600000))  # fallback: +1h
+
+        if candle_close_time > now_ms:
+            # This is a PARTIAL (in-progress) candle — update DB but don't signal
+            self._store_candle(symbol, ts, o, h, low, c, v)
+            log.debug(f"Partial candle: {symbol} @ {ts} close={c:.2f} (closing at {candle_close_time})")
+            return
+
+        # CLOSED candle — store and signal
+        self._store_candle(symbol, ts, o, h, low, c, v)
+        log.info(f"Closed candle: {symbol} @ {ts} close={c:.2f}")
 
         # Callback
         if self.on_candle:
             candle_data = {
                 "symbol": symbol, "timestamp": ts,
-                "open": o, "high": h, "low": l, "close": c, "volume": v,
+                "open": o, "high": h, "low": low, "close": c, "volume": v,
             }
             await self.on_candle(symbol, candle_data)
 

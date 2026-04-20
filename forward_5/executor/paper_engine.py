@@ -160,19 +160,23 @@ class PaperTradingEngine:
         log.info("Paper Trading Engine stopped")
 
     async def _on_candle(self, symbol: str, candle: dict):
-        """Called by DataFeed when a new 1h candle arrives."""
+        """Called by DataFeed when a CLOSED 1h candle arrives.
+        
+        Note: DataFeed now filters partial candles — only CLOSED candles
+        (where close_time < now) trigger this callback. This ensures we
+        only evaluate signals on complete candle data, matching backtest logic.
+        """
         ts = candle.get("timestamp", 0)
         hour_key = f"{symbol}_{ts}"
 
-        # Deduplicate: only process each candle once
+        # Deduplicate: only process each closed candle once
         if hour_key in self._last_candle_hour:
             return
         self._last_candle_hour[hour_key] = True
 
-        log.info(f"📊 {symbol} candle: close={candle['close']:.2f} @ {datetime.fromtimestamp(ts/1000, tz=timezone.utc).strftime('%Y-%m-%d %H:%M')}")
+        log.info(f"📊 {symbol} CLOSED candle: close={candle['close']:.2f} @ {datetime.fromtimestamp(ts/1000, tz=timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
 
-        # Store candle in state DB (data_feed already does this)
-        # Evaluate signal
+        # Evaluate signal using DB candle history
         await self._evaluate_symbol(symbol, candle)
 
     async def _evaluate_symbol(self, symbol: str, current_candle: dict):
@@ -212,9 +216,9 @@ class PaperTradingEngine:
                 exit_price = exit_signal.price
                 # Apply slippage
                 exit_price *= (1 - SLIPPAGE_BPS / 10000)
-                # Apply fee on leveraged position
+                # Fee on the actual position value (leveraged)
                 leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
-                fee = exit_price * FEE_RATE * leverage
+                fee = open_pos["size"] * exit_price * FEE_RATE * leverage
 
                 pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
                 self.state.close_position(symbol, exit_price, current_candle["timestamp"],
@@ -268,11 +272,14 @@ class PaperTradingEngine:
 
             # Calculate position size: equal-weight allocation from total equity
             # 100€ total / 6 assets = ~16.67€ per position, then apply leverage
+            # Fee is proportional to position value: fee = size * price * rate * leverage
+            # So: size * price * (1 + fee_rate * leverage) = allocation * leverage
+            #     size = (allocation * leverage) / (price * (1 + fee_rate * leverage))
             allocation = equity / len(self.assets)  # Equal weight per asset
             leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
             entry_price = current_price * (1 + SLIPPAGE_BPS / 10000)  # Slippage on entry
-            fee = entry_price * FEE_RATE * leverage  # Fee on leveraged position
-            size = (allocation * leverage - fee) / entry_price  # Leveraged position
+            size = (allocation * leverage) / (entry_price * (1 + FEE_RATE * leverage))
+            fee = size * entry_price * FEE_RATE * leverage  # Actual fee on leveraged position
 
             self.state.open_position(symbol, entry_price, current_candle["timestamp"],
                                      size, guard_state.value)

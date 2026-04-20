@@ -16,7 +16,7 @@ log = logging.getLogger("risk_guard")
 
 DAILY_LOSS_PCT = 5.0        # Stop new entries if daily loss > 5%
 MAX_DRAWDOWN_PCT = 20.0     # Kill switch if drawdown from peak > 20%
-MAX_OPEN_POSITIONS = 1      # Only 1 position at a time
+MAX_OPEN_POSITIONS = 1      # 1 position per symbol (6 assets = max 6 concurrent)
 CONSECUTIVE_LOSS_PAUSE = 5  # Soft pause after 5 consecutive losses
 COOLDOWN_HOURS = 24         # 24h cooldown after kill switch
 
