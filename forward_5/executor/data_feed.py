@@ -89,7 +89,8 @@ class DataFeed:
             except Exception as e:
                 log.error(f"WebSocket error: {e}")
             if self._running:
-                log.info(f"Reconnecting in {self._reconnect_delay}s...")
+                # Testnet WS drops after ~60s idle — expected, not an error
+                log.debug(f"Reconnecting in {self._reconnect_delay}s...")
                 await asyncio.sleep(self._reconnect_delay)
                 self._reconnect_delay = min(self._reconnect_delay * 2, MAX_RECONNECT_DELAY)
 
@@ -101,11 +102,17 @@ class DataFeed:
     async def _connect_and_listen(self):
         ws_url = WS_URL_TESTNET if PAPER_MODE else WS_URL
         mode_str = "⛔ TESTNET (Paper)" if PAPER_MODE else "🔴 MAINNET (REAL MONEY)"
+        # Testnet WS drops idle connections — suppress noisy reconnect logs
         log.info(f"Connecting to {mode_str}: {ws_url}")
-        async with websockets.connect(ws_url) as ws:
+        async with websockets.connect(
+            ws_url,
+            ping_interval=20,
+            ping_timeout=10,
+            close_timeout=5,
+        ) as ws:
             self._ws = ws
-            self._reconnect_delay = RECONNECT_DELAY  # reset on success
-            log.info("WebSocket connected")
+            self._reconnect_delay = RECONNECT_DELAY
+            log.info("WebSocket connected ✅")
 
             # Subscribe to all assets
             for symbol in self.assets:

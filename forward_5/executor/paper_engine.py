@@ -26,7 +26,7 @@ log = logging.getLogger("paper_engine")
 
 # ── Configuration ──
 
-INITIAL_CAPITAL = 100.0
+INITIAL_CAPITAL = 100.0  # Total portfolio capital (NOT per asset)
 SLIPPAGE_BPS = 1.0  # 1 basis point simulated slippage
 FEE_RATE = 0.0001   # 0.01% maker fee (Hyperliquid)
 
@@ -83,6 +83,7 @@ class PaperTradingEngine:
         load_dotenv(Path(__file__).parent / ".env")
         channel_id = os.environ.get("DISCORD_CHANNEL_ID", DISCORD_CHANNEL_ID)
         self.reporter = DiscordReporter(channel_id=channel_id)
+        self.main_address = os.environ.get("HL_MAIN_ADDRESS", "")
         self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle)
         self.commands = CommandListener(self, channel_id=channel_id)
         self._running = False
@@ -117,6 +118,21 @@ class PaperTradingEngine:
         # Record engine start time
         self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
 
+        # Check Hyperliquid testnet balance
+        balance_str = ""
+        if self.main_address:
+            try:
+                import urllib.request
+                url = "https://api.hyperliquid-testnet.xyz/info"
+                data = json.dumps({"type": "clearinghouseState", "user": self.main_address.lower()}).encode()
+                req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+                resp = urllib.request.urlopen(req, timeout=10)
+                state = json.loads(resp.read())
+                val = state.get("marginSummary", {}).get("accountValue", "0")
+                balance_str = f"\n💰 Testnet Balance: ${val} (Main: {self.main_address[:10]}...)"
+            except Exception as e:
+                balance_str = f"\n⚠️ Balance check failed: {e}"
+
         # Send startup message to Discord
         # ⛔ PAPER MODE SAFETY — startup message
         tier_str = ', '.join(f"{s}@{LEVERAGE_TIERS.get(s, 1.0)}x" for s in self.assets)
@@ -124,11 +140,11 @@ class PaperTradingEngine:
             f"🚀 **Paper Trading Engine V1 Started**\n"
             f"⛔ **PAPER MODE — NO REAL ORDERS**\n"
             f"Assets: {tier_str}\n"
-            f"Assets: {tier_str}\n"
             f"Strategy: MACD+ADX+EMA Baseline (ADR-007 tiers)\n"
-            f"Capital: {INITIAL_CAPITAL}€ per asset\n"
+            f"Capital: {INITIAL_CAPITAL}€ total ({INITIAL_CAPITAL/len(self.assets):.1f}€/asset)\n"
             f"Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPos=1, CL≥5\n"
             f"Commands: !kill, !resume, !status, !help"
+            f"{balance_str}"
         )
 
         # Start command listener and data feed concurrently
@@ -250,11 +266,13 @@ class PaperTradingEngine:
                 })
                 return
 
-            # Calculate position size with asset-specific leverage
+            # Calculate position size: equal-weight allocation from total equity
+            # 100€ total / 6 assets = ~16.67€ per position, then apply leverage
+            allocation = equity / len(self.assets)  # Equal weight per asset
             leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
             entry_price = current_price * (1 + SLIPPAGE_BPS / 10000)  # Slippage on entry
             fee = entry_price * FEE_RATE * leverage  # Fee on leveraged position
-            size = (equity * leverage - fee) / entry_price  # Leveraged position
+            size = (allocation * leverage - fee) / entry_price  # Leveraged position
 
             self.state.open_position(symbol, entry_price, current_candle["timestamp"],
                                      size, guard_state.value)

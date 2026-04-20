@@ -2,7 +2,7 @@
 title: Phases
 ---
 
-# Phasen 0–9
+# Phasen 0–10
 
 > Jede Phase muss vollständig und dokumentiert sein bevor die nächste beginnt.
 
@@ -12,16 +12,11 @@ title: Phases
 
 | Phase | Name | Status | Ergebnis |
 |-------|------|--------|----------|
-| 0 | Freeze & Archive | ✅ COMPLETE | Alte Systeme eingefroren |
-| 1 | Skeleton | ✅ COMPLETE | Grundstruktur, ADRs |
-| 2 | Core | ✅ COMPLETE | 103 Tests, Projektions-Engine |
-| 3 | Observability | ✅ COMPLETE | Monitoring, Logging |
-| 4 | Boundaries | ✅ COMPLETE | Error Handling, Circuit Breaker |
-| 5 | Operations | ✅ COMPLETE | systemd, CLI, Health Dashboard |
-| 6 | Test Strategy | ✅ COMPLETE | 24h Stability Test PASSED |
-| **7** | **Strategy Lab** | **✅ COMPLETE** | **Gold Standard: MACD+ADX+EMA** |
-| **8** | **Paper Trading + Economics** | **⭐ IN PROGRESS** | **Executor V1 + Audit gefixt** |
+| 0–6 | Foundation | ✅ COMPLETE | Grundstruktur bis Test Strategy |
+| 7 | Strategy Lab | ✅ COMPLETE | Gold Standard: MACD+ADX+EMA |
+| **8** | **Paper Trading + Economics** | **⭐ LIVE** | **Engine läuft seit 2026-04-20** |
 | 9 | Final Gate | ⬜ PENDING | Go/No-Go für Live Trading |
+| 10 | V2 Strategy | ⬜ PLANNED | Regime + Volatility-Parity + Sentiment |
 
 ---
 
@@ -34,43 +29,55 @@ title: Phases
 2026-04-01  Phase 5 COMPLETE (Operations)
 2026-04-05  Phase 6 COMPLETE (24h Test PASSED)
 2026-04-05  Phase 7 COMPLETE (Strategy Lab validated)
-2026-04-19  Phase 8 START (Executor V1 built)
-2026-04-19  Phase 8 Audit (12 Bugs fixed, Post-EMA Re-Validation)
+2026-04-19  Phase 8 START (Executor V1 built + Audited)
+2026-04-20  Phase 8 LIVE (Paper Trading started on Testnet)
 ```
 
 ---
 
-## Phasen-Details
+## Phase 8: Paper Trading — LIVE 🟢
 
-### Phase 0–4: Foundation ✅
+**Gestartet:** 2026-04-20 | **Capital:** 100€ TOTAL | **Assets:** 6 | **Mode:** PAPER ONLY
 
-Grundlegende Infrastruktur: Freeze, Skeleton, Core Reliability (103 Tests), Observability (68 Tests), System Boundaries.
+### Was wurde gemacht
+- Executor V1: 7 Module, Integrationstest (376 Trades)
+- Full Pipeline Audit: 12 Bugs gefunden & gefixt
+- Hyperliquid Testnet: API Wallet autorisiert, $999 Balance
+- Discord Commands: !kill, !resume, !status, !help
+- Components v2 Embeds für Reports
+- Capital Model: 100€ Total, Equal-Weight per Asset
 
-### Phase 5: Operations ✅
+### Success Criteria (ADR-006)
+- ≥30 Trades
+- ≤25% Drawdown
+- ≤10pp Win-Rate Deviation vs Backtest
+- ≥30 Tage Laufzeit
+- ≥95% Signal Execution Rate
+- ≤60s Kill-Switch Response
 
-Systemd Service, CLI Control, Health Dashboard, Alert Engine. Alles läuft stabil.
+### Noch offen
+- Monitor V1 (Equity-Kurve, Dashboard, Daily Report)
+- 30+ Tage Paper Trading (läuft)
+- Economics Validierung (nach 30 Tagen)
 
-### Phase 6: Test Strategy ✅
+---
 
-24h Stability Test mit 96/96 Checks. 5 Acceptance Gates bestanden.
+## Phase 9: Final Gate ⬜
 
-### Phase 7: Strategy Lab ✅
+Go/No-Go Entscheidung. Kriterien:
+1. Paper Trading Success Criteria erfüllt
+2. Economics positiv (oder klarer Pfad dorthin)
+3. Manuelle Freigabe durch Dave
 
-3 Strategie-Typen validiert. Breakthrough: ADX+EMA Regime-Filter verdoppelt Pass-Rate auf 50%. Gold Standard: MACD Momentum + ADX+EMA.
+---
 
-→ Details: [Roadmap](roadmap.md) | [Baseline Strategy](strategy-lab/baseline.md)
+## Phase 10: V2 Strategy ⬜
 
-### Phase 8: Paper Trading + Economics ⭐
+**Voraussetzung:** Phase 9 bestanden. Kein V2 ohne bewiesene V1-Pipeline.
 
-Executor V1 gebaut (7 Module, Integrationstest bestanden). **Full Pipeline Audit:**
-12 Bugs gefunden & gefixt (4 kritisch: EMA=Bogus, MACD=Bogus, net_return 100x, DSL Trailing).
-Post-Fix Re-Validation: CL≤8 = 12%, CL≤12 = 75% Pass-Rate.
-Paper Trading Run als nächster Meilenstein. Economics erst nach Paper Trading Proof.
-
-→ Details: [Roadmap](roadmap.md) | [ADR-006](architecture/adr-006.md)
-
-### Phase 9: Final Gate ⬜
-
-Endgültige Go/No-Go Entscheidung. Manuelle Freigabe durch Dave.
-
-→ Details: [Roadmap](roadmap.md)
+### V2 Design Principles
+- **Regime-Erkennung als Herzstück** — Trend/Range/Crash → nicht in Range handeln
+- **Volatility-Parity** — Risiko pro Trade konstant, nicht Kapital
+- **Sentiment als Kill-Switch** — Score 0-100, JSON-Mode, nur downsizing
+- **On-Chain Regime-Filter** — Exchange Netflow 7-14d
+- **Kein Indikatoren-Salat** — bessere Regeln, nicht mehr Indikatoren
