@@ -304,41 +304,74 @@ class PaperTradingEngine:
             log.debug(f"  {symbol}: No entry — {signal.reason}")
 
 
-# ── Backfill: Load historical data from parquet ──
+# ── Backfill: Load historical data from Hyperliquid Testnet API ──
 
-async def backfill_from_parquet(engine: PaperTradingEngine):
-    """Load historical candles from parquet files to warm up indicators."""
-    research_dir = Path(__file__).parent.parent / "research"
+async def backfill_from_api(engine: PaperTradingEngine):
+    """Load historical candles from Hyperliquid Testnet REST API.
+    
+    This replaces the old parquet backfill. Testnet prices differ from mainnet,
+    so we MUST use testnet data for consistent indicator calculations.
+    
+    Returns ~5000 1h candles per asset (Sep 2025 to now), which is more than
+    enough for EMA-200 warmup (210 candles needed).
+    """
+    import urllib.request
+    
+    api_url = "https://api.hyperliquid-testnet.xyz/info"
+    start_time = 1758679200000  # Sep 24, 2025 (earliest available on testnet)
+    
+    if PAPER_MODE:
+        api_url = "https://api.hyperliquid-testnet.xyz/info"
+    else:
+        api_url = "https://api.hyperliquid.xyz/info"
+    
+    total_inserted = 0
+    
     for symbol in engine.assets:
-        parquet_path = research_dir / "data" / f"{symbol}_1h_full.parquet"
-        if not parquet_path.exists():
-            log.warning(f"No parquet for {symbol} at {parquet_path}")
+        coin = SYMBOL_MAP.get(symbol, symbol.replace("USDT", ""))
+        
+        payload = json.dumps({
+            "type": "candleSnapshot",
+            "req": {
+                "coin": coin,
+                "interval": "1h",
+                "startTime": start_time,
+            }
+        }).encode()
+        
+        req = urllib.request.Request(api_url, data=payload, headers={"Content-Type": "application/json"})
+        
+        try:
+            resp = urllib.request.urlopen(req, timeout=30)
+            data = json.loads(resp.read())
+        except Exception as e:
+            log.error(f"Backfill API failed for {symbol}: {e}")
             continue
-
-        import polars as pl
-        df = pl.read_parquet(str(parquet_path))
-        log.info(f"Backfilling {symbol}: {len(df)} candles from parquet")
-
-        # Insert into data_feed's candle table
+        
+        if not isinstance(data, list):
+            log.error(f"Unexpected backfill response for {symbol}")
+            continue
+        
+        inserted = 0
         with sqlite3.connect(engine.feed.db_path) as conn:
-            for row in df.iter_rows(named=True):
-                # Handle datetime vs integer timestamps
-                ts = row["timestamp"]
-                if hasattr(ts, 'timestamp'):
-                    # datetime object → convert to ms epoch
-                    ts = int(ts.timestamp() * 1000)
-                elif ts < 1e12:
-                    # seconds epoch → convert to ms
-                    ts = int(ts * 1000)
-                else:
-                    ts = int(ts)
+            for candle in data:
+                ts = int(candle["t"])
+                o = float(candle["o"])
+                h = float(candle["h"])
+                l = float(candle["l"])
+                c = float(candle["c"])
+                v = float(candle.get("v", 0))
                 
                 conn.execute("""
                     INSERT OR REPLACE INTO candles (symbol, ts, open, high, low, close, volume)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (symbol, ts, row["open"], row["high"],
-                      row["low"], row["close"], row.get("volume", 0)))
-        log.info(f"  ✅ {symbol}: {len(df)} candles backfilled")
+                """, (symbol, ts, o, h, l, c, v))
+                inserted += 1
+        
+        total_inserted += inserted
+        log.info(f"  ✅ {symbol}: {inserted} candles backfilled from API")
+    
+    log.info(f"Backfill complete: {total_inserted} candles total")
 
 
 # ── Main ──
@@ -352,8 +385,8 @@ async def main():
 
     engine = PaperTradingEngine(assets=ASSETS)
 
-    # Backfill historical data first
-    await backfill_from_parquet(engine)
+    # Backfill historical data from API first
+    await backfill_from_api(engine)
 
     log.info("=" * 60)
     log.info("  PAPER TRADING ENGINE V1 — MACD+ADX+EMA Baseline")
