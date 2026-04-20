@@ -69,6 +69,7 @@ nav:
     - "Baseline Strategy": strategy-lab/baseline.md
   - "💰 Economics": economics.md
   - "🧪 Test Suite": test-suite.md
+  - "🔮 V2 Design": v2-design.md
 
 extra:
   generator: false
