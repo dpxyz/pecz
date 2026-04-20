@@ -68,6 +68,7 @@ nav:
     - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
     - "Baseline Strategy": strategy-lab/baseline.md
   - "💰 Economics": economics.md
+  - "🧪 Test Suite": test-suite.md
 
 extra:
   generator: false

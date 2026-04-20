@@ -57,11 +57,39 @@ title: Roadmap
 | !kill / !resume | Discord Commands für Guard-Override | ✅ |
 | Process Manager | Auto-start, restart on crash | ✅ |
 | Paper Engine gestartet | 6 Assets, 100€ Total, Testnet WS | ✅ |
+| **Test Suite** | **82 Tests (75 Unit + 7 E2E), 100% Grün** | ✅ |
 | 30+ Day Run | Echtzeit Paper Trading | 🔵 Running |
 
 **Start:** 2026-04-20 | **Capital:** 100€ Total (~16.67€/Asset) | **Mode:** PAPER ONLY
 
-### 8.3: Monitor V1 — NEXT
+### 8.3: Test Suite — ✅ COMPLETE
+
+**82 Tests, Commit 68e4f8e, `pytest tests/ -v`**
+
+| Test-File | # | Was geprüft wird |
+|------------|---|------------------|
+| `test_state_manager` | 14 | Position lifecycle, Equity, BUG 2 Regr., Accounting-Invariante |
+| `test_risk_guard` | 9 | State Machine, BUG 4 Regr., CL-Tracker, DD Kill |
+| `test_signal_generator` | 17 | Entry/Exit-Logik, Indikatoren, Parameter-Konsistenz |
+| `test_discord_reporter` | 18 | BUG 3 Regr. (6 Assets), Format-Funktionen, Farben |
+| `test_paper_engine` | 11 | BUG 1+2 Regr., Position Sizing, Multi-Trade Accounting |
+| `test_e2e_system` | 7 | Full Pipeline: Candle→Signal→Guard→Entry→Exit→Equity |
+
+**Workflow für neue Bugs:**
+1. Bug finden → fixen
+2. Test schreiben der den Bug **vor** dem Fix reproduziert (sollte FAILen)
+3. Fix anwenden → Test muss PASSen
+4. `pytest tests/ -v` → alles grün = sicher
+5. Commit mit Bug-Referenz
+
+**Bekannte Lücken (nur Paper Trading deckt das ab):**
+- Multi-Asset Concurrent / SQLite Race Conditions
+- Crash Mid-Trade / Restart Recovery
+- Echte WebSocket-Formate
+- CommandListener + Discord Polling
+- Edge Cases mit echten Marktdaten
+
+### 8.5: Monitor V1 — NEXT
 
 | Task | Beschreibung | Status |
 |------|-------------|--------|
@@ -70,7 +98,7 @@ title: Roadmap
 | Daily Report | Discord Embed um 21:00 Berlin | ⬜ |
 | Alerting | DD>15%, Guard-State Change, Equity ATH | ⬜ |
 
-### 8.4: Economics — FRAMEWORK DONE
+### 8.6: Economics — FRAMEWORK DONE
 
 | Report | Status |
 |--------|--------|
