@@ -24,7 +24,12 @@ MAX_RECONNECT_DELAY = 60
 # ⛔ PAPER MODE — use Testnet WebSocket
 # When PAPER_MODE=True, connect to Testnet (fake money)
 # When PAPER_MODE=False, connect to Mainnet (REAL MONEY)
-PAPER_MODE = True  # MUST match paper_engine.py PAPER_MODE
+# IMPORTANT: Import PAPER_MODE from paper_engine to stay in sync
+try:
+    from paper_engine import PAPER_MODE as _PAPER_MODE
+    PAPER_MODE = _PAPER_MODE
+except ImportError:
+    PAPER_MODE = True  # Fallback: always paper unless explicitly loaded
 
 # Hyperliquid candle intervals
 INTERVAL = "1h"

@@ -68,7 +68,9 @@ class RiskGuard:
                     remaining = (pause_until - now) / 3600
                     return False, f"SOFT_PAUSE active — {remaining:.1f}h remaining"
                 else:
-                    log.info("Soft pause expired, resuming RUNNING")
+                    # BUG FIX: Reset CL on SOFT_PAUSE expiry, otherwise it re-triggers immediately
+                    log.info("Soft pause expired, resetting CL and resuming RUNNING")
+                    self.state.reset_consecutive_losses()
                     self.state.set_guard_state(GuardState.RUNNING, "Soft pause expired")
                     guard = GuardState.RUNNING
 
@@ -94,17 +96,23 @@ class RiskGuard:
         # BUG 4 FIX: Use current equity as denominator (not start_equity).
         # start_equity makes the threshold easier to trigger after profits.
         equity = self.state.get_equity()
+        # BUG FIX: Guard against division by zero (total capital loss)
+        if equity <= 0:
+            self._trigger_kill("Equity at or below zero")
+            return False, "KILL_SWITCH: Equity at or below zero"
         daily_pnl = self.state.get_daily_pnl()
         daily_loss_pct = abs(daily_pnl) / equity * 100 if daily_pnl < 0 else 0
 
         if daily_loss_pct > DAILY_LOSS_PCT:
+            now_ts = int(datetime.now(timezone.utc).timestamp())
+            self.state.set_state("stop_new_timestamp", now_ts)
             self.state.set_guard_state(GuardState.STOP_NEW,
                                        f"Daily loss {daily_loss_pct:.1f}% > {DAILY_LOSS_PCT}%")
             return False, f"Daily loss {daily_loss_pct:.1f}% exceeds {DAILY_LOSS_PCT}%"
 
         # ── Drawdown check ──
         peak_equity = self.state.get_state("peak_equity", self.state.get_start_equity())
-        if peak_equity > 0:
+        if peak_equity > 0 and equity > 0:
             drawdown_pct = (peak_equity - equity) / peak_equity * 100
             if drawdown_pct > MAX_DRAWDOWN_PCT:
                 self._trigger_kill(f"Drawdown {drawdown_pct:.1f}% > {MAX_DRAWDOWN_PCT}%")

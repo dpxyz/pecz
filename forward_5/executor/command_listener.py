@@ -234,7 +234,7 @@ class CommandListener:
 
     async def _cmd_status(self):
         """!status — Show current engine status."""
-        header, body, color = format_hourly_status(self.engine.state)
+        header, body, color = format_hourly_status(self.engine.state, assets=self.engine.assets)
         # Add uptime info
         start_time = self.engine.state.get_state("engine_start_time")
         if start_time:

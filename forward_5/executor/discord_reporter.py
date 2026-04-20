@@ -132,9 +132,13 @@ def format_entry_blocked(event: dict) -> tuple:
     )
 
 
-def format_hourly_status(state_manager) -> tuple:
+def format_hourly_status(state_manager, assets: list = None) -> tuple:
     """Format hourly status report. Returns (header, body, color)."""
     from state_manager import GuardState
+    
+    # Use provided assets or default list
+    if assets is None:
+        assets = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]
     
     equity = state_manager.get_equity()
     start_equity = state_manager.get_start_equity()
@@ -146,9 +150,9 @@ def format_hourly_status(state_manager) -> tuple:
     pnl_total = equity - start_equity
     pnl_pct = (pnl_total / start_equity) * 100 if start_equity > 0 else 0
     
-    # Iterate ALL tracked assets for open positions
+    # Iterate tracked assets for open positions
     positions = []
-    for sym in ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]:
+    for sym in assets:
         pos = state_manager.get_open_position(sym)
         if pos:
             positions.append(f"{sym.split('USDT')[0]}: ${pos['entry_price']:,.0f}")
@@ -302,8 +306,8 @@ class DiscordReporter:
         header, body, color = format_entry_blocked(event)
         self._send_container(header, body, color)
     
-    def report_hourly(self, state_manager):
-        header, body, color = format_hourly_status(state_manager)
+    def report_hourly(self, state_manager, assets: list = None):
+        header, body, color = format_hourly_status(state_manager, assets=assets)
         self._send_container(header, body, color)
     
     def report_daily(self, state_manager):

@@ -176,6 +176,15 @@ class PaperTradingEngine:
             return
         self._last_candle_hour[hour_key] = True
 
+        # Clean up old dedup entries (keep last 24 hours = ~144 entries per asset)
+        # Prevents unbounded memory growth over months of operation
+        if len(self._last_candle_hour) > 2000:
+            oldest_key = next(iter(self._last_candle_hour))
+            # Remove oldest entries (rough cleanup)
+            keys_to_remove = list(self._last_candle_hour.keys())[:1000]
+            for k in keys_to_remove:
+                del self._last_candle_hour[k]
+
         log.info(f"📊 {symbol} CLOSED candle: close={candle['close']:.2f} @ {datetime.fromtimestamp(ts/1000, tz=timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
 
         # Evaluate signal using DB candle history
@@ -186,7 +195,7 @@ class PaperTradingEngine:
         # Report at 0, 4, 8, 12, 16, 20 UTC (= 1, 5, 9, 13, 17, 21 Berlin)
         if candle_hour_utc % 4 == 0 and candle_hour_utc != self._last_summary_hour:
             self._last_summary_hour = candle_hour_utc
-            self.reporter.report_hourly(self.state)
+            self.reporter.report_hourly(self.state, assets=self.assets)
             log.info(f"📋 4h summary sent (hour {candle_hour_utc} UTC)")
 
     async def _evaluate_symbol(self, symbol: str, current_candle: dict):
@@ -209,6 +218,45 @@ class PaperTradingEngine:
         current_price = current_candle["close"]
         equity = self.state.get_equity()
         guard_state = self.state.get_guard_state()
+
+        # ── KILL_SWITCH: Force-close any open position ──
+        # BUG FIX: Previously KILL_SWITCH only blocked new entries
+        # but left existing positions open. Now we force-close on KILL.
+        if guard_state == GuardState.KILL_SWITCH:
+            open_pos = self.state.get_open_position(symbol)
+            if open_pos:
+                # Force-close at current price with slippage
+                exit_price = current_price * (1 - SLIPPAGE_BPS / 10000)
+                leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
+                fee = open_pos["size"] * exit_price * FEE_RATE * leverage
+                pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
+
+                self.state.close_position(symbol, exit_price, current_candle["timestamp"],
+                                           "KILL_SWITCH force-close", guard_state.value,
+                                           net_pnl=pnl)
+                self.risk.on_trade_closed(pnl)
+
+                exit_event = {
+                    "event": "EXIT",
+                    "symbol": symbol,
+                    "side": "LONG",
+                    "price": exit_price,
+                    "size": open_pos["size"],
+                    "pnl": pnl,
+                    "equity": self.state.get_equity(),
+                    "reason": "KILL_SWITCH force-close",
+                    "guard_state": GuardState.KILL_SWITCH.value,
+                    "timestamp": current_candle["timestamp"],
+                }
+                log_trade(exit_event)
+                from discord_reporter import COLOR_RED
+                self.reporter._send_container(
+                    "\U0001f6a8 **KILL CLOSE**",
+                    f"**{symbol}** force-closed @ ${exit_price:,.2f}\nPnL: {pnl:+.2f}\u20ac\nAll positions will be closed.",
+                    COLOR_RED
+                )
+                log.warning(f"\U0001f6a8 KILL_SWITCH force-close: {symbol} @ {exit_price:.2f}, PnL={pnl:.2f}")
+                return  # No further evaluation during KILL
 
         # ── Check exit for open position ──
         open_pos = self.state.get_open_position(symbol)
@@ -308,7 +356,7 @@ class PaperTradingEngine:
                 "side": "LONG",
                 "price": entry_price,
                 "size": size,
-                "equity": equity,
+                "equity": equity - fee,  # BUG FIX: Report post-fee equity
                 "reason": signal.reason,
                 "guard_state": guard_state.value,
                 "indicators": signal.indicators,

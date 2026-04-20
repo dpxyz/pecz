@@ -113,11 +113,37 @@ class TestConsecutiveLosses:
         """SOFT_PAUSE should trigger at CL ≥ 5."""
         sm.set_state("consecutive_losses", 5)
         rg = RiskGuard(sm)
-        # Note: also checks DD and daily loss, so ensure those pass
         sm.set_state("peak_equity", 100.0)
         allowed, reason = rg.check_all("BTCUSDT")
         assert not allowed
         assert "consecutive" in reason.lower() or sm.get_guard_state() == GuardState.SOFT_PAUSE
+
+    def test_soft_pause_expiry_resets_cl(self, sm):
+        """BUG FIX: SOFT_PAUSE must reset CL on expiry, else infinite loop.
+
+        Previously: SOFT_PAUSE expired → RUNNING → CL still 5 → SOFT_PAUSE again.
+        Fix: On expiry, reset consecutive_losses before transitioning to RUNNING.
+        """
+        from datetime import datetime, timezone
+        rg = RiskGuard(sm)
+        sm.set_state("consecutive_losses", 5)
+        sm.set_state("peak_equity", 100.0)
+
+        # Trigger SOFT_PAUSE
+        allowed, reason = rg.check_all("BTCUSDT")
+        assert not allowed
+        assert sm.get_guard_state() == GuardState.SOFT_PAUSE
+
+        # Set pause_timestamp to 25 hours ago (expired)
+        expired_ts = int(datetime.now(timezone.utc).timestamp()) - (25 * 3600)
+        sm.set_state("pause_timestamp", expired_ts)
+
+        # Re-check: should expire, reset CL, and allow trading
+        sm.set_guard_state(GuardState.SOFT_PAUSE)  # ensure still in pause
+        allowed, reason = rg.check_all("BTCUSDT")
+        assert allowed, f"Should allow after SOFT_PAUSE expiry, got: {reason}"
+        assert sm.get_consecutive_losses() == 0, "CL must be reset after SOFT_PAUSE expiry"
+        assert sm.get_guard_state() == GuardState.RUNNING
 
 
 class TestDrawdown:
