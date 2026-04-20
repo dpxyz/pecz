@@ -28,14 +28,6 @@ PAPER_MODE = True  # MUST match paper_engine.py PAPER_MODE
 
 # Hyperliquid candle intervals
 INTERVAL = "1h"
-CANDLE_SUB = {
-    "type": "candle",
-    "req": {
-        "type": "candle",
-        "coin": "BTC",  # will be overridden per asset
-        "interval": INTERVAL,
-    },
-}
 
 # Map our symbols to Hyperliquid coin names
 SYMBOL_MAP = {
@@ -114,11 +106,17 @@ class DataFeed:
             self._reconnect_delay = RECONNECT_DELAY
             log.info("WebSocket connected ✅")
 
-            # Subscribe to all assets
+            # Subscribe to all assets using correct Hyperliquid WS format
             for symbol in self.assets:
                 coin = SYMBOL_MAP.get(symbol, symbol.replace("USDT", ""))
-                sub = json.loads(json.dumps(CANDLE_SUB))
-                sub["req"]["coin"] = coin
+                sub = {
+                    "method": "subscribe",
+                    "subscription": {
+                        "type": "candle",
+                        "coin": coin,
+                        "interval": INTERVAL,
+                    },
+                }
                 await ws.send(json.dumps(sub))
                 log.info(f"Subscribed: {symbol} ({coin}) 1h candles")
 
@@ -127,7 +125,24 @@ class DataFeed:
                 await self._handle_message(msg)
 
     async def _handle_message(self, msg):
-        if msg.get("type") != "candle":
+        # Hyperliquid WS message format:
+        #   {"channel": "candle", "data": {"coin": "BTC", "candle": [t, o, h, l, c, v]}}
+        #   {"channel": "subscriptionResponse", "data": {...}}
+        #   {"channel": "error", "data": "..."}
+        channel = msg.get("channel", "")
+
+        # Log subscription confirmations
+        if channel == "subscriptionResponse":
+            log.debug(f"Subscription confirmed: {msg.get('data', {})}")
+            return
+
+        # Log errors
+        if channel == "error":
+            log.error(f"WS error: {msg.get('data', '')}")
+            return
+
+        # Only handle candle messages
+        if channel != "candle":
             return
 
         data = msg.get("data", {})

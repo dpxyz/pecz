@@ -72,7 +72,7 @@ def log_trade(event: dict):
 
 
 class PaperTradingEngine:
-    def __init__(self, assets: list[str] = None, db_path: str = "executor/state.db"):
+    def __init__(self, assets: list[str] = None, db_path: str = "state.db"):
         self.assets = assets or ASSETS
         self.state = StateManager(db_path=db_path)
         self.risk = RiskGuard(self.state)
@@ -354,7 +354,7 @@ async def main():
     log.info("  Exit:  trailing_stop 2%, stop_loss 2.5%, max_hold 48h")
     log.info("  Kill-switches: DailyLoss>5%, MaxDD>20%, MaxPositions=1, CL≥5")
     log.info(f"  Leverage Tiers (ADR-007): {LEVERAGE_TIERS}")
-    log.info("  Capital: 100€/asset | Slippage: 1bp | Fee: 0.01%")
+    log.info("  Capital: 100€ total (~16.67€/asset) | Slippage: 1bp | Fee: 0.01%")
     log.info("=" * 60)
 
     try:
