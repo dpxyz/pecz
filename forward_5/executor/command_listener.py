@@ -245,9 +245,8 @@ class CommandListener:
 
     async def _cmd_help(self):
         """!help — Show available commands."""
-        self.engine.reporter.report_custom(
-            "📋 **Executor V1 Commands**\n"
-            "━━━━━━━━━━━━━━━━━━\n"
+        header = "📋 **Executor V1 Commands**"
+        body = (
             "**!kill** — Activate kill switch (stops all trading)\n"
             "**!resume** — Resume from kill/pause state\n"
             "**!status** — Show current equity, guard state, positions\n"
@@ -255,6 +254,7 @@ class CommandListener:
             "━━━━━━━━━━━━━━━━━━\n"
             "Commands work in #foundry-reports channel."
         )
+        self.engine.reporter._send_container(header, body, COLOR_GRAY)
 
 
 # ── Integration Test ──

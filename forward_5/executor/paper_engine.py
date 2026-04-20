@@ -133,11 +133,11 @@ class PaperTradingEngine:
             except Exception as e:
                 balance_str = f"\n⚠️ Balance check failed: {e}"
 
-        # Send startup message to Discord
+        # Send startup message to Discord — Components v2 container
         # ⛔ PAPER MODE SAFETY — startup message
         tier_str = ', '.join(f"{s}@{LEVERAGE_TIERS.get(s, 1.0)}x" for s in self.assets)
-        self.reporter.report_custom(
-            f"🚀 **Paper Trading Engine V1 Started**\n"
+        header = "🚀 **Paper Trading Engine V1 Started**"
+        body = (
             f"⛔ **PAPER MODE — NO REAL ORDERS**\n"
             f"Assets: {tier_str}\n"
             f"Strategy: MACD+ADX+EMA Baseline (ADR-007 tiers)\n"
@@ -146,6 +146,7 @@ class PaperTradingEngine:
             f"Commands: !kill, !resume, !status, !help"
             f"{balance_str}"
         )
+        self.reporter._send_container(header, body, COLOR_BLUE)
 
         # Start command listener and data feed concurrently
         await asyncio.gather(
