@@ -2,9 +2,9 @@
 title: Economics
 ---
 
-# 💰 Phase 8.3: Economics
+# 💰 Economics
 
-> Stand: 2026-04-20 — Paper Trading läuft. Zahlen werden nach 30+ Tagen mit echten Daten validiert.
+> Stand: 2026-04-20 — Paper Trading läuft. Echte Zahlen nach 14 Tagen.
 
 ---
 
@@ -16,7 +16,7 @@ title: Economics
 | API/Data | 30 | Datenfeeds, Monitoring |
 | **Total Fix** | **40** | Dave-confirmed |
 
-## Current Setup: 100€ TOTAL
+## Capital: 100€ TOTAL
 
 ⚠️ **100€ ist das GESAMT-Kapital**, nicht per Asset. Bei 6 Assets: ~16.67€/Asset.
 
@@ -30,15 +30,13 @@ title: Economics
 | ADA | 1.5x | 16.67€ | 25.01€ |
 | **Total** | | **100€** | **~152€** |
 
-### Break-Even bei verschiedenen Startkapitalien
+### Break-Even
 
-| Total Capital | Netto/Mo | |
+| Total Capital | Break-Even/Mo | |
 |--------------|----------|---|
-| 100€ | TBD (Paper Trading) | 🔵 Testing |
-| 600€ | +37€/mo | ✅ (6× 100€/Asset) |
+| 100€ | ~107€/Asset (6 Assets) | 🔵 Testing |
+| 600€ | +37€/mo | ✅ |
 | 900€ | +16€/mo | ✅ |
-
-**Entscheidung:** Paper Trading mit 100€ TOTAL. Break-even wird nach echten Daten berechnet.
 
 ## Fee Structure
 
@@ -58,4 +56,4 @@ title: Economics
 
 ---
 
-*Wird aktualisiert nach Paper Trading (≥30 Tage, ≥30 Trades).*
+*Wird aktualisiert nach Paper Trading (≥14 Tage, ≥10 Trades).*

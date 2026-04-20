@@ -28,7 +28,8 @@ class GuardState(Enum):
 class PositionState(Enum):
     NO_POSITION = "NO_POSITION"
     IN_LONG = "IN_LONG"
-    # Note: CLOSED is used in DB, COOLDOWN is reserved for future use
+    # CLOSED is used in DB for closed positions
+    # COOLDOWN is reserved for future per-symbol cooldown (V2)
 
 
 class StateManager:
