@@ -19,7 +19,7 @@ from data_feed import DataFeed, SYMBOL_MAP
 from signal_generator import SignalGenerator, SignalType
 from state_manager import StateManager, GuardState
 from risk_guard import RiskGuard
-from discord_reporter import DiscordReporter
+from discord_reporter import DiscordReporter, COLOR_BLUE
 from command_listener import CommandListener
 
 log = logging.getLogger("paper_engine")

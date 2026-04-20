@@ -13,7 +13,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from discord_reporter import format_hourly_status
+from discord_reporter import format_hourly_status, COLOR_GRAY
 
 log = logging.getLogger("command_listener")
 

@@ -48,7 +48,7 @@ title: Roadmap
 
 7 Module gebaut, Integration getestet, 12 Bugs gefixt, Discord Commands, Process Manager.
 
-### 8.2: Paper Trading LIVE 🟢
+### 8.2: Paper Trading — Phase 1 (14 Tage) 🟢
 
 | Task | Beschreibung | Status |
 |------|-------------|--------|
@@ -58,7 +58,7 @@ title: Roadmap
 | Process Manager | Auto-start, restart on crash | ✅ |
 | Paper Engine gestartet | 6 Assets, 100€ Total, Testnet WS | ✅ |
 | **Test Suite** | **82 Tests (75 Unit + 7 E2E), 100% Grün** | ✅ |
-| 30+ Day Run | Echtzeit Paper Trading | 🔵 Running |
+| 14-Day Paper Run | Echtzeit Signal-Validierung | 🔵 Running |
 
 **Start:** 2026-04-20 | **Capital:** 100€ Total (~16.67€/Asset) | **Mode:** PAPER ONLY
 
@@ -105,10 +105,29 @@ title: Roadmap
 | Monthly PnL Projection | ✅ |
 | Infra Costs (40€/mo) | ✅ |
 | Break-even Analysis (107€/asset) | ✅ |
-| Actual Numbers | ⬜ (nach 30 Tagen) |
+| Actual Numbers | ⬜ (nach 14 Tagen) |
 
-### Success Criteria (ADR-006)
-- ≥30 Trades | ≤25% DD | ≤10pp Win-Rate Deviation | ≥30 Tage | ≥95% Execution | ≤60s Kill-Switch
+### 8.7: Testnet API Trading — Phase 2 (14 Tage) ⬜
+
+| Task | Beschreibung | Status |
+|------|-------------|--------|
+| Order Executor Module | Echte Orders an Hyperliquid Testnet API | ⬜ |
+| Position Verification | Trades sichtbar auf app.hyperliquid-testnet.xyz | ⬜ |
+| API Error Handling | Timeouts, Partial Fills, Rate Limits | ⬜ |
+| Kill-Switch via API | Position schließen per !kill Command | ⬜ |
+| API Integration Tests | Eigene Test-Suite für Order-Flow | ⬜ |
+
+**Voraussetzung:** Phase 1 (Paper Trading) bestanden.
+
+### Success Criteria (ADR-006, Updated)
+
+**Phase 1 — Paper (14 Tage):**
+- ≥10 Trades | ≤25% DD | Accounting-Invariante ✅ | ≥95% Execution | ≥14 Tage
+
+**Phase 2 — Testnet API (14 Tage):**
+- ≥5 Orders platziert | 0% API-Fehler | Position sichtbar | Kill-Switch via API | ≥14 Tage
+
+**Gate:** Phase 2 nur starten wenn Phase 1 alle Kriterien erfüllt.
 
 ---
 

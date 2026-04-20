@@ -47,18 +47,29 @@ title: Phases
 - Components v2 Embeds für Reports
 - Capital Model: 100€ Total, Equal-Weight per Asset
 
-### Success Criteria (ADR-006)
-- ≥30 Trades
+### Success Criteria (ADR-006, Updated)
+
+**Phase 1 — Paper Trading (14 Tage):**
+- ≥10 Trades
 - ≤25% Drawdown
-- ≤10pp Win-Rate Deviation vs Backtest
-- ≥30 Tage Laufzeit
+- Accounting-Invariante ✅
 - ≥95% Signal Execution Rate
-- ≤60s Kill-Switch Response
+- ≥14 Tage Laufzeit
+
+**Phase 2 — Testnet API (14 Tage):**
+- ≥5 Orders platziert auf Testnet
+- 0% API-Fehler (unhandled)
+- Position sichtbar auf app.hyperliquid-testnet.xyz
+- Kill-Switch schließt Position via API
+- ≥14 Tage Laufzeit
+
+**Gate:** Phase 2 nur starten wenn Phase 1 bestanden.
 
 ### Noch offen
 - Monitor V1 (Equity-Kurve, Dashboard, Daily Report)
-- 30+ Tage Paper Trading (läuft)
-- Economics Validierung (nach 30 Tagen)
+- 14 Tage Paper Trading (läuft seit 2026-04-20)
+- Economics Validierung (nach 14 Tagen)
+- Order Executor Module (Phase 2)
 
 ---
 
