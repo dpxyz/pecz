@@ -109,6 +109,13 @@ title: Roadmap
 </div>
 <div style="margin-top:0.5rem;font-size:0.75rem;">
 **Phase 9: Final Gate** — 14d testnet api: ≥5 orders, 0% api errors, kill-switch via api
+
+**pre-requisites (ADR-008):**
+- [ ] heartbeat file (engine → 30s, watchdog → 60s)
+- [ ] position recovery after restart
+- [ ] external uptime monitor (UptimeRobot + Discord)
+- [ ] escalation ladder implemented
+- → [ADR-008: Crash & Uptime](../architecture/adr-008/)
 </div>
 </div>
 
