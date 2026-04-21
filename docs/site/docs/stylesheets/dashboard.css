@@ -1,44 +1,43 @@
 /* ═══════════════════════════════════════════════════════
-   Forward V5 Mission Control — Terminal Dashboard v3
-   Inspired by: Hermes Agent, GitHub Dark, Terminal UIs
+   Forward V5 Mission Control — Terminal Dashboard v4
+   Pure terminal aesthetic. No rounded corners. No softness.
    ═══════════════════════════════════════════════════════ */
 
-/* ── Font Import ── */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 /* ════════════════════════════════════════════════════════
-   MKDOCS MATERIAL OVERRIDES — Dark terminal everything
+   MKDOCS OVERRIDES
    ════════════════════════════════════════════════════════ */
 
 .md-header {
     background-color: #0d1117 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    border-bottom: 1px solid #30363d !important;
     box-shadow: none !important;
 }
 
 .md-tabs {
     background-color: #0d1117 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+    border-bottom: 1px solid #21262d !important;
 }
 
 .md-header__link,
 .md-tabs__link {
-    color: #7c8ca3 !important;
+    color: #8b949e !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 500 !important;
-    font-size: 0.75rem !important;
-    letter-spacing: 0.03em;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.04em;
 }
 
 .md-tabs__link--active,
 .md-header__link:hover {
-    color: #c9d1d9 !important;
+    color: #e6edf3 !important;
 }
 
 .md-search__form {
     background-color: #161b22 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-radius: 6px !important;
+    border: 1px solid #30363d !important;
+    border-radius: 0 !important;
 }
 
 .md-sidebar {
@@ -46,9 +45,9 @@
 }
 
 .md-nav__item .md-nav__link {
-    color: #7c8ca3 !important;
+    color: #8b949e !important;
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.75rem !important;
+    font-size: 0.7rem !important;
 }
 
 .md-nav__item .md-nav__link--active {
@@ -57,7 +56,7 @@
 
 .md-footer {
     background-color: #0d1117 !important;
-    border-top: 1px solid rgba(255,255,255,0.06) !important;
+    border-top: 1px solid #21262d !important;
 }
 
 .md-footer-meta {
@@ -70,7 +69,7 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   ROOT — Terminal palette
+   ROOT — High-contrast terminal palette
    ════════════════════════════════════════════════════════ */
 
 :root {
@@ -78,36 +77,35 @@
     --fwd-surface: #0d1117;
     --fwd-surface-2: #161b22;
     --fwd-surface-3: #1c2333;
-    --fwd-border: #21262d;
-    --fwd-border-bright: #30363d;
-    --fwd-border-subtle: rgba(255,255,255,0.05);
+    --fwd-border: #30363d;
+    --fwd-border-bright: #484f58;
+    --fwd-border-subtle: #21262d;
     --fwd-text: #c9d1d9;
     --fwd-text-bright: #e6edf3;
     --fwd-text-muted: #8b949e;
-    --fwd-text-dim: #484f58;
-    --fwd-accent: #818cf8;
-    --fwd-accent-dim: rgba(129,140,248,0.12);
+    --fwd-text-dim: #6e7681;
+    --fwd-accent: #a5b4fc;
+    --fwd-accent-dim: rgba(165,180,252,0.12);
     --fwd-success: #3fb950;
     --fwd-success-dim: rgba(63,185,80,0.10);
     --fwd-danger: #f85149;
     --fwd-danger-dim: rgba(248,81,73,0.10);
     --fwd-warning: #d29922;
     --fwd-warning-dim: rgba(210,153,34,0.10);
-    --fwd-neutral: #484f58;
+    --fwd-neutral: #6e7681;
     --fwd-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    --fwd-radius: 6px;
 }
 
 /* ════════════════════════════════════════════════════════
-   DASHBOARD — Terminal container
+   DASHBOARD
    ════════════════════════════════════════════════════════ */
 
 .dashboard {
     background: var(--fwd-bg);
     color: var(--fwd-text);
     font-family: var(--fwd-mono);
-    font-size: 0.8rem;
-    line-height: 1.6;
+    font-size: 0.72rem;
+    line-height: 1.55;
     min-height: 100vh;
     padding: 0;
     margin: -1.2rem -2rem -2rem;
@@ -115,7 +113,7 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   HEADER — Terminal prompt style
+   HEADER
    ════════════════════════════════════════════════════════ */
 
 .dashboard .dash-header {
@@ -123,15 +121,15 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
-    padding-bottom: 1.25rem;
-    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.25rem;
     border-bottom: 1px solid var(--fwd-border);
 }
 
 .dashboard .dash-header h1 {
     font-family: var(--fwd-mono);
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--fwd-text-bright);
     margin: 0;
@@ -145,51 +143,51 @@
 
 .dashboard .dash-header .dash-meta {
     display: flex;
-    gap: 1.25rem;
+    gap: 1rem;
     align-items: center;
     font-family: var(--fwd-mono);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--fwd-text-muted);
     letter-spacing: 0.04em;
 }
 
 .dashboard .dash-header .dash-meta .live-dot {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--fwd-success);
     box-shadow: 0 0 6px var(--fwd-success);
     animation: pulse-glow 2s ease-in-out infinite;
-    margin-right: 0.35rem;
+    margin-right: 0.3rem;
 }
 
 @keyframes pulse-glow {
     0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--fwd-success); }
-    50% { opacity: 0.5; box-shadow: 0 0 10px var(--fwd-success); }
+    50% { opacity: 0.4; box-shadow: 0 0 10px var(--fwd-success); }
 }
 
 /* ════════════════════════════════════════════════════════
-   SECTION HEADERS — Comment-style
+   SECTION HEADERS — // comment style
    ════════════════════════════════════════════════════════ */
 
 .dashboard .section-label {
     font-family: var(--fwd-mono);
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--fwd-text-dim);
-    margin: 1.75rem 0 0.6rem;
+    margin: 1.5rem 0 0.5rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .dashboard .section-label::before {
     content: '//';
     color: var(--fwd-text-dim);
-    margin-right: 0.25rem;
+    margin-right: 0.15rem;
 }
 
 .dashboard .section-label::after {
@@ -197,7 +195,7 @@
     flex: 1;
     height: 1px;
     background: var(--fwd-border);
-    margin-left: 0.5rem;
+    margin-left: 0.4rem;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -207,25 +205,25 @@
 .dashboard .grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .dashboard .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .dashboard .grid-6 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .dashboard .grid-2col {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 @media (max-width: 1024px) {
@@ -242,14 +240,14 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   CARDS — Flat terminal panels
+   CARDS — Sharp, no radius, border-defined
    ════════════════════════════════════════════════════════ */
 
 .dashboard .card {
-    background: var(--fwd-surface);
+    background: transparent;
     border: 1px solid var(--fwd-border);
-    border-radius: var(--fwd-radius);
-    padding: 0.85rem 1rem;
+    border-radius: 0;
+    padding: 0.6rem 0.75rem;
     transition: border-color 0.15s ease;
 }
 
@@ -259,22 +257,18 @@
 
 .dashboard .card.glow-success {
     border-left: 2px solid var(--fwd-success);
-    background: linear-gradient(90deg, var(--fwd-success-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-accent {
     border-left: 2px solid var(--fwd-accent);
-    background: linear-gradient(90deg, var(--fwd-accent-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-danger {
     border-left: 2px solid var(--fwd-danger);
-    background: linear-gradient(90deg, var(--fwd-danger-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-warning {
     border-left: 2px solid var(--fwd-warning);
-    background: linear-gradient(90deg, var(--fwd-warning-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-neutral {
@@ -293,65 +287,65 @@
 
 .dashboard .status-card .status-label {
     font-family: var(--fwd-mono);
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--fwd-text-bright);
     letter-spacing: 0.02em;
 }
 
 .dashboard .status-card .status-sub {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--fwd-text-muted);
-    margin-top: 0.15rem;
+    margin-top: 0.1rem;
     letter-spacing: 0.01em;
 }
 
 /* ════════════════════════════════════════════════════════
-   BADGES — Terminal status indicators
+   BADGES
    ════════════════════════════════════════════════════════ */
 
 .dashboard .badge {
     font-family: var(--fwd-mono);
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.2rem 0.55rem;
-    border-radius: 3px;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.25rem;
     white-space: nowrap;
 }
 
 .dashboard .badge--success {
     background: var(--fwd-success-dim);
     color: var(--fwd-success);
-    border: 1px solid rgba(63,185,80,0.2);
+    border: 1px solid rgba(63,185,80,0.25);
 }
 
 .dashboard .badge--danger {
     background: var(--fwd-danger-dim);
     color: var(--fwd-danger);
-    border: 1px solid rgba(248,81,73,0.2);
+    border: 1px solid rgba(248,81,73,0.25);
 }
 
 .dashboard .badge--warning {
     background: var(--fwd-warning-dim);
     color: var(--fwd-warning);
-    border: 1px solid rgba(210,153,34,0.2);
+    border: 1px solid rgba(210,153,34,0.25);
 }
 
 .dashboard .badge--neutral {
-    background: rgba(72,79,88,0.15);
+    background: rgba(110,118,129,0.1);
     color: var(--fwd-text-muted);
-    border: 1px solid rgba(72,79,88,0.3);
+    border: 1px solid rgba(110,118,129,0.3);
 }
 
 .dashboard .badge--accent {
     background: var(--fwd-accent-dim);
     color: var(--fwd-accent);
-    border: 1px solid rgba(129,140,248,0.2);
+    border: 1px solid rgba(165,180,252,0.25);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -361,12 +355,12 @@
 .dashboard .metric-card {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.1rem;
 }
 
 .dashboard .metric-card .metric-label {
     font-family: var(--fwd-mono);
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -375,10 +369,10 @@
 
 .dashboard .metric-card .metric-value {
     font-family: var(--fwd-mono);
-    font-size: 1.35rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--fwd-text-bright);
-    line-height: 1.1;
+    line-height: 1.15;
 }
 
 .dashboard .metric-card .metric-value.positive { color: var(--fwd-success); }
@@ -386,13 +380,13 @@
 
 .dashboard .metric-card .metric-sub {
     font-family: var(--fwd-mono);
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: var(--fwd-text-dim);
     letter-spacing: 0.02em;
 }
 
 /* ════════════════════════════════════════════════════════
-   PHASE TIMELINE — Terminal progress
+   PHASE TIMELINE
    ════════════════════════════════════════════════════════ */
 
 .dashboard .phase-timeline {
@@ -400,15 +394,15 @@
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
-    padding: 1.25rem 0 0.5rem;
+    padding: 1rem 0 0.35rem;
 }
 
 .dashboard .phase-timeline::before {
     content: '';
     position: absolute;
-    top: 15px;
-    left: 20px;
-    right: 20px;
+    top: 12px;
+    left: 16px;
+    right: 16px;
     height: 1px;
     background: var(--fwd-border);
 }
@@ -420,28 +414,28 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 0.35rem;
+    gap: 0.3rem;
 }
 
 .dashboard .step-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 0;
     background: var(--fwd-surface);
-    border: 2px solid var(--fwd-neutral);
+    border: 1px solid var(--fwd-neutral);
     transition: all 0.2s;
 }
 
 .dashboard .step-label {
     font-family: var(--fwd-mono);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: var(--fwd-text-muted);
     letter-spacing: 0.02em;
 }
 
 .dashboard .step-sublabel {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: var(--fwd-text-dim);
     letter-spacing: 0.01em;
 }
@@ -450,7 +444,6 @@
 .dashboard .phase-step--done .step-dot {
     background: var(--fwd-success);
     border-color: var(--fwd-success);
-    box-shadow: 0 0 6px rgba(63,185,80,0.3);
 }
 
 .dashboard .phase-step--done .step-label {
@@ -461,7 +454,6 @@
 .dashboard .phase-step--active .step-dot {
     background: var(--fwd-accent);
     border-color: var(--fwd-accent);
-    box-shadow: 0 0 8px var(--fwd-accent-dim), 0 0 16px var(--fwd-accent-dim);
     animation: pulse-accent 2.5s ease-in-out infinite;
 }
 
@@ -470,8 +462,8 @@
 }
 
 @keyframes pulse-accent {
-    0%, 100% { box-shadow: 0 0 8px var(--fwd-accent-dim), 0 0 16px var(--fwd-accent-dim); }
-    50% { box-shadow: 0 0 12px var(--fwd-accent-dim), 0 0 24px var(--fwd-accent-dim); }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
 /* Pending */
@@ -481,33 +473,33 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   QUICK LINKS — File/directory style
+   QUICK LINKS
    ════════════════════════════════════════════════════════ */
 
 .dashboard .quick-link {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.5rem;
     text-decoration: none;
     color: var(--fwd-text);
     font-family: var(--fwd-mono);
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 500;
-    padding: 0.65rem 0.85rem;
-    background: var(--fwd-surface);
+    padding: 0.5rem 0.65rem;
+    background: transparent;
     border: 1px solid var(--fwd-border);
-    border-radius: var(--fwd-radius);
+    border-radius: 0;
     transition: all 0.15s ease;
 }
 
 .dashboard .quick-link:hover {
-    background: var(--fwd-surface-2);
     border-color: var(--fwd-accent);
     color: var(--fwd-accent);
+    background: var(--fwd-accent-dim);
 }
 
 .dashboard .quick-link .link-icon {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--fwd-accent);
     opacity: 0.5;
     transition: opacity 0.15s;
@@ -520,11 +512,11 @@
 .dashboard .quick-link .link-text {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.05rem;
 }
 
 .dashboard .quick-link .link-desc {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     color: var(--fwd-text-dim);
     font-weight: 400;
     letter-spacing: 0.02em;
@@ -535,28 +527,28 @@
    ════════════════════════════════════════════════════════ */
 
 .dashboard .chart-area {
-    background: var(--fwd-surface);
+    background: transparent;
     border: 1px solid var(--fwd-border);
-    border-radius: var(--fwd-radius);
-    padding: 2rem;
+    border-radius: 0;
+    padding: 1.5rem;
     text-align: center;
-    min-height: 160px;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .dashboard .chart-area .chart-icon {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: var(--fwd-accent);
     opacity: 0.2;
 }
 
 .dashboard .chart-area .chart-text {
     font-family: var(--fwd-mono);
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--fwd-text-dim);
     letter-spacing: 0.04em;
 }
@@ -569,22 +561,22 @@
     width: 100%;
     border-collapse: collapse;
     font-family: var(--fwd-mono);
-    font-size: 0.7rem;
+    font-size: 0.6rem;
 }
 
 .dashboard table th {
     text-align: left;
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.6rem;
     color: var(--fwd-text-dim);
     font-weight: 500;
     text-transform: uppercase;
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     letter-spacing: 0.1em;
     border-bottom: 1px solid var(--fwd-border);
 }
 
 .dashboard table td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.6rem;
     color: var(--fwd-text);
     border-bottom: 1px solid var(--fwd-border-subtle);
 }
@@ -594,16 +586,16 @@
    ════════════════════════════════════════════════════════ */
 
 .dashboard .progress-bar {
-    height: 3px;
+    height: 2px;
     background: var(--fwd-surface-3);
-    border-radius: 1px;
+    border-radius: 0;
     overflow: hidden;
-    margin-top: 0.4rem;
+    margin-top: 0.3rem;
 }
 
 .dashboard .progress-bar .progress-fill {
     height: 100%;
-    border-radius: 1px;
+    border-radius: 0;
     transition: width 0.5s ease;
 }
 
@@ -617,18 +609,18 @@
    ════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-    .dashboard { padding: 1rem; }
+    .dashboard { padding: 0.75rem; }
 
     .dashboard .phase-timeline {
         flex-direction: column;
-        gap: 1.25rem;
-        padding-left: 1.5rem;
+        gap: 1rem;
+        padding-left: 1.25rem;
     }
 
     .dashboard .phase-timeline::before {
         width: 1px;
         height: 100%;
-        left: 8px;
+        left: 6px;
         top: 0;
         right: auto;
     }
