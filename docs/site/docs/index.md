@@ -6,7 +6,7 @@ title: Mission Control
 
 <!-- ── Header ── -->
 <div class="dash-header">
-<h1><span class="accent">→</span> FORWARD V5</h1>
+<h1><span class="logo"><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><polygon points="5,0.5 9.5,9.5 0.5,9.5"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.2"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0.8" y="0.8" width="8.4" height="8.4"/></svg></span>PECZ<span class="accent">_</span></h1>
 <div class="dash-meta">
 <span><span class="live-dot"></span>PHASE 8 LIVE</span>
 <span>DAY 2/14</span>
