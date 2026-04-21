@@ -72,8 +72,13 @@
 }
 
 .md-main__inner,
-.md-content {
-    background-color: #0a0e17 !important;
+.md-content,
+.md-content__inner {
+    background-color: #0d1117 !important;
+}
+
+.md-typeset {
+    background-color: #0d1117 !important;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -81,7 +86,7 @@
    ════════════════════════════════════════════════════════ */
 
 :root {
-    --fwd-bg: #0a0e17;
+    --fwd-bg: #0d1117;
     --fwd-surface: #0d1117;
     --fwd-surface-2: #161b22;
     --fwd-surface-3: #1c2333;
