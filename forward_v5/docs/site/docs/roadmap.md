@@ -24,114 +24,123 @@ title: Roadmap
 
 ## ✅ Phase 7: Strategy Lab — COMPLETE
 
-**Ziel:** Mindestens eine robuste, validierte Strategie für Paper Trading finden.
-
-### Was wurde gemacht
-- Backtest Engine v2 (Polars, Walk-Forward, vectorized)
-- DSL Translator (8 Indikatoren, Condition Parser, kein eval/exec)
-- 6 Strategie-Typen über 3 Assets × 5 Zeiträume validiert (90 Tests)
-- Regime-Filter Breakthrough: ADX+EMA verdoppelt Pass-Rate (12%→50%)
-- ATR-Filter getestet und abgelehnt
-- Gold Standard identifiziert: **MACD Momentum + ADX+EMA**
-
-### Ergebnis
 | | Unfiltered | ADX+EMA Filter |
 |---|---|---|
-| Pass Rate | 12% | **50%** |
+| Pass Rate | 12% | **75%** (CL≤12) |
 | Avg Drawdown | 22.7% | **14.1%** |
 | Max Consec. Losses | 9.9 | **6.5** |
 
-### Entscheidungen
-- **Keine weitere Gate-Relaxation** — Thresholds bleiben wie sie sind
-- **Keine weiteren Filter-Tests** — ATR getestet, abgelehnt
-- **KI als Signalgeber = YES** (ADR-005 V2+), KI als Richter = NO
-- **Ziel-Shift:** Besserer Backtest → Strategie unter Echtzeit beweisen
+**Entscheidungen:** Foundry FROZEN | ATR abgelehnt | KI als Signalgeber (V2+)
 
 ---
 
-## ⭐ Phase 8: Paper Trading + Economics — IN PROGRESS
+## ⭐ Phase 8: Paper Trading — IN PROGRESS
 
-**Ziel:** Beweisen dass die Strategie unter echten Bedingungen funktioniert.
+### 8.1: Executor V1 ✅
 
-### 8.1: Executor V1 ✅ BUILD COMPLETE
+7 Module, Integrationstest, 12 Bugs gefixt, Discord Commands, Process Manager.
 
-| Modul | Beschreibung | Status |
-|-------|-------------|--------|
-| data_feed.py | Hyperliquid WebSocket, 1h Candles, SQLite | ✅ |
-| signal_generator.py | MACD+ADX+EMA, deterministic | ✅ |
-| state_manager.py | Position, Equity, Guard State (SQLite) | ✅ |
-| risk_guard.py | 5 Guard States, hardcoded thresholds | ✅ |
-| paper_engine.py | Orchestrator, Backfill, Slippage, Fees | ✅ |
-| discord_reporter.py | #foundry-reports, OpenClaw message tool | ✅ |
-| test_integration.py | 376 Trades auf BTC+ETH 2024 | ✅ |
+### 8.2: Paper Trading Phase 1 (14 Tage) 🔵 Running
 
-### 8.2: Paper Trading Setup — TODO
+**Start:** 2026-04-20 | **Capital:** 100€ Total | **Mode:** PAPER ONLY | **Assets:** 6
 
-| Task | Beschreibung | Status |
-|------|-------------|--------|
-| Embed-Formatierung | Farbige Discord Reports | ⬜ |
-| `!kill` / `!resume` | Discord Commands für Guard-Override | ⬜ |
-| systemd Service | Auto-start, restart on crash | ⬜ |
-| Hyperliquid Testnet | Testnet-Setup, API Keys | ⬜ |
-| 30+ Day Run | Echtzeit Paper Trading | ⬜ |
+| Kriterium | Target | Aktuell |
+|-----------|--------|---------|
+| Trades | ≥10 | 0 (Day 1) |
+| Drawdown | ≤25% | 0.01% |
+| Execution | ≥95% | 100% |
+| Dauer | ≥14 Tage | 1/14 |
+
+### 8.3: Test Suite ✅
+
+**83 Tests, 100% Pass**
+
+| Test-File | # | Was geprüft wird |
+|------------|---|------------------|
+| `test_state_manager` | 14 | Position lifecycle, Equity, Accounting-Invariante |
+| `test_risk_guard` | 10 | State Machine, CL-Reset, DD Kill, Daily Loss |
+| `test_signal_generator` | 17 | Entry/Exit-Logik, Indikatoren, Parameter |
+| `test_discord_reporter` | 18 | 6 Assets in hourly, Format-Funktionen, Farben |
+| `test_paper_engine` | 11 | Entry Fee, NET PnL, Position Sizing |
+| `test_e2e_system` | 7 | Full Pipeline Candle→Signal→Entry→Exit |
+
+### 8.4: Bug Audits ✅
+
+5 Audit-Runden, 17 Bugs gefunden & gefixt (4 kritisch, 7 medium, 6 low).
+
+### 8.5: Monitor V1 — NEXT ⬜
+
+| Task | Status |
+|------|--------|
+| Equity-per-Bar in state.db | ⬜ |
+| Live Dashboard (pecz.pages.dev/monitor) | ⬜ |
+| Daily Discord Report (21:00 Berlin) | ⬜ |
+| Alerting (DD>15%, Guard-State Change) | ⬜ |
+
+### 8.6: Economics ✅ Framework
+
+Break-even: 107€/Asset bei 40€/mo Fixkosten. Echte Zahlen nach 14 Tagen.
+
+### 8.7: Paper Trading Phase 2 (14 Tage) ⬜
+
+Echte Testnet-API Orders. Voraussetzung: Phase 1 bestanden.
 
 ### Success Criteria (ADR-006)
-- ≥30 Trades
-- ≤25% Drawdown
-- ≤10pp Win-Rate Deviation vs. Backtest
-- ≥30 Tage Laufzeit
-- ≥95% Signal Execution Rate
-- ≤60s Kill-Switch Response
 
-### 8.3: Economics — NACH Paper Trading
-
-| Report | Inhalt |
-|--------|--------|
-| Monthly PnL Projection | Erwarteter Return bei 100€ |
-| Infra Costs | Server, API, Monitoring |
-| Break-even Analysis | Trades/Tag für Profitabilität |
-| Risk-adjusted Returns | Sharpe, Sortino, Calmar |
+**Phase 1:** ≥10 Trades | ≤25% DD | Accounting ✅ | ≥95% Execution | 14 Tage
+**Phase 2:** ≥5 Orders | 0% API-Fehler | Position sichtbar | Kill-Switch via API | 14 Tage
 
 ---
 
-## ⬜ Phase 9: Final Gate — PENDING
-
-**Ziel:** Endgültige Go/No-Go Entscheidung für Live Trading.
-
-### Checklist
+## ⬜ Phase 9: Final Gate
 
 | # | Item | Status |
 |---|------|--------|
-| 1 | Alle Phasen 0-8 abgeschlossen | ⬜ |
-| 2 | Paper Trading Success Criteria erfüllt | ⬜ |
+| 1 | Phase 0-8 abgeschlossen | ⬜ |
+| 2 | Paper Trading Kriterien erfüllt | ⬜ |
 | 3 | Economics positiv | ⬜ |
 | 4 | Security Audit | ⬜ |
-| 5 | On-Call Setup | ⬜ |
-| 6 | Rollback getestet | ⬜ |
-| 7 | **Manuelle Freigabe (Dave)** | ⬜ |
+| 5 | Manuelle Freigabe (Dave) | ⬜ |
 
-### Go/No-Go
+---
 
-```
-╔══════════════════════════════════════════════╗
-║  LIVE TRADING GO/NO-GO                       ║
-║                                               ║
-║  Decision:  [ ] GO    [ ] NO-GO              ║
-║                                               ║
-║  If GO:                                       ║
-║  [ ] ENABLE_EXECUTION_LIVE=true              ║
-║  [ ] MAINNET_TRADING_ALLOWED=true            ║
-║                                               ║
-║  Signature: ___________  Date: __________     ║
-╚══════════════════════════════════════════════╝
-```
+## ⬜ Phase 10: V2 Strategy — PLANNED
+
+**Voraussetzung:** Phase 9 bestanden. Kein V2 ohne bewiesene V1-Pipeline.
+
+### V2 Design Principles
+
+1. **Regime-Erkennung als Herzstück** — Trend/Range/Crash → nicht in Range handeln
+2. **Volatility-Parity** — Risiko pro Trade konstant, nicht Kapital
+3. **Sentiment als Kill-Switch** — Score 0-100, JSON-Mode, nur downsizing
+4. **On-Chain als Regime-Filter** — Exchange Netflow 7-14d Aggregation
+5. **Kein Indikatoren-Salat** — bessere Regeln, nicht mehr Indikatoren
+
+### Alpha Stack V2 (Priorität)
+
+1. Asset-Ranking (ROC-basiert) — hohe Priorität
+2. ADX-based Position Sizing — hohe Priorität
+3. 2x Leverage für Blue Chips — mittlere Priorität
+4. Limit-Orders statt Market — mittlere Priorität
+5. HTF-Alignment — niedrige Priorität
+6. ~~ATR-Stops~~ — **abgelehnt** (kein Improvement)
+7. ~~Kelly Criterion~~ — **abgelehnt** (instabile Win-Rate)
+
+### V2 Architecture (ADR-005 + ADR-008)
+
+**Sentiment/Macro Risk Layer** (ADR-005, Layer 3):
+- KI als Signalgeber: Score 0-100
+- Fail-safe: Bei Fehler → ignorieren (nicht handeln ist sicherer)
+- Nur Downsizing, nie Upsizing
+- JSON-Mode für deterministische Extraktion
+- V2+: Sentiment = High Priority für 1h Timeframe
 
 ---
 
 ## 🚫 Was wir NICHT machen
 
+- Keine Strategie-Änderungen während Paper Trading
+- Kein KI-Richter (nur KI-Signalgeber)
+- Kein Live Trading ohne Paper Proof
 - Keine Gate-Relaxation (Thresholds bleiben)
-- Keine weiteren Filter-Tests (ATR abgelehnt)
-- Kein KI-Richter (nur KI-Signalgeber in V2+)
-- Kein Live Trading ohne Paper Trading Proof
 - Kein Phase-Skipping

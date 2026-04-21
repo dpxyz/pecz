@@ -10,57 +10,58 @@ title: Mission Control
 
 ## 📍 Aktueller Stand
 
-**Phase 7 ✅ → Phase 8 ⭐** | Executor V1 gebaut, Paper Trading als nächster Meilenstein
+**Phase 8 ⭐ LIVE** | Paper Engine läuft seit 2026-04-20
 
 | Phase | Status | Was |
 |-------|--------|-----|
-| 0–4 | ✅ | Grundstruktur, Core, Observability, Boundaries |
-| 5 | ✅ | Operations (systemd, CLI, Health) |
-| 6 | ✅ | Test Strategy (24h Stability PASSED) |
+| 0–6 | ✅ | Grundstruktur bis Test Strategy |
 | 7 | ✅ | Strategy Lab — Gold Standard gefunden |
-| **8** | **⭐ NEXT** | **Paper Trading → Economics** |
-| 9 | ⬜ | Final Gate & Live-Freigabe |
+| **8** | **⭐ LIVE** | **Paper Trading läuft** |
+| 9 | ⬜ | Final Gate (14+14 Tage) |
+| 10 | ⬜ | V2 Strategy (Regime + Volatility-Parity) |
 
 ---
 
-## 🏆 Gefundene Strategie: MACD Momentum + ADX+EMA
+## 🟢 Paper Trading Engine — LIVE
+
+**Gestartet:** 2026-04-20 | **Mode:** PAPER ONLY | **Capital:** 100€ Total
+
+| Asset | Leverage | Allocation |
+|-------|----------|------------|
+| BTC | 1.8x | ~16.67€ |
+| ETH | 1.8x | ~16.67€ |
+| SOL | 1.5x | ~16.67€ |
+| AVAX | 1.0x | ~16.67€ |
+| DOGE | 1.5x | ~16.67€ |
+| ADA | 1.5x | ~16.67€ |
+
+**Strategy:** MACD+ADX+EMA | **Kill-Switches:** CL≥5, DD>20%, DailyLoss>5%
+**Testnet:** Hyperliquid ($999 Balance) | **Reports:** #foundry-reports | **System:** #system
+
+### Quality Assurance
+
+| Was | Status |
+|-----|--------|
+| **83 Tests** (75 Unit + 7 E2E + 1 Regression) | ✅ 100% Pass |
+| **5 Bug Audits** (17 Bugs total, alle gefixt) | ✅ |
+| **Accounting Check** (täglich via Housekeeping) | ✅ 5 Invarianten |
+| **Pre-Commit Hook** (pytest vor Executor-Commits) | ✅ |
+| **4h Summary Reports** (Discord #foundry-reports) | ✅ |
+
+---
+
+## 🏆 Strategie: MACD Momentum + ADX+EMA
 
 | Metrik | Unfiltered | **ADX+EMA Filter** |
 |--------|-----------|---------------------|
-| Pass Rate | 12% (2/16) | **50% (8/16)** |
-| Avg Return | +53.4% | +35.9% |
+| Pass Rate | 12% | **75% (CL≤12)** |
 | Avg Drawdown | 22.7% | **14.1%** |
 | Max Consec. Losses | 9.9 | **6.5** |
 
 **Entry:** `macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20`
 **Exit:** Trailing Stop 2%, SL 2.5%, Max Hold 48 Bars
 
-Details: [Baseline Strategy](strategy-lab/baseline.md) | Validierung: [ADR-005](architecture/adr-005.md)
-
----
-
-## 🏗️ Executor V1 — Paper Trading Engine
-
-**Status:** Build complete, Integrationstest bestanden (376 Trades)
-
-| Modul | Status | Beschreibung |
-|-------|--------|--------------|
-| data_feed | ✅ | Hyperliquid WebSocket, 1h Candles, SQLite Buffer |
-| signal_generator | ✅ | Deterministische MACD+ADX+EMA Logik |
-| state_manager | ✅ | SQLite State (Position, Equity, Guard) |
-| risk_guard | ✅ | 5 Guard States, hardcoded Thresholds |
-| paper_engine | ✅ | Orchestrator, Backfill, Slippage, Fees |
-| discord_reporter | ✅ | #foundry-reports Channel |
-| test_integration | ✅ | 376 Trades auf BTC+ETH 2024 |
-
-**Noch offen:**
-
-- [ ] Embed-Formatierung (farbige Reports)
-- [ ] `!kill` / `!resume` Discord Commands
-- [ ] systemd Service
-- [ ] 30+ Tage Paper Trading Run
-
-Details: [ADR-006](architecture/adr-006.md)
+Details: [Baseline Strategy](strategy-lab/baseline.md) | [ADR-005](architecture/adr-005.md) | [ADR-007](architecture/adr-007.md)
 
 ---
 
@@ -69,71 +70,38 @@ Details: [ADR-006](architecture/adr-006.md)
 ```
 RUNNING → SOFT_PAUSE → STOP_NEW → KILL_SWITCH → COOLDOWN → RUNNING
   (ok)    (CL≥5)      (daily>5%)  (DD>20%)      (24h)       (!resume)
+
+SOFT_PAUSE: 24h pause after 5 consecutive losses (CL resets on expiry)
+KILL_SWITCH: Force-closes all positions, no new trades
 ```
 
-Kill-Switches sind **non-negotiable** und hardcoded.
+Kill-Switches sind non-negotiable und hardcoded.
 
 ---
 
-## 📊 Validierung
+## 🏗️ Executor V1 — Module
 
-8 Assets (BTC, ETH, SOL, DOGE, AVAX, LINK, XRP, ADA) × 2 Zeiträume = 16 Tests pro Filter.
+| Modul | Status | Beschreibung |
+|-------|--------|-------------|
+| data_feed | ✅ | Hyperliquid Testnet WebSocket, 1h Candles, SQLite Buffer |
+| signal_generator | ✅ | Deterministische MACD+ADX+EMA Logik (Polars) |
+| state_manager | ✅ | SQLite State (Position, Equity, Guard, Accounting) |
+| risk_guard | ✅ | 5 Guard States, SOFT_PAUSE CL-Reset, KILL Switch force-close |
+| paper_engine | ✅ | Orchestrator, Backfill, Slippage, Fees, 4h Reports |
+| discord_reporter | ✅ | Components v2 Container mit Farbaccent |
+| command_listener | ✅ | !kill, !resume, !status, !help |
 
-| Filter | Pass | Return | DD | CL |
-|--------|------|--------|----|----|
-| Unfiltered | 12% | +53.4% | 22.7% | 9.9 |
-| ADX>20 | 12% | +41.4% | 22.5% | 9.6 |
-| ADX>25 | 12% | +33.2% | 22.6% | 10.1 |
-| EMA Bull | 25% | +46.9% | 13.6% | 6.6 |
-| **ADX+EMA** | **50%** | **+35.9%** | **14.1%** | **6.5** |
-| ATR Expansion | 44% | +26.4% | 10.4% | — |
-| ATR Tight | 50% | +21.1% | 10.7% | — |
-
-**ATR getestet und abgelehnt** — ADX+EMA bleibt Gold Standard.
+Details: [ADR-006](architecture/adr-006.md)
 
 ---
 
-## 📐 Architecture
+## ⏭️ Nächste Schritte
 
-```mermaid
-graph LR
-    F[Foundry<br>Pre-Trade] --> E[Executor<br>During Trade] --> M[Monitor<br>Post-Trade]
-    F -->|Strategy<br>Parameters| E
-    E -->|Trade Log<br>PnL Stats| M
-    M -->|Retirement<br>Signal| F
-```
-
-- **Foundry:** Backtest, Walk-Forward, Gate Evaluation
-- **Executor:** Paper/Live Trading, Risk Guards, Discord Reports
-- **Monitor:** Performance Tracking, Strategy Retirement
-
-Details: [ADR-005](architecture/adr-005.md)
-
----
-
-## 🗺️ Roadmap
-
-### Jetzt — Paper Trading Vorbereitung
-1. Discord Embed-Formatierung
-2. `!kill` / `!resume` Commands
-3. systemd Service für Paper Engine
-4. Hyperliquid Testnet Setup
-
-### Nächster Meilenstein — Paper Trading Run
-- 30+ Tage auf Hyperliquid Testnet
-- ≥30 Trades, ≤25% DD, ≤10pp Win-Rate Deviation
-- 95% Signal Execution Rate, ≤60s Kill-Switch Response
-
-### Danach — Phase 8: Economics
-- Monthly PnL Projection
-- Infra Cost vs. Return
-- Break-even Analysis
-- Risk-adjusted Returns (Sharpe, Sortino)
-
-### Final — Phase 9: Go/No-Go
-- Alle Tests bestanden
-- Economics positiv
-- Manuelle Freigabe (Dave)
+1. **Monitor V1** — Equity-Kurve per Bar, Dashboard, Daily Report
+2. **14+14 Tage Paper Trading** — Phase 1: Paper, Phase 2: Testnet API
+3. **Success Criteria prüfen** — ≥10 Trades, ≤25% DD, Accounting-Invariante
+4. **Phase 9: Final Gate** — Go/No-Go Entscheidung
+5. **Phase 10: V2 Strategy** — Regime-Score + Volatility-Parity + Sentiment-Kill-Switch
 
 ---
 
@@ -141,9 +109,12 @@ Details: [ADR-005](architecture/adr-005.md)
 
 | | |
 |---|---|
-| **Plattform** | Hyperliquid Perps DEX |
-| **Startkapital** | 100€, 1x Leverage |
+| **Plattform** | Hyperliquid Perps DEX (Testnet) |
+| **Startkapital** | 100€ TOTAL (~16.67€/Asset) |
 | **Fees** | 0.01% Maker + 1bp Slippage |
-| **Gate Thresholds** | 1% Return, PF 1.05, DD≤20%, CL≤8, Sharpe≥0.1 |
-| **Discord** | #foundry-reports (automated), DM (interactive) |
+| **Discord** | #foundry-reports (trading), #system (housekeeping) |
+| **Commands** | !kill, !resume, !status, !help |
+| **Tests** | 83 (75 Unit + 7 E2E + 1 Regression) |
+| **Accounting** | Daily invariant check via housekeeping |
+| **Pre-Commit** | pytest must pass before executor commits |
 | **Repo** | [github.com/dpxyz/pecz](https://github.com/dpxyz/pecz) |

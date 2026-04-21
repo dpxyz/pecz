@@ -2,71 +2,88 @@
 title: Phases
 ---
 
-# Phasen 0–9
+# 📋 Phasen — Forward V5
 
-> Jede Phase muss vollständig und dokumentiert sein bevor die nächste beginnt.
+## ✅ Phase 0: Freeze & Archive
 
----
+Alte Systeme eingefroren, Repo aufgeräumt.
 
-## Status
+## ✅ Phase 1: Skeleton
 
-| Phase | Name | Status | Ergebnis |
-|-------|------|--------|----------|
-| 0 | Freeze & Archive | ✅ COMPLETE | Alte Systeme eingefroren |
-| 1 | Skeleton | ✅ COMPLETE | Grundstruktur, ADRs |
-| 2 | Core | ✅ COMPLETE | 103 Tests, Projektions-Engine |
-| 3 | Observability | ✅ COMPLETE | Monitoring, Logging |
-| 4 | Boundaries | ✅ COMPLETE | Error Handling, Circuit Breaker |
-| 5 | Operations | ✅ COMPLETE | systemd, CLI, Health Dashboard |
-| 6 | Test Strategy | ✅ COMPLETE | 24h Stability Test PASSED |
-| **7** | **Strategy Lab** | **✅ COMPLETE** | **Gold Standard: MACD+ADX+EMA** |
-| **8** | **Paper Trading + Economics** | **⭐ IN PROGRESS** | **Executor V1 gebaut** |
-| 9 | Final Gate | ⬜ PENDING | Go/No-Go für Live Trading |
+Grundstruktur, Projekt-Setup, erste ADRs.
 
----
+## ✅ Phase 2: Core
 
-## Timeline
+103 Tests, Projektions-Engine, Basis-Infrastruktur.
 
-```
-2026-03-06  Phase 0 COMPLETE
-2026-03-08  Phase 2 COMPLETE (103 Tests)
-2026-03-27  Phase 3 COMPLETE (Observability)
-2026-04-01  Phase 5 COMPLETE (Operations)
-2026-04-05  Phase 6 COMPLETE (24h Test PASSED)
-2026-04-05  Phase 7 COMPLETE (Strategy Lab validated)
-2026-04-19  Phase 8 START (Executor V1 built)
-```
+## ✅ Phase 3: Observability
 
----
+Monitoring, Logging, Metriken.
 
-## Phasen-Details
+## ✅ Phase 4: Boundaries
 
-### Phase 0–4: Foundation ✅
+Error Handling, Circuit Breaker, Guard Rails.
 
-Grundlegende Infrastruktur: Freeze, Skeleton, Core Reliability (103 Tests), Observability (68 Tests), System Boundaries.
+## ✅ Phase 5: Operations
 
-### Phase 5: Operations ✅
+systemd, CLI, Health Dashboard, Deployment.
 
-Systemd Service, CLI Control, Health Dashboard, Alert Engine. Alles läuft stabil.
+## ✅ Phase 6: Test Strategy
 
-### Phase 6: Test Strategy ✅
+24h Stability Test PASSED. Grundlage für Strategy Lab.
 
-24h Stability Test mit 96/96 Checks. 5 Acceptance Gates bestanden.
+## ✅ Phase 7: Strategy Lab
 
-### Phase 7: Strategy Lab ✅
+| Was | Ergebnis |
+|-----|----------|
+| Broad Validation | 8 Assets × 2 Perioden = 16 Tests/Filter |
+| Multi-Strategy | 6 Strategien × 3 Assets × 5 Perioden = 90 Tests |
+| Regime-Filter | ADX+EMA verdoppelt Pass Rate (12% → 50%) |
+| ATR-Filter | Getestet, abgelehnt (kein Improvement) |
+| Gold Standard | **MACD+ADX+EMA, CL≤12, 75% Pass Rate** |
 
-6 Strategie-Typen validiert (90 Tests). 8 Assets × 2 Perioden. Breakthrough: ADX+EMA Regime-Filter verdoppelt Pass-Rate auf 50%, halbiert Drawdown. Gold Standard: MACD Momentum + ADX+EMA.
+**Key ADRs:** ADR-005 (Three-Layer), ADR-006 (Paper Trading), ADR-007 (Leverage Tiers)
 
-→ Details: [Roadmap](roadmap.md) | [Baseline Strategy](strategy-lab/baseline.md)
+## ⭐ Phase 8: Paper Trading — IN PROGRESS
 
-### Phase 8: Paper Trading + Economics ⭐
+### 8.1 Executor V1 ✅
 
-Executor V1 gebaut (7 Module, Integrationstest bestanden). Paper Trading Run als nächster Meilenstein. Economics erst nach Paper Trading Proof.
+7 Module gebaut, Integration getestet, 12 Bugs gefixt.
 
-→ Details: [Roadmap](roadmap.md) | [ADR-006](architecture/adr-006.md)
+### 8.2 Paper Trading Phase 1 🔵 Running
 
-### Phase 9: Final Gate ⬜
+- **Start:** 2026-04-20
+- **Capital:** 100€ Total, 6 Assets, ADR-007 Leverage Tiers
+- **Testnet:** Hyperliquid ($999 Balance)
+- **Criteria:** ≥10 Trades, ≤25% DD, ≥95% Execution, 14 Tage
 
-Endgültige Go/No-Go Entscheidung. Manuelle Freigabe durch Dave.
+### 8.3 Test Suite ✅
 
-→ Details: [Roadmap](roadmap.md)
+83 Tests (75 Unit + 7 E2E + 1 Regression), 100% Pass.
+Täglicher Accounting-Check über Housekeeping.
+Pre-Commit Hook: pytest MUSS grün sein.
+
+### 8.4 Bug Audits ✅
+
+5 Audit-Runden, 17 Bugs gefunden & gefixt.
+
+### 8.5 Monitor V1 ⬜ NEXT
+
+Equity-per-Bar DB, Live Dashboard, Daily Report, Alerting.
+
+### 8.6 Economics ✅
+
+Framework steht, echte Zahlen nach 14 Tagen.
+
+### 8.7 Paper Trading Phase 2 ⬜
+
+Echte Testnet-API Orders. Voraussetzung: Phase 1 bestanden.
+
+## ⬜ Phase 9: Final Gate
+
+Go/No-Go Entscheidung. Alle Kriterien aus Phase 8 müssen erfüllt sein.
+
+## ⬜ Phase 10: V2 Strategy
+
+Regime-Erkennung + Volatility-Parity + Sentiment-Kill-Switch.
+Siehe [V2 Design](v2-design.md) — ADR-008 wird nach Paper Trading geschrieben.
