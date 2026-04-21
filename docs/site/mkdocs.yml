@@ -58,6 +58,7 @@ nav:
       - "ADR-005: Three-Layer": architecture/adr-005.md
       - "ADR-006: Paper Trading": architecture/adr-006.md
       - "ADR-007: Leverage Tiers": architecture/adr-007.md
+    - "ADR-008: Crash & Uptime": architecture/adr-008.md
     - "🔬 Strategy Lab":
       - "Overview": strategy-lab/index.md
       - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
