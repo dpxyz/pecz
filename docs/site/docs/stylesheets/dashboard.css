@@ -7,6 +7,72 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ════════════════════════════════════════════════════════
+   MKDOCS MATERIAL OVERRIDES — Kill the blue header
+   ════════════════════════════════════════════════════════ */
+
+/* Force entire site dark — match dashboard bg */
+.md-header {
+    background-color: #111827 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: none !important;
+}
+
+.md-tabs {
+    background-color: #111827 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+/* Search bar */
+.md-search__form {
+    background-color: #1a2235 !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Nav links */
+.md-header__link,
+.md-tabs__link {
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+    opacity: 0.8;
+}
+
+.md-tabs__link--active,
+.md-header__link:hover {
+    color: #e2e8f0 !important;
+    opacity: 1;
+}
+
+/* Sidebar */
+.md-sidebar {
+    background-color: #0d1117 !important;
+}
+
+.md-nav__item .md-nav__link {
+    color: #94a3b8 !important;
+    font-size: 0.85rem !important;
+}
+
+.md-nav__item .md-nav__link--active {
+    color: #818cf8 !important;
+}
+
+/* Footer */
+.md-footer {
+    background-color: #111827 !important;
+    border-top: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Main content area bg */
+.md-main__inner {
+    background-color: #0a0e17 !important;
+}
+
+.md-content {
+    background-color: #0a0e17 !important;
+}
+
+/* ════════════════════════════════════════════════════════
    ROOT OVERRIDES — Force dark, override Material defaults
    ════════════════════════════════════════════════════════ */
 
@@ -19,8 +85,8 @@
     --fwd-border: #1e293b;
     --fwd-border-subtle: rgba(255,255,255,0.06);
     --fwd-text: #e2e8f0;
-    --fwd-text-muted: #64748b;
-    --fwd-text-dim: #475569;
+    --fwd-text-muted: #8b9dc3;
+    --fwd-text-dim: #64748b;
     --fwd-accent: #818cf8;
     --fwd-accent-glow: rgba(129,140,248,0.15);
     --fwd-success: #34d399;
@@ -78,11 +144,11 @@
 
 .dashboard .dash-header h1 {
     font-family: var(--fwd-font-mono);
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--fwd-text);
     margin: 0;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
 }
 
 .dashboard .dash-header h1 .accent {
@@ -94,10 +160,9 @@
     gap: 1.5rem;
     align-items: center;
     font-family: var(--fwd-font-mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--fwd-text-muted);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .dashboard .dash-header .dash-meta .live-dot {
@@ -122,11 +187,11 @@
 
 .dashboard .section-label {
     font-family: var(--fwd-font-mono);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--fwd-text-dim);
+    letter-spacing: 0.12em;
+    color: var(--fwd-text-muted);
     margin: 2rem 0 0.75rem;
     display: flex;
     align-items: center;
@@ -232,17 +297,17 @@
 }
 
 .dashboard .status-card .status-label {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-family: var(--fwd-font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--fwd-text);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
 }
 
 .dashboard .status-card .status-sub {
-    font-size: 0.7rem;
-    color: var(--fwd-text-dim);
-    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    color: var(--fwd-text-muted);
+    margin-top: 0.2rem;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -251,11 +316,11 @@
 
 .dashboard .badge {
     font-family: var(--fwd-font-mono);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
+    padding: 0.25rem 0.7rem;
     border-radius: 4px;
     display: inline-flex;
     align-items: center;
@@ -303,12 +368,12 @@
 }
 
 .dashboard .metric-card .metric-label {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.6rem;
+    font-family: var(--fwd-font-sans);
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--fwd-text-dim);
+    letter-spacing: 0.08em;
+    color: var(--fwd-text-muted);
 }
 
 .dashboard .metric-card .metric-value {
@@ -323,9 +388,9 @@
 .dashboard .metric-card .metric-value.negative { color: var(--fwd-danger); }
 
 .dashboard .metric-card .metric-sub {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.65rem;
-    color: var(--fwd-text-dim);
+    font-family: var(--fwd-font-sans);
+    font-size: 0.7rem;
+    color: var(--fwd-text-muted);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -371,15 +436,15 @@
 
 .dashboard .step-label {
     font-family: var(--fwd-font-mono);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--fwd-text-dim);
+    color: var(--fwd-text-muted);
     letter-spacing: 0.02em;
 }
 
 .dashboard .step-sublabel {
-    font-size: 0.6rem;
-    color: var(--fwd-text-dim);
+    font-size: 0.7rem;
+    color: var(--fwd-text-muted);
 }
 
 /* Done */
@@ -426,10 +491,10 @@
     gap: 0.75rem;
     text-decoration: none;
     color: var(--fwd-text);
-    font-family: var(--fwd-font-mono);
-    font-size: 0.8rem;
+    font-family: var(--fwd-font-sans);
+    font-size: 0.9rem;
     font-weight: 500;
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1.1rem;
     background: var(--fwd-surface);
     border: 1px solid var(--fwd-border-subtle);
     border-radius: var(--fwd-radius-sm);
@@ -460,10 +525,10 @@
 }
 
 .dashboard .quick-link .link-desc {
-    font-size: 0.6rem;
-    color: var(--fwd-text-dim);
+    font-size: 0.7rem;
+    color: var(--fwd-text-muted);
     font-weight: 400;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -491,10 +556,10 @@
 }
 
 .dashboard .chart-area .chart-text {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.75rem;
-    color: var(--fwd-text-dim);
-    letter-spacing: 0.03em;
+    font-family: var(--fwd-font-sans);
+    font-size: 0.85rem;
+    color: var(--fwd-text-muted);
+    letter-spacing: 0.02em;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -504,23 +569,23 @@
 .dashboard table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--fwd-font-mono);
-    font-size: 0.75rem;
+    font-family: var(--fwd-font-sans);
+    font-size: 0.8rem;
 }
 
 .dashboard table th {
     text-align: left;
-    padding: 0.5rem 0.75rem;
-    color: var(--fwd-text-dim);
+    padding: 0.6rem 0.85rem;
+    color: var(--fwd-text-muted);
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
     border-bottom: 1px solid var(--fwd-border);
 }
 
 .dashboard table td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.6rem 0.85rem;
     color: var(--fwd-text);
     border-bottom: 1px solid var(--fwd-border-subtle);
 }
