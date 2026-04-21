@@ -23,6 +23,8 @@ theme:
         name: Switch to dark mode
   features:
     - navigation.top
+    - navigation.instant
+    - navigation.tracking
     - search.suggest
     - search.highlight
     - content.code.copy
@@ -50,26 +52,27 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
-nav:
-  - "🎯 Mission Control": index.md
-  - "🗺️ Roadmap": roadmap.md
-  - "📋 Phases": phases.md
-  - "🚧 Blockers": blockers.md
-  - "🏗️ Architecture":
-    - "ADR-001: Target Architecture": architecture/adr-001.md
-    - "ADR-002: Observability": architecture/adr-002.md
-    - "ADR-003: State Model": architecture/adr-003.md
-    - "ADR-004: Risk Controls": architecture/adr-004.md
-    - "ADR-005: Three-Layer": architecture/adr-005.md
-    - "ADR-006: Paper Trading": architecture/adr-006.md
-    - "ADR-007: Leverage Tiers": architecture/adr-007.md
-  - "🔬 Strategy Lab":
-    - "Overview": strategy-lab/index.md
-    - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
-    - "Baseline Strategy": strategy-lab/baseline.md
-  - "💰 Economics": economics.md
-  - "🧪 Test Suite": test-suite.md
-  - "🔮 V2 Design": v2-design.md
+extra_css:
+  - stylesheets/dashboard.css
 
-extra:
-  generator: false
+nav:
+  - "🎯 Dashboard": index.md
+  - "🗺️ Roadmap": roadmap.md
+  - "🚧 Blockers": blockers.md
+  - "📖 Docs":
+    - "📋 Phases": phases.md
+    - "🏗️ Architecture":
+      - "ADR-001: Target Architecture": architecture/adr-001.md
+      - "ADR-002: Observability": architecture/adr-002.md
+      - "ADR-003: State Model": architecture/adr-003.md
+      - "ADR-004: Risk Controls": architecture/adr-004.md
+      - "ADR-005: Three-Layer": architecture/adr-005.md
+      - "ADR-006: Paper Trading": architecture/adr-006.md
+      - "ADR-007: Leverage Tiers": architecture/adr-007.md
+    - "🔬 Strategy Lab":
+      - "Overview": strategy-lab/index.md
+      - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
+      - "Baseline Strategy": strategy-lab/baseline.md
+    - "💰 Economics": economics.md
+    - "🧪 Test Suite": test-suite.md
+    - "🔮 V2 Design": v2-design.md

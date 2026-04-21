@@ -1,120 +1,179 @@
 ---
 title: Mission Control
+custom_css:
+  - stylesheets/dashboard.css
 ---
 
-# 🎯 Forward V5 — Mission Control
+<div class="dashboard">
 
-> **Ziel:** Ein trading-fähiges System das beweist, dass es profitabel arbeitet — nicht nur im Backtest, sondern unter echten Bedingungen.
+<!-- ── Header ── -->
+<div class="dash-header">
+<h1>🎯 Forward V5</h1>
+<span class="dash-phase">Phase 8 ⭐ LIVE · Day 2/14 · Equity: 99.99€</span>
+</div>
 
----
+<!-- ── Status Board ── -->
+<p class="section-title">System Status</p>
+<div class="grid-3">
 
-## 📍 Aktueller Stand
+<div class="status-card">
+  <div>
+    <div class="label">Engine</div>
+    <div class="sublabel">Paper Trading, REST Polling</div>
+  </div>
+  <span class="badge badge--success">🟢 RUNNING</span>
+</div>
 
-**Phase 8 ⭐ LIVE** | Paper Engine läuft seit 2026-04-20
+<div class="status-card">
+  <div>
+    <div class="label">Watchdog V2</div>
+    <div class="sublabel">Hourly check, circuit breaker</div>
+  </div>
+  <span class="badge badge--success">✅ OK</span>
+</div>
 
-| Phase | Status | Was |
-|-------|--------|-----|
-| 0–6 | ✅ | Grundstruktur bis Test Strategy |
-| 7 | ✅ | Strategy Lab — Gold Standard gefunden |
-| **8** | **⭐ LIVE** | **Paper Trading läuft** |
-| 9 | ⬜ | Final Gate (14+14 Tage) |
-| 10 | ⬜ | V2 Strategy (Regime + Volatility-Parity) |
+<div class="status-card">
+  <div>
+    <div class="label">Database</div>
+    <div class="sublabel">30,144 candles</div>
+  </div>
+  <span class="badge badge--success">✅ HEALTHY</span>
+</div>
 
----
+</div>
 
-## 🟢 Paper Trading Engine — LIVE
+<!-- ── Key Metrics ── -->
+<p class="section-title">Key Metrics</p>
+<div class="grid-4">
 
-**Gestartet:** 2026-04-20 | **Mode:** PAPER ONLY | **Capital:** 100€ Total
+<div class="metric-card">
+  <div class="metric-label">Equity</div>
+  <div class="metric-value">99.99€</div>
+  <div class="metric-sub">Start: 100.00€</div>
+</div>
 
-| Asset | Leverage | Allocation |
-|-------|----------|------------|
-| BTC | 1.8x | ~16.67€ |
-| ETH | 1.8x | ~16.67€ |
-| SOL | 1.5x | ~16.67€ |
-| AVAX | 1.0x | ~16.67€ |
-| DOGE | 1.5x | ~16.67€ |
-| ADA | 1.5x | ~16.67€ |
+<div class="metric-card">
+  <div class="metric-label">P&L</div>
+  <div class="metric-value positive">+0.00€</div>
+  <div class="metric-sub">Fees deducted</div>
+</div>
 
-**Strategy:** MACD+ADX+EMA | **Kill-Switches:** CL≥5, DD>20%, DailyLoss>5%
-**Testnet:** Hyperliquid ($999 Balance) | **Reports:** #foundry-reports | **System:** #system
+<div class="metric-card">
+  <div class="metric-label">Trades</div>
+  <div class="metric-value">2</div>
+  <div class="metric-sub">Target: ≥10</div>
+</div>
 
-### Quality Assurance
+<div class="metric-card">
+  <div class="metric-label">Drawdown</div>
+  <div class="metric-value">0.01%</div>
+  <div class="metric-sub">Limit: ≤25%</div>
+</div>
 
-| Was | Status |
-|-----|--------|
-| **83 Tests** (75 Unit + 7 E2E + 1 Regression) | ✅ 100% Pass |
-| **5 Bug Audits** (17 Bugs total, alle gefixt) | ✅ |
-| **Accounting Check** (täglich via Housekeeping) | ✅ 5 Invarianten |
-| **Pre-Commit Hook** (pytest vor Executor-Commits) | ✅ |
-| **4h Summary Reports** (Discord #foundry-reports) | ✅ |
+</div>
 
----
+<!-- ── Equity Curve ── -->
+<p class="section-title">Equity Curve</p>
+<div class="chart-placeholder">
+<span class="material-icons">show_chart</span><br>
+📈 Monitor V1 — Live equity chart coming soon
+</div>
 
-## 🏆 Strategie: MACD Momentum + ADX+EMA
+<!-- ── Phase Timeline ── -->
+<p class="section-title">Roadmap</p>
+<div class="phase-timeline">
 
-| Metrik | Unfiltered | **ADX+EMA Filter** |
-|--------|-----------|---------------------|
-| Pass Rate | 12% | **75% (CL≤12)** |
-| Avg Drawdown | 22.7% | **14.1%** |
-| Max Consec. Losses | 9.9 | **6.5** |
+<div class="phase-step phase-step--done">
+  <div class="step-dot"></div>
+  <div class="step-label">0–6</div>
+  <div class="step-sublabel">Foundation</div>
+</div>
 
-**Entry:** `macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20`
-**Exit:** Trailing Stop 2%, SL 2.5%, Max Hold 48 Bars
+<div class="phase-step phase-step--done">
+  <div class="step-dot"></div>
+  <div class="step-label">7</div>
+  <div class="step-sublabel">Strategy</div>
+</div>
 
-Details: [Baseline Strategy](strategy-lab/baseline.md) | [ADR-005](architecture/adr-005.md) | [ADR-007](architecture/adr-007.md)
+<div class="phase-step phase-step--active">
+  <div class="step-dot"></div>
+  <div class="step-label">8</div>
+  <div class="step-sublabel">Paper Trading</div>
+</div>
 
----
+<div class="phase-step phase-step--pending">
+  <div class="step-dot"></div>
+  <div class="step-label">9</div>
+  <div class="step-sublabel">Final Gate</div>
+</div>
 
-## 🛡️ Guard States
+<div class="phase-step phase-step--pending">
+  <div class="step-dot"></div>
+  <div class="step-label">10</div>
+  <div class="step-sublabel">V2 Strategy</div>
+</div>
 
-```
-RUNNING → SOFT_PAUSE → STOP_NEW → KILL_SWITCH → COOLDOWN → RUNNING
-  (ok)    (CL≥5)      (daily>5%)  (DD>20%)      (24h)       (!resume)
+</div>
 
-SOFT_PAUSE: 24h pause after 5 consecutive losses (CL resets on expiry)
-KILL_SWITCH: Force-closes all positions, no new trades
-```
+<!-- ── Open Position ── -->
+<p class="section-title">Open Positions</p>
 
-Kill-Switches sind non-negotiable und hardcoded.
+| Asset | Side | Entry | Size | Leverage | Status |
+|-------|------|-------|------|----------|--------|
+| BTC | LONG | $76,567 | 0.000392 | 1.8x | 🟢 Open |
 
----
+<!-- ── Quick Navigation ── -->
+<p class="section-title">Documentation</p>
+<div class="grid-3">
 
-## 🏗️ Executor V1 — Module
+<a href="roadmap/" class="quick-link">
+  <span class="material-icons">map</span>
+  <div>
+    <div>Roadmap</div>
+    <div class="link-desc">Phases, milestones, progress</div>
+  </div>
+</a>
 
-| Modul | Status | Beschreibung |
-|-------|--------|-------------|
-| data_feed | ✅ | Hyperliquid Testnet WebSocket, 1h Candles, SQLite Buffer |
-| signal_generator | ✅ | Deterministische MACD+ADX+EMA Logik (Polars) |
-| state_manager | ✅ | SQLite State (Position, Equity, Guard, Accounting) |
-| risk_guard | ✅ | 5 Guard States, SOFT_PAUSE CL-Reset, KILL Switch force-close |
-| paper_engine | ✅ | Orchestrator, Backfill, Slippage, Fees, 4h Reports |
-| discord_reporter | ✅ | Components v2 Container mit Farbaccent |
-| command_listener | ✅ | !kill, !resume, !status, !help |
+<a href="economics/" class="quick-link">
+  <span class="material-icons">euro</span>
+  <div>
+    <div>Economics</div>
+    <div class="link-desc">Costs, break-even, fees</div>
+  </div>
+</a>
 
-Details: [ADR-006](architecture/adr-006.md)
+<a href="test-suite/" class="quick-link">
+  <span class="material-icons">checklist</span>
+  <div>
+    <div>Test Suite</div>
+    <div class="link-desc">110 tests, 100% pass</div>
+  </div>
+</a>
 
----
+<a href="architecture/adr-005/" class="quick-link">
+  <span class="material-icons">layers</span>
+  <div>
+    <div>Three-Layer ADR</div>
+    <div class="link-desc">Foundry → Executor → Monitor</div>
+  </div>
+</a>
 
-## ⏭️ Nächste Schritte
+<a href="strategy-lab/baseline/" class="quick-link">
+  <span class="material-icons">science</span>
+  <div>
+    <div>Baseline Strategy</div>
+    <div class="link-desc">ADX+EMA MACD gold standard</div>
+  </div>
+</a>
 
-1. **Monitor V1** — Equity-Kurve per Bar, Dashboard, Daily Report
-2. **14+14 Tage Paper Trading** — Phase 1: Paper, Phase 2: Testnet API
-3. **Success Criteria prüfen** — ≥10 Trades, ≤25% DD, Accounting-Invariante
-4. **Phase 9: Final Gate** — Go/No-Go Entscheidung
-5. **Phase 10: V2 Strategy** — Regime-Score + Volatility-Parity + Sentiment-Kill-Switch
+<a href="v2-design/" class="quick-link">
+  <span class="material-icons">auto_awesome</span>
+  <div>
+    <div>V2 Design</div>
+    <div class="link-desc">Regime, volatility, sentiment</div>
+  </div>
+</a>
 
----
+</div>
 
-## ⚙️ System
-
-| | |
-|---|---|
-| **Plattform** | Hyperliquid Perps DEX (Testnet) |
-| **Startkapital** | 100€ TOTAL (~16.67€/Asset) |
-| **Fees** | 0.01% Maker + 1bp Slippage |
-| **Discord** | #foundry-reports (trading), #system (housekeeping) |
-| **Commands** | !kill, !resume, !status, !help |
-| **Tests** | 83 (75 Unit + 7 E2E + 1 Regression) |
-| **Accounting** | Daily invariant check via housekeeping |
-| **Pre-Commit** | pytest must pass before executor commits |
-| **Repo** | [github.com/dpxyz/pecz](https://github.com/dpxyz/pecz) |
+</div>
