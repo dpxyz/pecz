@@ -115,9 +115,10 @@
     font-size: 0.72rem;
     line-height: 1.55;
     min-height: 100vh;
-    padding: 0;
-    margin: -1.2rem -2rem -2rem;
     padding: 1.5rem 2rem;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -252,18 +253,7 @@
     gap: 0.4rem;
 }
 
-@media (max-width: 1024px) {
-    .dashboard .grid-3,
-    .dashboard .grid-4,
-    .dashboard .grid-6 { grid-template-columns: repeat(2, 1fr); }
-    .dashboard .grid-2col { grid-template-columns: 1fr; }
-}
 
-@media (max-width: 640px) {
-    .dashboard .grid-3,
-    .dashboard .grid-4,
-    .dashboard .grid-6 { grid-template-columns: 1fr; }
-}
 
 /* ════════════════════════════════════════════════════════
    CARDS — Sharp, no radius, border-defined
@@ -631,11 +621,41 @@
 .dashboard .progress-bar .progress-fill.warning { background: var(--fwd-warning); }
 
 /* ════════════════════════════════════════════════════════
-   RESPONSIVE — Mobile
+   RESPONSIVE — Mobile first
    ════════════════════════════════════════════════════════ */
 
-@media (max-width: 768px) {
-    .dashboard { padding: 0.75rem; }
+/* Tablets — 2 columns */
+@media (max-width: 1024px) {
+    .dashboard .grid-3,
+    .dashboard .grid-4,
+    .dashboard .grid-6 { grid-template-columns: repeat(2, 1fr); }
+    .dashboard .grid-2col { grid-template-columns: 1fr; }
+}
+
+/* Mobile — 1 column, compact */
+@media (max-width: 640px) {
+    .dashboard {
+        padding: 0.75rem;
+        margin: 0;
+        font-size: 0.68rem;
+    }
+
+    .dashboard .grid-3,
+    .dashboard .grid-4,
+    .dashboard .grid-6 { grid-template-columns: 1fr; }
+    .dashboard .grid-2col { grid-template-columns: 1fr; }
+
+    .dashboard .dash-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .dashboard .dash-header .dash-meta {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        font-size: 0.6rem;
+    }
 
     .dashboard .phase-timeline {
         flex-direction: column;
@@ -654,5 +674,42 @@
     .dashboard .phase-step {
         flex-direction: row;
         text-align: left;
+    }
+
+    .dashboard .status-card {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+
+    .dashboard .metric-card .metric-value {
+        font-size: 0.95rem;
+    }
+
+    /* Tables — horizontal scroll on mobile */
+    .dashboard table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.55rem;
+    }
+
+    .dashboard table th,
+    .dashboard table td {
+        padding: 0.3rem 0.45rem;
+    }
+
+    .dashboard .chart-area {
+        min-height: 80px;
+        padding: 1rem;
+    }
+
+    .dashboard .quick-link {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.6rem;
+    }
+
+    .dashboard .section-label {
+        font-size: 0.55rem;
+        margin: 1.25rem 0 0.4rem;
     }
 }
