@@ -9,6 +9,20 @@
    MKDOCS OVERRIDES
    ════════════════════════════════════════════════════════ */
 
+/* Nuclear override — force ALL backgrounds to same dark */
+:root,
+[data-md-color-scheme="slate"],
+body,
+.md-main,
+.md-main__inner,
+.md-content,
+.md-content__inner,
+.md-typeset,
+.md-container {
+    --md-default-bg-color: #0d1117 !important;
+    background-color: #0d1117 !important;
+}
+
 .md-header {
     background-color: #0d1117 !important;
     border-bottom: 1px solid #454d56 !important;
@@ -68,16 +82,6 @@
 }
 
 .md-footer-meta {
-    background-color: #0d1117 !important;
-}
-
-.md-main__inner,
-.md-content,
-.md-content__inner {
-    background-color: #0d1117 !important;
-}
-
-.md-typeset {
     background-color: #0d1117 !important;
 }
 
