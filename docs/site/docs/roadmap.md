@@ -6,7 +6,7 @@ title: Roadmap
 
 <div class="dash-header">
 <h1><span class="accent">→</span> ROADMAP</h1>
-<div class="dash-meta"><span><span class="live-dot"></span>PHASE 8 ACTIVE</span></div>
+<div class="dash-meta"><span><span class="live-dot"></span>PHASE 8</span></div>
 </div>
 
 <!-- ── Timeline ── -->
@@ -15,31 +15,31 @@ title: Roadmap
 <div class="phase-step phase-step--done">
   <div class="step-dot"></div>
   <div class="step-label">0–6</div>
-  <div class="step-sublabel">Foundation</div>
+  <div class="step-sublabel">foundation</div>
 </div>
 
 <div class="phase-step phase-step--done">
   <div class="step-dot"></div>
   <div class="step-label">7</div>
-  <div class="step-sublabel">Strategy</div>
+  <div class="step-sublabel">strategy</div>
 </div>
 
 <div class="phase-step phase-step--active">
   <div class="step-dot"></div>
   <div class="step-label">8</div>
-  <div class="step-sublabel">Paper Trading</div>
+  <div class="step-sublabel">paper</div>
 </div>
 
 <div class="phase-step phase-step--pending">
   <div class="step-dot"></div>
   <div class="step-label">9</div>
-  <div class="step-sublabel">Final Gate</div>
+  <div class="step-sublabel">gate</div>
 </div>
 
 <div class="phase-step phase-step--pending">
   <div class="step-dot"></div>
   <div class="step-label">10</div>
-  <div class="step-sublabel">V2 Strategy</div>
+  <div class="step-sublabel">v2</div>
 </div>
 
 </div>
@@ -47,78 +47,78 @@ title: Roadmap
 <!-- ── Phase 0-6 ── -->
 <div class="card glow-success">
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--success">✓ COMPLETE</span>
+<span class="badge badge--success">✓ done</span>
 </div>
-<div style="margin-top:0.75rem;font-family:var(--fwd-font-mono);font-size:0.8rem;">
-**Phase 0–6: Foundation** — Skeleton → Core → Observability → Boundaries → Operations → Test Strategy
+<div style="margin-top:0.5rem;font-size:0.75rem;">
+**Phase 0–6: Foundation** — skeleton → core → observability → boundaries → operations → test strategy
 </div>
 </div>
 
 <!-- ── Phase 7 ── -->
-<div class="card glow-success" style="margin-top:0.75rem;">
+<div class="card glow-success" style="margin-top:0.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--success">✓ COMPLETE</span>
+<span class="badge badge--success">✓ done</span>
 </div>
-<div style="margin-top:0.75rem;">
-**Phase 7: Strategy Lab** — Gold Standard Found
+<div style="margin-top:0.5rem;font-size:0.75rem;">
+**Phase 7: Strategy Lab** — gold standard found
 
-| METRIC | UNFILTERED | ADX+EMA |
+| metric | unfiltered | adx+ema |
 |--------|-----------|---------|
-| Pass Rate | 12% | **75%** |
-| Avg DD | 22.7% | **14.1%** |
-| Max CL | 9.9 | **6.5** |
+| pass rate | 12% | **75%** |
+| avg dd | 22.7% | **14.1%** |
+| max cl | 9.9 | **6.5** |
 
 </div>
 </div>
 
 <!-- ── Phase 8 ── -->
-<div class="card glow-accent" style="margin-top:0.75rem;">
+<div class="card glow-accent" style="margin-top:0.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--accent">● IN PROGRESS</span>
-<span style="font-family:var(--fwd-font-mono);font-size:0.7rem;color:var(--fwd-text-dim);">DAY 2/14</span>
+<span class="badge badge--accent">● active</span>
+<span style="font-size:0.65rem;color:var(--fwd-text-dim);">DAY 2/14</span>
 </div>
-<div style="margin-top:0.75rem;">
+<div style="margin-top:0.5rem;font-size:0.75rem;">
 **Phase 8: Paper Trading**
 
-| COMPONENT | STATUS |
+| component | status |
 |-----------|--------|
-| Executor V1 | ✓ 7 modules + 110 tests |
-| Paper Engine | ● Running (REST polling) |
-| Watchdog V2 | ● Hourly + circuit breaker |
-| Housekeeping | ● Daily 09:00 Berlin |
-| Monitor V1 | ○ Next |
+| executor v1 | ✓ 7 modules + 110 tests |
+| paper engine | ● running · rest polling |
+| watchdog v2 | ● hourly · circuit breaker |
+| housekeeping | ● daily 09:00 berlin |
+| monitor v1 | ○ next |
 
-**Phase 1 Criteria:**
+**phase 1 criteria:**
 
-| CRITERION | TARGET | CURRENT |
+| criterion | target | current |
 |-----------|--------|---------|
-| Trades | ≥10 | 2 |
-| Drawdown | ≤25% | 0.01% |
-| Execution | ≥95% | — |
-| Accounting | ✅ | ✅ |
+| trades | ≥10 | 2 |
+| drawdown | ≤25% | 0.01% |
+| execution | ≥95% | — |
+| accounting | ✅ | ✅ |
 
-<div class="progress-bar" style="margin-top:0.75rem;"><div class="progress-fill accent" style="width:14%"></div></div>
-<div style="font-family:var(--fwd-font-mono);font-size:0.6rem;color:var(--fwd-text-dim);margin-top:0.25rem;">14% COMPLETE (2/14 DAYS)</div>
+<div class="progress-bar" style="margin-top:0.5rem;"><div class="progress-fill accent" style="width:14%"></div></div>
+<div style="font-size:0.6rem;color:var(--fwd-text-dim);margin-top:0.2rem;">14% complete (2/14 days)</div>
 </div>
 </div>
 
 <!-- ── Phase 9 ── -->
-<div class="card glow-neutral" style="margin-top:0.75rem;">
+<div class="card glow-neutral" style="margin-top:0.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--neutral">○ NEXT</span>
+<span class="badge badge--neutral">○ next</span>
 </div>
-<div style="margin-top:0.75rem;font-family:var(--fwd-font-mono);font-size:0.8rem;">
-**Phase 9: Final Gate** — 14d testnet API: ≥5 orders, 0% API errors, kill-switch via API
+<div style="margin-top:0.5rem;font-size:0.75rem;">
+**Phase 9: Final Gate** — 14d testnet api: ≥5 orders, 0% api errors, kill-switch via api
 </div>
 </div>
 
 <!-- ── Phase 10 ── -->
-<div class="card glow-neutral" style="margin-top:0.75rem;">
+<div class="card glow-neutral" style="margin-top:0.5rem;">
 <div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--neutral">○ PLANNED</span>
+<span class="badge badge--neutral">○ planned</span>
 </div>
-<div style="margin-top:0.75rem;font-family:var(--fwd-font-mono);font-size:0.8rem;">
-**Phase 10: V2 Strategy** — Regime-Score + Volatility-Parity + Sentiment Kill-Switch → [V2 Design](../v2-design/)
+<div style="margin-top:0.5rem;font-size:0.75rem;">
+**Phase 10: V2 Strategy** — regime-score + volatility-parity + sentiment kill-switch → [v2 design](../v2-design/)
 </div>
 </div>
 

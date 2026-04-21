@@ -1,134 +1,121 @@
 /* ═══════════════════════════════════════════════════════
-   Forward V5 Mission Control — Dashboard v2
-   Inspired by: Hermes Agent, GitHub Dark
+   Forward V5 Mission Control — Terminal Dashboard v3
+   Inspired by: Hermes Agent, GitHub Dark, Terminal UIs
    ═══════════════════════════════════════════════════════ */
 
 /* ── Font Import ── */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 /* ════════════════════════════════════════════════════════
-   MKDOCS MATERIAL OVERRIDES — Kill the blue header
+   MKDOCS MATERIAL OVERRIDES — Dark terminal everything
    ════════════════════════════════════════════════════════ */
 
-/* Force entire site dark — match dashboard bg */
 .md-header {
-    background-color: #111827 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    background-color: #0d1117 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
     box-shadow: none !important;
 }
 
 .md-tabs {
-    background-color: #111827 !important;
+    background-color: #0d1117 !important;
     border-bottom: 1px solid rgba(255,255,255,0.04) !important;
 }
 
-/* Search bar */
-.md-search__form {
-    background-color: #1a2235 !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-}
-
-/* Nav links */
 .md-header__link,
 .md-tabs__link {
-    color: #94a3b8 !important;
+    color: #7c8ca3 !important;
+    font-family: 'JetBrains Mono', monospace !important;
     font-weight: 500 !important;
-    font-size: 0.85rem !important;
-    opacity: 0.8;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.03em;
 }
 
 .md-tabs__link--active,
 .md-header__link:hover {
-    color: #e2e8f0 !important;
-    opacity: 1;
+    color: #c9d1d9 !important;
 }
 
-/* Sidebar */
+.md-search__form {
+    background-color: #161b22 !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 6px !important;
+}
+
 .md-sidebar {
     background-color: #0d1117 !important;
 }
 
 .md-nav__item .md-nav__link {
-    color: #94a3b8 !important;
-    font-size: 0.85rem !important;
+    color: #7c8ca3 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.75rem !important;
 }
 
 .md-nav__item .md-nav__link--active {
     color: #818cf8 !important;
 }
 
-/* Footer */
 .md-footer {
-    background-color: #111827 !important;
+    background-color: #0d1117 !important;
     border-top: 1px solid rgba(255,255,255,0.06) !important;
 }
 
-/* Main content area bg */
-.md-main__inner {
-    background-color: #0a0e17 !important;
+.md-footer-meta {
+    background-color: #0d1117 !important;
 }
 
+.md-main__inner,
 .md-content {
     background-color: #0a0e17 !important;
 }
 
 /* ════════════════════════════════════════════════════════
-   ROOT OVERRIDES — Force dark, override Material defaults
+   ROOT — Terminal palette
    ════════════════════════════════════════════════════════ */
 
 :root {
-    /* Brand */
     --fwd-bg: #0a0e17;
-    --fwd-surface: #111827;
-    --fwd-surface-2: #1a2235;
-    --fwd-surface-3: #232d42;
-    --fwd-border: #1e293b;
-    --fwd-border-subtle: rgba(255,255,255,0.06);
-    --fwd-text: #e2e8f0;
-    --fwd-text-muted: #8b9dc3;
-    --fwd-text-dim: #64748b;
+    --fwd-surface: #0d1117;
+    --fwd-surface-2: #161b22;
+    --fwd-surface-3: #1c2333;
+    --fwd-border: #21262d;
+    --fwd-border-bright: #30363d;
+    --fwd-border-subtle: rgba(255,255,255,0.05);
+    --fwd-text: #c9d1d9;
+    --fwd-text-bright: #e6edf3;
+    --fwd-text-muted: #8b949e;
+    --fwd-text-dim: #484f58;
     --fwd-accent: #818cf8;
-    --fwd-accent-glow: rgba(129,140,248,0.15);
-    --fwd-success: #34d399;
-    --fwd-success-glow: rgba(52,211,153,0.12);
-    --fwd-danger: #f87171;
-    --fwd-danger-glow: rgba(248,113,113,0.12);
-    --fwd-warning: #fbbf24;
-    --fwd-warning-glow: rgba(251,191,36,0.12);
-    --fwd-neutral: #64748b;
-
-    /* Fonts */
-    --fwd-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-    --fwd-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-
-    /* Radius */
-    --fwd-radius: 10px;
-    --fwd-radius-sm: 6px;
-    --fwd-radius-lg: 14px;
-
-    /* Shadows */
-    --fwd-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
-    --fwd-shadow-lg: 0 4px 20px rgba(0,0,0,0.4);
+    --fwd-accent-dim: rgba(129,140,248,0.12);
+    --fwd-success: #3fb950;
+    --fwd-success-dim: rgba(63,185,80,0.10);
+    --fwd-danger: #f85149;
+    --fwd-danger-dim: rgba(248,81,73,0.10);
+    --fwd-warning: #d29922;
+    --fwd-warning-dim: rgba(210,153,34,0.10);
+    --fwd-neutral: #484f58;
+    --fwd-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --fwd-radius: 6px;
 }
 
 /* ════════════════════════════════════════════════════════
-   DASHBOARD CONTAINER
+   DASHBOARD — Terminal container
    ════════════════════════════════════════════════════════ */
 
 .dashboard {
-    --md-default-bg: var(--fwd-bg);
-    --md-primary-fg-color: var(--fwd-accent);
     background: var(--fwd-bg);
     color: var(--fwd-text);
-    font-family: var(--fwd-font-sans);
+    font-family: var(--fwd-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
     min-height: 100vh;
     padding: 0;
     margin: -1.2rem -2rem -2rem;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
 }
 
 /* ════════════════════════════════════════════════════════
-   HEADER
+   HEADER — Terminal prompt style
    ════════════════════════════════════════════════════════ */
 
 .dashboard .dash-header {
@@ -137,30 +124,31 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--fwd-border-subtle);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--fwd-border);
 }
 
 .dashboard .dash-header h1 {
-    font-family: var(--fwd-font-mono);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--fwd-text);
+    font-family: var(--fwd-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fwd-text-bright);
     margin: 0;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 
 .dashboard .dash-header h1 .accent {
     color: var(--fwd-accent);
+    font-weight: 300;
 }
 
 .dashboard .dash-header .dash-meta {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.25rem;
     align-items: center;
-    font-family: var(--fwd-font-mono);
-    font-size: 0.8rem;
+    font-family: var(--fwd-mono);
+    font-size: 0.7rem;
     color: var(--fwd-text-muted);
     letter-spacing: 0.04em;
 }
@@ -171,38 +159,45 @@
     height: 6px;
     border-radius: 50%;
     background: var(--fwd-success);
-    box-shadow: 0 0 8px var(--fwd-success);
+    box-shadow: 0 0 6px var(--fwd-success);
     animation: pulse-glow 2s ease-in-out infinite;
-    margin-right: 0.4rem;
+    margin-right: 0.35rem;
 }
 
 @keyframes pulse-glow {
-    0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--fwd-success); }
-    50% { opacity: 0.6; box-shadow: 0 0 12px var(--fwd-success); }
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--fwd-success); }
+    50% { opacity: 0.5; box-shadow: 0 0 10px var(--fwd-success); }
 }
 
 /* ════════════════════════════════════════════════════════
-   SECTION HEADERS
+   SECTION HEADERS — Comment-style
    ════════════════════════════════════════════════════════ */
 
 .dashboard .section-label {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-family: var(--fwd-mono);
+    font-size: 0.65rem;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--fwd-text-muted);
-    margin: 2rem 0 0.75rem;
+    letter-spacing: 0.14em;
+    color: var(--fwd-text-dim);
+    margin: 1.75rem 0 0.6rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.dashboard .section-label::before {
+    content: '//';
+    color: var(--fwd-text-dim);
+    margin-right: 0.25rem;
 }
 
 .dashboard .section-label::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--fwd-border-subtle);
+    background: var(--fwd-border);
+    margin-left: 0.5rem;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -212,25 +207,25 @@
 .dashboard .grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .dashboard .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .dashboard .grid-6 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .dashboard .grid-2col {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 @media (max-width: 1024px) {
@@ -247,43 +242,43 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   CARDS — Glassmorphism on dark
+   CARDS — Flat terminal panels
    ════════════════════════════════════════════════════════ */
 
 .dashboard .card {
     background: var(--fwd-surface);
-    border: 1px solid var(--fwd-border-subtle);
+    border: 1px solid var(--fwd-border);
     border-radius: var(--fwd-radius);
-    padding: 1rem 1.25rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.85rem 1rem;
+    transition: border-color 0.15s ease;
 }
 
 .dashboard .card:hover {
-    border-color: rgba(255,255,255,0.1);
+    border-color: var(--fwd-border-bright);
 }
 
 .dashboard .card.glow-success {
-    border-left: 3px solid var(--fwd-success);
-    box-shadow: inset 0 0 20px var(--fwd-success-glow);
+    border-left: 2px solid var(--fwd-success);
+    background: linear-gradient(90deg, var(--fwd-success-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-accent {
-    border-left: 3px solid var(--fwd-accent);
-    box-shadow: inset 0 0 20px var(--fwd-accent-glow);
+    border-left: 2px solid var(--fwd-accent);
+    background: linear-gradient(90deg, var(--fwd-accent-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-danger {
-    border-left: 3px solid var(--fwd-danger);
-    box-shadow: inset 0 0 20px var(--fwd-danger-glow);
+    border-left: 2px solid var(--fwd-danger);
+    background: linear-gradient(90deg, var(--fwd-danger-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-warning {
-    border-left: 3px solid var(--fwd-warning);
-    box-shadow: inset 0 0 20px var(--fwd-warning-glow);
+    border-left: 2px solid var(--fwd-warning);
+    background: linear-gradient(90deg, var(--fwd-warning-dim) 0%, var(--fwd-surface) 40%);
 }
 
 .dashboard .card.glow-neutral {
-    border-left: 3px solid var(--fwd-neutral);
+    border-left: 2px solid var(--fwd-neutral);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -297,62 +292,64 @@
 }
 
 .dashboard .status-card .status-label {
-    font-family: var(--fwd-font-sans);
-    font-size: 0.9rem;
+    font-family: var(--fwd-mono);
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--fwd-text);
-    letter-spacing: 0.01em;
+    color: var(--fwd-text-bright);
+    letter-spacing: 0.02em;
 }
 
 .dashboard .status-card .status-sub {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--fwd-text-muted);
-    margin-top: 0.2rem;
+    margin-top: 0.15rem;
+    letter-spacing: 0.01em;
 }
 
 /* ════════════════════════════════════════════════════════
-   BADGES
+   BADGES — Terminal status indicators
    ════════════════════════════════════════════════════════ */
 
 .dashboard .badge {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.65rem;
-    font-weight: 600;
+    font-family: var(--fwd-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.25rem 0.7rem;
-    border-radius: 4px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
+    white-space: nowrap;
 }
 
 .dashboard .badge--success {
-    background: var(--fwd-success-glow);
+    background: var(--fwd-success-dim);
     color: var(--fwd-success);
-    border: 1px solid rgba(52,211,153,0.2);
+    border: 1px solid rgba(63,185,80,0.2);
 }
 
 .dashboard .badge--danger {
-    background: var(--fwd-danger-glow);
+    background: var(--fwd-danger-dim);
     color: var(--fwd-danger);
-    border: 1px solid rgba(248,113,113,0.2);
+    border: 1px solid rgba(248,81,73,0.2);
 }
 
 .dashboard .badge--warning {
-    background: var(--fwd-warning-glow);
+    background: var(--fwd-warning-dim);
     color: var(--fwd-warning);
-    border: 1px solid rgba(251,191,36,0.2);
+    border: 1px solid rgba(210,153,34,0.2);
 }
 
 .dashboard .badge--neutral {
-    background: rgba(100,116,139,0.1);
-    color: var(--fwd-neutral);
-    border: 1px solid rgba(100,116,139,0.2);
+    background: rgba(72,79,88,0.15);
+    color: var(--fwd-text-muted);
+    border: 1px solid rgba(72,79,88,0.3);
 }
 
 .dashboard .badge--accent {
-    background: var(--fwd-accent-glow);
+    background: var(--fwd-accent-dim);
     color: var(--fwd-accent);
     border: 1px solid rgba(129,140,248,0.2);
 }
@@ -364,37 +361,38 @@
 .dashboard .metric-card {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.15rem;
 }
 
 .dashboard .metric-card .metric-label {
-    font-family: var(--fwd-font-sans);
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-family: var(--fwd-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--fwd-text-muted);
+    letter-spacing: 0.1em;
+    color: var(--fwd-text-dim);
 }
 
 .dashboard .metric-card .metric-value {
-    font-family: var(--fwd-font-mono);
-    font-size: 1.5rem;
+    font-family: var(--fwd-mono);
+    font-size: 1.35rem;
     font-weight: 700;
-    color: var(--fwd-text);
-    line-height: 1;
+    color: var(--fwd-text-bright);
+    line-height: 1.1;
 }
 
 .dashboard .metric-card .metric-value.positive { color: var(--fwd-success); }
 .dashboard .metric-card .metric-value.negative { color: var(--fwd-danger); }
 
 .dashboard .metric-card .metric-sub {
-    font-family: var(--fwd-font-sans);
-    font-size: 0.7rem;
-    color: var(--fwd-text-muted);
+    font-family: var(--fwd-mono);
+    font-size: 0.6rem;
+    color: var(--fwd-text-dim);
+    letter-spacing: 0.02em;
 }
 
 /* ════════════════════════════════════════════════════════
-   PHASE TIMELINE — Horizontal with connecting line
+   PHASE TIMELINE — Terminal progress
    ════════════════════════════════════════════════════════ */
 
 .dashboard .phase-timeline {
@@ -402,16 +400,16 @@
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
-    padding: 1.5rem 0 0.5rem;
+    padding: 1.25rem 0 0.5rem;
 }
 
 .dashboard .phase-timeline::before {
     content: '';
     position: absolute;
-    top: 18px;
-    left: 24px;
-    right: 24px;
-    height: 2px;
+    top: 15px;
+    left: 20px;
+    right: 20px;
+    height: 1px;
     background: var(--fwd-border);
 }
 
@@ -422,12 +420,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
 }
 
 .dashboard .step-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--fwd-surface);
     border: 2px solid var(--fwd-neutral);
@@ -435,23 +433,24 @@
 }
 
 .dashboard .step-label {
-    font-family: var(--fwd-font-mono);
-    font-size: 0.8rem;
+    font-family: var(--fwd-mono);
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--fwd-text-muted);
     letter-spacing: 0.02em;
 }
 
 .dashboard .step-sublabel {
-    font-size: 0.7rem;
-    color: var(--fwd-text-muted);
+    font-size: 0.6rem;
+    color: var(--fwd-text-dim);
+    letter-spacing: 0.01em;
 }
 
 /* Done */
 .dashboard .phase-step--done .step-dot {
     background: var(--fwd-success);
     border-color: var(--fwd-success);
-    box-shadow: 0 0 8px var(--fwd-success-glow);
+    box-shadow: 0 0 6px rgba(63,185,80,0.3);
 }
 
 .dashboard .phase-step--done .step-label {
@@ -462,8 +461,8 @@
 .dashboard .phase-step--active .step-dot {
     background: var(--fwd-accent);
     border-color: var(--fwd-accent);
-    box-shadow: 0 0 12px var(--fwd-accent-glow), 0 0 24px var(--fwd-accent-glow);
-    animation: pulse-accent 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--fwd-accent-dim), 0 0 16px var(--fwd-accent-dim);
+    animation: pulse-accent 2.5s ease-in-out infinite;
 }
 
 .dashboard .phase-step--active .step-label {
@@ -471,8 +470,8 @@
 }
 
 @keyframes pulse-accent {
-    0%, 100% { box-shadow: 0 0 12px var(--fwd-accent-glow), 0 0 24px var(--fwd-accent-glow); }
-    50% { box-shadow: 0 0 16px var(--fwd-accent-glow), 0 0 32px var(--fwd-accent-glow); }
+    0%, 100% { box-shadow: 0 0 8px var(--fwd-accent-dim), 0 0 16px var(--fwd-accent-dim); }
+    50% { box-shadow: 0 0 12px var(--fwd-accent-dim), 0 0 24px var(--fwd-accent-dim); }
 }
 
 /* Pending */
@@ -482,22 +481,22 @@
 }
 
 /* ════════════════════════════════════════════════════════
-   QUICK LINKS
+   QUICK LINKS — File/directory style
    ════════════════════════════════════════════════════════ */
 
 .dashboard .quick-link {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
     text-decoration: none;
     color: var(--fwd-text);
-    font-family: var(--fwd-font-sans);
-    font-size: 0.9rem;
+    font-family: var(--fwd-mono);
+    font-size: 0.75rem;
     font-weight: 500;
-    padding: 0.85rem 1.1rem;
+    padding: 0.65rem 0.85rem;
     background: var(--fwd-surface);
-    border: 1px solid var(--fwd-border-subtle);
-    border-radius: var(--fwd-radius-sm);
+    border: 1px solid var(--fwd-border);
+    border-radius: var(--fwd-radius);
     transition: all 0.15s ease;
 }
 
@@ -505,13 +504,12 @@
     background: var(--fwd-surface-2);
     border-color: var(--fwd-accent);
     color: var(--fwd-accent);
-    transform: translateY(-1px);
 }
 
 .dashboard .quick-link .link-icon {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: var(--fwd-accent);
-    opacity: 0.6;
+    opacity: 0.5;
     transition: opacity 0.15s;
 }
 
@@ -522,13 +520,14 @@
 .dashboard .quick-link .link-text {
     display: flex;
     flex-direction: column;
+    gap: 0.1rem;
 }
 
 .dashboard .quick-link .link-desc {
-    font-size: 0.7rem;
-    color: var(--fwd-text-muted);
+    font-size: 0.6rem;
+    color: var(--fwd-text-dim);
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -537,29 +536,29 @@
 
 .dashboard .chart-area {
     background: var(--fwd-surface);
-    border: 1px solid var(--fwd-border-subtle);
+    border: 1px solid var(--fwd-border);
     border-radius: var(--fwd-radius);
     padding: 2rem;
     text-align: center;
-    min-height: 180px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .dashboard .chart-area .chart-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--fwd-accent);
-    opacity: 0.25;
+    opacity: 0.2;
 }
 
 .dashboard .chart-area .chart-text {
-    font-family: var(--fwd-font-sans);
-    font-size: 0.85rem;
-    color: var(--fwd-text-muted);
-    letter-spacing: 0.02em;
+    font-family: var(--fwd-mono);
+    font-size: 0.7rem;
+    color: var(--fwd-text-dim);
+    letter-spacing: 0.04em;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -569,23 +568,23 @@
 .dashboard table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--fwd-font-sans);
-    font-size: 0.8rem;
+    font-family: var(--fwd-mono);
+    font-size: 0.7rem;
 }
 
 .dashboard table th {
     text-align: left;
-    padding: 0.6rem 0.85rem;
-    color: var(--fwd-text-muted);
-    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    color: var(--fwd-text-dim);
+    font-weight: 500;
     text-transform: uppercase;
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
     border-bottom: 1px solid var(--fwd-border);
 }
 
 .dashboard table td {
-    padding: 0.6rem 0.85rem;
+    padding: 0.5rem 0.75rem;
     color: var(--fwd-text);
     border-bottom: 1px solid var(--fwd-border-subtle);
 }
@@ -595,16 +594,16 @@
    ════════════════════════════════════════════════════════ */
 
 .dashboard .progress-bar {
-    height: 4px;
+    height: 3px;
     background: var(--fwd-surface-3);
-    border-radius: 2px;
+    border-radius: 1px;
     overflow: hidden;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
 }
 
 .dashboard .progress-bar .progress-fill {
     height: 100%;
-    border-radius: 2px;
+    border-radius: 1px;
     transition: width 0.5s ease;
 }
 
@@ -622,14 +621,14 @@
 
     .dashboard .phase-timeline {
         flex-direction: column;
-        gap: 1.5rem;
-        padding-left: 2rem;
+        gap: 1.25rem;
+        padding-left: 1.5rem;
     }
 
     .dashboard .phase-timeline::before {
-        width: 2px;
+        width: 1px;
         height: 100%;
-        left: 10px;
+        left: 8px;
         top: 0;
         right: auto;
     }
