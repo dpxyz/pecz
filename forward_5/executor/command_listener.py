@@ -29,8 +29,9 @@ CMD_KILL = "!kill"
 CMD_RESUME = "!resume"
 CMD_STATUS = "!status"
 CMD_HELP = "!help"
+CMD_WATCHDOG_CLEAR = "!watchdog-clear"
 
-VALID_COMMANDS = [CMD_KILL, CMD_RESUME, CMD_STATUS, CMD_HELP]
+VALID_COMMANDS = [CMD_KILL, CMD_RESUME, CMD_STATUS, CMD_HELP, CMD_WATCHDOG_CLEAR]
 
 
 def _load_processed() -> set:
@@ -181,6 +182,8 @@ class CommandListener:
             await self._cmd_status()
         elif command == CMD_HELP:
             await self._cmd_help()
+        elif command == CMD_WATCHDOG_CLEAR:
+            await self._cmd_watchdog_clear(author)
 
     async def _cmd_kill(self, author: str):
         """!kill — Activate kill switch immediately."""
@@ -243,6 +246,24 @@ class CommandListener:
             body += f"\nUptime: {uptime_h:.1f}h"
         self.engine.reporter._send_container(header, body, color)
 
+    async def _cmd_watchdog_clear(self, author: str):
+        """!watchdog-clear — Clear circuit breaker and reset restart counter."""
+        from discord_reporter import COLOR_GREEN, COLOR_AMBER
+        from watchdog_v2 import clear_circuit_breaker, load_state
+        
+        clear_circuit_breaker()
+        state = load_state()
+        
+        self.engine.reporter._send_container(
+            "🔓 **WATCHDOG RESET**",
+            f"Circuit breaker cleared.\n"
+            f"Restart history reset.\n"
+            f"Auto-restart re-enabled.\n"
+            f"_By {author}_",
+            COLOR_GREEN
+        )
+        log.info(f"🔓 Watchdog circuit breaker cleared by {author}")
+
     async def _cmd_help(self):
         """!help — Show available commands."""
         header = "📋 **Executor V1 Commands**"
@@ -250,6 +271,7 @@ class CommandListener:
             "**!kill** — Activate kill switch (stops all trading)\n"
             "**!resume** — Resume from kill/pause state\n"
             "**!status** — Show current equity, guard state, positions\n"
+            "**!watchdog-clear** — Clear circuit breaker, re-enable auto-restart\n"
             "**!help** — Show this message\n"
             "━━━━━━━━━━━━━━━━━━\n"
             "Commands work in #foundry-reports channel."
