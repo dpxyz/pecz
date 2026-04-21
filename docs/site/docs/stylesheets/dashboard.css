@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════
-   Forward V5 Mission Control — Terminal Dashboard v4
-   Pure terminal aesthetic. No rounded corners. No softness.
+   Pecz Mission Control — Modern Earthy Tech Palette
+   Warm dark + Acid Lime + Off-White
    ═══════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
@@ -9,7 +9,7 @@
    MKDOCS OVERRIDES
    ════════════════════════════════════════════════════════ */
 
-/* Nuclear override — force ALL backgrounds to same dark */
+/* Nuclear override — force ALL backgrounds to warm dark */
 :root,
 [data-md-color-scheme="slate"],
 body,
@@ -19,32 +19,32 @@ body,
 .md-content__inner,
 .md-typeset,
 .md-container {
-    --md-default-bg-color: #0d1117 !important;
-    background-color: #0d1117 !important;
+    --md-default-bg-color: #161412 !important;
+    background-color: #161412 !important;
 }
 
 .md-header {
-    background-color: #0d1117 !important;
-    border-bottom: 1px solid #454d56 !important;
+    background-color: #161412 !important;
+    border-bottom: 1px solid #2A2523 !important;
     box-shadow: none !important;
 }
 
-/* Logo in header — force white */
+/* Logo in header — warm off-white */
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
-    filter: brightness(0) invert(1) !important;
+    filter: brightness(0) invert(0.95) sepia(0.05) !important;
     height: 1.2rem !important;
     width: auto !important;
 }
 
 .md-tabs {
-    background-color: #0d1117 !important;
-    border-bottom: 1px solid #373e47 !important;
+    background-color: #161412 !important;
+    border-bottom: 1px solid #221F1D !important;
 }
 
 .md-header__link,
 .md-tabs__link {
-    color: #a1adb8 !important;
+    color: #8C857E !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 500 !important;
     font-size: 0.7rem !important;
@@ -53,36 +53,36 @@ body,
 
 .md-tabs__link--active,
 .md-header__link:hover {
-    color: #e6edf3 !important;
+    color: #F2EFE9 !important;
 }
 
 .md-search__form {
-    background-color: #161b22 !important;
-    border: 1px solid #454d56 !important;
+    background-color: #1F1C1A !important;
+    border: 1px solid #2A2523 !important;
     border-radius: 0 !important;
 }
 
 .md-sidebar {
-    background-color: #0d1117 !important;
+    background-color: #161412 !important;
 }
 
 .md-nav__item .md-nav__link {
-    color: #a1adb8 !important;
+    color: #8C857E !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.7rem !important;
 }
 
 .md-nav__item .md-nav__link--active {
-    color: #818cf8 !important;
+    color: #D4FF5F !important;
 }
 
 .md-footer {
-    background-color: #0d1117 !important;
-    border-top: 1px solid #32383f !important;
+    background-color: #161412 !important;
+    border-top: 1px solid #221F1D !important;
 }
 
 .md-footer-meta {
-    background-color: #0d1117 !important;
+    background-color: #161412 !important;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -90,26 +90,26 @@ body,
    ════════════════════════════════════════════════════════ */
 
 :root {
-    --fwd-bg: #0d1117;
-    --fwd-surface: #0d1117;
-    --fwd-surface-2: #161b22;
-    --fwd-surface-3: #1c2333;
-    --fwd-border: #454d56;
-    --fwd-border-bright: #636c76;
-    --fwd-border-subtle: #32383f;
-    --fwd-text: #d8dee5;
-    --fwd-text-bright: #eceff3;
-    --fwd-text-muted: #a1adb8;
-    --fwd-text-dim: #848d96;
-    --fwd-accent: #a5b4fc;
-    --fwd-accent-dim: rgba(165,180,252,0.12);
-    --fwd-success: #3fb950;
-    --fwd-success-dim: rgba(63,185,80,0.10);
-    --fwd-danger: #f85149;
-    --fwd-danger-dim: rgba(248,81,73,0.10);
-    --fwd-warning: #d29922;
-    --fwd-warning-dim: rgba(210,153,34,0.10);
-    --fwd-neutral: #848d96;
+    --fwd-bg: #161412;
+    --fwd-surface: #1F1C1A;
+    --fwd-surface-2: #252220;
+    --fwd-surface-3: #2A2725;
+    --fwd-border: #2A2523;
+    --fwd-border-bright: #3D3835;
+    --fwd-border-subtle: #221F1D;
+    --fwd-text: #C9C3BB;
+    --fwd-text-bright: #F2EFE9;
+    --fwd-text-muted: #8C857E;
+    --fwd-text-dim: #6B6560;
+    --fwd-accent: #D4FF5F;
+    --fwd-accent-dim: rgba(212,255,95,0.12);
+    --fwd-success: #D4FF5F;
+    --fwd-success-dim: rgba(212,255,95,0.10);
+    --fwd-danger: #FF5F5F;
+    --fwd-danger-dim: rgba(255,95,95,0.10);
+    --fwd-warning: #FFB05F;
+    --fwd-warning-dim: rgba(255,176,95,0.10);
+    --fwd-neutral: #6B6560;
     --fwd-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 
@@ -346,19 +346,19 @@ body,
 .dashboard .badge--success {
     background: var(--fwd-success-dim);
     color: var(--fwd-success);
-    border: 1px solid rgba(63,185,80,0.25);
+    border: 1px solid rgba(212,255,95,0.25);
 }
 
 .dashboard .badge--danger {
     background: var(--fwd-danger-dim);
     color: var(--fwd-danger);
-    border: 1px solid rgba(248,81,73,0.25);
+    border: 1px solid rgba(255,95,95,0.25);
 }
 
 .dashboard .badge--warning {
     background: var(--fwd-warning-dim);
     color: var(--fwd-warning);
-    border: 1px solid rgba(210,153,34,0.25);
+    border: 1px solid rgba(255,176,95,0.25);
 }
 
 .dashboard .badge--neutral {
@@ -370,7 +370,7 @@ body,
 .dashboard .badge--accent {
     background: var(--fwd-accent-dim);
     color: var(--fwd-accent);
-    border: 1px solid rgba(165,180,252,0.25);
+    border: 1px solid rgba(212,255,95,0.25);
 }
 
 /* ════════════════════════════════════════════════════════
