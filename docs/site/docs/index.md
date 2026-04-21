@@ -1,86 +1,90 @@
 ---
 title: Mission Control
-custom_css:
-  - stylesheets/dashboard.css
 ---
 
 <div class="dashboard">
 
 <!-- ── Header ── -->
 <div class="dash-header">
-<h1>🎯 Forward V5</h1>
-<span class="dash-phase">Phase 8 ⭐ LIVE · Day 2/14 · Equity: 99.99€</span>
+<h1><span class="accent">→</span> FORWARD V5</h1>
+<div class="dash-meta">
+<span><span class="live-dot"></span>PHASE 8 LIVE</span>
+<span>DAY 2/14</span>
+<span>EQUITY 99.99€</span>
+</div>
 </div>
 
-<!-- ── Status Board ── -->
-<p class="section-title">System Status</p>
+<!-- ── System Status ── -->
+<div class="section-label">System</div>
 <div class="grid-3">
 
-<div class="status-card">
+<div class="card glow-success status-card">
   <div>
-    <div class="label">Engine</div>
-    <div class="sublabel">Paper Trading, REST Polling</div>
+    <div class="status-label">ENGINE</div>
+    <div class="status-sub">Paper Trading · REST Polling · 60s</div>
   </div>
-  <span class="badge badge--success">🟢 RUNNING</span>
+  <span class="badge badge--success">● RUNNING</span>
 </div>
 
-<div class="status-card">
+<div class="card glow-success status-card">
   <div>
-    <div class="label">Watchdog V2</div>
-    <div class="sublabel">Hourly check, circuit breaker</div>
+    <div class="status-label">WATCHDOG</div>
+    <div class="status-sub">V2 · Circuit Breaker · Hourly</div>
   </div>
-  <span class="badge badge--success">✅ OK</span>
+  <span class="badge badge--success">● OK</span>
 </div>
 
-<div class="status-card">
+<div class="card glow-success status-card">
   <div>
-    <div class="label">Database</div>
-    <div class="sublabel">30,144 candles</div>
+    <div class="status-label">DATABASE</div>
+    <div class="status-sub">30,144 candles · 6 assets</div>
   </div>
-  <span class="badge badge--success">✅ HEALTHY</span>
+  <span class="badge badge--success">● HEALTHY</span>
 </div>
 
 </div>
 
 <!-- ── Key Metrics ── -->
-<p class="section-title">Key Metrics</p>
+<div class="section-label">Metrics</div>
 <div class="grid-4">
 
-<div class="metric-card">
+<div class="card metric-card">
   <div class="metric-label">Equity</div>
   <div class="metric-value">99.99€</div>
-  <div class="metric-sub">Start: 100.00€</div>
+  <div class="metric-sub">START: 100.00€</div>
 </div>
 
-<div class="metric-card">
+<div class="card metric-card">
   <div class="metric-label">P&L</div>
   <div class="metric-value positive">+0.00€</div>
-  <div class="metric-sub">Fees deducted</div>
+  <div class="metric-sub">FEES DEDUCTED</div>
 </div>
 
-<div class="metric-card">
+<div class="card metric-card">
   <div class="metric-label">Trades</div>
   <div class="metric-value">2</div>
-  <div class="metric-sub">Target: ≥10</div>
+  <div class="progress-bar"><div class="progress-fill accent" style="width:20%"></div></div>
+  <div class="metric-sub">TARGET: ≥10</div>
 </div>
 
-<div class="metric-card">
+<div class="card metric-card">
   <div class="metric-label">Drawdown</div>
   <div class="metric-value">0.01%</div>
-  <div class="metric-sub">Limit: ≤25%</div>
+  <div class="progress-bar"><div class="progress-fill success" style="width:0.04%"></div></div>
+  <div class="metric-sub">LIMIT: ≤25%</div>
 </div>
 
 </div>
 
 <!-- ── Equity Curve ── -->
-<p class="section-title">Equity Curve</p>
-<div class="chart-placeholder">
-<span class="material-icons">show_chart</span><br>
-📈 Monitor V1 — Live equity chart coming soon
+<div class="section-label">Equity Curve</div>
+<div class="chart-area">
+<div class="chart-icon">📈</div>
+<div class="chart-text">MONITOR V1 — LIVE EQUITY CHART COMING SOON</div>
 </div>
 
 <!-- ── Phase Timeline ── -->
-<p class="section-title">Roadmap</p>
+<div class="section-label">Roadmap</div>
 <div class="phase-timeline">
 
 <div class="phase-step phase-step--done">
@@ -116,62 +120,44 @@ custom_css:
 </div>
 
 <!-- ── Open Position ── -->
-<p class="section-title">Open Positions</p>
+<div class="section-label">Open Position</div>
 
-| Asset | Side | Entry | Size | Leverage | Status |
-|-------|------|-------|------|----------|--------|
-| BTC | LONG | $76,567 | 0.000392 | 1.8x | 🟢 Open |
+| ASSET | SIDE | ENTRY | SIZE | LEV | STATUS |
+|-------|------|-------|------|-----|--------|
+| BTC | LONG | $76,567 | 0.000392 | 1.8x | ● OPEN |
 
 <!-- ── Quick Navigation ── -->
-<p class="section-title">Documentation</p>
-<div class="grid-3">
+<div class="section-label">Docs</div>
+<div class="grid-6">
 
 <a href="roadmap/" class="quick-link">
-  <span class="material-icons">map</span>
-  <div>
-    <div>Roadmap</div>
-    <div class="link-desc">Phases, milestones, progress</div>
-  </div>
+  <span class="link-icon">🗺️</span>
+  <div class="link-text">Roadmap<span class="link-desc">Phases & milestones</span></div>
 </a>
 
 <a href="economics/" class="quick-link">
-  <span class="material-icons">euro</span>
-  <div>
-    <div>Economics</div>
-    <div class="link-desc">Costs, break-even, fees</div>
-  </div>
+  <span class="link-icon">💰</span>
+  <div class="link-text">Economics<span class="link-desc">Costs & break-even</span></div>
 </a>
 
 <a href="test-suite/" class="quick-link">
-  <span class="material-icons">checklist</span>
-  <div>
-    <div>Test Suite</div>
-    <div class="link-desc">110 tests, 100% pass</div>
-  </div>
+  <span class="link-icon">🧪</span>
+  <div class="link-text">Test Suite<span class="link-desc">110 tests · 100% pass</span></div>
 </a>
 
 <a href="architecture/adr-005/" class="quick-link">
-  <span class="material-icons">layers</span>
-  <div>
-    <div>Three-Layer ADR</div>
-    <div class="link-desc">Foundry → Executor → Monitor</div>
-  </div>
+  <span class="link-icon">🏗️</span>
+  <div class="link-text">Architecture<span class="link-desc">Three-Layer ADR</span></div>
 </a>
 
 <a href="strategy-lab/baseline/" class="quick-link">
-  <span class="material-icons">science</span>
-  <div>
-    <div>Baseline Strategy</div>
-    <div class="link-desc">ADX+EMA MACD gold standard</div>
-  </div>
+  <span class="link-icon">🔬</span>
+  <div class="link-text">Baseline<span class="link-desc">ADX+EMA gold standard</span></div>
 </a>
 
 <a href="v2-design/" class="quick-link">
-  <span class="material-icons">auto_awesome</span>
-  <div>
-    <div>V2 Design</div>
-    <div class="link-desc">Regime, volatility, sentiment</div>
-  </div>
+  <span class="link-icon">🔮</span>
+  <div class="link-text">V2 Design<span class="link-desc">Regime & sentiment</span></div>
 </a>
 
 </div>

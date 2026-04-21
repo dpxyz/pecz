@@ -7,20 +7,9 @@ copyright: "Copyright &copy; 2026"
 theme:
   name: material
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+    - scheme: slate
       primary: indigo
       accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to dark mode
   features:
     - navigation.top
     - navigation.instant
