@@ -63,6 +63,12 @@ case "${1:---foreground}" in
         echo "   Press Ctrl+C to stop"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
+        # Rotate log on start (keep last 1MB, append fresh)
+        if [ -f "$LOG_FILE" ] && [ $(stat -f%z "$LOG_FILE" 2>/dev/null || stat -c%s "$LOG_FILE" 2>/dev/null || echo 0) -gt 1048576 ]; then
+            mv "$LOG_FILE" "${LOG_FILE}.old"
+            echo "[$(date -Iseconds)] Log rotated (${LOG_FILE}.old)" >> "$LOG_FILE"
+        fi
+
         restart_count=0
         first_start=$(date +%s)
 
