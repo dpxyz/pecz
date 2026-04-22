@@ -78,7 +78,7 @@ hide:
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 (function() {
-  const DATA_URL = 'monitor_data.json';
+  const DATA_URL = '/monitor_data.json';
   const PALETTE = {
     accent: '#D4FF5F',
     danger: '#FF5F5F',
