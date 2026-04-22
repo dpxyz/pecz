@@ -34,6 +34,21 @@
 - Jeder neue Indikator muss Pass-Rate verbessern
 - ATR-Filter abgelehnt (bewiesen: kein Improvement)
 
+### 6. Korrelations-Filter
+- V1 öffnet oft 5+ LONGs gleichzeitig — alle BTC-korreliert
+- V2: max 2 stark korrelierte Positionen gleichzeitig
+- Reduziert DD massiv ohne Return zu schneiden
+
+### 7. Re-Entry Logik
+- V1: Trailing Stop → fertig, kein Re-Entry
+- V2: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry möglich
+- Nicht sofort, aber auch nicht nie
+
+### 8. Regime-basierter Exit
+- Strong Trend (Score >65): weiter Trail 2.5-3%, Position atmen lassen
+- Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
+- Hoher Regime-Score = höhere Conviction = mehr Raum
+
 ---
 
 ## Sniper-Modul
