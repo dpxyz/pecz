@@ -145,6 +145,11 @@ title: Mission Control
   <div class="link-text">economics<span class="link-desc">costs & break-even</span></div>
 </a>
 
+<a href="dashboard/" class="quick-link">
+  <span class="link-icon">📊</span>
+  <div class="link-text">live monitor<span class="link-desc">quity curve + chart</span></div>
+</a>
+
 <a href="test-suite/" class="quick-link">
   <span class="link-icon">🧪</span>
   <div class="link-text">test-suite<span class="link-desc">297 tests · 81% cov</span></div>
