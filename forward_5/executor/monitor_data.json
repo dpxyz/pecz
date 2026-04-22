@@ -1,24 +1,24 @@
 {
   "summary": {
-    "equity": 99.63037775585062,
+    "equity": 99.1558618136715,
     "start_equity": 100.0,
     "peak_equity": 100.0,
-    "pnl": -0.36962224414938305,
-    "pnl_pct": -0.36962224414938305,
-    "unrealized_pnl": -0.2720918897006984,
-    "mtm_equity": 99.35828586614991,
-    "drawdown_pct": 0.36962224414938305,
+    "pnl": -0.8441381863284931,
+    "pnl_pct": -0.8441381863284931,
+    "unrealized_pnl": 0.5399773000354214,
+    "mtm_equity": 99.69583911370692,
+    "drawdown_pct": 0.8441381863284931,
     "guard_state": "RUNNING",
-    "consecutive_losses": 0,
-    "total_trades": 1,
+    "consecutive_losses": 2,
+    "total_trades": 3,
     "wins": 1,
-    "losses": 0,
-    "win_rate": 100.0,
-    "total_pnl": 0.1495414619246472,
-    "n_open_positions": 6,
-    "uptime_hours": 3.6,
-    "last_candle": "2026-04-22T16:00:00+00:00",
-    "timestamp": "2026-04-22T16:57:05.416028+00:00"
+    "losses": 2,
+    "win_rate": 33.33333333333333,
+    "total_pnl": -0.32497448025446307,
+    "n_open_positions": 4,
+    "uptime_hours": 3.8,
+    "last_candle": "2026-04-22T17:00:00+00:00",
+    "timestamp": "2026-04-22T17:12:12.217849+00:00"
   },
   "equity_curve": [
     {
@@ -172,6 +172,54 @@
       "drawdown_pct": -0.7003247394822694,
       "guard_state": "RUNNING",
       "n_positions": 6
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": -0.06566822816472542,
+      "drawdown_pct": 0.43529047231410806,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.32240371360285,
+      "unrealized_pnl": 0.09605009076752516,
+      "drawdown_pct": 0.5815461956296275,
+      "guard_state": "RUNNING",
+      "n_positions": 5
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.1558618136715,
+      "unrealized_pnl": 0.25364952377118966,
+      "drawdown_pct": 0.5904886625573056,
+      "guard_state": "RUNNING",
+      "n_positions": 4
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.1558618136715,
+      "unrealized_pnl": 0.25364952377118966,
+      "drawdown_pct": 0.5904886625573056,
+      "guard_state": "RUNNING",
+      "n_positions": 4
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.1558618136715,
+      "unrealized_pnl": 0.25364952377118966,
+      "drawdown_pct": 0.5904886625573056,
+      "guard_state": "RUNNING",
+      "n_positions": 4
+    },
+    {
+      "ts": 1776873600000,
+      "equity": 99.1558618136715,
+      "unrealized_pnl": 0.28658104638030946,
+      "drawdown_pct": 0.5575571399481873,
+      "guard_state": "RUNNING",
+      "n_positions": 4
     }
   ],
   "positions": [
@@ -179,10 +227,10 @@
       "symbol": "BTCUSDT",
       "entry_price": 76426.6419,
       "entry_time": 1776816000000,
-      "peak_price": 79367.0,
+      "peak_price": 79424.0,
       "size": 0.00039053881861603895,
-      "unrealized_pnl": 0.8698072210685691,
-      "mark_price": 78668.0,
+      "unrealized_pnl": 0.9892905886869477,
+      "mark_price": 78974.0,
       "entry_ts": 1776816000000
     },
     {
@@ -196,23 +244,13 @@
       "entry_ts": 1776823200000
     },
     {
-      "symbol": "SOLUSDT",
-      "entry_price": 88.3778369,
-      "entry_time": 1776841200000,
-      "peak_price": 89.6,
-      "size": 0.2814217546114249,
-      "unrealized_pnl": -0.16632219878546126,
-      "mark_price": 87.8,
-      "entry_ts": 1776841200000
-    },
-    {
       "symbol": "AVAXUSDT",
       "entry_price": 9.58855876,
       "entry_time": 1776852000000,
       "peak_price": 9.58855876,
       "size": 1.729172901475167,
-      "unrealized_pnl": -0.14059832236632602,
-      "mark_price": 9.5082,
+      "unrealized_pnl": -0.08993862282970629,
+      "mark_price": 9.5375,
       "entry_ts": 1776852000000
     },
     {
@@ -221,22 +259,34 @@
       "entry_time": 1776852000000,
       "peak_price": 0.09841,
       "size": 253.35740829679887,
-      "unrealized_pnl": -0.32767889193399286,
-      "mark_price": 0.096878,
+      "unrealized_pnl": -0.20076587018653327,
+      "mark_price": 0.097379,
       "entry_ts": 1776852000000
-    },
-    {
-      "symbol": "ETHUSDT",
-      "entry_price": 2423.2423,
-      "entry_time": 1776866400000,
-      "peak_price": 2447.9,
-      "size": 0.012332793865861369,
-      "unrealized_pnl": -0.34869090204820063,
-      "mark_price": 2395.4,
-      "entry_ts": 1776866400000
     }
   ],
   "recent_trades": [
+    {
+      "timestamp": 1776877233,
+      "event": "EXIT",
+      "symbol": "SOLUSDT",
+      "price": 87.7992192,
+      "size": 0.2814217546114249,
+      "equity": 0.0,
+      "pnl": -0.16654189993134627,
+      "guard_state": "RUNNING",
+      "reason": "Trailing stop hit: low=87.80 <= stop=87.81 (peak=89.60, -2.0%)"
+    },
+    {
+      "timestamp": 1776877228,
+      "event": "EXIT",
+      "symbol": "ETHUSDT",
+      "price": 2398.7021058,
+      "size": 0.012332793865861369,
+      "equity": 0.0,
+      "pnl": -0.30797404224776403,
+      "guard_state": "RUNNING",
+      "reason": "Trailing stop hit: low=2394.50 <= stop=2398.94 (peak=2447.90, -2.0%)"
+    },
     {
       "timestamp": 1776870027,
       "event": "ENTRY",
@@ -304,5 +354,5 @@
       "reason": "Entry at 88.38"
     }
   ],
-  "generated_at": "2026-04-22T16:57:05.416529+00:00"
+  "generated_at": "2026-04-22T17:12:12.218459+00:00"
 }
