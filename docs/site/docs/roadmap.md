@@ -46,87 +46,124 @@ title: Roadmap
 
 <!-- ── Phase 0-6 ── -->
 <div class="card glow-success">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--success">✓ done</span>
-</div>
-<div style="margin-top:0.5rem;font-size:0.75rem;">
-**Phase 0–6: Foundation** — skeleton → core → observability → boundaries → operations → test strategy
-</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 0–6: Foundation</span>
+    <span class="badge badge--success">✓ done</span>
+  </div>
+  <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--fwd-text-muted);">
+    skeleton → core → observability → boundaries → operations → test strategy
+  </div>
 </div>
 
 <!-- ── Phase 7 ── -->
 <div class="card glow-success" style="margin-top:0.5rem;">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--success">✓ done</span>
-</div>
-<div style="margin-top:0.5rem;font-size:0.75rem;">
-**Phase 7: Strategy Lab** — gold standard found
-
-| metric | unfiltered | adx+ema |
-|--------|-----------|---------|
-| pass rate | 12% | **75%** |
-| avg dd | 22.7% | **14.1%** |
-| max cl | 9.9 | **6.5** |
-
-</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 7: Strategy Lab</span>
+    <span class="badge badge--success">✓ done</span>
+  </div>
+  <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--fwd-text-muted);">Gold standard found: ADX+EMA</div>
+  <div class="grid-3" style="gap:0.3rem;margin-top:0.4rem;">
+    <div class="card" style="padding:0.3rem 0.5rem;text-align:center;">
+      <div style="font-size:0.6rem;color:var(--fwd-text-muted);">pass rate</div>
+      <div style="font-size:0.85rem;font-weight:600;color:var(--fwd-accent);">75%</div>
+      <div style="font-size:0.55rem;color:var(--fwd-text-dim);">vs 12% unfiltered</div>
+    </div>
+    <div class="card" style="padding:0.3rem 0.5rem;text-align:center;">
+      <div style="font-size:0.6rem;color:var(--fwd-text-muted);">avg dd</div>
+      <div style="font-size:0.85rem;font-weight:600;color:var(--fwd-accent);">14.1%</div>
+      <div style="font-size:0.55rem;color:var(--fwd-text-dim);">vs 22.7% unfiltered</div>
+    </div>
+    <div class="card" style="padding:0.3rem 0.5rem;text-align:center;">
+      <div style="font-size:0.6rem;color:var(--fwd-text-muted);">max cl</div>
+      <div style="font-size:0.85rem;font-weight:600;color:var(--fwd-accent);">6.5</div>
+      <div style="font-size:0.55rem;color:var(--fwd-text-dim);">vs 9.9 unfiltered</div>
+    </div>
+  </div>
 </div>
 
 <!-- ── Phase 8 ── -->
 <div class="card glow-accent" style="margin-top:0.5rem;">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--accent">● active</span>
-<span style="font-size:0.65rem;color:var(--fwd-text-dim);">DAY 2/14</span>
-</div>
-<div style="margin-top:0.5rem;font-size:0.75rem;">
-**Phase 8: Paper Trading**
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 8: Paper Trading</span>
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <span class="badge badge--accent">● active</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-dim);">DAY 3/14</span>
+    </div>
+  </div>
 
-| component | status |
-|-----------|--------|
-| executor v1 | ✓ 7 modules + 110 tests |
-| paper engine | ● running · rest polling |
-| watchdog v2 | ● hourly · circuit breaker |
-| housekeeping | ● daily 09:00 berlin |
-| monitor v1 | ○ next |
+  <div style="margin-top:0.4rem;" class="section-label">components</div>
+  <div class="grid-2" style="gap:0.3rem;">
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">executor v1</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">✓ 7 modules + 297 tests</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">paper engine</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">● running · rest</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">watchdog v2</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">● hourly · breaker</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">housekeeping</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">● daily 09:00</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">monitor v1</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">● live</span>
+    </div>
+  </div>
 
-**phase 1 criteria:**
+  <div style="margin-top:0.4rem;" class="section-label">phase 1 criteria</div>
+  <div class="grid-2" style="gap:0.3rem;">
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">trades</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">≥10 · 2 done</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">drawdown</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">≤25% · 0.51%</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">execution</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">≥95% · —</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">accounting</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">✅ · ✅</span>
+    </div>
+  </div>
 
-| criterion | target | current |
-|-----------|--------|---------|
-| trades | ≥10 | 2 |
-| drawdown | ≤25% | 0.01% |
-| execution | ≥95% | — |
-| accounting | ✅ | ✅ |
-
-<div class="progress-bar" style="margin-top:0.5rem;"><div class="progress-fill accent" style="width:14%"></div></div>
-<div style="font-size:0.6rem;color:var(--fwd-text-dim);margin-top:0.2rem;">14% complete (2/14 days)</div>
-</div>
+  <div class="progress-bar" style="margin-top:0.5rem;"><div class="progress-fill accent" style="width:21%"></div></div>
+  <div style="font-size:0.6rem;color:var(--fwd-text-dim);margin-top:0.2rem;">21% complete (3/14 days)</div>
 </div>
 
 <!-- ── Phase 9 ── -->
 <div class="card glow-neutral" style="margin-top:0.5rem;">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--neutral">○ next</span>
-</div>
-<div style="margin-top:0.5rem;font-size:0.75rem;">
-**Phase 9: Final Gate** — 14d testnet api: ≥5 orders, 0% api errors, kill-switch via api
-
-**pre-requisites (ADR-008):**
-- [ ] heartbeat file (engine → 30s, watchdog → 60s)
-- [ ] position recovery after restart
-- [ ] external uptime monitor (UptimeRobot + Discord)
-- [ ] escalation ladder implemented
-- → [ADR-008: Crash & Uptime](../architecture/adr-008/)
-</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 9: Final Gate</span>
+    <span class="badge badge--neutral">○ next</span>
+  </div>
+  <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--fwd-text-muted);">14d testnet api: ≥5 orders, 0% api errors, kill-switch via api</div>
+  <div style="margin-top:0.3rem;font-size:0.7rem;color:var(--fwd-text-dim);">pre-reqs (ADR-008):</div>
+  <div style="margin-top:0.2rem;" class="grid-2" style="gap:0.2rem;">
+    <div style="font-size:0.68rem;color:var(--fwd-text-muted);">☐ heartbeat file</div>
+    <div style="font-size:0.68rem;color:var(--fwd-text-muted);">☐ position recovery</div>
+    <div style="font-size:0.68rem;color:var(--fwd-text-muted);">☐ uptime monitor</div>
+    <div style="font-size:0.68rem;color:var(--fwd-text-muted);">☐ escalation ladder</div>
+  </div>
+  <div style="margin-top:0.2rem;font-size:0.68rem;">→ <a href="../architecture/adr-008/" style="color:var(--fwd-accent);">ADR-008: Crash & Uptime</a></div>
 </div>
 
 <!-- ── Phase 10 ── -->
 <div class="card glow-neutral" style="margin-top:0.5rem;">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span class="badge badge--neutral">○ planned</span>
-</div>
-<div style="margin-top:0.5rem;font-size:0.75rem;">
-**Phase 10: V2 Strategy** — regime-score + volatility-parity + sentiment kill-switch → [v2 design](../v2-design/)
-</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 10: V2 Strategy</span>
+    <span class="badge badge--neutral">○ planned</span>
+  </div>
+  <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--fwd-text-muted);">regime-score + volatility-parity + sentiment kill-switch</div>
+  <div style="margin-top:0.2rem;font-size:0.68rem;">→ <a href="../v2-design/" style="color:var(--fwd-accent);">V2 Design</a></div>
 </div>
 
 </div>
