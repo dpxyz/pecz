@@ -282,6 +282,13 @@ hide:
     });
   }
 
+  function smartDec(v) {
+    if (v == null) return '—';
+    if (v < 1) return v.toFixed(6);
+    if (v < 100) return v.toFixed(4);
+    return v.toFixed(2);
+  }
+
   function renderPositions(positions) {
     const tbody = document.getElementById('positions-body');
     if (!positions || positions.length === 0) {
@@ -295,8 +302,8 @@ hide:
       const statusColor = PALETTE.accent;
       return '<tr style="border-bottom:1px solid var(--fwd-border-subtle);">' +
         '<td style="padding:0.5rem; color:var(--fwd-text-bright);">' + sym + '</td>' +
-        '<td style="padding:0.5rem; text-align:right;">' + fmt(p.entry_price, p.entry_price < 1 ? 6 : 2) + '</td>' +
-        '<td style="padding:0.5rem; text-align:right;">' + fmt(p.mark_price, p.mark_price < 1 ? 6 : 2) + '</td>' +
+        '<td style="padding:0.5rem; text-align:right;">' + smartDec(p.entry_price) + '</td>' +
+        '<td style="padding:0.5rem; text-align:right;">' + smartDec(p.mark_price) + '</td>' +
         '<td style="padding:0.5rem; text-align:right; color:' + pnlColor + ';">' + (upnl >= 0 ? '+' : '') + fmtEur(upnl) + '</td>' +
         '<td style="padding:0.5rem;"><span style="color:' + statusColor + ';">● open</span></td>' +
         '</tr>';
@@ -317,8 +324,9 @@ hide:
       const timeStr = ts.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'}) + ' ' +
                       ts.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
       const icon = t.event === 'EXIT' ? '🔴' : '🟢';
+      const dec = t.price < 1 ? 6 : (t.price < 100 ? 4 : 2);
       const pnlStr = t.event === 'EXIT' ? ' <span style="color:' + pnlColor + ';">' + (pnl >= 0 ? '+' : '') + fmtEur(pnl) + '</span>' : '';
-      return '<div style="margin-bottom:0.25rem;">' + icon + ' ' + timeStr + ' ' + sym + ' @ ' + fmt(t.price, t.price < 1 ? 6 : 2) + pnlStr + '</div>';
+      return '<div style="margin-bottom:0.25rem;">' + icon + ' ' + timeStr + ' ' + sym + ' @ ' + t.price.toFixed(dec) + pnlStr + '</div>';
     }).join('');
   }
 

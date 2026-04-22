@@ -54,7 +54,7 @@ class MonitorV1:
             conn.close()
 
     def get_open_positions(self) -> list[dict]:
-        """Get all open positions with current mark prices."""
+        """Get all open positions with current mark prices and calculated uPnL."""
         conn = self._get_conn()
         try:
             rows = conn.execute("""
@@ -63,17 +63,23 @@ class MonitorV1:
                 WHERE state = 'IN_LONG'
                 ORDER BY entry_time ASC
             """).fetchall()
+            levs = {'BTCUSDT':1.8,'ETHUSDT':1.8,'SOLUSDT':1.5,'AVAXUSDT':1.0,'DOGEUSDT':1.5,'ADAUSDT':1.5}
             positions = []
             for r in rows:
-                # Get latest price
+                sym, entry, entry_time, peak, size, _ = r
+                # Get latest mark price
                 latest = conn.execute("""
                     SELECT close FROM candles
                     WHERE symbol = ? ORDER BY ts DESC LIMIT 1
-                """, (r[0],)).fetchone()
-                mark = latest[0] if latest else r[1]
+                """, (sym,)).fetchone()
+                mark = latest[0] if latest else entry
+                # Calculate unrealized PnL with exit fee
+                lev = levs.get(sym, 1.0)
+                exit_fee = size * mark * 0.0001 * lev
+                upnl = (mark - entry) * size - exit_fee
                 positions.append({
-                    "symbol": r[0], "entry_price": r[1], "entry_time": r[2],
-                    "peak_price": r[3], "size": r[4], "unrealized_pnl": r[5],
+                    "symbol": sym, "entry_price": entry, "entry_time": entry_time,
+                    "peak_price": peak, "size": size, "unrealized_pnl": upnl,
                     "mark_price": mark,
                 })
             return positions
@@ -247,7 +253,10 @@ class MonitorV1:
             for p in positions:
                 sym = p["symbol"].replace("USDT", "")
                 upnl = p["unrealized_pnl"]
-                pos_lines.append(f"  {sym}: LONG @ {p['entry_price']:.2f} → {p['mark_price']:.2f} (uPnL: {upnl:+.2f}€)")
+                ep = p['entry_price']
+                mp = p['mark_price']
+                dec = 6 if ep < 1 else (4 if ep < 100 else 2)
+                pos_lines.append(f"  {sym}: LONG @ {ep:.{dec}f} → {mp:.{dec}f} (uPnL: {upnl:+.2f}€)")
         else:
             pos_lines.append("  No open positions")
 
@@ -256,7 +265,8 @@ class MonitorV1:
         for t in trades[:5]:
             if t["event"] == "EXIT":
                 sym = t["symbol"].replace("USDT", "")
-                trade_lines.append(f"  {sym}: {t['event']} @ {t['price']:.2f} PnL={t['pnl']:+.2f}€")
+                dec = 6 if t["price"] < 1 else (4 if t["price"] < 100 else 2)
+                trade_lines.append(f"  {sym}: {t['event']} @ {t['price']:.{dec}f} PnL={t['pnl']:+.2f}€")
 
         body = "\n".join([
             equity_line,
