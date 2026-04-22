@@ -46,7 +46,7 @@ title: Mission Control
 
 <!-- ── Key Metrics ── -->
 <div class="section-label">metrics</div>
-<div class="grid-4">
+<div class="grid-2">
 
 <div class="card metric-card">
   <div class="metric-label">equity</div>
@@ -55,9 +55,21 @@ title: Mission Control
 </div>
 
 <div class="card metric-card">
-  <div class="metric-label">pnl</div>
+  <div class="metric-label">mtm equity</div>
+  <div class="metric-value" id="idx-mtm">—</div>
+  <div class="metric-sub">incl. unrealized</div>
+</div>
+
+<div class="card metric-card">
+  <div class="metric-label">realized pnl</div>
   <div class="metric-value" id="idx-pnl">—</div>
   <div class="metric-sub">net · fees deducted</div>
+</div>
+
+<div class="card metric-card">
+  <div class="metric-label">unrealized pnl</div>
+  <div class="metric-value" id="idx-upnl">—</div>
+  <div class="metric-sub">open positions</div>
 </div>
 
 <div class="card metric-card">
@@ -215,11 +227,21 @@ title: Mission Control
       const eqEl = document.getElementById('idx-equity');
       if (eqEl) eqEl.textContent = fmtEur(s.equity);
 
+      const mtmEl = document.getElementById('idx-mtm');
+      if (mtmEl) mtmEl.textContent = fmtEur(s.mtm_equity || s.equity);
+
       const pnlEl = document.getElementById('idx-pnl');
       if (pnlEl) {
         const pnl = s.pnl || 0;
         pnlEl.textContent = (pnl >= 0 ? '+' : '') + fmtEur(pnl);
         pnlEl.style.color = pnl >= 0 ? P.accent : P.danger;
+      }
+
+      const upnlEl = document.getElementById('idx-upnl');
+      if (upnlEl) {
+        const upnl = s.unrealized_pnl || 0;
+        upnlEl.textContent = (upnl >= 0 ? '+' : '') + fmtEur(upnl);
+        upnlEl.style.color = upnl >= 0 ? P.accent : P.danger;
       }
 
       const trEl = document.getElementById('idx-trades');
