@@ -157,62 +157,146 @@ Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Rankin
 
 ---
 
-## Regime-Score — Proof of Concept
+## V2 Module
 
-### Kombination
-| Komponente | Was | Range  |
-|------------|-----|--------|
-| ADX-14 | Trendstärke | 0-100  |
-| ATR-Ratio | ATR / ATR_SMA20 (Volatilitäts-Explosion) | 0.5-2.0 |
-| EMA-Slope | Steigung der EMA-50 | -1 bis +1 |
+### Modul 1: Regime Detection (Stufe 1 — Kern)
 
-### Mapping
-- **< 30**: Range → kein Trade, bestehende tighten
-- **30-70**: Trend → normal traden (V1 Baseline)
-- **> 70**: Strong Trend → Position vergrößern (V2 Alpha)
+**Ziel**: Jedes Candle einen Regime-Score 0-100 berechnen
 
-### Warum
-- ADX allein = binär (drüber/drunter). Score = kontinuierlich.
-- ATR-Ratio fängt Crash-Regime (plötzliche Vol-Explosion)
-- EMA-Slope unterscheidet Trend von flat-Trend
+**Score-Formel (Basis)**:
+```
+regime_score = (
+  adx_score * 0.45 +     # ADX normalisiert auf 0-100
+  vol_score * 0.25 +     # ATR-Ratio: niedrig=stabil, hoch=crash
+  slope_score * 0.30     # EMA-Slope normalisiert auf 0-100
+)
+```
 
-## Asset-Ranking (Alpha Stack #1)
+**Komponenten**:
+| Signal | Quelle | Berechnung | Range |
+|--------|--------|------------|-------|
+| adx_score | ADX-14 | `min(adx / 50 * 100, 100)` | 0-100 |
+| vol_score | ATR-Ratio | `ATR / ATR_SMA20` → invertiert | 0-100 |
+| slope_score | EMA-50 | Steigung normalisiert | 0-100 |
 
-- ROC-Ranking: Welches Asset hat stärksten Momentum?
-- Statt 6 Assets gleich: Top 3-4 bevorzugen
-- Reduziert Noise von schwachen Signalen
-- Kombinierbar mit Regime-Score: nur Top-Assets in Trend-Phasen
+**Gewichtung**: 45/25/30 — ADX dominiert weil Trendstärke der wichtigste Indikator ist
+
+**Regime-Mapping**:
+| Score | Regime | Aktion |
+|-------|--------|--------|
+| 0-30 | Range | Kein Entry, bestehende Positionen tighten |
+| 30-70 | Trend | V1 normal traden |
+| 70-100 | Strong Trend | Sniper-Modul kann aktivieren |
+
+**Gemma4-Einsatz (Stufe 1)**:
+- Kein KI-Regime in Stufe 1 — deterministische Formel reicht
+- Gemma4 evaluiert später ob KI-Regime die Formel verbessern kann (Stufe 3)
+- Vorteil: Deterministisch, reproduzierbar, kein API-Call pro Candle
+
+**Backtest-Validierung**:
+- Gleicher Gate wie V1: ≥75% Pass-Rate, CL≤12, DD≤20%
+- Vergleiche: Regime-gefiltert vs ungefiltert
+- Erwartung: ~70% weniger Trades, ~50% weniger DD
 
 ---
 
-## Sentiment Architecture
+### Modul 2: Sentiment (Stufe 3 — Advanced)
 
-### Data Sources (Priority)
+**Ziel**: KI-basierter Kill-Switch bei Crash-Szenarien
 
-| Priority | Source | Format | Update |
-|----------|--------|--------|--------|
-| **Hoch** | Crypto News (CoinDesk, CryptoSlate) | KI-Score 0-100 | Echtzeit |
-| **Mittel** | Macro (Fed, CPI, DXY) | Regime-Flag | Täglich |
-| **Mittel** | On-Chain (Exchange Netflow) | Flow-Rate | Täglich |
-| **Niedrig** | Social (Fear&Greed, Reddit) | Index-Wert | Stündlich |
-
-### Processing Pipeline
-
+**Pipeline**:
 ```
-News API → KI Extraction (JSON-Mode) → Sentiment Score (0-100)
-                                            ↓
-                                    Position Sizing Filter
-                                    Score ≤ 30 → Half Position
-                                    Score ≤ 15 → No Entry
-                                    Score > 50 → Full Position
+News API → Gemma4 JSON-Mode → Sentiment Score (0-100)
+                                        ↓
+                                Position Sizing Filter
+                                Score ≤ 30 → Half Position
+                                Score ≤ 15 → No Entry
+                                Score > 50 → Full Position
 ```
 
-### Fail-Safe Rules
+**Warum Gemma4, nicht GLM**:
+- Lokal, keine API-Kosten, keine Rate-Limits
+- Sentiment-Parsing ist einfacher als Strategy-Design
+- JSON-Mode funktioniert stabil auf Gemma4:31b
+- Keine Latenz — lokal in <1s statt Cloud-Roundtrip
 
-1. **KI-Extraction fails** → Score = 50 (neutral, kein Einfluss)
-2. **API timeout** → Letzter Score beibehalten (decay nach 4h → 50)
-3. **Widersprüchliche Signale** → Konservativster Score gewinnt
-4. **Niemals Upsizing** → Sentiment kann nur verkleinern, nie vergrößern
+**Warum erst Stufe 3**:
+- Sentiment ist ein Filter, kein Motor
+- Regime-Score (Stufe 1) filtert bereits Range-Trades raus
+- Sentiment fängt Black-Swans die Indikatoren verpassen
+- Aber: Black-Swans sind selten → schwer zu backtesten → braucht Live-Validierung
+
+**Fail-Safe**:
+- Gemma4 fail → Score = 50 (neutral)
+- API timeout → letzter Score beibehalten (decay nach 4h → 50)
+- Widersprüchliche Signale → konservativster Score
+- Niemals Upsizing — Sentiment kann nur verkleinern
+
+---
+
+### Modul 3: Asset Selection (Stufe 3 — Advanced)
+
+**Ziel**: ROC-Ranking der Assets statt Equal-weight
+
+**Basis (Stufe 1)**:
+- ROC-5/10/20 berechnen
+- Top 2-3 Assets bevorzugen
+- Rein mathematisch, keine KI nötig
+
+**Gemma4-Erweiterung (Stufe 3)**:
+- Momentum-Kontext verstehen: "BTC rallyt wegen ETF-News" vs. "BTC rallyt technisch"
+- News-Attribution: Welches Asset profitiert von welchem Event?
+- Nur wenn ROC-Baseline bewiesen ist
+
+---
+
+### Modul 4: Risk Management (Stufe 1-2)
+
+**Kein KI-Einsatz** — das ist Mathematik:
+
+| DD-Schwelle | Aktion |
+|-------------|--------|
+| > 10% | Alle Positionen halbieren |
+| > 15% | Keine neuen Entries (SOFT_PAUSE) |
+| > 20% | KILL (alles schließen) |
+
+**Korrelations-Filter (Stufe 2)**:
+- Max 2 stark korrelierte Positionen gleichzeitig
+- Stufe 3: Dynamische Rolling-Correlation statt statische Regel
+
+**Circuit-Breaker (Stufe 1)**:
+- 3 aufeinanderfolgende Sniper-Verluste → 48h Sniper-Pause
+
+---
+
+### Modul 5: Sniper (Stufe 1 — Kern)
+
+**Siehe oben** — detailliert ausgearbeitet im Sniper-Modul Abschnitt
+
+Entry-Stack: Regime > 70, Asset-Ranking #1-2, Sentiment > 50, MACD, EMA-Slope > 0.5
+Exit: Trail 2.5%, Max Hold 24h, Regime < 50 = raus, Regime 50-70 = Downgrade
+Capital: max 30€ × 5x = 150€ Notional
+Circuit-Breaker: 3 Verluste → 48h Pause
+
+---
+
+### KI-Einsatz-Strategie
+
+| Modul | Stufe | KI | Warum |
+|-------|-------|----|-------|
+| Regime Detection | 1 | Nein | Deterministisch reicht, reproduzierbar |
+| Risk Management | 1-2 | Nein | Mathematik, keine Meinung |
+| Sniper | 1 | Nein | Regelbasiert, Regime-Score als Input |
+| Sentiment | 3 | **Gemma4** | News-Parsing, JSON-Mode, lokal |
+| Asset Selection | 3 | **Gemma4** | Momentum-Kontext, erst nach ROC-Baseline |
+| Korrelationsmatrix | 3 | Nein | Statistik, Rolling-Correlation |
+
+**Warum Gemma4 statt GLM-5.1**:
+- Lokal → keine API-Kosten, keine Rate-Limits
+- Schnell → <1s inferenz statt Cloud-Roundtrip
+- Ausreichend → Sentiment-Parsing braucht kein Flagship-Modell
+- Deterministisch → gleicher Input = gleicher Output (JSON-Mode)
+- GLM-5.1 cloud = Reserve für komplexe Aufgaben (z.B. ADR-Formulierung, Code-Review)
 
 ---
 
