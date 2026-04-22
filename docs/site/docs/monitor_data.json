@@ -1,0 +1,252 @@
+{
+  "summary": {
+    "equity": 99.63037775585062,
+    "start_equity": 100.0,
+    "peak_equity": 100.0,
+    "pnl": -0.36962224414938305,
+    "pnl_pct": -0.36962224414938305,
+    "drawdown_pct": 0.36962224414938305,
+    "guard_state": "RUNNING",
+    "consecutive_losses": 0,
+    "total_trades": 1,
+    "wins": 1,
+    "losses": 0,
+    "win_rate": 100.0,
+    "total_pnl": 0.1495414619246472,
+    "n_open_positions": 6,
+    "uptime_hours": 1.7,
+    "last_candle": "2026-04-22T15:00:00+00:00",
+    "timestamp": "2026-04-22T15:06:52.876540+00:00"
+  },
+  "equity_curve": [
+    {
+      "ts": 1776844840000,
+      "equity": 99.99626928311062,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1776852013000,
+      "equity": 99.99089741335034,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 2
+    },
+    {
+      "ts": 1776855613000,
+      "equity": 99.98923938575314,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 3
+    },
+    {
+      "ts": 1776855620000,
+      "equity": 99.98550907232628,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 4
+    },
+    {
+      "ts": 1776862832000,
+      "equity": 100.13505053425092,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 3
+    },
+    {
+      "ts": 1776863776635,
+      "equity": 99.63575711844975,
+      "unrealized_pnl": 0.0,
+      "drawdown_pct": 0.0,
+      "guard_state": "RUNNING",
+      "n_positions": 5
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63575711844975,
+      "unrealized_pnl": 1.1018208435892816,
+      "drawdown_pct": -0.7375779620390261,
+      "guard_state": "RUNNING",
+      "n_positions": 5
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.0993108107433582,
+      "drawdown_pct": -0.7296885665939783,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.2176843207878263,
+      "drawdown_pct": -0.8480620766384419,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1872953303222158,
+      "drawdown_pct": -0.8176730861728315,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1864308303301252,
+      "drawdown_pct": -0.8168085861807413,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776866400000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1864308303301252,
+      "drawdown_pct": -0.8168085861807413,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776866521950,
+      "equity": 99.63575711844975,
+      "unrealized_pnl": 1.1149051637162672,
+      "drawdown_pct": -0.7506622821660187,
+      "guard_state": "RUNNING",
+      "n_positions": 5
+    }
+  ],
+  "positions": [
+    {
+      "symbol": "BTCUSDT",
+      "entry_price": 76426.6419,
+      "entry_time": 1776816000000,
+      "peak_price": 79130.0,
+      "size": 0.00039053881861603895,
+      "unrealized_pnl": 0.9303298419210158,
+      "mark_price": 78823.0
+    },
+    {
+      "symbol": "ADAUSDT",
+      "entry_price": 0.254575455,
+      "entry_time": 1776823200000,
+      "peak_price": 0.25614,
+      "size": 97.70140056694807,
+      "unrealized_pnl": 0.016250478553499377,
+      "mark_price": 0.25478
+    },
+    {
+      "symbol": "SOLUSDT",
+      "entry_price": 88.3778369,
+      "entry_time": 1776841200000,
+      "peak_price": 89.6,
+      "size": 0.2814217546114249,
+      "unrealized_pnl": 0.07059937502975071,
+      "mark_price": 88.642
+    },
+    {
+      "symbol": "AVAXUSDT",
+      "entry_price": 9.58855876,
+      "entry_time": 1776852000000,
+      "peak_price": 9.58855876,
+      "size": 1.729172901475167,
+      "unrealized_pnl": -0.06417652306534812,
+      "mark_price": 9.5524
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "entry_price": 0.0981568147,
+      "entry_time": 1776852000000,
+      "peak_price": 0.09841,
+      "size": 253.35740829679887,
+      "unrealized_pnl": -0.14351568472759696,
+      "mark_price": 0.097605
+    },
+    {
+      "symbol": "ETHUSDT",
+      "entry_price": 2423.2423,
+      "entry_time": 1776866400000,
+      "peak_price": 2423.2423,
+      "size": 0.012332793865861369,
+      "unrealized_pnl": 0.11000644937411422,
+      "mark_price": 2432.6
+    }
+  ],
+  "recent_trades": [
+    {
+      "timestamp": 1776870027,
+      "event": "ENTRY",
+      "symbol": "ETHUSDT",
+      "price": 2423.2423,
+      "size": 0.012332793865861369,
+      "equity": 0.0,
+      "pnl": 0.0,
+      "guard_state": "RUNNING",
+      "reason": "Entry at 2423.24"
+    },
+    {
+      "timestamp": 1776862832,
+      "event": "EXIT",
+      "symbol": "ETHUSDT",
+      "price": 2424.8654892,
+      "size": 0.01237126852815011,
+      "equity": 0.0,
+      "pnl": 0.1495414619246472,
+      "guard_state": "RUNNING",
+      "reason": "Trailing stop hit: low=2406.30 <= stop=2425.11 (peak=2474.60, -2.0%)"
+    },
+    {
+      "timestamp": 1776855620,
+      "event": "ENTRY",
+      "symbol": "DOGEUSDT",
+      "price": 0.0981568147,
+      "size": 253.35740829679887,
+      "equity": 0.0,
+      "pnl": 0.0,
+      "guard_state": "RUNNING",
+      "reason": "Entry at 0.10"
+    },
+    {
+      "timestamp": 1776855613,
+      "event": "ENTRY",
+      "symbol": "AVAXUSDT",
+      "price": 9.58855876,
+      "size": 1.729172901475167,
+      "equity": 0.0,
+      "pnl": 0.0,
+      "guard_state": "RUNNING",
+      "reason": "Entry at 9.59"
+    },
+    {
+      "timestamp": 1776852013,
+      "event": "ENTRY",
+      "symbol": "ETHUSDT",
+      "price": 2412.34121,
+      "size": 0.01237126852815011,
+      "equity": 0.0,
+      "pnl": 0.0,
+      "guard_state": "RUNNING",
+      "reason": "Entry at 2412.34"
+    },
+    {
+      "timestamp": 1776844840,
+      "event": "ENTRY",
+      "symbol": "SOLUSDT",
+      "price": 88.3778369,
+      "size": 0.2814217546114249,
+      "equity": 0.0,
+      "pnl": 0.0,
+      "guard_state": "RUNNING",
+      "reason": "Entry at 88.38"
+    }
+  ],
+  "generated_at": "2026-04-22T15:06:52.877214+00:00"
+}

@@ -170,7 +170,7 @@ title: Mission Control
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 (function() {
-  const DATA_URL = 'https://raw.githubusercontent.com/dpxyz/pecz/main/forward_5/executor/monitor_data.json';
+  const DATA_URL = 'monitor_data.json';
   const P = {accent:'#D4FF5F',danger:'#FF5F5F',text:'#C9C3BB',muted:'#6B6560',surface:'#1F1C1A',border:'#352F2C'};
   let eqChart = null;
 
