@@ -1,7 +1,7 @@
 """
-Executor V1 — Data Feed
+Executor V1 - Data Feed
 Hybrid: REST polling for candles (reliable on testnet) + WS for live prices.
-Testnet WS candle feed is unreliable — we poll the REST API instead.
+Testnet WS candle feed is unreliable - we poll the REST API instead.
 """
 
 import asyncio
@@ -22,7 +22,7 @@ WS_URL_TESTNET = "wss://api.hyperliquid-testnet.xyz/ws"
 API_URL = "https://api.hyperliquid.xyz"
 API_URL_TESTNET = "https://api.hyperliquid-testnet.xyz"
 
-# ⛔ PAPER MODE — use Testnet
+# ⛔ PAPER MODE - use Testnet
 try:
     from paper_engine import PAPER_MODE as _PAPER_MODE
     PAPER_MODE = _PAPER_MODE
@@ -47,13 +47,15 @@ SYMBOL_MAP = {
 class DataFeed:
     def __init__(self, db_path: str = "executor/state.db",
                  assets: list[str] = None,
-                 on_candle=None):
+                 on_candle=None,
+                 engine_last_processed_ts: int = None):
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.assets = assets or ["BTCUSDT", "ETHUSDT"]
         self.on_candle = on_candle  # async callback(symbol, candle_data)
         self._running = False
         self._last_processed: dict[str, int] = {}  # symbol → last closed candle ts
+        self._engine_last_processed_ts = engine_last_processed_ts  # for gap recovery
         self._init_db()
 
     def _init_db(self):
@@ -78,29 +80,55 @@ class DataFeed:
     async def start(self):
         self._running = True
         mode_str = "⛔ TESTNET (Paper)" if PAPER_MODE else "🔴 MAINNET (REAL MONEY)"
-        log.info(f"DataFeed starting — {mode_str} — assets: {self.assets}")
+        log.info(f"DataFeed starting - {mode_str} - assets: {self.assets}")
         log.info(f"Candle source: REST API polling every {POLL_INTERVAL}s")
 
         # Backfill recent candles
         await self._backfill()
 
         # Initialize last-processed pointers from DB
-        # Set to last CLOSED candle (before current hour) so we process
-        # any missed candles from the gap, not the current partial.
+        # GAP RECOVERY: After a crash, the engine may have missed candles.
+        # We set _last_processed to the engine's last known state, so that
+        # any candles between that timestamp and now get replayed.
+        # The engine's _on_candle has dedup protection and won't re-process
+        # candles that were already handled.
+        #
+        # If engine_state_last_ts is provided (from state.db), use it.
+        # Otherwise fall back to last DB candle (no gap to replay).
         now_ms = int(time.time() * 1000)
         current_hour = (now_ms // 3600000) * 3600000
+        gap_count = 0
         for symbol in self.assets:
             with sqlite3.connect(self.db_path) as conn:
-                # Get the last closed candle (before current hour)
-                row = conn.execute(
-                    "SELECT MAX(ts) FROM candles WHERE symbol = ? AND ts < ?", 
+                # Get the last closed candle in the DB (before current hour)
+                last_in_db = conn.execute(
+                    "SELECT MAX(ts) FROM candles WHERE symbol = ? AND ts < ?",
                     (symbol, current_hour)
-                ).fetchone()
-                if row and row[0]:
-                    self._last_processed[symbol] = row[0]
-                    log.info(f"  {symbol}: last closed candle at ts={row[0]}")
+                ).fetchone()[0]
+                
+                if self._engine_last_processed_ts and last_in_db:
+                    # There's a gap to replay — start from engine's last processed
+                    self._last_processed[symbol] = self._engine_last_processed_ts
+                    # Count gap candles for logging
+                    gap = conn.execute(
+                        "SELECT COUNT(*) FROM candles WHERE symbol = ? AND ts > ? AND ts < ?",
+                        (symbol, self._engine_last_processed_ts, current_hour)
+                    ).fetchone()[0]
+                    if gap > 0:
+                        log.info(f"  {symbol}: GAP RECOVERY — replaying {gap} candles from ts={self._engine_last_processed_ts}")
+                        gap_count += gap
+                    else:
+                        log.info(f"  {symbol}: up-to-date (last={last_in_db})")
+                elif last_in_db:
+                    # No engine state — set to last DB candle (no replay)
+                    self._last_processed[symbol] = last_in_db
+                    log.info(f"  {symbol}: last closed candle at ts={last_in_db}")
                 else:
                     self._last_processed[symbol] = 0
+                    log.info(f"  {symbol}: no candles in DB")
+        
+        if gap_count > 0:
+            log.info(f"⚠️ GAP RECOVERY: {gap_count} total candles to replay across {len(self.assets)} assets")
 
         # Start polling loop
         while self._running:
@@ -151,7 +179,7 @@ class DataFeed:
         """Poll REST API for latest candles, fire callback for newly closed ones."""
         api_url = API_URL_TESTNET if PAPER_MODE else API_URL
         now_ms = int(time.time() * 1000)
-        # Current hour boundary — candles before this are "closed"
+        # Current hour boundary - candles before this are "closed"
         current_hour = (now_ms // 3600000) * 3600000
 
         for symbol in self.assets:

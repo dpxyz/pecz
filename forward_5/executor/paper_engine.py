@@ -84,10 +84,11 @@ class PaperTradingEngine:
         channel_id = os.environ.get("DISCORD_CHANNEL_ID", DISCORD_CHANNEL_ID)
         self.reporter = DiscordReporter(channel_id=channel_id)
         self.main_address = os.environ.get("HL_MAIN_ADDRESS", "")
-        self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle)
+        self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle, engine_last_processed_ts=None)
         self.commands = CommandListener(self, channel_id=channel_id)
         self._running = False
         self._last_candle_hour = {}  # track which hours we've processed
+        self._engine_start_time = None  # set on start(), used to skip backfill candles
         self._last_summary_hour = -1  # track 4h summary reporting
 
         # Initialize equity
@@ -117,7 +118,22 @@ class PaperTradingEngine:
         log.info(f"   Trade log: {TRADE_LOG}")
 
         # Record engine start time
+        self._engine_start_time = int(datetime.now(timezone.utc).timestamp() * 1000)  # ms for candle ts comparison
         self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
+
+        # Gap recovery: get last processed timestamp from state
+        # This tells the data feed where to start replaying missed candles
+        engine_last_ts = None
+        try:
+            ts_str = self.state.get_state("last_processed_ts")
+            if ts_str:
+                engine_last_ts = int(float(ts_str))
+                log.info(f"Gap recovery: engine last processed ts={engine_last_ts}")
+        except Exception:
+            pass
+
+        # Update data feed with gap recovery timestamp
+        self.feed._engine_last_processed_ts = engine_last_ts
 
         # Check Hyperliquid testnet balance
         balance_str = ""
@@ -176,6 +192,13 @@ class PaperTradingEngine:
             return
         self._last_candle_hour[hour_key] = True
 
+        # Skip candles older than engine start time (backfill/gap recovery noise)
+        # Only process candles from the current session or recent past
+        if self._engine_start_time and ts < self._engine_start_time:
+            # Still update last_processed_ts so gap recovery progresses
+            self.state.set_state("last_processed_ts", str(ts))
+            return
+
         # Clean up old dedup entries (keep last 24 hours = ~144 entries per asset)
         # Prevents unbounded memory growth over months of operation
         if len(self._last_candle_hour) > 2000:
@@ -186,6 +209,9 @@ class PaperTradingEngine:
                 del self._last_candle_hour[k]
 
         log.info(f"📊 {symbol} CLOSED candle: close={candle['close']:.2f} @ {datetime.fromtimestamp(ts/1000, tz=timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
+
+        # Update last_processed_ts in state DB for gap recovery after crashes
+        self.state.set_state("last_processed_ts", str(ts))
 
         # Evaluate signal using DB candle history
         await self._evaluate_symbol(symbol, candle)
