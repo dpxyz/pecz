@@ -19,7 +19,7 @@ hide:
 <div id="monitor-dashboard" style="display:none;">
 
 <!-- Summary Cards -->
-<div class="grid-4" id="summary-cards">
+<div class="grid-2" id="summary-cards">
   <div class="card metric-card">
     <div class="metric-label">equity</div>
     <div class="metric-value" id="eq-value">—</div>
