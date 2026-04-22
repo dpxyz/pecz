@@ -67,10 +67,12 @@
 
 | Signal | Aktion |
 |--------|--------|
-| Trailing Stop 1.5% | Standard-Exit |
 | Regime-Score fällt < 50 | Sofort raus (Trend bricht) |
+| Regime-Score fällt 50-65 | Downgrade auf V1-Hebel, Trail auf 2.0% |
+| Trailing Stop 2.5% | Standard-Exit im Strong Trend |
 | Max Hold 24h | Raus, egal was passiert |
 
+Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
 DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case ~3€ pro Trade = 3% des Gesamtportfolios.
 
 ---
@@ -115,9 +117,11 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 
 ### Risiko-Kontrolle
 - Nur 1 Position gleichzeitig (Konzentration)
-- Trailing Stop tight: 1.5% statt 2.0%
+- Trailing Stop: 2.5% (Strong Trend = mehr Raum, nicht enger)
 - Max Hold: 24h statt 48h (Conviction hat Zeitlimit)
-- Capital: ~83€ Notional pro Trade (16.67€ × 5x)
+- Capital: max 30€ allocated × 5x = 150€ Notional
+- Regime-Score fällt auf 50-65 → Downgrade auf V1-Hebel
+- Volatility-Parität gilt für V1, Sniper ist fix 5x
 
 ### Warum 4-5x vertretbar
 - Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
