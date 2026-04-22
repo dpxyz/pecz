@@ -85,7 +85,7 @@
 
 ---
 
-## Sniper-Exit: Drei Regeln
+## Sniper-Exit: Vier Regeln
 
 | Signal | Aktion |
 |--------|--------|
@@ -147,7 +147,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 - **Sniper-Circuit-Breaker**: 3 aufeinanderfolgende Sniper-Verluste → Sniper pausiert für 48h, dann Resume
 
 ### Warum 4-5x vertretbar
-- Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
+- Regime-Score > 70 filtert ~70% aller Bars raus (nur Strong Trend)
 - Asset-Ranking Top-2 = stärkster Momentum in stärkstem Trend
 - DD pro Trade: max 3.75% des Portfolios (2.5% Trail × 5x auf 30€ allocated)
 - V1-DD von 14% kommt aus Range-Trades — die fallen komplett weg
