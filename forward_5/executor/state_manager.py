@@ -87,6 +87,20 @@ class StateManager:
                 CREATE INDEX IF NOT EXISTS idx_trades_symbol
                 ON trades(symbol)
             """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS equity_history (
+                    ts INTEGER NOT NULL,
+                    equity REAL NOT NULL,
+                    unrealized_pnl REAL DEFAULT 0,
+                    drawdown_pct REAL DEFAULT 0,
+                    guard_state TEXT DEFAULT 'RUNNING',
+                    n_positions INTEGER DEFAULT 0
+                )
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_equity_ts
+                ON equity_history(ts)
+            """)
 
     # ── Key-Value State ──
 
@@ -248,6 +262,35 @@ class StateManager:
             return row[0] if row else 0.0
 
     # ── Stats ──
+
+    # ── Equity History (Monitor V1) ──
+
+    def log_equity_snapshot(self, ts: int, equity: float,
+                             unrealized_pnl: float = 0, drawdown_pct: float = 0,
+                             guard_state: str = "RUNNING", n_positions: int = 0):
+        """Log equity snapshot for Monitor V1 equity curve."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute("""
+                INSERT INTO equity_history (ts, equity, unrealized_pnl, drawdown_pct,
+                                            guard_state, n_positions)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (ts, equity, unrealized_pnl, drawdown_pct, guard_state, n_positions))
+
+    def get_equity_history(self, hours: int = 168) -> list[dict]:
+        """Get equity history for the last N hours (default 7 days)."""
+        cutoff = int(datetime.now(timezone.utc).timestamp() * 1000) - (hours * 3600000)
+        with sqlite3.connect(self.db_path) as conn:
+            rows = conn.execute("""
+                SELECT ts, equity, unrealized_pnl, drawdown_pct, guard_state, n_positions
+                FROM equity_history
+                WHERE ts >= ?
+                ORDER BY ts ASC
+            """, (cutoff,)).fetchall()
+            return [
+                {"ts": r[0], "equity": r[1], "unrealized_pnl": r[2],
+                 "drawdown_pct": r[3], "guard_state": r[4], "n_positions": r[5]}
+                for r in rows
+            ]
 
     def get_trade_stats(self) -> dict:
         with sqlite3.connect(self.db_path) as conn:

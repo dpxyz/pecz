@@ -46,6 +46,7 @@ extra_css:
 
 nav:
   - "🎯 Dashboard": index.md
+  - "📊 Live Monitor": dashboard.md
   - "🗺️ Roadmap": roadmap.md
   - "🚧 Blockers": blockers.md
   - "📖 Docs":

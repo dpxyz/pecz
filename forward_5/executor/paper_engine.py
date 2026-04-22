@@ -254,6 +254,31 @@ class PaperTradingEngine:
         # Evaluate signal using DB candle history
         await self._evaluate_symbol(symbol, candle)
 
+        # ── Log equity snapshot for Monitor V1 ──
+        equity = self.state.get_equity()
+        peak = float(self.state.get_state("peak_equity", equity))
+        # Count open positions
+        n_open = sum(1 for sym in self.assets if self.state.get_open_position(sym))
+        # Unrealized PnL
+        unrealized_pnl = 0.0
+        for sym in self.assets:
+            pos = self.state.get_open_position(sym)
+            if pos:
+                mark = candle["close"] if sym == symbol else None
+                if not mark:
+                    latest = self.feed.get_candles(sym, limit=1)
+                    mark = latest[0]["close"] if latest else pos["entry_price"]
+                lev = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
+                exit_fee = pos["size"] * mark * FEE_RATE * lev
+                unrealized_pnl += (mark - pos["entry_price"]) * pos["size"] - exit_fee
+        mtm_equity = equity + unrealized_pnl
+        dd = (peak - mtm_equity) / peak * 100 if peak > 0 else 0
+        self.state.log_equity_snapshot(
+            ts=ts, equity=equity, unrealized_pnl=unrealized_pnl,
+            drawdown_pct=dd, guard_state=self.state.get_guard_state().value,
+            n_positions=n_open
+        )
+
         # ── 4-hourly summary report ──
         candle_hour_utc = (ts // 3600000) % 24  # 0-23 UTC hour
         # Report at 0, 4, 8, 12, 16, 20 UTC (= 1, 5, 9, 13, 17, 21 Berlin)
