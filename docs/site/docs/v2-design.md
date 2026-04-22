@@ -53,8 +53,8 @@
 - 50% bei Trail nehmen, 50% laufen lassen
 - Trend-following-Klassiker: Gewinn sichern, aber Raum für weiteren Upside
 - Komplexer zu implementieren, aber messbar besser als Voll-Exit
-- **Nur für V1-Trades** — Sniper hat 100% Entry/Exit, kein Half-in/Half-out bei 5x
-- Sniper: 50% bei Trail, Rest bis Regime-Score < 50 oder Max Hold
+- **Nur für V1-Trades** — Sniper hat 100% Entry/Exit
+- Sniper-Exit: Regime < 50 = komplett raus, Trail 2.5% = komplett raus, kein Halbschritt bei 5x Hebel
 
 ### 10. DD-basierte Positionsreduktion
 - Portfolio-DD > 10% → alle Positionen halbieren
@@ -149,7 +149,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 ### Warum 4-5x vertretbar
 - Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
 - Asset-Ranking Top-2 = stärkster Momentum in stärkstem Trend
-- DD pro Trade: ~5-6% bei 1.5% Stop = vertretbar
+- DD pro Trade: ~7-8% bei 2.5% Trail × 5x = vertretbar
 - V1-DD von 14% kommt aus Range-Trades — die fallen komplett weg
 
 ### Scharfmacher
