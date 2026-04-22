@@ -341,3 +341,13 @@ class TestLiveDataIntegrity:
                 assert ts >= 1776600000000, (
                     f"Backfill artifact: {t['event']} {t['symbol']} @ ts={ts}"
                 )
+
+    def test_db_no_backfill_artifacts(self, real_db):
+        """DB trades table should have no pre-2026 entries."""
+        with sqlite3.connect(real_db) as conn:
+            artifacts = conn.execute(
+                "SELECT id, timestamp, event, symbol FROM trades WHERE timestamp < 1776600000000"
+            ).fetchall()
+            assert len(artifacts) == 0, (
+                f"DB has {len(artifacts)} backfill artifacts: {artifacts[:3]}"
+            )

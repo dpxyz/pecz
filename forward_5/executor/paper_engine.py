@@ -18,8 +18,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from data_feed import DataFeed, SYMBOL_MAP
 from signal_generator import SignalGenerator, SignalType
 from state_manager import StateManager, GuardState
-from risk_guard import RiskGuard
-from discord_reporter import DiscordReporter, COLOR_BLUE
+from risk_guard import RiskGuard, MAX_DRAWDOWN_PCT
+from discord_reporter import DiscordReporter, COLOR_BLUE, COLOR_RED
 from command_listener import CommandListener
 
 log = logging.getLogger("paper_engine")
@@ -213,6 +213,50 @@ class PaperTradingEngine:
         # Update last_processed_ts in state DB for gap recovery after crashes
         self.state.set_state("last_processed_ts", str(ts))
 
+        # ── Unrealized Drawdown Check ──
+        # Risk Guard DD check uses REALIZED equity only.
+        # But with 6 concurrent positions, unrealized DD can exceed 20%
+        # before any position is closed. Check mark-to-market DD here.
+        equity = self.state.get_equity()
+        peak = float(self.state.get_state("peak_equity", equity))
+        unrealized_pnl = 0.0
+        for sym in self.assets:
+            pos = self.state.get_open_position(sym)
+            if pos:
+                mark_price = candle["close"] if sym == symbol else None
+                # For other assets, get latest close from DB
+                if not mark_price:
+                    latest = self.feed.get_candles(sym, limit=1)
+                    if latest:
+                        mark_price = latest[0]["close"]
+                    else:
+                        mark_price = pos["entry_price"]  # fallback
+                lev = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
+                exit_fee = pos["size"] * mark_price * FEE_RATE * lev
+                pos_pnl = (mark_price - pos["entry_price"]) * pos["size"] - exit_fee
+                unrealized_pnl += pos_pnl
+        mark_to_market = equity + unrealized_pnl
+        mtm_dd = (peak - mark_to_market) / peak * 100 if peak > 0 else 0
+        if mtm_dd > MAX_DRAWDOWN_PCT:
+            log.warning(f"⚠️ Unrealized DD: {mtm_dd:.1f}% > {MAX_DRAWDOWN_PCT}% — triggering KILL")
+            self.risk._trigger_kill(f"Unrealized DD {mtm_dd:.1f}% > {MAX_DRAWDOWN_PCT}%")
+            # Force-close all positions immediately
+            for sym in self.assets:
+                open_pos = self.state.get_open_position(sym)
+                if open_pos:
+                    mark = candle["close"] if sym == symbol else (self.feed.get_candles(sym, limit=1)[0]["close"] if self.feed.get_candles(sym, limit=1) else pos["entry_price"])
+                    exit_price = mark * (1 - SLIPPAGE_BPS / 10000)
+                    lev = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
+                    fee = open_pos["size"] * exit_price * FEE_RATE * lev
+                    pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
+                    self.state.close_position(sym, exit_price, ts, "Unrealized DD KILL", GuardState.KILL_SWITCH.value, net_pnl=pnl)
+                    self.risk.on_trade_closed(pnl)
+            self.reporter._send_container(
+                "\U0001f6a8 **KILL: Unrealized DD**",
+                f"Mark-to-market DD: {mtm_dd:.1f}% > {MAX_DRAWDOWN_PCT}%\nAll positions force-closed.",
+                COLOR_RED)
+            return
+
         # Evaluate signal using DB candle history
         await self._evaluate_symbol(symbol, candle)
 
@@ -275,7 +319,6 @@ class PaperTradingEngine:
                     "timestamp": current_candle["timestamp"],
                 }
                 log_trade(exit_event)
-                from discord_reporter import COLOR_RED
                 self.reporter._send_container(
                     "\U0001f6a8 **KILL CLOSE**",
                     f"**{symbol}** force-closed @ ${exit_price:,.2f}\nPnL: {pnl:+.2f}\u20ac\nAll positions will be closed.",

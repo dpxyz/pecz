@@ -108,17 +108,24 @@ class DataFeed:
                 
                 if self._engine_last_processed_ts and last_in_db:
                     # There's a gap to replay — start from engine's last processed
-                    self._last_processed[symbol] = self._engine_last_processed_ts
-                    # Count gap candles for logging
-                    gap = conn.execute(
-                        "SELECT COUNT(*) FROM candles WHERE symbol = ? AND ts > ? AND ts < ?",
-                        (symbol, self._engine_last_processed_ts, current_hour)
-                    ).fetchone()[0]
-                    if gap > 0:
-                        log.info(f"  {symbol}: GAP RECOVERY — replaying {gap} candles from ts={self._engine_last_processed_ts}")
-                        gap_count += gap
+                    # Sanity check: don't replay more than 7 days (168h) of candles
+                    max_gap_ms = 7 * 24 * 3600 * 1000  # 7 days
+                    if (current_hour - self._engine_last_processed_ts) > max_gap_ms:
+                        log.warning(f"  {symbol}: Gap too large ({(current_hour - self._engine_last_processed_ts) / 86400000:.0f} days), "
+                                   f"starting from recent history instead")
+                        self._last_processed[symbol] = last_in_db
                     else:
-                        log.info(f"  {symbol}: up-to-date (last={last_in_db})")
+                        self._last_processed[symbol] = self._engine_last_processed_ts
+                        # Count gap candles for logging
+                        gap = conn.execute(
+                            "SELECT COUNT(*) FROM candles WHERE symbol = ? AND ts > ? AND ts < ?",
+                            (symbol, self._engine_last_processed_ts, current_hour)
+                        ).fetchone()[0]
+                        if gap > 0:
+                            log.info(f"  {symbol}: GAP RECOVERY — replaying {gap} candles from ts={self._engine_last_processed_ts}")
+                            gap_count += gap
+                        else:
+                            log.info(f"  {symbol}: up-to-date (last={last_in_db})")
                 elif last_in_db:
                     # No engine state — set to last DB candle (no replay)
                     self._last_processed[symbol] = last_in_db
@@ -160,13 +167,21 @@ class DataFeed:
                     }
                 }, timeout=15)
                 candles = resp.json()
+                # BUG FIX: API can return error dict instead of list
+                if not isinstance(candles, list):
+                    log.error(f"  ❌ {symbol}: API returned non-list: {candles}")
+                    continue
                 count = 0
                 for c in candles:
-                    ts = int(c["t"])
-                    self._store_candle(symbol, ts,
-                                       float(c["o"]), float(c["h"]),
-                                       float(c["l"]), float(c["c"]),
-                                       float(c.get("v", 0)))
+                    try:
+                        ts = int(c["t"])
+                        self._store_candle(symbol, ts,
+                                           float(c["o"]), float(c["h"]),
+                                           float(c["l"]), float(c["c"]),
+                                           float(c.get("v", 0)))
+                    except (KeyError, ValueError, TypeError) as e:
+                        log.warning(f"  ⚠️ {symbol}: Invalid candle data: {e}")
+                        continue
                     count += 1
                 total += count
                 log.info(f"  ✅ {symbol}: {count} candles backfilled")
@@ -197,15 +212,28 @@ class DataFeed:
                 }, timeout=15)
                 candles = resp.json()
 
+                # BUG FIX: API can return error dict instead of list
+                if not isinstance(candles, list):
+                    log.error(f"Poll error for {symbol}: API returned non-list")
+                    continue
+
                 for c in candles:
-                    ts = int(c["t"])
-                    T = int(c["T"])  # close time
+                    try:
+                        ts = int(c["t"])
+                        T = int(c["T"])  # close time
+                    except (KeyError, ValueError, TypeError) as e:
+                        log.warning(f"⚠️ {symbol}: Invalid candle: {e}")
+                        continue
 
                     # Store in DB (upsert)
-                    self._store_candle(symbol, ts,
-                                       float(c["o"]), float(c["h"]),
-                                       float(c["l"]), float(c["c"]),
-                                       float(c.get("v", 0)))
+                    try:
+                        self._store_candle(symbol, ts,
+                                           float(c["o"]), float(c["h"]),
+                                           float(c["l"]), float(c["c"]),
+                                           float(c.get("v", 0)))
+                    except (KeyError, ValueError) as e:
+                        log.warning(f"⚠️ {symbol}: Invalid candle data: {e}")
+                        continue
 
                     # Fire callback only for CLOSED candles we haven't processed yet
                     last = self._last_processed.get(symbol, 0)
