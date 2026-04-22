@@ -71,7 +71,7 @@
 - Rolling-Correlation berechnen (20-Bar-Window)
 - Entry blocken wenn Korrelation > 0.7 mit bestehender Position
 - Besser als willkürliche "max 2"-Regel
-- V3-Kandidat, nicht V2-Start
+- **Stufe 2** — baut auf Regime-Score auf
 
 ---
 
@@ -216,21 +216,38 @@ News API → KI Extraction (JSON-Mode) → Sentiment Score (0-100)
 
 ---
 
-## Alpha Stack V2 (Priorität)
+## Alpha Stack V2 (Priorität, nach Stufen)
 
-| # | Feature | Priorität | Erwarteter Impact |
-|---|---------|-----------|-------------------|
-| 1 | Regime-Score (ADX+ATR+Slope) | **Hoch** | Filtert ~70% Range-Trades raus |
-| 2 | Asset-Ranking (ROC) | **Hoch** | Bessere Asset-Auswahl bei >1 Signal |
-| 3 | Sniper-Modul (4-5x) | **Hoch** | Conviction-Upgrade auf Top-Asset |
-| 4 | Volatility-Parität | **Mittel** | Riskoparität statt Equal-Weight |
-| 5 | Partial Exits (V1) | **Mittel** | Gewinn sichern, Upside offen halten |
-| 6 | Limit-Orders | **Mittel** | Fee-Reduktion, weniger Slippage |
-| 7 | Korrelations-Filter | Niedrig | max 2 korrelierte Positionen |
-| 8 | HTF-Alignment | Niedrig | 4h Bestätigung vor 1h Entry |
-| 9 | Sentiment Kill-Switch | Niedrig | Crash-Schutz, V3-Kandidat |
-| — | ~~ATR-Stops~~ | Abgelehnt | Kein Improvement bewiesen |
-| — | ~~Kelly Criterion~~ | Abgelehnt | Win-Rate zu instabil |
+**Stufe 1 — Kern**
+| # | Feature | Warum |
+|---|---------|-------|
+| 1 | Regime-Score (ADX+ATR+Slope) | Filtert ~70% Range-Trades raus |
+| 2 | Sniper-Modul (4-5x) | Conviction-Upgrade auf Top-Asset |
+| 3 | DD-basierte Positionsreduktion | 10/15/20% Stufen |
+
+**Stufe 2 — Enhancement**
+| # | Feature | Warum |
+|---|---------|-------|
+| 4 | Volatility-Parität | Riskoparität statt Equal-Weight |
+| 5 | Partial Exits (V1 only) | Gewinn sichern, Upside offen |
+| 6 | Re-Entry Logik | 1h Cooldown, dann wieder möglich |
+| 7 | Korrelations-Filter | max 2 korrelierte Positionen |
+| 8 | Regime-basierter Exit | Trail dynamisch nach Regime-Score |
+
+**Stufe 3 — Advanced**
+| # | Feature | Warum |
+|---|---------|-------|
+| 9 | Sentiment Kill-Switch | Crash-Schutz, KI-Filter |
+| 10 | On-Chain Regime-Filter | Exchange Netflow |
+| 11 | Limit-Orders | Fee-Reduktion |
+| 12 | Asset-Ranking (ROC) | Stärkster Momentum bevorzugen |
+| 13 | Dynamische Korrelationsmatrix | Statt max 2-Regel |
+
+**Abgelehnt**
+| Feature | Warum |
+|---------|-------|
+| ATR-Stops | Kein Improvement bewiesen |
+| Kelly Criterion | Win-Rate zu instabil |
 
 ---
 
