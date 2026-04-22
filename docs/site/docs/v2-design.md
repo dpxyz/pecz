@@ -242,11 +242,28 @@ News API → KI Extraction (JSON-Mode) → Sentiment Score (0-100)
 - Kein Hyper-Optimization der Backtest-Parameter
 - Kein automatisches Upsizing bei "gutem Sentiment"
 
-## Zeitplan
+## V2 Implementierung — 3 Stufen, 1 Release
 
-| Milestone | Timing | Voraussetzung |
-|-----------|--------|---------------|
-| ADR-008 schreiben | Nach Phase 8 | Paper Trading abgeschlossen |
-| Sentiment Prototype | Phase 10 Start | Phase 9 bestanden |
-| Integration Test | Phase 10 Mitte | Prototype läuft |
-| Paper Trading V2 | Phase 10 Ende | Integration bestanden |
+### Stufe 1: Kern (Regime + Sniper)
+- Regime-Score (ADX + ATR-Ratio + EMA-Slope)
+- Sniper-Modul (4-5x Upgrade auf Top-Asset)
+- DD-basierte Positionsreduktion
+- **Gate**: Regime+Sniper Sharpe > V1, DD < V1
+
+### Stufe 2: Enhancement
+- Volatility-Parität (statt Leverage-Tiers)
+- Partial Exits (V1 only)
+- Re-Entry Logik
+- Korrelations-Filter (max 2)
+- Regime-basierter Exit (Trail dynamisch)
+- **Gate**: Gesamt-DD verbessert, Sharpe ≥ Stufe 1
+
+### Stufe 3: Advanced
+- Sentiment Kill-Switch
+- On-Chain Regime-Filter
+- Limit-Orders
+- Dynamische Korrelationsmatrix
+- Asset-Ranking (ROC)
+- **Gate**: Vollständiges V2 durchs Tor, dann LIVE
+
+Alle 3 Stufen = V2. Kein V3. Nach Stufe 3 → Live gehen.
