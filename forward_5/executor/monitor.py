@@ -163,12 +163,25 @@ class MonitorV1:
             # DD
             dd = (peak_equity - equity) / peak_equity * 100 if peak_equity > 0 else 0
 
+            # Unrealized PnL from open positions
+            unrealized_pnl = 0.0
+            levs = {'BTCUSDT':1.8,'ETHUSDT':1.8,'SOLUSDT':1.5,'AVAXUSDT':1.0,'DOGEUSDT':1.5,'ADAUSDT':1.5}
+            for sym in ['BTCUSDT','ETHUSDT','SOLUSDT','AVAXUSDT','DOGEUSDT','ADAUSDT']:
+                pos = conn.execute('SELECT entry_price, size FROM positions WHERE symbol=? AND state="IN_LONG"', (sym,)).fetchone()
+                if pos:
+                    mark = conn.execute('SELECT close FROM candles WHERE symbol=? ORDER BY ts DESC LIMIT 1', (sym,)).fetchone()
+                    mark_price = mark[0] if mark else pos[0]
+                    fee = pos[1] * mark_price * 0.0001 * levs.get(sym, 1.0)
+                    unrealized_pnl += (mark_price - pos[0]) * pos[1] - fee
+
             return {
                 "equity": equity,
                 "start_equity": start_equity,
                 "peak_equity": peak_equity,
                 "pnl": equity - start_equity,
                 "pnl_pct": (equity - start_equity) / start_equity * 100,
+                "unrealized_pnl": unrealized_pnl,
+                "mtm_equity": equity + unrealized_pnl,
                 "drawdown_pct": dd,
                 "guard_state": guard_state,
                 "consecutive_losses": consecutive_losses,

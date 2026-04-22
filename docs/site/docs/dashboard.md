@@ -28,9 +28,19 @@ hide:
     <div class="metric-sub" id="eq-sub">start: 100.00€</div>
   </div>
   <div class="card metric-card">
-    <div class="metric-label">pnl</div>
+    <div class="metric-label">mtm equity</div>
+    <div class="metric-value" id="mtm-value">—</div>
+    <div class="metric-sub" id="mtm-sub">incl. unrealized</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-label">realized pnl</div>
     <div class="metric-value" id="pnl-value">—</div>
     <div class="metric-sub">net · fees deducted</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-label">unrealized pnl</div>
+    <div class="metric-value" id="upnl-value">—</div>
+    <div class="metric-sub">open positions</div>
   </div>
   <div class="card metric-card">
     <div class="metric-label">drawdown</div>
@@ -123,9 +133,21 @@ hide:
     document.getElementById('eq-value').textContent = fmtEur(s.equity);
     document.getElementById('eq-sub').textContent = 'start: ' + fmtEur(s.start_equity);
 
+    const mtmEl = document.getElementById('mtm-value');
+    if (mtmEl) {
+      mtmEl.textContent = fmtEur(s.mtm_equity || s.equity);
+    }
+
     const pnlEl = document.getElementById('pnl-value');
     pnlEl.textContent = (pnl >= 0 ? '+' : '') + fmtEur(pnl);
     pnlEl.style.color = pnl >= 0 ? PALETTE.accent : PALETTE.danger;
+
+    const upnlEl = document.getElementById('upnl-value');
+    if (upnlEl) {
+      const upnl = s.unrealized_pnl || 0;
+      upnlEl.textContent = (upnl >= 0 ? '+' : '') + fmtEur(upnl);
+      upnlEl.style.color = upnl >= 0 ? PALETTE.accent : PALETTE.danger;
+    }
 
     const ddEl = document.getElementById('dd-value');
     ddEl.textContent = fmtPct(s.drawdown_pct);

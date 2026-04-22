@@ -5,6 +5,8 @@
     "peak_equity": 100.0,
     "pnl": -0.36962224414938305,
     "pnl_pct": -0.36962224414938305,
+    "unrealized_pnl": 0.1320419494890635,
+    "mtm_equity": 99.76241970533968,
     "drawdown_pct": 0.36962224414938305,
     "guard_state": "RUNNING",
     "consecutive_losses": 0,
@@ -14,9 +16,9 @@
     "win_rate": 100.0,
     "total_pnl": 0.1495414619246472,
     "n_open_positions": 6,
-    "uptime_hours": 1.7,
-    "last_candle": "2026-04-22T15:00:00+00:00",
-    "timestamp": "2026-04-22T15:06:52.876540+00:00"
+    "uptime_hours": 3.5,
+    "last_candle": "2026-04-22T16:00:00+00:00",
+    "timestamp": "2026-04-22T16:51:15.742037+00:00"
   },
   "equity_curve": [
     {
@@ -122,6 +124,54 @@
       "drawdown_pct": -0.7506622821660187,
       "guard_state": "RUNNING",
       "n_positions": 5
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1492532094516366,
+      "drawdown_pct": -0.7796309653022604,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1491915576202272,
+      "drawdown_pct": -0.7795693134708443,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.1427198281692188,
+      "drawdown_pct": -0.7730975840198369,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.096573583388108,
+      "drawdown_pct": -0.7269513392387239,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.0699469836316593,
+      "drawdown_pct": -0.7003247394822694,
+      "guard_state": "RUNNING",
+      "n_positions": 6
+    },
+    {
+      "ts": 1776870000000,
+      "equity": 99.63037775585062,
+      "unrealized_pnl": 1.0699469836316593,
+      "drawdown_pct": -0.7003247394822694,
+      "guard_state": "RUNNING",
+      "n_positions": 6
     }
   ],
   "positions": [
@@ -129,10 +179,10 @@
       "symbol": "BTCUSDT",
       "entry_price": 76426.6419,
       "entry_time": 1776816000000,
-      "peak_price": 79130.0,
+      "peak_price": 79367.0,
       "size": 0.00039053881861603895,
-      "unrealized_pnl": 0.9303298419210158,
-      "mark_price": 78823.0
+      "unrealized_pnl": 0.9174443807072691,
+      "mark_price": 78790.0
     },
     {
       "symbol": "ADAUSDT",
@@ -140,8 +190,8 @@
       "entry_time": 1776823200000,
       "peak_price": 0.25614,
       "size": 97.70140056694807,
-      "unrealized_pnl": 0.016250478553499377,
-      "mark_price": 0.25478
+      "unrealized_pnl": -0.10976542295685522,
+      "mark_price": 0.25349
     },
     {
       "symbol": "SOLUSDT",
@@ -149,8 +199,8 @@
       "entry_time": 1776841200000,
       "peak_price": 89.6,
       "size": 0.2814217546114249,
-      "unrealized_pnl": 0.07059937502975071,
-      "mark_price": 88.642
+      "unrealized_pnl": -0.11623664042547653,
+      "mark_price": 87.978
     },
     {
       "symbol": "AVAXUSDT",
@@ -158,8 +208,8 @@
       "entry_time": 1776852000000,
       "peak_price": 9.58855876,
       "size": 1.729172901475167,
-      "unrealized_pnl": -0.06417652306534812,
-      "mark_price": 9.5524
+      "unrealized_pnl": -0.14059832236632602,
+      "mark_price": 9.5082
     },
     {
       "symbol": "DOGEUSDT",
@@ -167,17 +217,17 @@
       "entry_time": 1776852000000,
       "peak_price": 0.09841,
       "size": 253.35740829679887,
-      "unrealized_pnl": -0.14351568472759696,
-      "mark_price": 0.097605
+      "unrealized_pnl": -0.29576064694361265,
+      "mark_price": 0.097004
     },
     {
       "symbol": "ETHUSDT",
       "entry_price": 2423.2423,
       "entry_time": 1776866400000,
-      "peak_price": 2423.2423,
+      "peak_price": 2447.9,
       "size": 0.012332793865861369,
-      "unrealized_pnl": 0.11000644937411422,
-      "mark_price": 2432.6
+      "unrealized_pnl": -0.12304139852593511,
+      "mark_price": 2413.7
     }
   ],
   "recent_trades": [
@@ -248,5 +298,5 @@
       "reason": "Entry at 88.38"
     }
   ],
-  "generated_at": "2026-04-22T15:06:52.877214+00:00"
+  "generated_at": "2026-04-22T16:51:15.742569+00:00"
 }
