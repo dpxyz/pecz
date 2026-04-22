@@ -5,8 +5,8 @@
     "peak_equity": 100.0,
     "pnl": -0.7430473063819392,
     "pnl_pct": -0.7430473063819392,
-    "unrealized_pnl": -0.4693045229961097,
-    "mtm_equity": 98.78764817062195,
+    "unrealized_pnl": -0.5785066888475814,
+    "mtm_equity": 98.67844600477048,
     "drawdown_pct": 0.7430473063819392,
     "guard_state": "RUNNING",
     "consecutive_losses": 0,
@@ -16,9 +16,9 @@
     "win_rate": 40.0,
     "total_pnl": -0.22388360030791596,
     "n_open_positions": 2,
-    "uptime_hours": 0.1,
+    "uptime_hours": 0.3,
     "last_candle": "2026-04-22T22:00:00+00:00",
-    "timestamp": "2026-04-22T22:12:04.615471+00:00"
+    "timestamp": "2026-04-22T22:25:07.309254+00:00"
   },
   "equity_curve": [
     {
@@ -437,8 +437,8 @@
       "entry_time": 1776823200000,
       "peak_price": 0.25614,
       "size": 97.70140056694807,
-      "unrealized_pnl": -0.24848060136359845,
-      "mark_price": 0.25207,
+      "unrealized_pnl": -0.3305374674633641,
+      "mark_price": 0.25123,
       "entry_ts": 1776823200000
     },
     {
@@ -447,8 +447,8 @@
       "entry_time": 1776852000000,
       "peak_price": 9.58855876,
       "size": 1.729172901475167,
-      "unrealized_pnl": -0.22082392163251127,
-      "mark_price": 9.4618,
+      "unrealized_pnl": -0.24796922138421734,
+      "mark_price": 9.4461,
       "entry_ts": 1776852000000
     }
   ],
@@ -564,5 +564,5 @@
       "reason": "Entry at 88.38"
     }
   ],
-  "generated_at": "2026-04-22T22:12:04.616186+00:00"
+  "generated_at": "2026-04-22T22:25:07.309755+00:00"
 }
