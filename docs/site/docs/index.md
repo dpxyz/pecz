@@ -9,8 +9,8 @@ title: Mission Control
 <h1><span class="logo"><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><polygon points="5,0.5 9.5,9.5 0.5,9.5"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.2"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0.8" y="0.8" width="8.4" height="8.4"/></svg></span>PECZ<span class="accent">_</span></h1>
 <div class="dash-meta">
 <span><span class="live-dot"></span>PHASE 8 LIVE</span>
-<span>DAY 2/14</span>
-<span>EQ 99.99€</span>
+<span>DAY 3/14</span>
+<span>EQ 99.49€</span>
 </div>
 </div>
 
@@ -50,27 +50,27 @@ title: Mission Control
 
 <div class="card metric-card">
   <div class="metric-label">equity</div>
-  <div class="metric-value">99.99€</div>
+  <div class="metric-value">99.49€</div>
   <div class="metric-sub">start: 100.00€</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">pnl</div>
-  <div class="metric-value positive">+0.00€</div>
+  <div class="metric-value negative">-0.51€</div>
   <div class="metric-sub">net · fees deducted</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">trades</div>
-  <div class="metric-value">2</div>
-  <div class="progress-bar"><div class="progress-fill accent" style="width:20%"></div></div>
+  <div class="metric-value">6</div>
+  <div class="progress-bar"><div class="progress-fill accent" style="width:60%"></div></div>
   <div class="metric-sub">target: ≥10</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">drawdown</div>
-  <div class="metric-value">0.01%</div>
-  <div class="progress-bar"><div class="progress-fill success" style="width:0.04%"></div></div>
+  <div class="metric-value">0.51%</div>
+  <div class="progress-bar"><div class="progress-fill success" style="width:2%"></div></div>
   <div class="metric-sub">limit: ≤25%</div>
 </div>
 
@@ -124,7 +124,12 @@ title: Mission Control
 
 | asset | side | entry | size | lev | status |
 |-------|------|-------|------|-----|--------|
-| BTC | LONG | $76,567 | 0.000392 | 1.8x | ● open |
+| BTC | LONG | $76,426 | 0.000391 | 1.8x | ● open |
+| ETH | LONG | $2,412 | 0.012371 | 1.8x | ● open |
+| SOL | LONG | $88.38 | 0.281422 | 1.5x | ● open |
+| AVAX | LONG | $9.59 | 1.729173 | 1.0x | ● open |
+| DOGE | LONG | $0.10 | 253.357408 | 1.5x | ● open |
+| ADA | LONG | $0.25 | 97.701401 | 1.5x | ● open |
 
 <!-- ── Quick Navigation ── -->
 <div class="section-label">docs</div>
@@ -142,7 +147,7 @@ title: Mission Control
 
 <a href="test-suite/" class="quick-link">
   <span class="link-icon">🧪</span>
-  <div class="link-text">test-suite<span class="link-desc">110 tests · 100% pass</span></div>
+  <div class="link-text">test-suite<span class="link-desc">297 tests · 81% cov</span></div>
 </a>
 
 <a href="architecture/adr-005/" class="quick-link">

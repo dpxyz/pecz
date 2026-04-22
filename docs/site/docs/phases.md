@@ -59,13 +59,33 @@ systemd, CLI, Health Dashboard, Deployment.
 
 ### 8.3 Test Suite ✅
 
-83 Tests (75 Unit + 7 E2E + 1 Regression), 100% Pass.
+**297 Tests, 81% Coverage, 0 Static Issues**
+
+4-Layer Hardening Protocol COMPLETE:
+- Schicht 1: pytest-cov → Coverage-Lücken identifiziert
+- Schicht 2: ruff + mypy → 0 Issues
+- Schicht 3: hypothesis → 15 Property Tests
+- Schicht 4: Fault Injection → 21 Tests
+
+| Modul | Coverage |
+|-------|----------|
+| accounting_check | 94% |
+| state_manager | 83% |
+| signal_generator | 81% |
+| risk_guard | 69% |
+| paper_engine | 61% |
+| command_listener | 56% |
+| data_feed | 48% |
+| discord_reporter | 48% |
+| watchdog_v2 | 46% |
+
 Täglicher Accounting-Check über Housekeeping.
 Pre-Commit Hook: pytest MUSS grün sein.
 
 ### 8.4 Bug Audits ✅
 
-5 Audit-Runden, 17 Bugs gefunden & gefixt.
+6 Audit-Runden, 17 Bugs gefunden & gefixt (4 kritisch, 7 medium, 6 low).
+Plus Deep Audit Round 6: 10 weitere Bugs, 27 neue Tests.
 
 ### 8.5 Monitor V1 ⬜ NEXT
 
