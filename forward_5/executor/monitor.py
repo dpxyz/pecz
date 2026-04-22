@@ -80,7 +80,7 @@ class MonitorV1:
                 positions.append({
                     "symbol": sym, "entry_price": entry, "entry_time": entry_time,
                     "peak_price": peak, "size": size, "unrealized_pnl": upnl,
-                    "mark_price": mark,
+                    "mark_price": mark, "entry_ts": entry_time,
                 })
             return positions
         finally:

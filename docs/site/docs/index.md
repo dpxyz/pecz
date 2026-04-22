@@ -182,6 +182,20 @@ title: Mission Control
   }
   function fmtEur(v) { return v.toFixed(2) + '€'; }
 
+  function updateIdxTimer(el) {
+    const ts = el.getAttribute('data-entry-ts');
+    if (!ts) return;
+    const entry = new Date(typeof ts === 'string' && ts.includes('T') ? ts : Number(ts));
+    if (isNaN(entry.getTime())) return;
+    const diff = Date.now() - entry.getTime();
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    el.textContent = (h > 0 ? h + 'h ' : '') + m + 'm';
+    if (diff > 48*3600000) el.style.color = P.danger;
+    else if (h >= 24) el.style.color = '#FFB05F';
+  }
+  setInterval(() => document.querySelectorAll('.pos-timer').forEach(el => updateIdxTimer(el)), 60000);
+
   async function load() {
     try {
       const resp = await fetch(DATA_URL + '?t=' + Date.now());
@@ -258,8 +272,13 @@ title: Mission Control
               '<span>entry ' + smartDec(p.entry_price) + '</span>' +
               '<span>mark ' + smartDec(p.mark_price) + '</span>' +
             '</div>' +
+            '<div style="display:flex;justify-content:space-between;font-size:0.68rem;margin-top:0.15rem;">' +
+              '<span style="color:var(--fwd-text-muted);">' + (p.entry_ts ? new Date(typeof p.entry_ts==="string"&&p.entry_ts.includes("T")?p.entry_ts:Number(p.entry_ts)).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})+' '+new Date(typeof p.entry_ts==="string"&&p.entry_ts.includes("T")?p.entry_ts:Number(p.entry_ts)).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '') + '</span>' +
+              '<span style="color:var(--fwd-text-dim);" data-entry-ts="' + (p.entry_ts||'') + '" class="pos-timer"></span>' +
+            '</div>' +
           '</div>';
         }).join('');
+        document.querySelectorAll('.pos-timer').forEach(el => updateIdxTimer(el));
       }
     } catch(e) {}
   }

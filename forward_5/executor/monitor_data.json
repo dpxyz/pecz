@@ -5,8 +5,8 @@
     "peak_equity": 100.0,
     "pnl": -0.36962224414938305,
     "pnl_pct": -0.36962224414938305,
-    "unrealized_pnl": 0.1320419494890635,
-    "mtm_equity": 99.76241970533968,
+    "unrealized_pnl": -0.2720918897006984,
+    "mtm_equity": 99.35828586614991,
     "drawdown_pct": 0.36962224414938305,
     "guard_state": "RUNNING",
     "consecutive_losses": 0,
@@ -16,9 +16,9 @@
     "win_rate": 100.0,
     "total_pnl": 0.1495414619246472,
     "n_open_positions": 6,
-    "uptime_hours": 3.5,
+    "uptime_hours": 3.6,
     "last_candle": "2026-04-22T16:00:00+00:00",
-    "timestamp": "2026-04-22T16:51:15.742037+00:00"
+    "timestamp": "2026-04-22T16:57:05.416028+00:00"
   },
   "equity_curve": [
     {
@@ -181,8 +181,9 @@
       "entry_time": 1776816000000,
       "peak_price": 79367.0,
       "size": 0.00039053881861603895,
-      "unrealized_pnl": 0.9174443807072691,
-      "mark_price": 78790.0
+      "unrealized_pnl": 0.8698072210685691,
+      "mark_price": 78668.0,
+      "entry_ts": 1776816000000
     },
     {
       "symbol": "ADAUSDT",
@@ -190,8 +191,9 @@
       "entry_time": 1776823200000,
       "peak_price": 0.25614,
       "size": 97.70140056694807,
-      "unrealized_pnl": -0.10976542295685522,
-      "mark_price": 0.25349
+      "unrealized_pnl": -0.15860879563528676,
+      "mark_price": 0.25299,
+      "entry_ts": 1776823200000
     },
     {
       "symbol": "SOLUSDT",
@@ -199,8 +201,9 @@
       "entry_time": 1776841200000,
       "peak_price": 89.6,
       "size": 0.2814217546114249,
-      "unrealized_pnl": -0.11623664042547653,
-      "mark_price": 87.978
+      "unrealized_pnl": -0.16632219878546126,
+      "mark_price": 87.8,
+      "entry_ts": 1776841200000
     },
     {
       "symbol": "AVAXUSDT",
@@ -209,7 +212,8 @@
       "peak_price": 9.58855876,
       "size": 1.729172901475167,
       "unrealized_pnl": -0.14059832236632602,
-      "mark_price": 9.5082
+      "mark_price": 9.5082,
+      "entry_ts": 1776852000000
     },
     {
       "symbol": "DOGEUSDT",
@@ -217,8 +221,9 @@
       "entry_time": 1776852000000,
       "peak_price": 0.09841,
       "size": 253.35740829679887,
-      "unrealized_pnl": -0.29576064694361265,
-      "mark_price": 0.097004
+      "unrealized_pnl": -0.32767889193399286,
+      "mark_price": 0.096878,
+      "entry_ts": 1776852000000
     },
     {
       "symbol": "ETHUSDT",
@@ -226,8 +231,9 @@
       "entry_time": 1776866400000,
       "peak_price": 2447.9,
       "size": 0.012332793865861369,
-      "unrealized_pnl": -0.12304139852593511,
-      "mark_price": 2413.7
+      "unrealized_pnl": -0.34869090204820063,
+      "mark_price": 2395.4,
+      "entry_ts": 1776866400000
     }
   ],
   "recent_trades": [
@@ -298,5 +304,5 @@
       "reason": "Entry at 88.38"
     }
   ],
-  "generated_at": "2026-04-22T16:51:15.742569+00:00"
+  "generated_at": "2026-04-22T16:57:05.416529+00:00"
 }

@@ -120,6 +120,24 @@ hide:
 
   function fmt(v, decimals=2) { return v != null ? v.toFixed(decimals) : '—'; }
   function fmtEur(v) { return fmt(v) + '€'; }
+
+  function updateTimer(el) {
+    const ts = el.getAttribute('data-entry-ts');
+    if (!ts) return;
+    const entry = new Date(typeof ts === 'string' && ts.includes('T') ? ts : Number(ts));
+    if (isNaN(entry.getTime())) return;
+    const diff = Date.now() - entry.getTime();
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const over48 = diff > 48 * 3600000;
+    el.textContent = (h > 0 ? h + 'h ' : '') + m + 'm';
+    if (over48) el.style.color = PALETTE.danger;
+    else if (h >= 24) el.style.color = '#FFB05F';
+  }
+
+  setInterval(() => {
+    document.querySelectorAll('.pos-timer').forEach(el => updateTimer(el));
+  }, 60000);
   function fmtPct(v) { return fmt(v) + '%'; }
 
   function render(data) {
@@ -319,6 +337,10 @@ hide:
       const pnlSign = upnl >= 0 ? '+' : '';
       const ep = smartDec(p.entry_price);
       const mp = smartDec(p.mark_price);
+      const entryTs = p.entry_ts || p.entry_time;
+      const entryDate = entryTs ? new Date(typeof entryTs === 'number' ? entryTs : entryTs) : null;
+      const dateStr = entryDate ? entryDate.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '';
+      const timeStr = entryDate ? entryDate.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '';
       return `<div class="card" style="padding:0.6rem 0.8rem;">` +
         `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">` +
           `<span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span>` +
@@ -328,8 +350,14 @@ hide:
           `<span>entry ${ep}</span>` +
           `<span>mark ${mp}</span>` +
         `</div>` +
+        `<div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-top:0.2rem;">` +
+          `<span style="color:var(--fwd-text-muted);">${dateStr} ${timeStr}</span>` +
+          `<span style="color:var(--fwd-text-dim);" data-entry-ts="${entryTs}" class="pos-timer">—</span>` +
+        `</div>` +
       `</div>`;
     }).join('');
+    // Start timers for open positions
+    document.querySelectorAll('.pos-timer').forEach(el => updateTimer(el));
   }
 
   function renderTrades(trades) {
