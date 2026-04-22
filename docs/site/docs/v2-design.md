@@ -96,7 +96,7 @@
 | Max Hold 24h | Raus, egal was passiert |
 
 Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
-DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case ~3€ pro Trade = 3% des Gesamtportfolios.
+DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case 1 Trade = 2.5% Trail × 5x = 12.5% auf 30€ = 3.75€ = 3.75% des Gesamtportfolios. Heißt: 1 Sniper-Verlust verbraucht ~38% des DD-Budgets. Max 2-3 Sniper-Verluste bevor Sniper pausiert.
 
 ---
 
@@ -220,13 +220,17 @@ News API → KI Extraction (JSON-Mode) → Sentiment Score (0-100)
 
 | # | Feature | Priorität | Erwarteter Impact |
 |---|---------|-----------|-------------------|
-| 1 | Asset-Ranking (ROC) | **Hoch** | Bessere Asset-Auswahl bei >1 Signal |
-| 2 | ADX-based Sizing | **Hoch** | 0.5x bei ADX 20-30, 1.5x bei >40 |
-| 3 | 2x Leverage (BTC/ETH) | Mittel | +40% Return, DD noch akzeptabel |
-| 4 | Limit-Orders | Mittel | Fee-Reduktion, weniger Slippage |
-| 5 | HTF-Alignment | Niedrig | 4h Bestätigung vor 1h Entry |
-| 6 | ~~ATR-Stops~~ | Abgelehnt | Kein Improvement bewiesen |
-| 7 | ~~Kelly Criterion~~ | Abgelehnt | Win-Rate zu instabil |
+| 1 | Regime-Score (ADX+ATR+Slope) | **Hoch** | Filtert ~70% Range-Trades raus |
+| 2 | Asset-Ranking (ROC) | **Hoch** | Bessere Asset-Auswahl bei >1 Signal |
+| 3 | Sniper-Modul (4-5x) | **Hoch** | Conviction-Upgrade auf Top-Asset |
+| 4 | Volatility-Parität | **Mittel** | Riskoparität statt Equal-Weight |
+| 5 | Partial Exits (V1) | **Mittel** | Gewinn sichern, Upside offen halten |
+| 6 | Limit-Orders | **Mittel** | Fee-Reduktion, weniger Slippage |
+| 7 | Korrelations-Filter | Niedrig | max 2 korrelierte Positionen |
+| 8 | HTF-Alignment | Niedrig | 4h Bestätigung vor 1h Entry |
+| 9 | Sentiment Kill-Switch | Niedrig | Crash-Schutz, V3-Kandidat |
+| — | ~~ATR-Stops~~ | Abgelehnt | Kein Improvement bewiesen |
+| — | ~~Kelly Criterion~~ | Abgelehnt | Win-Rate zu instabil |
 
 ---
 
