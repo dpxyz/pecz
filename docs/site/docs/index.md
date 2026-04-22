@@ -184,7 +184,7 @@ title: Mission Control
       if (!ts) return;
       const d = new Date(ts);
       const el = document.getElementById('dash-timestamp');
-      if (el) el.textContent = d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' · ' + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
+      if (el) el.textContent = d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'}) + ' · ' + d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
     } catch(e) {}
   }
   updateTimestamp();

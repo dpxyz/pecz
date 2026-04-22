@@ -153,7 +153,7 @@ hide:
     const tsEl = document.getElementById('monitor-last-update');
     if (tsEl && data.generated_at) {
       const d = new Date(data.generated_at);
-      tsEl.textContent = d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' · ' + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
+      tsEl.textContent = d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'}) + ' · ' + d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
     }
 
     // Equity chart
