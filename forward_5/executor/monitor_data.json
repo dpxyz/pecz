@@ -14,9 +14,9 @@
     "win_rate": 100.0,
     "total_pnl": 0.1495414619246472,
     "n_open_positions": 5,
-    "uptime_hours": 5.2,
+    "uptime_hours": 5.3,
     "last_candle": "2026-04-22T13:00:00+00:00",
-    "timestamp": "2026-04-22T13:16:19.531969+00:00"
+    "timestamp": "2026-04-22T13:19:18.733130+00:00"
   },
   "equity_curve": [
     {
@@ -76,7 +76,7 @@
       "peak_price": 78583.0,
       "size": 0.00039053881861603895,
       "unrealized_pnl": 0.0,
-      "mark_price": 78375.0
+      "mark_price": 78385.0
     },
     {
       "symbol": "ADAUSDT",
@@ -172,5 +172,5 @@
       "reason": "Entry at 88.38"
     }
   ],
-  "generated_at": "2026-04-22T13:16:19.532478+00:00"
+  "generated_at": "2026-04-22T13:19:18.733651+00:00"
 }
