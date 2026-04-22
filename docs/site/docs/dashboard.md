@@ -7,6 +7,8 @@ hide:
 
 # 📊 Live Dashboard
 
+<div class="dashboard">
+
 <div id="monitor-last-update" style="float:right; color:var(--fwd-text-muted); font-size:0.85rem; font-family:var(--fwd-font);">⏳</div>
 
 <div style="clear:both;"></div>
@@ -348,3 +350,5 @@ hide:
   setInterval(load, 300000);
 })();
 </script>
+
+</div>
