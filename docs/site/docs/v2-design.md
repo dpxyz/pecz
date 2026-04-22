@@ -36,6 +36,46 @@
 
 ---
 
+## Sniper-Modul
+
+### Kernidee
+Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale aligned sind, wird das Top-Asset von 1.8x auf 4-5x gehoben. Die anderen 5 Assets laufen normal.
+
+### Modus B: Sniper als V1-Upgrade
+- V1 scannt alle 6 Assets normal
+- Sniper-Bedingungen erfüllt → Top-Asset wird NICHT mit V1-Hebel tradet, sondern mit 4-5x
+- Die anderen 5 Assets: normale V1-Regeln
+- Kein Kapitalkonflikt — das Top-Asset wird nur "aufgewertet"
+
+### Entry-Stack (ALLE müssen grün sein)
+1. Regime-Score > 65 (Strong Trend)
+2. Asset-Ranking: nur #1 oder #2
+3. Sentiment > 50 (kein Panic)
+4. MACD-Entry (Trigger bleibt gleich)
+5. EMA-Slope > 0.5 (Trend hat Geschwindigkeit)
+
+### Leverage
+- V1: 1.0-1.8x (gestreut, defensive)
+- Sniper: **4-5x** (1 Position, maximale Conviction)
+- Nicht 2-3x — das wäre V1 mit Filter
+
+### Risiko-Kontrolle
+- Nur 1 Position gleichzeitig (Konzentration)
+- Trailing Stop tight: 1.5% statt 2.0%
+- Max Hold: 24h statt 48h (Conviction hat Zeitlimit)
+- Capital: ~83€ Notional pro Trade (16.67€ × 5x)
+
+### Warum 4-5x vertretbar
+- Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
+- Asset-Ranking Top-2 = stärkster Momentum in stärkstem Trend
+- DD pro Trade: ~5-6% bei 1.5% Stop = vertretbar
+- V1-DD von 14% kommt aus Range-Trades — die fallen komplett weg
+
+### Scharfmacher
+Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Ranking im Backtest bewiesen sind.
+
+---
+
 ## Regime-Score — Proof of Concept
 
 ### Kombination
