@@ -14,32 +14,38 @@ title: Mission Control
 </div>
 </div>
 
-<!-- ── System Status ── -->
+<!-- ── System Status (compact) ── -->
 <div class="section-label">system</div>
-<div class="grid-3">
+<div class="grid-3" style="gap:0.4rem;">
 
-<div class="card glow-success status-card">
-  <div>
-    <div class="status-label">engine</div>
-    <div class="status-sub">paper · rest · 60s</div>
+<div class="card" style="padding:0.4rem 0.7rem;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;color:var(--fwd-text);">engine</div>
+      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">paper · rest · 60s</div>
+    </div>
+    <span style="font-size:0.7rem;color:var(--fwd-success);">● run</span>
   </div>
-  <span class="badge badge--success">● run</span>
 </div>
 
-<div class="card glow-success status-card">
-  <div>
-    <div class="status-label">watchdog</div>
-    <div class="status-sub">v2 · breaker · 1h</div>
+<div class="card" style="padding:0.4rem 0.7rem;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;color:var(--fwd-text);">watchdog</div>
+      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">v2 · breaker · 1h</div>
+    </div>
+    <span style="font-size:0.7rem;color:var(--fwd-success);">● ok</span>
   </div>
-  <span class="badge badge--success">● ok</span>
 </div>
 
-<div class="card glow-success status-card">
-  <div>
-    <div class="status-label">database</div>
-    <div class="status-sub">30.1k candles · 6 assets</div>
+<div class="card" style="padding:0.4rem 0.7rem;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;color:var(--fwd-text);">database</div>
+      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">30.1k candles · 6 assets</div>
+    </div>
+    <span style="font-size:0.7rem;color:var(--fwd-success);">● ok</span>
   </div>
-  <span class="badge badge--success">● ok</span>
 </div>
 
 </div>
@@ -50,27 +56,25 @@ title: Mission Control
 
 <div class="card metric-card">
   <div class="metric-label">equity</div>
-  <div class="metric-value">99.49€</div>
+  <div class="metric-value" id="idx-equity">—</div>
   <div class="metric-sub">start: 100.00€</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">pnl</div>
-  <div class="metric-value negative">-0.51€</div>
+  <div class="metric-value" id="idx-pnl">—</div>
   <div class="metric-sub">net · fees deducted</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">trades</div>
-  <div class="metric-value">6</div>
-  <div class="progress-bar"><div class="progress-fill accent" style="width:60%"></div></div>
-  <div class="metric-sub">target: ≥10</div>
+  <div class="metric-value" id="idx-trades">—</div>
+  <div class="metric-sub" id="idx-trades-sub">target: ≥10</div>
 </div>
 
 <div class="card metric-card">
   <div class="metric-label">drawdown</div>
-  <div class="metric-value">0.51%</div>
-  <div class="progress-bar"><div class="progress-fill success" style="width:2%"></div></div>
+  <div class="metric-value" id="idx-dd">—</div>
   <div class="metric-sub">limit: ≤25%</div>
 </div>
 
@@ -78,9 +82,8 @@ title: Mission Control
 
 <!-- ── Equity Curve ── -->
 <div class="section-label">equity curve</div>
-<div class="chart-area">
-<div class="chart-icon">📈</div>
-<div class="chart-text">monitor_v1 — pending implementation</div>
+<div class="chart-area" style="min-height:220px;position:relative;">
+  <canvas id="index-equity-chart"></canvas>
 </div>
 
 <!-- ── Phase Timeline ── -->
@@ -119,17 +122,13 @@ title: Mission Control
 
 </div>
 
-<!-- ── Open Position ── -->
-<div class="section-label">open position</div>
-
-| asset | side | entry | size | lev | status |
-|-------|------|-------|------|-----|--------|
-| BTC | LONG | $76,426 | 0.000391 | 1.8x | ● open |
-| ETH | LONG | $2,412 | 0.012371 | 1.8x | ● open |
-| SOL | LONG | $88.38 | 0.281422 | 1.5x | ● open |
-| AVAX | LONG | $9.59 | 1.729173 | 1.0x | ● open |
-| DOGE | LONG | $0.10 | 253.357408 | 1.5x | ● open |
-| ADA | LONG | $0.25 | 97.701401 | 1.5x | ● open |
+<!-- ── Open Positions (cards) ── -->
+<div class="section-label">positions</div>
+<div id="index-positions" class="grid-2" style="gap:0.5rem;">
+  <div class="card" style="color:var(--fwd-text-muted);font-size:0.85rem;text-align:center;padding:1rem;">
+    Loading…
+  </div>
+</div>
 
 <!-- ── Quick Navigation ── -->
 <div class="section-label">docs</div>
@@ -147,7 +146,7 @@ title: Mission Control
 
 <a href="dashboard/" class="quick-link">
   <span class="link-icon">📊</span>
-  <div class="link-text">live monitor<span class="link-desc">quity curve + chart</span></div>
+  <div class="link-text">live monitor<span class="link-desc">equity curve + chart</span></div>
 </a>
 
 <a href="test-suite/" class="quick-link">
@@ -172,24 +171,105 @@ title: Mission Control
 
 </div>
 
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 (function() {
   const DATA_URL = 'https://raw.githubusercontent.com/dpxyz/pecz/main/forward_5/executor/monitor_data.json';
-  async function updateTimestamp() {
+  const P = {accent:'#D4FF5F',danger:'#FF5F5F',text:'#C9C3BB',muted:'#6B6560',surface:'#1F1C1A',border:'#352F2C'};
+  let eqChart = null;
+
+  function smartDec(v) {
+    if (v == null) return '—';
+    if (v < 1) return v.toFixed(6);
+    if (v < 100) return v.toFixed(4);
+    return v.toFixed(2);
+  }
+  function fmtEur(v) { return v.toFixed(2) + '€'; }
+
+  async function load() {
     try {
       const resp = await fetch(DATA_URL + '?t=' + Date.now());
       if (!resp.ok) return;
       const data = await resp.json();
-      const ts = data.generated_at || data.summary?.timestamp;
-      if (!ts) return;
-      const d = new Date(ts);
-      const el = document.getElementById('dash-timestamp');
-      if (el) el.textContent = d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'}) + ' · ' + d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
+      const s = data.summary || {};
+
+      // Timestamp
+      const ts = data.generated_at || s.timestamp;
+      if (ts) {
+        const d = new Date(ts);
+        const el = document.getElementById('dash-timestamp');
+        if (el) el.textContent = d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + ' · ' + d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+      }
+
+      // Metrics
+      const eqEl = document.getElementById('idx-equity');
+      if (eqEl) eqEl.textContent = fmtEur(s.equity);
+
+      const pnlEl = document.getElementById('idx-pnl');
+      if (pnlEl) {
+        const pnl = s.pnl || 0;
+        pnlEl.textContent = (pnl >= 0 ? '+' : '') + fmtEur(pnl);
+        pnlEl.style.color = pnl >= 0 ? P.accent : P.danger;
+      }
+
+      const trEl = document.getElementById('idx-trades');
+      if (trEl) trEl.textContent = s.total_trades != null ? s.total_trades : '—';
+      const trSub = document.getElementById('idx-trades-sub');
+      if (trSub) trSub.textContent = (s.wins||0) + 'W/' + (s.losses||0) + 'L · target: ≥10';
+
+      const ddEl = document.getElementById('idx-dd');
+      if (ddEl) {
+        ddEl.textContent = s.drawdown_pct != null ? s.drawdown_pct.toFixed(2) + '%' : '—';
+        ddEl.style.color = s.drawdown_pct > 15 ? P.danger : s.drawdown_pct > 10 ? '#FFB05F' : P.accent;
+      }
+
+      // Equity curve
+      const curve = data.equity_curve || [];
+      if (curve.length > 0) {
+        const labels = curve.map(p => {
+          const d = new Date(p.ts);
+          return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+        });
+        const eqData = curve.map(p => p.equity + (p.unrealized_pnl||0));
+        const ctx = document.getElementById('index-equity-chart');
+        if (ctx) {
+          if (eqChart) eqChart.destroy();
+          eqChart = new Chart(ctx.getContext('2d'), {
+            type:'line',
+            data:{labels,datasets:[{label:'Equity',data:eqData,borderColor:P.accent,backgroundColor:'rgba(212,255,95,0.08)',borderWidth:2,fill:true,pointRadius:curve.length<50?3:0,tension:0.3}]},
+            options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:P.surface,titleColor:P.text,bodyColor:P.text,borderColor:P.border,borderWidth:1,callbacks:{label:c=>fmtEur(c.parsed.y)}}},scales:{x:{ticks:{color:P.muted,maxTicksLimit:6,font:{size:9}},grid:{color:'rgba(53,47,44,0.4)'}},y:{ticks:{color:P.muted,callback:v=>fmtEur(v),font:{size:9}},grid:{color:'rgba(53,47,44,0.4)'}}}}
+          });
+        }
+      }
+
+      // Positions as cards
+      const positions = data.positions || [];
+      const grid = document.getElementById('index-positions');
+      if (positions.length === 0) {
+        grid.innerHTML = '<div class="card" style="color:var(--fwd-text-muted);font-size:0.85rem;text-align:center;padding:1rem;">No open positions</div>';
+      } else {
+        grid.innerHTML = positions.map(p => {
+          const sym = p.symbol.replace('USDT','');
+          const upnl = p.unrealized_pnl || 0;
+          const pc = upnl >= 0 ? P.accent : P.danger;
+          const ps = upnl >= 0 ? '+' : '';
+          return '<div class="card" style="padding:0.5rem 0.8rem;">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">' +
+              '<span style="color:var(--fwd-text-bright);font-weight:600;">' + sym + '</span>' +
+              '<span style="color:' + pc + ';font-weight:600;">' + ps + fmtEur(upnl) + '</span>' +
+            '</div>' +
+            '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--fwd-text-muted);">' +
+              '<span>entry ' + smartDec(p.entry_price) + '</span>' +
+              '<span>mark ' + smartDec(p.mark_price) + '</span>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
     } catch(e) {}
   }
-  updateTimestamp();
-  setInterval(updateTimestamp, 300000);
+  load();
+  setInterval(load, 300000);
 })();
 </script>
-
-</div>
