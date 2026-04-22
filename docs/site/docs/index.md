@@ -16,36 +16,30 @@ title: Mission Control
 
 <!-- ── System Status (compact) ── -->
 <div class="section-label">system</div>
-<div class="grid-3" style="gap:0.4rem;">
+<div class="grid-3" style="gap:0.3rem;">
 
-<div class="card" style="padding:0.4rem 0.7rem;">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <div style="font-size:0.75rem;color:var(--fwd-text);">engine</div>
-      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">paper · rest · 60s</div>
-    </div>
-    <span style="font-size:0.7rem;color:var(--fwd-success);">● run</span>
+<div class="card status-compact">
+  <div>
+    <div class="status-label">engine</div>
+    <div class="status-sub">paper · rest · 60s</div>
   </div>
+  <span class="badge-sm" style="color:var(--fwd-success);">● run</span>
 </div>
 
-<div class="card" style="padding:0.4rem 0.7rem;">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <div style="font-size:0.75rem;color:var(--fwd-text);">watchdog</div>
-      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">v2 · breaker · 1h</div>
-    </div>
-    <span style="font-size:0.7rem;color:var(--fwd-success);">● ok</span>
+<div class="card status-compact">
+  <div>
+    <div class="status-label">watchdog</div>
+    <div class="status-sub">v2 · breaker · 1h</div>
   </div>
+  <span class="badge-sm" style="color:var(--fwd-success);">● ok</span>
 </div>
 
-<div class="card" style="padding:0.4rem 0.7rem;">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <div style="font-size:0.75rem;color:var(--fwd-text);">database</div>
-      <div style="font-size:0.65rem;color:var(--fwd-text-muted);">30.1k candles · 6 assets</div>
-    </div>
-    <span style="font-size:0.7rem;color:var(--fwd-success);">● ok</span>
+<div class="card status-compact">
+  <div>
+    <div class="status-label">database</div>
+    <div class="status-sub">30.1k candles · 6 assets</div>
   </div>
+  <span class="badge-sm" style="color:var(--fwd-success);">● ok</span>
 </div>
 
 </div>

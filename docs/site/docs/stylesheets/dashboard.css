@@ -330,6 +330,29 @@ body,
     letter-spacing: 0.01em;
 }
 
+.dashboard .status-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.6rem !important;
+}
+.dashboard .status-compact .status-label {
+    font-family: var(--fwd-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--fwd-text-bright);
+}
+.dashboard .status-compact .status-sub {
+    font-size: 0.58rem;
+    color: var(--fwd-text-muted);
+    margin-top: 0.05rem;
+}
+.dashboard .status-compact .badge-sm {
+    font-family: var(--fwd-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
 /* ════════════════════════════════════════════════════════
    BADGES
    ════════════════════════════════════════════════════════ */
