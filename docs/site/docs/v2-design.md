@@ -44,7 +44,7 @@
 - Sniper: Kein Re-Entry nach Max Hold oder Regime-Exit. Score muss erst < 70 fallen und wieder > 70 steigen für einen neuen Sniper-Trade.
 
 ### 8. Regime-basierter Exit
-- Strong Trend (Score >65): weiter Trail 2.5-3%, Position atmen lassen
+- Strong Trend (Score >70): weiter Trail 2.5-3%, Position atmen lassen
 - Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
 - Hoher Regime-Score = höhere Conviction = mehr Raum
 
@@ -90,7 +90,7 @@
 | Signal | Aktion |
 |--------|--------|
 | Regime-Score fällt < 50 | Sofort raus (Trend bricht) |
-| Regime-Score fällt 50-65 | Downgrade auf V1-Hebel, Trail auf 2.0% |
+| Regime-Score fällt 50-70 | Downgrade auf V1-Hebel, Trail auf 2.0% |
 | Trailing Stop 2.5% | Standard-Exit im Strong Trend |
 | Max Hold 24h | Raus, egal was passiert |
 
@@ -142,7 +142,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 - Trailing Stop: 2.5% (Strong Trend = mehr Raum, nicht enger)
 - Max Hold: 24h statt 48h (Conviction hat Zeitlimit)
 - Capital: max 30€ allocated × 5x = 150€ Notional
-- Regime-Score fällt auf 50-65 → Downgrade auf V1-Hebel
+- Regime-Score fällt auf 50-70 → Downgrade auf V1-Hebel
 - Volatility-Parität gilt für V1, Sniper ist fix 5x
 - **Sniper-Circuit-Breaker**: 3 aufeinanderfolgende Sniper-Verluste → Sniper pausiert für 48h, dann Resume
 
