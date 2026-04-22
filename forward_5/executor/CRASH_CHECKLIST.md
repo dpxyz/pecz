@@ -1,89 +1,98 @@
 # Crash Recovery Checklist
 
-**Wann:** Nach jedem Agent-Crash, Engine-Neustart, oder Docker-Neustart
+**Wann:** Nach jedem Agent-Crash, Engine-Neustart, oder Docker-Neustart.
+**Regel:** In dieser Reihenfolge abarbeiten. Nicht improvisieren.
 
-## System-Check (in dieser Reihenfolge)
-
-### 1. Prozesse prüfen
+## 1. Prozesse
 ```bash
 ps aux | grep -E "paper_engine|watchdog|monitor" | grep -v grep
 ```
-- [ ] Paper Engine läuft (PID sichtbar)
-- [ ] Wenn nicht: `cd /data/.openclaw/workspace/forward_v5/forward_5/executor && bash run_paper_engine.sh --background`
+- Läuft? → weiter zu 2.
+- Nicht? → `cd /data/.openclaw/workspace/forward_v5/forward_5/executor && bash run_paper_engine.sh --background`
 
-### 2. Cron-Jobs prüfen
-```bash
-cat /data/.openclaw/cron/jobs.json | python3 -m json.tool | grep -E "name|enabled|lastRunStatus|consecutiveErrors"
-```
-- [ ] housekeeping: enabled=True, lastRunStatus=ok, consecutiveErrors=0
-- [ ] engine-watchdog: enabled=True, lastRunStatus=ok, consecutiveErrors=0
-- [ ] monitor-update: enabled=True, lastRunStatus=ok, consecutiveErrors=0
-- [ ] Wenn Cron fehlt: `openclaw cron add` (siehe MEMORY.md für Configs)
-
-### 3. Engine Health prüfen
-```bash
-cd /data/.openclaw/workspace/forward_v5/forward_5/executor
-python3 -c "
-import sqlite3; conn=sqlite3.connect('state.db')
-eq=float(conn.execute('SELECT value FROM state WHERE key=\"equity\"').fetchone()[0])
-candles=conn.execute('SELECT COUNT(*) FROM candles').fetchone()[0]
-eh=conn.execute('SELECT equity, drawdown_pct, n_positions FROM equity_history ORDER BY ts DESC LIMIT 1').fetchone()
-pos=conn.execute('SELECT COUNT(*) FROM positions WHERE state=\"IN_LONG\"').fetchone()[0]
-print(f'Equity: {eq:.2f}€ | DD: {eh[1]:.2f}% | Positions: {pos} | Candles: {candles}')
-conn.close()
-"
-```
-- [ ] Equity > 0 und plausibel (~99€)
-- [ ] DD < 25%
-- [ ] Candles > 0 (Datenfeed funktioniert)
-
-### 4. Engine Log prüfen
-```bash
-tail -30 paper_engine.log | grep -i "error\|exception\|traceback\|fail"
-```
-- [ ] Keine Error/Exception/Traceback im aktuellen Log
-- [ ] Letzte Zeile hat aktuellen Timestamp
-
-### 5. Trade Log prüfen
+## 2. Cron-Jobs
 ```bash
 python3 -c "
 import json
-from collections import Counter
-trades = []
-with open('trades.jsonl') as f:
-    for line in f:
-        if line.strip(): trades.append(json.loads(line))
-entries = Counter(t['symbol'] for t in trades if t['event'] == 'ENTRY')
-exits = Counter(t['symbol'] for t in trades if t['event'] == 'EXIT')
-for sym in sorted(set(list(entries.keys()) + list(exits.keys()))):
-    e, x = entries.get(sym,0), exits.get(sym,0)
-    diff = e - x
-    marker = ' ⚠️' if diff > 0 else ' ✅'
-    print(f'{sym}: entry={e} exit={x} diff={diff}{marker}')
+for j in json.load(open('/data/.openclaw/cron/jobs.json'))['jobs']:
+    s=j['state']; e=s.get('consecutiveErrors',0)
+    print(f\"{j['name']:20s} {'✅' if j['enabled'] and e==0 else '❌'} last={s.get('lastRunStatus','?')} errors={e}\")
 "
 ```
-- [ ] Alle Symbole haben entry == exit (Diff = 0)
-- [ ] Wenn nicht: Backfill-Garbage oder orphaned ENTRYs → bereinigen
+- Alle ✅? → weiter zu 3.
+- Cron fehlt? → `openclaw cron add` (siehe MEMORY.md)
 
-### 6. Monitor Data prüfen
+## 3. Engine Health
 ```bash
-ls -la monitor_data.json
+cd /data/.openclaw/workspace/forward_v5/forward_5/executor
+python3 -c "
+import sqlite3; c=sqlite3.connect('state.db')
+eq=float(c.execute(\"SELECT value FROM state WHERE key='equity'\").fetchone()[0])
+eh=c.execute('SELECT equity,drawdown_pct,n_positions FROM equity_history ORDER BY ts DESC LIMIT 1').fetchone()
+pos=c.execute(\"SELECT COUNT(*) FROM positions WHERE state='IN_LONG'\").fetchone()[0]
+candles=c.execute('SELECT COUNT(*) FROM candles').fetchone()[0]
+print(f'EQ {eq:.2f}€ | DD {eh[1]:.2f}% | Pos {pos} | Candles {candles}')
+c.close()
+"
 ```
-- [ ] File existiert und ist < 1h alt
-- [ ] Wenn nicht: `bash /data/.openclaw/workspace/scripts/run_monitor.sh`
+- EQ plausibel (~99€), DD < 25%, Candles > 0? → weiter zu 4.
 
-### 7. Manuelle Checks ausführen
-- [ ] Watchdog: `python3 watchdog_v2.py` → Exit 0
-- [ ] Housekeeping: `bash /data/.openclaw/workspace/scripts/housekeeping.sh`
-- [ ] Monitor Update: `bash /data/.openclaw/workspace/scripts/run_monitor.sh`
-
-### 8. Test Suite
+## 4. Engine Log
 ```bash
-python3 -m pytest tests/ -q
+cd /data/.openclaw/workspace/forward_v5/forward_5/executor
+tail -50 paper_engine.log | grep -ic "error\|exception\|traceback"
 ```
-- [ ] Alle Tests bestanden (ausgenommen bekannte Bug-Tests)
-- [ ] Wenn neue Failures: Bug→Test-Workflow (PRINCIPLES.md)
+- 0? → weiter zu 5.
+- > 0? → `grep -n "Error\|Exception\|Traceback" paper_engine.log | tail -10` → Bug→Test-Workflow
 
-## Nach dem Check
-- [ ] Discord #system informieren (kurz: "Engine recovered, EQ=99.XX€, DD=X.X%")
-- [ ] MEMORY.md aktualisieren wenn wichtiges passiert ist
+## 5. Trade Log
+```bash
+cd /data/.openclaw/workspace/forward_v5/forward_5/executor
+python3 -c "
+import json; from collections import Counter
+t=[json.loads(l) for l in open('trades.jsonl') if l.strip()]
+e=Counter(x['symbol'] for x in t if x['event']=='ENTRY')
+x=Counter(x['symbol'] for x in t if x['event']=='EXIT')
+for s in sorted(set(list(e)+list(x))):
+    d=e.get(s,0)-x.get(s,0)
+    print(f'{s:10s} E={e.get(s,0)} X={x.get(s,0)} diff={d:+d} {\"⚠️\" if d else \"✅\"}')
+"
+```
+- Alle diff=0? → weiter zu 6.
+- Orphaned? → Backfill-Garbage bereinigen (siehe unten)
+
+## 6. Monitor + Discord
+```bash
+ls -la /data/.openclaw/workspace/forward_v5/forward_5/executor/monitor_data.json
+```
+- < 1h alt? → ok.
+- Älter? → `bash /data/.openclaw/workspace/scripts/run_monitor.sh`
+- Discord #system informieren: "🔄 Crash Recovery: EQ=XX€ DD=X% all systems OK"
+
+## 7. Test Suite
+```bash
+cd /data/.openclaw/workspace/forward_v5/forward_5/executor && python3 -m pytest tests/ -q
+```
+- Alle passed (außer bekannte Bug-Tests)? → fertig.
+- Neue Failures? → Bug→Test-Workflow (PRINCIPLES.md)
+
+---
+
+## Trade Log Bereinigung (falls Step 5 ⚠️)
+
+```python
+# Entferne Backfill-Garbage: Preise die unmöglich sind
+MIN_PRICES = {"BTCUSDT": 10000, "ETHUSDT": 100, "SOLUSDT": 10,
+              "AVAXUSDT": 1, "DOGEUSDT": 0.001, "ADAUSDT": 0.01}
+# Entferne Duplikate: gleicher symbol+event+price innerhalb 1h
+# Füge fehlende EXIT-Events für orphaned Positions hinzu (reason="engine_restart")
+```
+
+## Pfade
+- Engine: `forward_v5/forward_5/executor/`
+- State DB: `forward_v5/forward_5/executor/state.db`
+- Trade Log: `forward_v5/forward_5/executor/trades.jsonl`
+- Engine Log: `forward_v5/forward_5/executor/paper_engine.log`
+- Monitor: `scripts/run_monitor.sh`
+- Housekeeping: `scripts/housekeeping.sh`
+- Watchdog: `forward_v5/forward_5/executor/watchdog_v2.py`
