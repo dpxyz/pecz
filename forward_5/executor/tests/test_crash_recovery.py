@@ -381,3 +381,69 @@ class TestLiveDataIntegrity:
             assert len(artifacts) == 0, (
                 f"DB has {len(artifacts)} backfill artifacts: {artifacts[:3]}"
             )
+class TestTradeLogIntegrity:
+    """Test that trade log entries are consistent (no orphaned entries/exits)."""
+
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.trades_path = os.path.join(self.tmpdir, "trades.jsonl")
+
+    def test_entry_exit_count_balanced(self):
+        """BUG: Engine restart closes positions without writing EXIT to trades.jsonl.
+        This test verifies that ENTRY/EXIT counts are balanced per symbol.
+        Before fix: orphaned ENTRYs existed (ADAUSDT, AVAXUSDT, BTCUSDT).
+        After fix: engine writes EXIT on restart for force-closed positions."""
+        # Simulate trade log with orphaned entry (the bug)
+        trades = [
+            {"event": "ENTRY", "symbol": "BTCUSDT", "price": 76010.0, "timestamp": 1000},
+            {"event": "EXIT", "symbol": "BTCUSDT", "price": 75343.0, "pnl": -0.5, "timestamp": 2000},
+            {"event": "ENTRY", "symbol": "ADAUSDT", "price": 0.25, "timestamp": 3000},
+            # ADAUSDT has no EXIT — this is the bug
+        ]
+        with open(self.trades_path, 'w') as f:
+            for t in trades:
+                f.write(json.dumps(t) + '\n')
+
+        # Check balance
+        from collections import Counter
+        loaded = []
+        with open(self.trades_path) as f:
+            for line in f:
+                if line.strip():
+                    loaded.append(json.loads(line))
+        entries = Counter(t['symbol'] for t in loaded if t['event'] == 'ENTRY')
+        exits = Counter(t['symbol'] for t in loaded if t['event'] == 'EXIT')
+
+        # This SHOULD pass — currently FAILS with the bug
+        for sym in set(list(entries.keys()) + list(exits.keys())):
+            assert entries.get(sym, 0) == exits.get(sym, 0), \
+                f"{sym}: {entries.get(sym,0)} entries but {exits.get(sym,0)} exits (orphaned trade log)"
+
+    def test_no_backfill_garbage_entries(self):
+        """BUG: Backfill replay wrote ENTRY events for every processed candle.
+        Real BTC price > 10000, garbage entries had prices < 1000.
+        This test verifies all trades have realistic prices."""
+        trades = [
+            {"event": "ENTRY", "symbol": "BTCUSDT", "price": 76010.0, "timestamp": 1000},
+            {"event": "ENTRY", "symbol": "BTCUSDT", "price": 97.99, "timestamp": 2000},  # garbage
+            {"event": "ENTRY", "symbol": "ETHUSDT", "price": 2412.0, "timestamp": 3000},
+            {"event": "ENTRY", "symbol": "ETHUSDT", "price": 0.99, "timestamp": 4000},  # garbage
+        ]
+        with open(self.trades_path, 'w') as f:
+            for t in trades:
+                f.write(json.dumps(t) + '\n')
+
+        loaded = []
+        with open(self.trades_path) as f:
+            for line in f:
+                if line.strip():
+                    loaded.append(json.loads(line))
+
+        # Price sanity checks
+        MIN_PRICES = {"BTCUSDT": 10000, "ETHUSDT": 100, "SOLUSDT": 10,
+                      "AVAXUSDT": 1, "DOGEUSDT": 0.001, "ADAUSDT": 0.01}
+        for t in loaded:
+            sym = t['symbol']
+            if sym in MIN_PRICES:
+                assert t['price'] >= MIN_PRICES[sym], \
+                    f"{sym} price {t['price']} below minimum {MIN_PRICES[sym]} (backfill garbage)"

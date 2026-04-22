@@ -152,6 +152,22 @@ class StateManager:
                 }
             return None
 
+    def get_open_positions(self) -> list[dict]:
+        """Return all currently open positions (state='IN_LONG')."""
+        with sqlite3.connect(self.db_path) as conn:
+            rows = conn.execute("""
+                SELECT id, symbol, state, entry_price, entry_time,
+                       peak_price, size, unrealized_pnl
+                FROM positions
+                WHERE state = 'IN_LONG'
+            """).fetchall()
+            return [
+                {"id": r[0], "symbol": r[1], "state": r[2],
+                 "entry_price": r[3], "entry_time": r[4],
+                 "peak_price": r[5], "size": r[6], "unrealized_pnl": r[7]}
+                for r in rows
+            ]
+
     def open_position(self, symbol: str, entry_price: float, entry_time: int,
                       size: float, guard_state: str = "RUNNING"):
         now = datetime.now(timezone.utc).isoformat()

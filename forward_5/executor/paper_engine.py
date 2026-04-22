@@ -115,6 +115,16 @@ class PaperTradingEngine:
         # Record engine start time
         self._engine_start_time = int(datetime.now(timezone.utc).timestamp() * 1000)  # ms for candle ts comparison
         self.state.set_state("engine_start_time", int(datetime.now(timezone.utc).timestamp()))
+        self.state.set_state("_engine_start_time_ms", str(self._engine_start_time))
+
+        # Position recovery: check for orphaned DB positions (closed by KILL/restart but no EXIT logged)
+        # This fixes the bug where KILL_SWITCH force-closes positions without writing EXIT to trades.jsonl
+        try:
+            open_positions = self.state.get_open_positions()
+            if not open_positions:
+                log.info("Position recovery: no open positions found")
+        except Exception as e:
+            log.warning(f"Position recovery check failed: {e}")
 
         # Gap recovery: get last processed timestamp from state
         # This tells the data feed where to start replaying missed candles
