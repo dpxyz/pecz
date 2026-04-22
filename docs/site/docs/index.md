@@ -11,7 +11,6 @@ title: Mission Control
 <span><span class="live-dot"></span>PHASE 8 LIVE</span>
 <span>DAY 3/14</span>
 <span id="dash-timestamp">⏳</span>
-<span>EQ 99.49€</span>
 </div>
 </div>
 
