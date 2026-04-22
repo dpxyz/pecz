@@ -40,9 +40,8 @@
 - Reduziert DD massiv ohne Return zu schneiden
 
 ### 7. Re-Entry Logik
-- V1: Trailing Stop → fertig, kein Re-Entry
-- V2: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry möglich
-- Nicht sofort, aber auch nicht nie
+- V1: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry möglich
+- Sniper: Kein Re-Entry nach Max Hold oder Regime-Exit. Score muss erst < 70 fallen und wieder > 70 steigen für einen neuen Sniper-Trade.
 
 ### 8. Regime-basierter Exit
 - Strong Trend (Score >65): weiter Trail 2.5-3%, Position atmen lassen
@@ -127,7 +126,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 - Kein Kapitalkonflikt — das Top-Asset wird nur "aufgewertet"
 
 ### Entry-Stack (ALLE müssen grün sein)
-1. Regime-Score > 65 (Strong Trend)
+1. Regime-Score > 70 (Strong Trend, nicht nur „irgendein Trend“)
 2. Asset-Ranking: nur #1 oder #2
 3. Sentiment > 50 (kein Panic)
 4. MACD-Entry (Trigger bleibt gleich)
@@ -145,6 +144,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 - Capital: max 30€ allocated × 5x = 150€ Notional
 - Regime-Score fällt auf 50-65 → Downgrade auf V1-Hebel
 - Volatility-Parität gilt für V1, Sniper ist fix 5x
+- **Sniper-Circuit-Breaker**: 3 aufeinanderfolgende Sniper-Verluste → Sniper pausiert für 48h, dann Resume
 
 ### Warum 4-5x vertretbar
 - Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
