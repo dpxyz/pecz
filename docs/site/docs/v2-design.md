@@ -51,6 +51,44 @@
 
 ---
 
+## Kapital-Allokation
+
+### 70/30-Split
+- **70€ V1-Pool** — normale 6-Asset-Strategie, läuft wie gehabt
+- **30€ Sniper-Pool** — nur für Sniper-Trades, 4-5x Hebel = 120-150€ Notional
+- Sniper feuert → nimmt aus seinem Pool, V1 läuft ungestört weiter
+- Sniper-Pool leer → kein Sniper bis V1-Positionen schließen und Kapital freigeben
+- Kein Kapitalkonflikt zwischen V1 und Sniper
+
+---
+
+## Sniper-Exit: Drei Regeln
+
+| Signal | Aktion |
+|--------|--------|
+| Trailing Stop 1.5% | Standard-Exit |
+| Regime-Score fällt < 50 | Sofort raus (Trend bricht) |
+| Max Hold 24h | Raus, egal was passiert |
+
+DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case ~3€ pro Trade = 3% des Gesamtportfolios.
+
+---
+
+## V2 Validierung
+
+### 3-Level-Test
+
+| Level | Kriterium | Threshold |
+|-------|-----------|-----------|
+| Backtest | Sniper Sharpe | > V1 Baseline Sharpe |
+| Backtest | Sniper DD | < V1 Baseline DD |
+| Paper | ≥5 Sniper-Trades | in 14 Tagen |
+| Paper | Sniper-PnL | positiv oder < 3% Portfolio-DD |
+
+Sniper schießt selten — fair. Wenn in 14 Tagen <3 Signale, Verlängerung auf 21 Tage.
+
+---
+
 ## Sniper-Modul
 
 ### Kernidee
