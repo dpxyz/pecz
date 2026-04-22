@@ -6,6 +6,7 @@ Recoverable after crash/restart.
 
 import json
 import sqlite3
+from typing import Optional
 import logging
 from pathlib import Path
 from datetime import datetime, timezone
@@ -119,7 +120,7 @@ class StateManager:
 
     # ── Position Management ──
 
-    def get_open_position(self, symbol: str) -> dict:
+    def get_open_position(self, symbol: str) -> Optional[dict]:
         with sqlite3.connect(self.db_path) as conn:
             row = conn.execute("""
                 SELECT id, symbol, state, entry_price, entry_time,
@@ -155,7 +156,7 @@ class StateManager:
         return pos_id
 
     def close_position(self, symbol: str, exit_price: float, exit_time: int,
-                       reason: str, guard_state: str = "RUNNING", net_pnl: float = None):
+                       reason: str, guard_state: str = "RUNNING", net_pnl: Optional[float] = None):
         pos = self.get_open_position(symbol)
         if not pos:
             log.warning(f"No open position for {symbol}")
@@ -223,7 +224,7 @@ class StateManager:
     def log_event(self, event: str, symbol: str = "", side: str = "",
                   price: float = 0, size: float = 0, equity: float = 0,
                   pnl: float = 0, guard_state: str = "", reason: str = "",
-                  indicators: dict = None):
+                  indicators: Optional[dict] = None):
         now_ts = int(datetime.now(timezone.utc).timestamp())
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""

@@ -1,15 +1,7 @@
-"""
-Executor V1 — Command Listener
-Listens for Discord commands (!kill, !resume, !status) in #foundry-reports.
-Runs as a background task alongside the Paper Trading Engine.
-"""
-
 import asyncio
+from typing import Optional
 import json
 import logging
-import os
-import sqlite3
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -128,7 +120,7 @@ def _check_for_commands(messages: list, processed: set) -> list:
 class CommandListener:
     """Polls Discord for commands and executes them on the Paper Trading Engine."""
 
-    def __init__(self, engine, channel_id: str = None):
+    def __init__(self, engine, channel_id: Optional[str] = None):
         self.engine = engine
         self.channel_id = channel_id
         self._processed = _load_processed()
@@ -242,7 +234,7 @@ class CommandListener:
     async def _cmd_resume(self, author: str):
         """!resume — Resume from kill switch / pause."""
         from state_manager import GuardState
-        from discord_reporter import COLOR_GREEN, COLOR_AMBER
+        from discord_reporter import COLOR_GREEN
         
         current = self.engine.state.get_guard_state()
         if current == GuardState.RUNNING:
@@ -277,11 +269,10 @@ class CommandListener:
 
     async def _cmd_watchdog_clear(self, author: str):
         """!watchdog-clear — Clear circuit breaker and reset restart counter."""
-        from discord_reporter import COLOR_GREEN, COLOR_AMBER
-        from watchdog_v2 import clear_circuit_breaker, load_state
+        from discord_reporter import COLOR_GREEN
+        from watchdog_v2 import clear_circuit_breaker
         
         clear_circuit_breaker()
-        state = load_state()
         
         self.engine.reporter._send_container(
             "🔓 **WATCHDOG RESET**",
@@ -331,7 +322,7 @@ if __name__ == "__main__":
         {"id": "1", "content": "!kill", "author": {"username": "Dave"}},  # Duplicate
     ]
     
-    processed = set()
+    processed: set[str] = set()
     commands = _check_for_commands(test_messages, processed)
     print(f"\n  Found {len(commands)} commands:")
     for cmd in commands:

@@ -5,11 +5,11 @@ Entry: macd_hist > 0 AND close > ema_50 AND ema_50 > ema_200 AND adx_14 > 20
 Exit:  trailing_stop 2%, stop_loss 2.5%, max_hold 48 bars
 """
 
+from typing import Optional
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
 import polars as pl
 
@@ -109,7 +109,7 @@ STRATEGY_PARAMS = {
 class SignalGenerator:
     """Deterministic signal generator — exact same logic as backtest."""
 
-    def __init__(self, params: dict = None):
+    def __init__(self, params: Optional[dict] = None):
         self.p = {**STRATEGY_PARAMS, **(params or {})}
         log.info(f"SignalGenerator initialized: ADX>{self.p['adx_threshold']} "
                  f"EMA{self.p['ema_fast']}>EMA{self.p['ema_slow']} "
@@ -204,7 +204,6 @@ class SignalGenerator:
     def check_exit(self, position: dict, current_candle: dict, bars_held: int) -> Optional[Signal]:
         """Check if current position should exit."""
         entry_price = position["entry_price"]
-        high = current_candle["high"]
         low = current_candle["low"]
         close = current_candle["close"]
         symbol = position["symbol"]

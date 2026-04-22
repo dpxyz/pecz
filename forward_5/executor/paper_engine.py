@@ -1,10 +1,5 @@
-"""
-Executor V1 — Paper Trading Engine
-Orchestrates Data Feed, Signal Generator, Position Manager, Risk Guard.
-Runs on 1h candle close, deterministic execution, JSONL trade log.
-"""
-
 import asyncio
+from typing import Optional
 import json
 import logging
 import sqlite3
@@ -72,7 +67,7 @@ def log_trade(event: dict):
 
 
 class PaperTradingEngine:
-    def __init__(self, assets: list[str] = None, db_path: str = "state.db"):
+    def __init__(self, assets: Optional[list[str]] = None, db_path: str = "state.db"):
         self.assets = assets or ASSETS
         self.state = StateManager(db_path=db_path)
         self.risk = RiskGuard(self.state)
@@ -87,7 +82,7 @@ class PaperTradingEngine:
         self.feed = DataFeed(db_path=db_path, assets=self.assets, on_candle=self._on_candle, engine_last_processed_ts=None)
         self.commands = CommandListener(self, channel_id=channel_id)
         self._running = False
-        self._last_candle_hour = {}  # track which hours we've processed
+        self._last_candle_hour: dict[str, bool] = {}  # track which hours we've processed
         self._engine_start_time = None  # set on start(), used to skip backfill candles
         self._last_summary_hour = -1  # track 4h summary reporting
 
@@ -112,7 +107,7 @@ class PaperTradingEngine:
         log.info("🚀 Paper Trading Engine starting...")
         log.info("   ⛔ PAPER_MODE=TRUE — No real orders will be placed")
         log.info(f"   Assets: {self.assets}")
-        log.info(f"   Strategy: MACD Momentum + ADX+EMA regime filter")
+        log.info("   Strategy: MACD Momentum + ADX+EMA regime filter")
         log.info(f"   Capital: {INITIAL_CAPITAL}€ | Fee: {FEE_RATE*100}% | Slippage: {SLIPPAGE_BPS}bps")
         log.info(f"   DB: {self.state.db_path}")
         log.info(f"   Trade log: {TRADE_LOG}")
@@ -202,7 +197,6 @@ class PaperTradingEngine:
         # Clean up old dedup entries (keep last 24 hours = ~144 entries per asset)
         # Prevents unbounded memory growth over months of operation
         if len(self._last_candle_hour) > 2000:
-            oldest_key = next(iter(self._last_candle_hour))
             # Remove oldest entries (rough cleanup)
             keys_to_remove = list(self._last_candle_hour.keys())[:1000]
             for k in keys_to_remove:
@@ -270,9 +264,6 @@ class PaperTradingEngine:
 
     async def _evaluate_symbol(self, symbol: str, current_candle: dict):
         """Evaluate signal for a symbol using buffered candles."""
-        # Get historical candles from DB
-        candles_raw = self.state.get_state(f"last_candles_{symbol}")
-
         # Fetch from data_feed's SQLite
         candles = self.feed.get_candles(symbol, limit=210)
 
@@ -334,7 +325,7 @@ class PaperTradingEngine:
             if closed_any:
                 self.reporter._send_container(
                     "\U0001f6a8 **KILL CLOSE**",
-                    f"All positions force-closed by KILL_SWITCH.\nNo further trading until !resume.",
+                    "All positions force-closed by KILL_SWITCH.\nNo further trading until !resume.",
                     COLOR_RED
                 )
             return  # No further evaluation during KILL
@@ -505,14 +496,14 @@ async def backfill_from_api(engine: PaperTradingEngine):
                 ts = int(candle["t"])
                 o = float(candle["o"])
                 h = float(candle["h"])
-                l = float(candle["l"])
+                lo = float(candle["l"])
                 c = float(candle["c"])
                 v = float(candle.get("v", 0))
                 
                 conn.execute("""
                     INSERT OR REPLACE INTO candles (symbol, ts, open, high, low, close, volume)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (symbol, ts, o, h, l, c, v))
+                """, (symbol, ts, o, h, lo, c, v))
                 inserted += 1
         
         total_inserted += inserted

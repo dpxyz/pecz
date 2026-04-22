@@ -23,7 +23,6 @@ import subprocess
 import sys
 import os
 import json
-import re
 import logging
 from pathlib import Path
 from datetime import datetime, timezone

@@ -5,8 +5,7 @@ All thresholds are hardcoded, not configurable by strategy.
 """
 
 import logging
-from datetime import datetime, timezone, timedelta
-from enum import Enum
+from datetime import datetime, timezone
 
 from state_manager import StateManager, GuardState
 
@@ -42,7 +41,7 @@ class RiskGuard:
 
         # ── KILL_SWITCH: No trading at all ──
         if guard == GuardState.KILL_SWITCH:
-            return False, f"KILL_SWITCH active — all trading halted"
+            return False, "KILL_SWITCH active — all trading halted"
 
         # ── COOLDOWN: Waiting period after kill ──
         if guard == GuardState.COOLDOWN:

@@ -4,11 +4,9 @@ Sends trade events, status updates, and alerts to Discord.
 Uses the OpenClaw message tool (no separate webhook needed).
 """
 
+from typing import Optional
 import json
 import logging
-import subprocess
-from datetime import datetime, timezone
-from pathlib import Path
 
 log = logging.getLogger("discord_reporter")
 
@@ -132,7 +130,7 @@ def format_entry_blocked(event: dict) -> tuple:
     )
 
 
-def format_hourly_status(state_manager, assets: list = None) -> tuple:
+def format_hourly_status(state_manager, assets: Optional[list] = None) -> tuple:
     """Format hourly status report. Returns (header, body, color)."""
     from state_manager import GuardState
     
@@ -205,7 +203,7 @@ def format_daily_summary(state_manager) -> tuple:
 
 # ── Discord Sender ──
 
-def send_to_discord(message: str, channel_id: str = None):
+def send_to_discord(message: str, channel_id: Optional[str] = None):
     """
     Send a plain text message to Discord via OpenClaw message tool.
     Used for custom/freeform messages.
@@ -248,7 +246,7 @@ def send_to_discord(message: str, channel_id: str = None):
 
 
 def send_container_to_discord(header: str, body: str, color: str,
-                               channel_id: str = None):
+                               channel_id: Optional[str] = None):
     """
     Send a colored container (Components v2) to Discord via OpenClaw.
     Falls back to plain text if components fail.
@@ -281,7 +279,7 @@ def send_container_to_discord(header: str, body: str, color: str,
 class DiscordReporter:
     """Send formatted trade events to Discord with colored containers."""
     
-    def __init__(self, channel_id: str = None):
+    def __init__(self, channel_id: Optional[str] = None):
         self.channel_id = channel_id
     
     def _send_text(self, msg: str):
@@ -306,7 +304,7 @@ class DiscordReporter:
         header, body, color = format_entry_blocked(event)
         self._send_container(header, body, color)
     
-    def report_hourly(self, state_manager, assets: list = None):
+    def report_hourly(self, state_manager, assets: Optional[list] = None):
         header, body, color = format_hourly_status(state_manager, assets=assets)
         self._send_container(header, body, color)
     

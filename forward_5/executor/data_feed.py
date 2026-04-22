@@ -4,16 +4,14 @@ Hybrid: REST polling for candles (reliable on testnet) + WS for live prices.
 Testnet WS candle feed is unreliable - we poll the REST API instead.
 """
 
+from typing import Optional
 import asyncio
-import json
 import time
 import sqlite3
 import logging
 from pathlib import Path
-from datetime import datetime, timezone
 
 import requests
-import websockets
 
 log = logging.getLogger("data_feed")
 
@@ -46,9 +44,9 @@ SYMBOL_MAP = {
 
 class DataFeed:
     def __init__(self, db_path: str = "executor/state.db",
-                 assets: list[str] = None,
+                 assets: Optional[list[str]] = None,
                  on_candle=None,
-                 engine_last_processed_ts: int = None):
+                 engine_last_processed_ts: Optional[int] = None):
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.assets = assets or ["BTCUSDT", "ETHUSDT"]
@@ -253,12 +251,12 @@ class DataFeed:
             except Exception as e:
                 log.error(f"Poll error for {symbol}: {e}")
 
-    def _store_candle(self, symbol, ts, o, h, l, c, v):
+    def _store_candle(self, symbol, ts, o, h, low, c, v):
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""
                 INSERT OR REPLACE INTO candles (symbol, ts, open, high, low, close, volume)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (symbol, ts, o, h, l, c, v))
+            """, (symbol, ts, o, h, low, c, v))
 
     def get_candles(self, symbol: str, limit: int = 200) -> list[dict]:
         """Fetch last N candles from SQLite (for indicator calculation)."""
