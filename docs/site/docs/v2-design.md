@@ -53,6 +53,7 @@
 - 50% bei Trail nehmen, 50% laufen lassen
 - Trend-following-Klassiker: Gewinn sichern, aber Raum für weiteren Upside
 - Komplexer zu implementieren, aber messbar besser als Voll-Exit
+- **Nur für V1-Trades** — Sniper hat 100% Entry/Exit, kein Half-in/Half-out bei 5x
 - Sniper: 50% bei Trail, Rest bis Regime-Score < 50 oder Max Hold
 
 ### 10. DD-basierte Positionsreduktion
