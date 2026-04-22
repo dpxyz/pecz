@@ -53,12 +53,13 @@
 
 ## Kapital-Allokation
 
-### 70/30-Split
-- **70€ V1-Pool** — normale 6-Asset-Strategie, läuft wie gehabt
-- **30€ Sniper-Pool** — nur für Sniper-Trades, 4-5x Hebel = 120-150€ Notional
-- Sniper feuert → nimmt aus seinem Pool, V1 läuft ungestört weiter
-- Sniper-Pool leer → kein Sniper bis V1-Positionen schließen und Kapital freigeben
-- Kein Kapitalkonflikt zwischen V1 und Sniper
+### Sniper-Upgrade (Modus B)
+- Kein separater Pool — Sniper **upgraded** den besten V1-Trade
+- V1 entscheidet welcher Trade. Sniper-Bedingungen erfüllt → Hebel von 1.8x auf 4-5x
+- Keine doppelte Position auf demselben Asset
+- **Max 30€ allocated** für Sniper-Trade (statt 16.67€), × 5x = 150€ Notional
+- Restliche 70€ verteilen sich auf V1-Positionen normal
+- Kein Kapitalkonflikt
 
 ---
 
