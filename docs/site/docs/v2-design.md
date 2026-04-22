@@ -36,6 +36,34 @@
 
 ---
 
+## Regime-Score — Proof of Concept
+
+### Kombination
+| Komponente | Was | Range  |
+|------------|-----|--------|
+| ADX-14 | Trendstärke | 0-100  |
+| ATR-Ratio | ATR / ATR_SMA20 (Volatilitäts-Explosion) | 0.5-2.0 |
+| EMA-Slope | Steigung der EMA-50 | -1 bis +1 |
+
+### Mapping
+- **< 30**: Range → kein Trade, bestehende tighten
+- **30-70**: Trend → normal traden (V1 Baseline)
+- **> 70**: Strong Trend → Position vergrößern (V2 Alpha)
+
+### Warum
+- ADX allein = binär (drüber/drunter). Score = kontinuierlich.
+- ATR-Ratio fängt Crash-Regime (plötzliche Vol-Explosion)
+- EMA-Slope unterscheidet Trend von flat-Trend
+
+## Asset-Ranking (Alpha Stack #1)
+
+- ROC-Ranking: Welches Asset hat stärksten Momentum?
+- Statt 6 Assets gleich: Top 3-4 bevorzugen
+- Reduziert Noise von schwachen Signalen
+- Kombinierbar mit Regime-Score: nur Top-Assets in Trend-Phasen
+
+---
+
 ## Sentiment Architecture
 
 ### Data Sources (Priority)
