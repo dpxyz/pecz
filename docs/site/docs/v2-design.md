@@ -163,109 +163,304 @@ Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Rankin
 
 **Ziel**: Jedes Candle einen Regime-Score 0-100 berechnen
 
-**Score-Formel (Basis)**:
+**Score-Formel**:
 ```
 regime_score = (
-  adx_score * 0.45 +     # ADX normalisiert auf 0-100
-  vol_score * 0.25 +     # ATR-Ratio: niedrig=stabil, hoch=crash
-  slope_score * 0.30     # EMA-Slope normalisiert auf 0-100
+  adx_score * 0.45 +     # Trendstärke
+  vol_score * 0.25 +     # Volatilitäts-Regime
+  slope_score * 0.30     # Trend-Geschwindigkeit
 )
 ```
 
-**Komponenten**:
-| Signal | Quelle | Berechnung | Range |
-|--------|--------|------------|-------|
-| adx_score | ADX-14 | `min(adx / 50 * 100, 100)` | 0-100 |
-| vol_score | ATR-Ratio | `ATR / ATR_SMA20` → invertiert | 0-100 |
-| slope_score | EMA-50 | Steigung normalisiert | 0-100 |
+**Komponenten im Detail**:
 
-**Gewichtung**: 45/25/30 — ADX dominiert weil Trendstärke der wichtigste Indikator ist
+| Komponente | Quelle | Berechnung | Range |
+|-----------|--------|------------|-------|
+| adx_score | ADX-14 | `min(adx / 50 * 100, 100)` | 0-100 |
+| vol_score | ATR-14 / ATR_SMA20 | Invertiert: stabil=100, crash=0 | 0-100 |
+| slope_score | EMA-50 Steigung | `(slope / max_slope) * 100`, gekappt | 0-100 |
+
+**ADX-Normalisierung**:
+- ADX < 20 → Score 0-40 (Range)
+- ADX 20-40 → Score 40-80 (Trend)
+- ADX > 40 → Score 80-100 (Strong Trend)
+- Kappung bei 100 → kein ADX-Wert kann Score dominieren
+
+**Vol-Score Invertierung**:
+- ATR-Ratio nahe 1.0 → volatil stabil → Score 80-100
+- ATR-Ratio > 1.5 → Vol-Explosion (Crash) → Score 0-20
+- ATR-Ratio < 0.7 → erstarrter Markt → Score 40-60
+- Formel: `vol_score = max(0, min(100, 100 - abs(ratio - 1.0) * 80))`
+
+**Slope-Normalisierung**:
+- `slope = (ema_50[t] - ema_50[t-1]) / ema_50[t-1]`
+- Normalisiert auf letzten 20 Bars: `slope_pct = slope / max(abs(slope_20)) * 100`
+- Kappung: `min(max(slope_pct, 0), 100)` → negativer Slope = 0
+
+**Gewichtung 45/25/30 — Warum**:
+- ADX 45% → Trendstärke ist der wichtigste Indikator (V1 bewiesen)
+- Slope 30% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
+- Vol 25% → Crash-Erkennung wichtig, aber soll Score nicht dominieren
 
 **Regime-Mapping**:
-| Score | Regime | Aktion |
-|-------|--------|--------|
-| 0-30 | Range | Kein Entry, bestehende Positionen tighten |
-| 30-70 | Trend | V1 normal traden |
-| 70-100 | Strong Trend | Sniper-Modul kann aktivieren |
+| Score | Regime | Entry-Regel | Exit-Regel |
+|-------|--------|-------------|------------|
+| 0-30 | Range | Kein Entry | Bestehende: Trail auf 1.5% tighten |
+| 30-70 | Trend | V1 normal | V1 normal (Trail 2%) |
+| 70-100 | Strong Trend | Sniper möglich | Trail 2.5%, Position atmen |
 
-**Gemma4-Einsatz (Stufe 1)**:
-- Kein KI-Regime in Stufe 1 — deterministische Formel reicht
-- Gemma4 evaluiert später ob KI-Regime die Formel verbessern kann (Stufe 3)
-- Vorteil: Deterministisch, reproduzierbar, kein API-Call pro Candle
+**Regime-Übergänge (Hysterese)**:
+- Range→Trend: Score muss >35 erreichen (nicht >30)
+- Trend→Range: Score muss <25 fallen (nicht <30)
+- Trend→Strong: Score muss >75 erreichen (nicht >70)
+- Strong→Trend: Score muss <65 fallen (nicht <70)
+- Verhindert Flip-Flopping an den Grenzen
+
+**Berechnung pro Candle**:
+- Kein API-Call — rein aus OHLCV-Daten berechnet
+- Alle 3 Komponenten auf demselben Bar
+- Kein Lookahead — nur abgeschlossene Candles
+- Speichert letzten Score für Hysterese-Vergleich
 
 **Backtest-Validierung**:
 - Gleicher Gate wie V1: ≥75% Pass-Rate, CL≤12, DD≤20%
-- Vergleiche: Regime-gefiltert vs ungefiltert
+- Vergleich: Regime-gefiltert vs ungefiltert
 - Erwartung: ~70% weniger Trades, ~50% weniger DD
+- **A/B-Test**: V1-Strategie mit Regime-Score vs ohne
+
+**Implementierung**:
+- Neues Modul: `regime_detector.py`
+- Input: Candle-Daten (close, high, low, volume)
+- Output: `regime_score` (0-100) + `regime_label` (range/trend/strong)
+- Integration: `paper_engine.py` fragt `regime_detector` vor jedem Entry
+- Sniper-Modul nutzt `regime_score > 70` als Entry-Bedingung
 
 ---
 
 ### Modul 2: Sentiment (Stufe 3 — Advanced)
 
-**Ziel**: KI-basierter Kill-Switch bei Crash-Szenarien
+**Ziel**: KI-basierter Kill-Switch bei Crash-Szenarien die Indikatoren verpassen
 
-**Pipeline**:
+**Pipeline im Detail**:
 ```
-News API → Gemma4 JSON-Mode → Sentiment Score (0-100)
-                                        ↓
-                                Position Sizing Filter
-                                Score ≤ 30 → Half Position
-                                Score ≤ 15 → No Entry
-                                Score > 50 → Full Position
+News Sources → Aggregator → Gemma4 Cloud JSON-Mode → Sentiment Score (0-100)
+                                                                    ↓
+                                                            Position Sizing Filter
+                                                            Score ≤ 15 → No Entry (Kill)
+                                                            Score 15-30 → Half Position
+                                                            Score 30-50 → Cautious (V1 only, kein Sniper)
+                                                            Score > 50 → Full Position (Sniper möglich)
 ```
 
-**Warum Gemma4, nicht GLM**:
-- Lokal, keine API-Kosten, keine Rate-Limits
-- Sentiment-Parsing ist einfacher als Strategy-Design
-- JSON-Mode funktioniert stabil auf Gemma4:31b
-- Keine Latenz — lokal in <1s statt Cloud-Roundtrip
+**News Sources (Priorität)**:
+| Priority | Source | Format | Update-Frequenz |
+|----------|--------|--------|-----------------|
+| 1 | Crypto News (CoinDesk, CryptoSlate) | KI-Score 0-100 | Echtzeit |
+| 2 | Macro (Fed, CPI, DXY) | Regime-Flag | Täglich |
+| 3 | On-Chain (Exchange Netflow) | Flow-Rate | Täglich |
+| 4 | Social (Fear&Greed Index) | Index-Wert | Stündlich |
+
+**Gemma4 Cloud Prompt (JSON-Mode)**:
+```
+Analyze the following crypto market news and return a JSON score.
+
+Rules:
+- Score 0-100 (0=extreme fear/crash, 50=neutral, 100=extreme greed/euphoria)
+- Only consider the last 24h of news
+- Major exchange hacks → Score 0-10
+- Regulatory crackdowns → Score 10-25
+- Minor FUD → Score 25-40
+- Neutral/boring → Score 40-60
+- Positive developments → Score 60-75
+- Major adoption news → Score 75-90
+- Extreme euphoria → Score 90-100
+
+Return ONLY: {"score": <int>, "confidence": <0.0-1.0>, "regime": "crash|fear|neutral|greed|euphoria"}
+```
+
+**Aggregation**:
+- Mehrere Quellen → gewichteter Durchschnitt
+- Priority 1 hat 50% Gewicht, Priority 2-4 teilen restliche 50%
+- Confidence < 0.3 → Score verwerfen, auf 50 (neutral) fallen
+- Widersprüchliche Signale → konservativster Score gewinnt
+
+**Fail-Safe-Kaskade**:
+1. **Gemma4 fail** → Score = 50 (neutral, kein Einfluss)
+2. **API timeout** → letzter Score beibehalten (decay nach 4h → 50)
+3. **Confidence < 0.3** → Score = 50
+4. **Keine News in 24h** → Score = 50
+5. **Niemals Upsizing** → Sentiment kann nur verkleinern, nie vergrößern
+
+**Sizing-Regeln im Detail**:
+| Score | V1 Position | Sniper | Begründung |
+|-------|-------------|--------|------------|
+| 0-15 | Kein Entry | Kein Entry | Crash oder extremes Risiko |
+| 15-30 | 50% Size | Kein Entry | Erhebliche Unsicherheit |
+| 30-50 | 100% Size | Kein Entry | Vorsichtig, keine Conviction |
+| 50-75 | 100% Size | Erlaubt | Normale Bedingungen |
+| 75-100 | 100% Size | Erlaubt | Starke Conviction (kein Upsizing!) |
+
+**Warum Gemma4 Cloud**:
+- Cloud-Infrastruktur, kein lokaler GPU-Bedarf
+- JSON-Mode stabil für strukturierte Extraktion
+- Sentiment-Parsing braucht kein Flagship-Modell
+- Zukunft: Migration auf lokal möglich wenn Hardware reicht
+- GLM-5.1 = Reserve für komplexe Tasks
 
 **Warum erst Stufe 3**:
 - Sentiment ist ein Filter, kein Motor
 - Regime-Score (Stufe 1) filtert bereits Range-Trades raus
 - Sentiment fängt Black-Swans die Indikatoren verpassen
 - Aber: Black-Swans sind selten → schwer zu backtesten → braucht Live-Validierung
+- Stufe 3 = Sniper + Regime bewiesen → Sentiment als Krönung
 
-**Fail-Safe**:
-- Gemma4 fail → Score = 50 (neutral)
-- API timeout → letzter Score beibehalten (decay nach 4h → 50)
-- Widersprüchliche Signale → konservativster Score
-- Niemals Upsizing — Sentiment kann nur verkleinern
+**Backtest-Validierung**:
+- Historische Events manuell bewerten (FTX, Terra, SEC, ETF-Approvals)
+- Simulierter Sentiment-Score auf historischen Daten → DD-Verbesserung messen
+- Gate: DD-Reduktion > 5% bei Crash-Events ODER keine Verschlechterung im Normalbetrieb
 
 ---
 
 ### Modul 3: Asset Selection (Stufe 3 — Advanced)
 
-**Ziel**: ROC-Ranking der Assets statt Equal-weight
+**Ziel**: Stärkstes Asset bevorzugen statt Equal-Weight über 6 Assets
 
-**Basis (Stufe 1)**:
-- ROC-5/10/20 berechnen
-- Top 2-3 Assets bevorzugen
-- Rein mathematisch, keine KI nötig
+**ROC-Ranking (Basis, Stufe 3)**:
+```
+roc_score = (
+  ROC_5 * 0.20 +    # Kurzfristiger Momentum
+  ROC_10 * 0.30 +   # Mittelfristiger Momentum
+  ROC_20 * 0.50     # Trend-Momentum (gewichtigster)
+)
+```
 
-**Gemma4-Erweiterung (Stufe 3)**:
-- Momentum-Kontext verstehen: "BTC rallyt wegen ETF-News" vs. "BTC rallyt technisch"
-- News-Attribution: Welches Asset profitiert von welchem Event?
-- Nur wenn ROC-Baseline bewiesen ist
+**Berechnung**:
+| Metrik | Formel | Gewichtung |
+|--------|--------|------------|
+| ROC_5 | `(close - close[5]) / close[5] * 100` | 20% |
+| ROC_10 | `(close - close[10]) / close[10] * 100` | 30% |
+| ROC_20 | `(close - close[20]) / close[20] * 100` | 50% |
+
+**Warum ROC_20 am wichtigsten**:
+- Kurzfristiger Momentum (5 Bars) ist Noise
+- 20-Bar-Trend korreliert mit V1-EMA-50 Zeitrahmen
+- Momentum-Anomalien verschwinden über 20 Bars
+
+**Ranking-Regeln**:
+| Rank | Behandlung |
+|------|------------|
+| #1 | Sniper-Kandidat (wenn Regime > 70) |
+| #2 | Normaler Entry |
+| #3-4 | Reduzierte Position (50% Size) |
+| #5-6 | Kein Entry (schwacher Momentum) |
+
+**Kombination mit Regime-Score**:
+| Regime | Rank #1 | Rank #2 | Rank #3-6 |
+|--------|---------|---------|------------|
+| Strong (>70) | Sniper 5x | V1 normal | Kein Entry |
+| Trend (30-70) | V1 normal | V1 normal | Kein Entry |
+| Range (<30) | Kein Entry | Kein Entry | Kein Entry |
+
+**Gemma4 Cloud-Erweiterung (Stufe 3)**:
+- News-Attribution: "BTC rallyt wegen ETF-News" vs. "BTC rallyt technisch"
+- Korrelations-News: "ETH folgt BTC" vs. "ETH hat eigenes Narrativ"
+- Nur wenn ROC-Baseline bewiesen → Gemma4 ergänzt, nicht ersetzt
+
+**Implementierung**:
+- Neues Modul: `asset_selector.py`
+- Input: close-Preise aller 6 Assets, letzter Regime-Score
+- Output: `ranking` (Liste der Assets sortiert nach roc_score)
+- Integration: `paper_engine.py` fragt Ranking vor Entry → Top-2 bekommen Priority
+- Sniper nutzt `ranking[0]` als Kandidat
+
+**Backtest-Validierung**:
+- Vergleich: ROC-gefiltert vs Equal-Weight
+- Gate: Sharpe > V1 Equal-Weight, DD ≤ V1 Equal-Weight
+- Fairness: Gleiche Anzahl Trades (ROC schneidet nur schwache ab)
 
 ---
 
 ### Modul 4: Risk Management (Stufe 1-2)
 
-**Kein KI-Einsatz** — das ist Mathematik:
+**Ziel**: Portfolio-DD kontrollieren, Korrelation begrenzen, Sniper bremsen
 
-| DD-Schwelle | Aktion |
-|-------------|--------|
-| > 10% | Alle Positionen halbieren |
-| > 15% | Keine neuen Entries (SOFT_PAUSE) |
-| > 20% | KILL (alles schließen) |
+**Kein KI-Einsatz** — reine Mathematik
+
+**DD-Scaling (Stufe 1)**:
+| Schwelle | Aktion | Begründung |
+|----------|--------|------------|
+| DD > 10% | Alle Positionen halbieren | Early Warning, Risiko reduzieren |
+| DD > 15% | Keine neuen Entries (SOFT_PAUSE) | Defensive, nur noch Exits |
+| DD > 20% | KILL (alles schließen) | Kapitalerhalt, kein Ermessen |
+
+**DD-Berechnung (Stufe 1)**:
+```
+drawdown_pct = (peak_equity - current_equity) / peak_equity * 100
+```
+- `peak_equity` = höchster je erreichter Equity-Stand
+- `current_equity` = mark-to-market (realized + unrealized)
+- Wird jeden Candle neu berechnet
+- Kein Smoothing, keine Ausnahme
 
 **Korrelations-Filter (Stufe 2)**:
 - Max 2 stark korrelierte Positionen gleichzeitig
-- Stufe 3: Dynamische Rolling-Correlation statt statische Regel
+- Korrelationsschwelle: Pearson r > 0.7 über letzten 20 Bars
+- Wenn 2 Positionen offen und 3. korreliert → Entry blockiert
+- BTC und ETH gelten IMMER als korreliert (r > 0.8 historisch)
+
+**Korrelations-Kaskade**:
+| Situation | Aktion |
+|-----------|--------|
+| 0 Positionen offen | Entry frei (max 2 korreliert) |
+| 1 Position offen | Entry frei wenn nicht r>0.7 mit bestehend |
+| 2 korrelierte Positionen | Kein weiterer Entry wenn r>0.7 |
+| KILL ausgelöst | Alle Positionen schließen, COOLDOWN 24h |
 
 **Circuit-Breaker (Stufe 1)**:
-- 3 aufeinanderfolgende Sniper-Verluste → 48h Sniper-Pause
+| Event | Aktion | Dauer |
+|-------|--------|-------|
+| 3 aufeinanderfolgende Sniper-Verluste | Sniper pausiert | 48h |
+| 5 aufeinanderfolgende V1-Verluste | SOFT_PAUSE | 24h |
+| DD > 20% (KILL) | Alle schließen | COOLDOWN 24h |
+| Circuit-Breaker Reset | Resume | Nach Ablauf |
+
+**Volatility-Parität (Stufe 2)**:
+- Ersetzt starre Leverage-Tiers (ADR-007)
+- Position Size = `target_risk / (ATR_14 * point_value)`
+- `target_risk` = konstanter Risiko-Betrag pro Trade (z.B. 1% des Kapitals)
+- High-Vol (AVAX) → kleinere Position, Low-Vol (BTC) → größere
+- Sniper: Ausnahme — fix 5x unabhängig von Vol-Parität
+
+**Regime-basierter Exit (Stufe 2)**:
+| Regime-Score | Trail | Begründung |
+|--------------|-------|------------|
+| >70 (Strong) | 2.5% | Position atmen, Conviction hoch |
+| 50-70 (Trend) | 2.0% | Normaler V1-Trail |
+| 30-50 (Weak) | 1.5% | Trend schwächt, schneller raus |
+| <30 (Range) | 1.5% + Exit-Check | Eng führen, ggf. manuell schließen |
+
+**Partial Exits (Stufe 2)**:
+- V1 only: 50% bei Trail nehmen, 50% laufen lassen
+- Sniper: 100% Entry/Exit, kein Halbschritt
+- Implementierung: Position wird in 2 Sub-Positionen aufgeteilt
+- Trail-Trigger schließt erste 50%, zweite 50% läuft mit neuem Trail
+
+**Re-Entry Logik (Stufe 2)**:
+- V1: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry
+- Sniper: Kein Re-Entry. Score muss <70 fallen und wieder >70 steigen.
+- Max 1 Re-Entry pro Asset pro Trend-Phase (verhindert Ping-Pong)
+
+**Implementierung**:
+- Erweitertes Modul: `risk_guard.py` (V1 Baseline existiert)
+- Neue Methoden: `check_correlation()`, `check_circuit_breaker()`, `calc_vol_parity_size()`
+- Integration: `paper_engine.py` fragt Risk Guard vor jedem Entry + jede DD-Check-Periode
+- State: Circuit-Breaker-Zähler in `state.db` persistiert (survived Restart)
+
+**Backtest-Validierung**:
+- DD-Scaling: Vergleich V1 Risk Guard vs V2 DD-Scaling → DD-Reduktion messbar
+- Korrelations-Filter: Vergleich mit/ohne → DD-Reduktion bei correlated-Moves
+- Circuit-Breaker: Simulation auf historischen Crash-Phasen
+- Gate: Jede Komponente einzeln bewiesen, dann kombiniert
 
 ---
 
@@ -291,12 +486,12 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 | Asset Selection | 3 | **Gemma4** | Momentum-Kontext, erst nach ROC-Baseline |
 | Korrelationsmatrix | 3 | Nein | Statistik, Rolling-Correlation |
 
-**Warum Gemma4 statt GLM-5.1**:
-- Lokal → keine API-Kosten, keine Rate-Limits
-- Schnell → <1s inferenz statt Cloud-Roundtrip
+**Warum Gemma4 Cloud statt GLM-5.1**:
+- Cloud-Infrastruktur, kein lokaler GPU-Bedarf
+- JSON-Mode stabil für strukturierte Extraktion
 - Ausreichend → Sentiment-Parsing braucht kein Flagship-Modell
-- Deterministisch → gleicher Input = gleicher Output (JSON-Mode)
-- GLM-5.1 cloud = Reserve für komplexe Aufgaben (z.B. ADR-Formulierung, Code-Review)
+- Zukunft: Migration auf lokal möglich wenn Hardware reicht
+- GLM-5.1 cloud = Reserve für komplexe Aufgaben
 
 ---
 
