@@ -149,7 +149,7 @@ Kein separates Modul — **Upgrade** für den besten V1-Trade. Wenn alle Signale
 ### Warum 4-5x vertretbar
 - Regime-Score > 65 filtert ~70% aller Bars raus (nur Strong Trend)
 - Asset-Ranking Top-2 = stärkster Momentum in stärkstem Trend
-- DD pro Trade: ~7-8% bei 2.5% Trail × 5x = vertretbar
+- DD pro Trade: max 3.75% des Portfolios (2.5% Trail × 5x auf 30€ allocated)
 - V1-DD von 14% kommt aus Range-Trades — die fallen komplett weg
 
 ### Scharfmacher
