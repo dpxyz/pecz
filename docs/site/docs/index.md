@@ -10,6 +10,7 @@ title: Mission Control
 <div class="dash-meta">
 <span><span class="live-dot"></span>PHASE 8 LIVE</span>
 <span>DAY 3/14</span>
+<span id="dash-timestamp">⏳</span>
 <span>EQ 99.49€</span>
 </div>
 </div>
@@ -171,5 +172,25 @@ title: Mission Control
 </a>
 
 </div>
+
+<script>
+(function() {
+  const DATA_URL = 'https://raw.githubusercontent.com/dpxyz/pecz/main/forward_5/executor/monitor_data.json';
+  async function updateTimestamp() {
+    try {
+      const resp = await fetch(DATA_URL + '?t=' + Date.now());
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const ts = data.generated_at || data.summary?.timestamp;
+      if (!ts) return;
+      const d = new Date(ts);
+      const el = document.getElementById('dash-timestamp');
+      if (el) el.textContent = d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' · ' + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
+    } catch(e) {}
+  }
+  updateTimestamp();
+  setInterval(updateTimestamp, 300000);
+})();
+</script>
 
 </div>

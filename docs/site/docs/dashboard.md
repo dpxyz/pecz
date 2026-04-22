@@ -7,6 +7,10 @@ hide:
 
 # 📊 Live Dashboard
 
+<div id="monitor-last-update" style="float:right; color:var(--fwd-text-muted); font-size:0.85rem; font-family:var(--fwd-font);">⏳</div>
+
+<div style="clear:both;"></div>
+
 <div id="monitor-loading" style="text-align:center; padding:4rem 0;">
   <div style="font-size:2rem;">⏳</div>
   <div style="color:var(--fwd-text-muted); margin-top:0.5rem;">Loading monitor data…</div>
@@ -143,6 +147,13 @@ hide:
       banner.style.color = s.guard_state === 'KILL_SWITCH' ? PALETTE.danger : PALETTE.warning;
       banner.style.border = '1px solid ' + (s.guard_state === 'KILL_SWITCH' ? PALETTE.danger : PALETTE.warning);
       banner.textContent = '🛑 Guard: ' + s.guard_state;
+    }
+
+    // Timestamp in header
+    const tsEl = document.getElementById('monitor-last-update');
+    if (tsEl && data.generated_at) {
+      const d = new Date(data.generated_at);
+      tsEl.textContent = d.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) + ' · ' + d.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
     }
 
     // Equity chart
