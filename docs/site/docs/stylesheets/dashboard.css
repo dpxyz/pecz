@@ -244,6 +244,11 @@ body,
     gap: 0.4rem;
 }
 
+.dashboard .grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
 .dashboard .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -637,7 +642,8 @@ body,
 @media (max-width: 1024px) {
     .dashboard .grid-3,
     .dashboard .grid-4,
-    .dashboard .grid-6 { grid-template-columns: repeat(2, 1fr); }
+    .dashboard .grid-6,
+    .dashboard .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .dashboard .grid-2col { grid-template-columns: 1fr; }
 }
 
@@ -651,7 +657,8 @@ body,
 
     .dashboard .grid-3,
     .dashboard .grid-4,
-    .dashboard .grid-6 { grid-template-columns: 1fr; }
+    .dashboard .grid-6,
+    .dashboard .grid-2 { grid-template-columns: 1fr; }
     .dashboard .grid-2col { grid-template-columns: 1fr; }
 
     .dashboard .dash-header {

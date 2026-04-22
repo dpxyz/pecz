@@ -56,25 +56,18 @@ hide:
 
 <!-- Open Positions -->
 <div class="section-label">open positions</div>
-<div id="positions-table" class="card" style="overflow-x:auto;">
-  <table style="width:100%; font-family:var(--fwd-font); font-size:0.85rem;">
-    <thead>
-      <tr style="color:var(--fwd-text-muted); border-bottom:1px solid var(--fwd-border);">
-        <th style="text-align:left; padding:0.5rem;">asset</th>
-        <th style="text-align:right; padding:0.5rem;">entry</th>
-        <th style="text-align:right; padding:0.5rem;">mark</th>
-        <th style="text-align:right; padding:0.5rem;">uPnL</th>
-        <th style="text-align:left; padding:0.5rem;">status</th>
-      </tr>
-    </thead>
-    <tbody id="positions-body"></tbody>
-  </table>
+<div id="positions-grid" class="grid-2" style="gap:0.5rem;">
+  <div class="card" style="color:var(--fwd-text-muted); font-size:0.85rem; text-align:center; padding:1rem;">
+    Loading…
+  </div>
 </div>
 
 <!-- Recent Trades -->
 <div class="section-label">recent trades</div>
-<div id="trades-list" class="card" style="font-family:var(--fwd-font); font-size:0.8rem; color:var(--fwd-text-muted); padding:1rem;">
-  No trades yet.
+<div id="trades-grid" class="grid-2" style="gap:0.5rem;">
+  <div class="card" style="color:var(--fwd-text-muted); font-size:0.85rem; text-align:center; padding:1rem;">
+    No trades yet.
+  </div>
 </div>
 
 </div>
@@ -290,43 +283,63 @@ hide:
   }
 
   function renderPositions(positions) {
-    const tbody = document.getElementById('positions-body');
+    const grid = document.getElementById('positions-grid');
     if (!positions || positions.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--fwd-text-muted); padding:1rem; text-align:center;">No open positions</td></tr>';
+      grid.innerHTML = '<div class="card" style="color:var(--fwd-text-muted); font-size:0.85rem; text-align:center; padding:1rem;">No open positions</div>';
       return;
     }
-    tbody.innerHTML = positions.map(p => {
+    grid.innerHTML = positions.map(p => {
       const sym = p.symbol.replace('USDT', '');
       const upnl = p.unrealized_pnl || 0;
       const pnlColor = upnl >= 0 ? PALETTE.accent : PALETTE.danger;
-      const statusColor = PALETTE.accent;
-      return '<tr style="border-bottom:1px solid var(--fwd-border-subtle);">' +
-        '<td style="padding:0.5rem; color:var(--fwd-text-bright);">' + sym + '</td>' +
-        '<td style="padding:0.5rem; text-align:right;">' + smartDec(p.entry_price) + '</td>' +
-        '<td style="padding:0.5rem; text-align:right;">' + smartDec(p.mark_price) + '</td>' +
-        '<td style="padding:0.5rem; text-align:right; color:' + pnlColor + ';">' + (upnl >= 0 ? '+' : '') + fmtEur(upnl) + '</td>' +
-        '<td style="padding:0.5rem;"><span style="color:' + statusColor + ';">● open</span></td>' +
-        '</tr>';
+      const pnlSign = upnl >= 0 ? '+' : '';
+      const ep = smartDec(p.entry_price);
+      const mp = smartDec(p.mark_price);
+      return `<div class="card" style="padding:0.6rem 0.8rem;">` +
+        `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">` +
+          `<span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span>` +
+          `<span style="color:${pnlColor}; font-weight:600;">${pnlSign}${fmtEur(upnl)}</span>` +
+        `</div>` +
+        `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted);">` +
+          `<span>entry ${ep}</span>` +
+          `<span>mark ${mp}</span>` +
+        `</div>` +
+      `</div>`;
     }).join('');
   }
 
   function renderTrades(trades) {
-    const el = document.getElementById('trades-list');
+    const grid = document.getElementById('trades-grid');
     if (!trades || trades.length === 0) {
-      el.textContent = 'No trades yet.';
+      grid.innerHTML = '<div class="card" style="color:var(--fwd-text-muted); font-size:0.85rem; text-align:center; padding:1rem;">No trades yet.</div>';
       return;
     }
-    el.innerHTML = trades.filter(t => t.event === 'EXIT' || t.event === 'ENTRY').map(t => {
+    const exits = trades.filter(t => t.event === 'EXIT' || t.event === 'ENTRY');
+    if (exits.length === 0) {
+      grid.innerHTML = '<div class="card" style="color:var(--fwd-text-muted); font-size:0.85rem; text-align:center; padding:1rem;">No completed trades yet.</div>';
+      return;
+    }
+    grid.innerHTML = exits.map(t => {
       const sym = t.symbol.replace('USDT', '');
       const pnl = t.pnl || 0;
       const pnlColor = pnl >= 0 ? PALETTE.accent : PALETTE.danger;
+      const isEntry = t.event === 'ENTRY';
+      const icon = isEntry ? '🟢' : '🔴';
       const ts = new Date(t.timestamp * 1000);
-      const timeStr = ts.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'}) + ' ' +
-                      ts.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
-      const icon = t.event === 'EXIT' ? '🔴' : '🟢';
+      const dateStr = ts.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
+      const timeStr = ts.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
       const dec = t.price < 1 ? 6 : (t.price < 100 ? 4 : 2);
-      const pnlStr = t.event === 'EXIT' ? ' <span style="color:' + pnlColor + ';">' + (pnl >= 0 ? '+' : '') + fmtEur(pnl) + '</span>' : '';
-      return '<div style="margin-bottom:0.25rem;">' + icon + ' ' + timeStr + ' ' + sym + ' @ ' + t.price.toFixed(dec) + pnlStr + '</div>';
+      const pnlStr = !isEntry ? `<span style="color:${pnlColor}; font-weight:600;">${pnl >= 0 ? '+' : ''}${fmtEur(pnl)}</span>` : '';
+      return `<div class="card" style="padding:0.5rem 0.8rem;">` +
+        `<div style="display:flex; justify-content:space-between; align-items:center;">` +
+          `<span>${icon} <span style="font-weight:600;">${sym}</span> <span style="color:var(--fwd-text-muted);">${t.event.toLowerCase()}</span></span>` +
+          pnlStr +
+        `</div>` +
+        `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted); margin-top:0.15rem;">` +
+          `<span>@ ${t.price.toFixed(dec)}</span>` +
+          `<span>${dateStr} ${timeStr}</span>` +
+        `</div>` +
+      `</div>`;
     }).join('');
   }
 
