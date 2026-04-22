@@ -49,9 +49,31 @@
 - Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
 - Hoher Regime-Score = höhere Conviction = mehr Raum
 
----
+### 9. Partial Exits
+- 50% bei Trail nehmen, 50% laufen lassen
+- Trend-following-Klassiker: Gewinn sichern, aber Raum für weiteren Upside
+- Komplexer zu implementieren, aber messbar besser als Voll-Exit
+- Sniper: 50% bei Trail, Rest bis Regime-Score < 50 oder Max Hold
 
-## Kapital-Allokation
+### 10. DD-basierte Positionsreduktion
+- Portfolio-DD > 10% → alle Positionen halbieren
+- Portfolio-DD > 15% → keine neuen Entries (SOFT_PAUSE)
+- Portfolio-DD > 20% → KILL (alles schließen)
+- V2 macht das glatter als V1 Risk Guard
+
+### 11. Limit-Orders statt Market
+- Hyperliquid Maker 0.01% vs Taker 0.035%
+- Bei 6 Trades/Tag: ~1€/Monat gespart auf 100€
+- Auf 1000€+ relevant
+- Entry = Limit an EMA-50, Exit = Limit an Trail
+
+### 12. Dynamische Korrelationsmatrix
+- Rolling-Correlation berechnen (20-Bar-Window)
+- Entry blocken wenn Korrelation > 0.7 mit bestehender Position
+- Besser als willkürliche "max 2"-Regel
+- V3-Kandidat, nicht V2-Start
+
+---
 
 ### Sniper-Upgrade (Modus B)
 - Kein separater Pool — Sniper **upgraded** den besten V1-Trade
