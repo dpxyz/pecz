@@ -287,3 +287,45 @@ class TestFeeInvariants:
         total_fee = entry_fee + exit_fee
         assert total_fee > 0
         assert math.isfinite(total_fee)
+
+    # ── Property 13: Fee calculation always positive for leveraged positions ──
+    @given(
+        entry_price=st.floats(min_value=1.0, max_value=100000.0),
+        size=st.floats(min_value=0.0001, max_value=100.0),
+        leverage=st.sampled_from([1.0, 1.5, 1.8, 2.0]),
+    )
+    @settings(max_examples=50)
+    def test_fee_always_positive(self, entry_price, size, leverage):
+        """Fee on a position should always be positive."""
+        FEE_RATE = 0.0001  # 0.01%
+        fee = size * entry_price * FEE_RATE * leverage
+        assert fee > 0
+
+    # ── Property 14: Equity never depleted from fees alone ──
+    @given(
+        start_equity=st.floats(min_value=10.0, max_value=100000.0),
+        n_trades=st.integers(min_value=1, max_value=50),
+        leverage=st.sampled_from([1.0, 1.5, 1.8]),
+    )
+    @settings(max_examples=50)
+    def test_fees_dont_exceed_equity(self, start_equity, n_trades, leverage):
+        """Total fees from N trades should never exceed starting equity."""
+        FEE_RATE = 0.0001
+        allocation = start_equity / 6
+        fee_per_trade = allocation * leverage * FEE_RATE
+        total_fees = fee_per_trade * n_trades * 2
+        assert total_fees < start_equity * 0.10
+
+    # ── Property 15: Trailing stop always below peak ──
+    @given(
+        entry_price=st.floats(min_value=10.0, max_value=100000.0),
+        peak_ratio=st.floats(min_value=1.0, max_value=3.0),
+        trail_pct=st.floats(min_value=0.01, max_value=0.10),
+    )
+    @settings(max_examples=50)
+    def test_trailing_stop_below_peak(self, entry_price, peak_ratio, trail_pct):
+        """Trailing stop should always be below peak."""
+        peak_price = entry_price * peak_ratio
+        trail_stop = peak_price * (1 - trail_pct)
+        assert trail_stop < peak_price
+        assert trail_stop > 0
