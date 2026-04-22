@@ -244,7 +244,7 @@ class PaperTradingEngine:
             for sym in self.assets:
                 open_pos = self.state.get_open_position(sym)
                 if open_pos:
-                    mark = candle["close"] if sym == symbol else (self.feed.get_candles(sym, limit=1)[0]["close"] if self.feed.get_candles(sym, limit=1) else pos["entry_price"])
+                    mark = candle["close"] if sym == symbol else (self.feed.get_candles(sym, limit=1)[0]["close"] if self.feed.get_candles(sym, limit=1) else open_pos["entry_price"])
                     exit_price = mark * (1 - SLIPPAGE_BPS / 10000)
                     lev = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
                     fee = open_pos["size"] * exit_price * FEE_RATE * lev
@@ -289,43 +289,55 @@ class PaperTradingEngine:
         equity = self.state.get_equity()
         guard_state = self.state.get_guard_state()
 
-        # ── KILL_SWITCH: Force-close any open position ──
-        # BUG FIX: Previously KILL_SWITCH only blocked new entries
-        # but left existing positions open. Now we force-close on KILL.
+        # ── KILL_SWITCH: Force-close ALL open positions ──
+        # BUG FIX: KILL_SWITCH must close ALL positions, not just the current symbol.
+        # Each candle only processes one symbol — closing just one would leave the
+        # other 5 positions floating for up to 6 hours. Close them ALL now.
         if guard_state == GuardState.KILL_SWITCH:
-            open_pos = self.state.get_open_position(symbol)
-            if open_pos:
-                # Force-close at current price with slippage
-                exit_price = current_price * (1 - SLIPPAGE_BPS / 10000)
-                leverage = LEVERAGE_TIERS.get(symbol, DEFAULT_LEVERAGE)
-                fee = open_pos["size"] * exit_price * FEE_RATE * leverage
-                pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
+            closed_any = False
+            for sym in self.assets:
+                open_pos = self.state.get_open_position(sym)
+                if open_pos:
+                    # Use this candle's price for the current symbol,
+                    # latest DB price for other symbols
+                    if sym == symbol:
+                        mark = current_price
+                    else:
+                        latest = self.feed.get_candles(sym, limit=1)
+                        mark = latest[0]["close"] if latest else open_pos["entry_price"]
+                    exit_price = mark * (1 - SLIPPAGE_BPS / 10000)
+                    leverage = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
+                    fee = open_pos["size"] * exit_price * FEE_RATE * leverage
+                    pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
 
-                self.state.close_position(symbol, exit_price, current_candle["timestamp"],
-                                           "KILL_SWITCH force-close", guard_state.value,
-                                           net_pnl=pnl)
-                self.risk.on_trade_closed(pnl)
+                    self.state.close_position(sym, exit_price, current_candle["timestamp"],
+                                               "KILL_SWITCH force-close", guard_state.value,
+                                               net_pnl=pnl)
+                    self.risk.on_trade_closed(pnl)
 
-                exit_event = {
-                    "event": "EXIT",
-                    "symbol": symbol,
-                    "side": "LONG",
-                    "price": exit_price,
-                    "size": open_pos["size"],
-                    "pnl": pnl,
-                    "equity": self.state.get_equity(),
-                    "reason": "KILL_SWITCH force-close",
-                    "guard_state": GuardState.KILL_SWITCH.value,
-                    "timestamp": current_candle["timestamp"],
-                }
-                log_trade(exit_event)
+                    exit_event = {
+                        "event": "EXIT",
+                        "symbol": sym,
+                        "side": "LONG",
+                        "price": exit_price,
+                        "size": open_pos["size"],
+                        "pnl": pnl,
+                        "equity": self.state.get_equity(),
+                        "reason": "KILL_SWITCH force-close",
+                        "guard_state": GuardState.KILL_SWITCH.value,
+                        "timestamp": current_candle["timestamp"],
+                    }
+                    log_trade(exit_event)
+                    closed_any = True
+                    log.warning(f"\U0001f6a8 KILL_SWITCH force-close: {sym} @ {exit_price:.2f}, PnL={pnl:.2f}")
+
+            if closed_any:
                 self.reporter._send_container(
                     "\U0001f6a8 **KILL CLOSE**",
-                    f"**{symbol}** force-closed @ ${exit_price:,.2f}\nPnL: {pnl:+.2f}\u20ac\nAll positions will be closed.",
+                    f"All positions force-closed by KILL_SWITCH.\nNo further trading until !resume.",
                     COLOR_RED
                 )
-                log.warning(f"\U0001f6a8 KILL_SWITCH force-close: {symbol} @ {exit_price:.2f}, PnL={pnl:.2f}")
-                return  # No further evaluation during KILL
+            return  # No further evaluation during KILL
 
         # ── Check exit for open position ──
         open_pos = self.state.get_open_position(symbol)

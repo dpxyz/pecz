@@ -186,9 +186,10 @@ class CommandListener:
             await self._cmd_watchdog_clear(author)
 
     async def _cmd_kill(self, author: str):
-        """!kill — Activate kill switch immediately."""
+        """!kill — Activate kill switch and force-close all positions."""
         from state_manager import GuardState
         from discord_reporter import COLOR_RED
+        from paper_engine import LEVERAGE_TIERS, DEFAULT_LEVERAGE, SLIPPAGE_BPS, FEE_RATE
         
         current = self.engine.state.get_guard_state()
         if current == GuardState.KILL_SWITCH:
@@ -199,16 +200,44 @@ class CommandListener:
             )
             return
 
+        # Activate kill switch first
         self.engine.risk.manual_kill(f"Manual !kill by {author}")
+        
+        # BUG FIX: Force-close ALL open positions immediately.
+        # Previously, !kill only set guard state but left positions open.
+        # Positions would float unmanaged until the next candle arrived.
+        closed_positions = []
+        for sym in self.engine.assets:
+            open_pos = self.engine.state.get_open_position(sym)
+            if open_pos:
+                latest = self.engine.feed.get_candles(sym, limit=1)
+                mark = latest[0]["close"] if latest else open_pos["entry_price"]
+                exit_price = mark * (1 - SLIPPAGE_BPS / 10000)
+                leverage = LEVERAGE_TIERS.get(sym, DEFAULT_LEVERAGE)
+                fee = open_pos["size"] * exit_price * FEE_RATE * leverage
+                pnl = (exit_price - open_pos["entry_price"]) * open_pos["size"] - fee
+                
+                now_ts = int(datetime.now(timezone.utc).timestamp() * 1000)
+                self.engine.state.close_position(
+                    sym, exit_price, now_ts,
+                    f"KILL_SWITCH force-close by {author}",
+                    GuardState.KILL_SWITCH.value,
+                    net_pnl=pnl
+                )
+                self.engine.risk.on_trade_closed(pnl)
+                closed_positions.append(f"{sym.split('USDT')[0]}: {pnl:+.2f}€")
+        
+        pos_summary = "\n".join(closed_positions) if closed_positions else "No open positions"
+        
         self.engine.reporter._send_container(
             "🚨 **CRITICAL**",
             f"**KILL SWITCH ACTIVATED** by {author}\n"
             f"All trading halted immediately.\n"
-            f"Any open positions will be managed to close.\n"
+            f"**Force-closed positions:**\n{pos_summary}\n"
             f"Use `!resume` to restart after review.",
             COLOR_RED
         )
-        log.critical(f"🚨 Manual kill switch activated by {author}")
+        log.critical(f"🚨 Manual kill switch activated by {author} — {len(closed_positions)} positions force-closed")
 
     async def _cmd_resume(self, author: str):
         """!resume — Resume from kill switch / pause."""

@@ -393,24 +393,51 @@ def run_watchdog():
     return "ALERT", format_alert(error_type, verify_detail, log_excerpt, attempt=attempt, max_attempts=MAX_RESTART_ATTEMPTS)
 
 
+def send_discord_container(header: str, body: str, color: str):
+    """Send a Components v2 container to #system via openclaw message."""
+    import subprocess
+    cmd = [
+        "openclaw", "message", "send",
+        "--channel", "discord",
+        "--target", DISCORD_SYSTEM_CHANNEL,
+        "--message", f"{header}\n{body}",
+    ]
+    try:
+        subprocess.run(cmd, capture_output=True, timeout=15)
+    except Exception as e:
+        log.warning(f"Discord send failed: {e}")
+
+
 def main():
     """Entry point. Exit code 0 = ok, 1 = alert, 2 = circuit breaker."""
     status, message = run_watchdog()
 
     if status == "OK":
+        # Silent on OK — no need to spam #system every hour
         sys.exit(0)
     elif status == "RECOVERED":
         log.info(f"✅ {message}")
-        # Write alert for housekeeping/Discord pickup
-        (ENGINE_DIR / ".watchdog_alert").write_text(f"RECOVERED: {message}\n")
+        send_discord_container(
+            "🟢 **Watchdog: Recovered**",
+            message,
+            "#22c55e"
+        )
         sys.exit(0)
     elif status == "CIRCUIT_BREAKER":
         log.error(f"⛔ {message}")
-        (ENGINE_DIR / ".watchdog_alert").write_text(f"CIRCUIT_BREAKER: {message}\n")
+        send_discord_container(
+            "⛔ **CIRCUIT BREAKER**",
+            message + "\nUse `!watchdog-clear` to re-enable auto-restart.",
+            "#ef4444"
+        )
         sys.exit(2)
     else:  # ALERT
         log.error(f"🚨 {message}")
-        (ENGINE_DIR / ".watchdog_alert").write_text(f"ALERT: {message}\n")
+        send_discord_container(
+            "🚨 **Watchdog Alert**",
+            message,
+            "#ef4444"
+        )
         sys.exit(1)
 
 

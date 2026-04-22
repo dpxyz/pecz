@@ -51,11 +51,20 @@ def check_equity_invariant(conn):
 
     # implied_entry_fees = start - equity + sum(pnl)
     # Should be positive (small, ~0.0054€ per trade)
+    # But could be negative if equity drifted UP unexplained
     implied_fees = start_val - equity_val + total_pnl
 
+    # Check both directions: fees should always be >= 0
+    # Negative implied_fees = money appeared from nowhere
+    # Very large positive = money disappeared
     if implied_fees < -EQUITY_TOLERANCE_EUR:
         issues.append(("CRITICAL",
-            f"Accounting broken: implied_fees={implied_fees:.4f}€ (negative!). "
+            f"Accounting broken: implied_fees={implied_fees:.4f}€ (negative — money appeared!). "
+            f"equity={equity_val:.4f}, start={start_val:.4f}, pnl={total_pnl:.4f}"))
+    elif implied_fees > EQUITY_TOLERANCE_EUR * 10:
+        # Large positive = many entry fees is fine, but flag if extreme
+        issues.append(("WARN",
+            f"Accounting drift: implied_fees={implied_fees:.4f}€ (very large). "
             f"equity={equity_val:.4f}, start={start_val:.4f}, pnl={total_pnl:.4f}"))
     elif implied_fees < -0.10:
         issues.append(("WARN",

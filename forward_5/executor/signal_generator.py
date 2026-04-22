@@ -59,12 +59,12 @@ def calc_adx(df: pl.DataFrame, period: int = 14) -> pl.Series:
         .otherwise(0)
     )
 
-    atr_expr = tr.rolling_mean(window_size=period, min_periods=period)
-    plus_di = 100 * (plus_dm.rolling_mean(window_size=period, min_periods=period) / atr_expr)
-    minus_di = 100 * (minus_dm.rolling_mean(window_size=period, min_periods=period) / atr_expr)
+    atr_expr = tr.rolling_mean(window_size=period, min_samples=period)
+    plus_di = 100 * (plus_dm.rolling_mean(window_size=period, min_samples=period) / atr_expr)
+    minus_di = 100 * (minus_dm.rolling_mean(window_size=period, min_samples=period) / atr_expr)
 
     dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di + 1e-10)
-    adx_expr = dx.rolling_mean(window_size=period, min_periods=period)
+    adx_expr = dx.rolling_mean(window_size=period, min_samples=period)
 
     result = df.select(adx_expr.alias("adx"))
     return result["adx"]
