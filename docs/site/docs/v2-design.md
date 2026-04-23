@@ -1,7 +1,26 @@
-# V2 Strategy Design — Sentiment & Regime
+# V2 Strategy Design — Der Oktopus 🐙
 
-**Status:** PLANNED (post Paper Trading)  
+**Status:** PLANNED (post Paper Trading)
 **ADR:** Will be formalized as ADR-008 after Phase 8
+
+## Die Oktopus-Metapher
+
+Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, sondern ein **Entscheidungsrahmen**.
+
+- **8 Arme** = 6 Assets + Regime + Sentiment — jeder Arm tastet unabhängig, die Entscheidung kommt zentral
+- **3 Herzen** = Redundanz — Fail-Safes, Kill-Switches, Circuit-Breaker
+- **Knochenlos** = anpassungsfähig — verhält sich in Range anders als im Trend (Regime-Erkennung)
+- **Kamera-Augen** = sieht was andere nicht sehen — Regime-Score als 6. Sinn
+- **Tintensäcke** = bei Gefahr Rückzug + Nebelwand — Kill-Switch, DD-Scaling, Circuit-Breaker
+- **Solitär mit Schwarm-Prinzip** = ein Körper, dezentrale Sensorik — Arme entscheiden lokal, Kopf entscheidet global
+
+**Der Oktopus-Test für neue Features:**
+- Braucht der Oktopus einen 9. Arm? → Nein → Kein neuer Indikator
+- Schützt die Tinte? → Ja → Kill-Switch
+- Greift der Oktopus an? → Nein, er beobachtet und schlägt präzise zu → Sniper nur bei voller Conviction
+- Schwimmt der Oktopus mit den Walen? → Nein, er drückt sich in die Ritze und wartet
+
+---
 
 ## V2 Design Principles
 
