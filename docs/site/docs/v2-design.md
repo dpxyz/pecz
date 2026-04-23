@@ -7,7 +7,7 @@
 
 Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, sondern ein **Entscheidungsrahmen**.
 
-- **8 Arme** = 6 Assets + Regime + Sentiment — jeder Arm tastet unabhängig, die Entscheidung kommt zentral
+- **8 Arme** = 6 Assets + Regime + Sentiment — alle Arme tasten **denselben Markt** ab, nur zuschlagen wenn alle Signale grün sind. Vielseitig wahrnehmend, fokussiert handelnd — nicht viele Eisen im Feuer, sondern viele Augen auf ein Ziel
 - **3 Herzen** = Redundanz — Fail-Safes, Kill-Switches, Circuit-Breaker
 - **Knochenlos** = anpassungsfähig — verhält sich in Range anders als im Trend (Regime-Erkennung)
 - **Kamera-Augen** = sieht was andere nicht sehen — Regime-Score als 6. Sinn
