@@ -157,6 +157,68 @@ def check_candle_freshness(conn):
     return issues
 
 
+TRADE_LOG_PATH = "/data/.openclaw/workspace/forward_v5/forward_5/executor/trades.jsonl"
+
+
+def check_trade_balance(conn):
+    """ENTRY/EXIT counts must balance per symbol (no orphaned or phantom entries).
+    
+    This catches two bugs seen in production:
+    - Phantom KILL_SWITCH EXITs for already-closed positions
+    - Missing EXITs when engine restart doesn't log them
+    """
+    issues = []
+    assets = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]
+    
+    # Count from trades.jsonl (not DB, since that's the source of truth for reporting)
+    try:
+        with open(TRADE_LOG_PATH) as f:
+            trades = [json.loads(line) for line in f if line.strip()]
+    except FileNotFoundError:
+        return [("WARN", "trades.jsonl not found")]
+    except Exception as e:
+        return [("WARN", f"trades.jsonl read error: {e}")]
+    
+    # Filter to valid timestamps only (>= Sep 2025 = testnet start)
+    valid_start = 1758679200000
+    valid_trades = [t for t in trades if int(t.get("timestamp", 0)) >= valid_start]
+    
+    garbage_count = len(trades) - len(valid_trades)
+    if garbage_count > 0:
+        issues.append(("WARN", f"{garbage_count} pre-Sep-2025 garbage entries in trades.jsonl"))
+    
+    from collections import Counter
+    counts = Counter()
+    for t in valid_trades:
+        counts[f"{t['symbol']}_{t['event']}"] += 1
+    
+    for sym in assets:
+        entries = counts.get(f"{sym}_ENTRY", 0)
+        exits = counts.get(f"{sym}_EXIT", 0)
+        if entries > exits:
+            # Could be an open position — check DB
+            open_pos = conn.execute(
+                "SELECT id FROM positions WHERE symbol = ? AND state = 'IN_LONG'",
+                (sym,)
+            ).fetchone()
+            if open_pos:
+                # Open position explains the imbalance
+                pass
+            else:
+                issues.append(("WARN", f"{sym}: {entries}E/{exits}X — orphaned ENTRY (no open position)"))
+        elif exits > entries:
+            issues.append(("CRITICAL", f"{sym}: {entries}E/{exits}X — phantom EXIT (more exits than entries)"))
+    
+    if not issues:
+        parts = []
+        for sym in assets:
+            e = counts.get(f"{sym}_ENTRY", 0)
+            x = counts.get(f"{sym}_EXIT", 0)
+            parts.append(f"{sym}:{e}E/{x}X")
+        return [("OK", f"Balance: {', '.join(parts)} | {len(valid_trades)} entries")]
+    return issues
+
+
 def check_peak_equity(conn):
     """Peak equity >= current equity."""
     eq_row = conn.execute("SELECT value FROM state WHERE key='equity'").fetchone()
@@ -189,6 +251,7 @@ def run_checks():
         ("guard", check_guard_state_consistency),
         ("candles", check_candle_freshness),
         ("peak", check_peak_equity),
+        ("trade_balance", check_trade_balance),
     ]
 
     for name, fn in checks:
