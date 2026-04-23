@@ -332,6 +332,9 @@ hide:
     }
     grid.innerHTML = positions.map(p => {
       const sym = p.symbol.replace('USDT', '');
+      const side = (p.side || 'LONG').toUpperCase();
+      const sideColor = side === 'LONG' ? PALETTE.accent : PALETTE.danger;
+      const sideBg = side === 'LONG' ? 'rgba(212,255,95,0.12)' : 'rgba(255,95,95,0.12)';
       const upnl = p.unrealized_pnl || 0;
       const pnlColor = upnl >= 0 ? PALETTE.accent : PALETTE.danger;
       const pnlSign = upnl >= 0 ? '+' : '';
@@ -343,7 +346,7 @@ hide:
       const timeStr = entryDate ? entryDate.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '';
       return `<div class="card" style="padding:0.6rem 0.8rem;">` +
         `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">` +
-          `<span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span>` +
+          `<span><span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span> <span style="font-size:0.65rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 5px; border-radius:3px; margin-left:4px;">${side}</span></span>` +
           `<span style="color:${pnlColor}; font-weight:600;">${pnlSign}${fmtEur(upnl)}</span>` +
         `</div>` +
         `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted);">` +
@@ -373,6 +376,9 @@ hide:
     }
     grid.innerHTML = exits.map(t => {
       const sym = t.symbol.replace('USDT', '');
+      const side = (t.side || 'LONG').toUpperCase();
+      const sideColor = side === 'LONG' ? PALETTE.accent : PALETTE.danger;
+      const sideBg = side === 'LONG' ? 'rgba(212,255,95,0.12)' : 'rgba(255,95,95,0.12)';
       const pnl = t.pnl || 0;
       const pnlColor = pnl >= 0 ? PALETTE.accent : PALETTE.danger;
       const isEntry = t.event === 'ENTRY';
@@ -384,7 +390,7 @@ hide:
       const pnlStr = !isEntry ? `<span style="color:${pnlColor}; font-weight:600;">${pnl >= 0 ? '+' : ''}${fmtEur(pnl)}</span>` : '';
       return `<div class="card" style="padding:0.5rem 0.8rem;">` +
         `<div style="display:flex; justify-content:space-between; align-items:center;">` +
-          `<span>${icon} <span style="font-weight:600;">${sym}</span> <span style="color:var(--fwd-text-muted);">${t.event.toLowerCase()}</span></span>` +
+          `<span>${icon} <span style="font-weight:600;">${sym}</span> <span style="font-size:0.6rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 4px; border-radius:3px; margin-left:2px;">${side}</span> <span style="color:var(--fwd-text-muted);">${t.event.toLowerCase()}</span></span>` +
           pnlStr +
         `</div>` +
         `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted); margin-top:0.15rem;">` +

@@ -78,7 +78,7 @@ class MonitorV1:
                 exit_fee = size * mark * 0.0001 * lev
                 upnl = (mark - entry) * size - exit_fee
                 positions.append({
-                    "symbol": sym, "entry_price": entry, "entry_time": entry_time,
+                    "symbol": sym, "side": "LONG", "entry_price": entry, "entry_time": entry_time,
                     "peak_price": peak, "size": size, "unrealized_pnl": upnl,
                     "mark_price": mark, "entry_ts": entry_time,
                 })
@@ -97,7 +97,8 @@ class MonitorV1:
             """, (limit,)).fetchall()
             return [
                 {"timestamp": r[0], "event": r[1], "symbol": r[2], "price": r[3],
-                 "size": r[4], "equity": r[5], "pnl": r[6], "guard_state": r[7], "reason": r[8]}
+                 "size": r[4], "equity": r[5], "pnl": r[6], "guard_state": r[7],
+                 "reason": r[8], "side": "LONG"}
                 for r in rows
             ]
         finally:
