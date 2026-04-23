@@ -566,9 +566,48 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 
 - Kein Indikator-Salat (mehr Indikatoren ≠ bessere Ergebnisse)
 - Keine KI-Entscheidung über Trade-Richtung (nur Filter)
-- Keine Short-Positionen (V1 bleibt Long-Only)
 - Kein Hyper-Optimization der Backtest-Parameter
 - Kein automatisches Upsizing bei "gutem Sentiment"
+
+## SHORT-Positionen — Hypothese (Stufe 2 Kandidat)
+
+**Status: ZU VALIDIEREN — nicht als festes Feature aufnehmen ohne Backtest-Beweis**
+
+**Warum SHORT Sinn macht:**
+- Regime Detection weiß wenn Trend DOWN → wird aktuell nicht genutzt
+- Einnahmen im Bärenmarkt → Fixkosten decken
+- Hyperliquid Perps = gleiches Interface, trivial zu implementieren
+- UI (LONG/SHORT Badge) ist bereits vorbereitet
+
+**Warum SHORT riskant ist:**
+- Bärenmärkte sind volatiler → Shortsqueezes sind brutal
+- Funding Rate wirkt GEGEN Shorts → wir zahlen für die Position
+- Markt hat natürlichen Aufwärts-Drift → Short ist strukturell schwerer
+- V1 25% Win-Rate LONG invertiert NICHT automatisch zu guter SHORT-Win-Rate
+- Bidirektional = doppelt so viele Code-Pfade = doppelt so viele Bugs
+
+**Regime-Logik (falls validiert):**
+
+| Regime | Trendrichtung | Aktion |
+|--------|--------------|--------|
+| Strong (>70) | UP | LONG |
+| Strong (>70) | DOWN | SHORT |
+| Trend (30-70) | UP | LONG V1 |
+| Trend (30-70) | DOWN | SHORT V1 |
+| Range (<30) | egal | Kein Trade |
+
+**Gate:**
+- V2 Stufe 1 (LONG-only) MUSS erst validiert sein
+- SHORT-Backtest MUSS ≥ LONG-Backtest Sharpe zeigen
+- SHORT-Backtest MUSS DD ≤ LONG-Backtest DD zeigen
+- Paper Trading MUSS ≥5 SHORT-Trades in 14 Tagen zeigen
+- Ohne Gate-Bestehen: SHORT wird NICHT aufgenommen
+
+**Reihenfolge:**
+1. V2 Stufe 1 bauen + validieren (LONG-only)
+2. Regime-Score um Trendrichtung erweitern
+3. SHORT-Backtest separat laufen
+4. Nur bei positivem Ergebnis → Stufe 2 aufnehmen
 
 ## V2 Implementierung — 3 Stufen, 1 Release
 
