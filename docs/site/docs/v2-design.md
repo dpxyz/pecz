@@ -166,12 +166,14 @@ Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Rankin
 **Score-Formel**:
 ```
 regime_score = (
-  adx_score * 0.40 +     # Trendstärke
+  adx_score * 0.45 +     # Trendstärke
   vol_score * 0.25 +     # Volatilitäts-Regime
-  slope_score * 0.25 +   # Trend-Geschwindigkeit
-  oi_score * 0.10        # Open Interest Change (echtes Kapital vs Fake)
+  slope_score * 0.30 +   # Trend-Geschwindigkeit
+  oi_score * 0.00        # Open Interest Change — ZU VALIDIEREN (aktuell 0%)
 )
 ```
+
+> **⚠️ OI Change = Hypothese, nicht bewiesen.** Weight steht auf 0% bis Backtest beweist dass es hilft. Wenn validiert: 10% (ADX→40%, Slope→25%). Siehe V2 Principle 5: Kein Indikatoren-Salat — jeder neue Input muss Pass-Rate verbessern.
 
 **Komponenten im Detail**:
 
@@ -209,11 +211,11 @@ regime_score = (
 - Aggregation: 24h Change, aktualisiert alle 4h
 - Kein externer Dienst nötig — kommt direkt von der Börse
 
-**Gewichtung 40/25/25/10 — Warum**:
-- ADX 40% → Trendstärke ist der wichtigste Indikator (V1 bewiesen), leicht reduziert für OI
-- Slope 25% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
+**Gewichtung 45/25/30/0 — Warum**:
+- ADX 45% → Trendstärke ist der wichtigste Indikator (V1 bewiesen)
+- Slope 30% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
 - Vol 25% → Crash-Erkennung wichtig, aber soll Score nicht dominieren
-- OI 10% → bestätigt ob Kapital zufließt (echter Trend) oder abfließt (Fake-Rally)
+- OI 0% → **Zu validieren** — wenn Backtest beweist dass Fake-Rally-Erkennung hilft, Upgrade auf 10%
 
 **Regime-Mapping**:
 | Score | Regime | Entry-Regel | Exit-Regel |
@@ -525,7 +527,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 **Stufe 1 — Kern**
 | # | Feature | Warum |
 |---|---------|-------|
-| 1 | Regime-Score (ADX+ATR+Slope+OI) | Filtert ~70% Range-Trades raus, OI bestätigt echten Trend |
+| 1 | Regime-Score (ADX+ATR+Slope, OI zu validieren) | Filtert ~70% Range-Trades raus |
 | 2 | Sniper-Modul (4-5x) | Conviction-Upgrade auf Top-Asset |
 | 3 | DD-basierte Positionsreduktion | 10/15/20% Stufen |
 
@@ -571,7 +573,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 ## V2 Implementierung — 3 Stufen, 1 Release
 
 ### Stufe 1: Kern (Regime + Sniper)
-- Regime-Score (ADX + ATR-Ratio + EMA-Slope + OI Change)
+- Regime-Score (ADX + ATR-Ratio + EMA-Slope, OI zu validieren)
 - Sniper-Modul (4-5x Upgrade auf Top-Asset)
 - DD-basierte Positionsreduktion
 - **Gate**: Regime+Sniper Sharpe > V1, DD < V1
