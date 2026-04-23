@@ -166,9 +166,10 @@ Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Rankin
 **Score-Formel**:
 ```
 regime_score = (
-  adx_score * 0.45 +     # Trendstärke
+  adx_score * 0.40 +     # Trendstärke
   vol_score * 0.25 +     # Volatilitäts-Regime
-  slope_score * 0.30     # Trend-Geschwindigkeit
+  slope_score * 0.25 +   # Trend-Geschwindigkeit
+  oi_score * 0.10        # Open Interest Change (echtes Kapital vs Fake)
 )
 ```
 
@@ -197,10 +198,22 @@ regime_score = (
 - Normalisiert auf letzten 20 Bars: `slope_pct = slope / max(abs(slope_20)) * 100`
 - Kappung: `min(max(slope_pct, 0), 100)` → negativer Slope = 0
 
-**Gewichtung 45/25/30 — Warum**:
-- ADX 45% → Trendstärke ist der wichtigste Indikator (V1 bewiesen)
-- Slope 30% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
+**OI-Score (Open Interest Change)**:
+- `oi_change = (oi_now - oi_24h_ago) / oi_24h_ago * 100`
+- OI steigt + Preis steigt = echtes Kapital → Score 80-100
+- OI steigt + Preis fällt = Short-Aufbau → Score 40-60 (Vorsicht)
+- OI fällt + Preis steigt = Fake-Rally (Short-Covering) → Score 0-30
+- OI fällt + Preis fällt = Kapital verlässt → Score 0-20
+- Normalisierung: `oi_score = max(0, min(100, base_score + oi_change * weight))`
+- Datenquelle: Hyperliquid `/info` API, `openInterest` pro Asset
+- Aggregation: 24h Change, aktualisiert alle 4h
+- Kein externer Dienst nötig — kommt direkt von der Börse
+
+**Gewichtung 40/25/25/10 — Warum**:
+- ADX 40% → Trendstärke ist der wichtigste Indikator (V1 bewiesen), leicht reduziert für OI
+- Slope 25% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
 - Vol 25% → Crash-Erkennung wichtig, aber soll Score nicht dominieren
+- OI 10% → bestätigt ob Kapital zufließt (echter Trend) oder abfließt (Fake-Rally)
 
 **Regime-Mapping**:
 | Score | Regime | Entry-Regel | Exit-Regel |
@@ -255,10 +268,20 @@ News Sources → Aggregator → Gemma4 Cloud JSON-Mode → Sentiment Score (0-10
 **News Sources (Priorität)**:
 | Priority | Source | Format | Update-Frequenz |
 |----------|--------|--------|-----------------|
+| 0 | Funding Rate (Hyperliquid API) | Score 0-100, direkt | 8h |
 | 1 | Crypto News (CoinDesk, CryptoSlate) | KI-Score 0-100 | Echtzeit |
 | 2 | Macro (Fed, CPI, DXY) | Regime-Flag | Täglich |
 | 3 | On-Chain (Exchange Netflow) | Flow-Rate | Täglich |
-| 4 | Social (Fear&Greed Index) | Index-Wert | Stündlich |
+
+**Funding Rate als Priority-0**:
+- Kommt direkt von Hyperliquid API (`/info`, `fundingHistory`) — kein externer Dienst, kein KI-Call
+- Positive Funding = Longs zahlen Shorts = überfüllt = Top-Signal
+- Negative Funding = Shorts zahlen Longs = überlevert = Bottom-Signal
+- Mapping: `funding_score = 50 + (funding_rate * scaling_factor)`, gekappt 0-100
+- Extreme Funding (>0.1%) = Score 0-10 (Crash-Risiko) oder 90-100 (Euphorie-Risiko)
+- Normale Funding (~0.01%) = Score 40-60 (neutral)
+- 8h Aggregation = stabil genug für 1h-Candles, filtert Noise
+- **Warum besser als Fear&Greed Index**: Echtzeit von unserer Börse, nicht aggregiert von 5 Quellen
 
 **Gemma4 Cloud Prompt (JSON-Mode)**:
 ```
@@ -279,10 +302,12 @@ Return ONLY: {"score": <int>, "confidence": <0.0-1.0>, "regime": "crash|fear|neu
 ```
 
 **Aggregation**:
-- Mehrere Quellen → gewichteter Durchschnitt
-- Priority 1 hat 50% Gewicht, Priority 2-4 teilen restliche 50%
-- Confidence < 0.3 → Score verwerfen, auf 50 (neutral) fallen
+- Funding Rate hat 40% Gewicht (kostenlos, direkt von Börse, kein KI nötig)
+- News-Sentiment hat 30% Gewicht
+- On-Chain Netflow hat 20% Gewicht
+- Macro hat 10% Gewicht
 - Widersprüchliche Signale → konservativster Score gewinnt
+- Confidence < 0.3 → Score verwerfen, auf 50 (neutral) fallen
 
 **Fail-Safe-Kaskade**:
 1. **Gemma4 fail** → Score = 50 (neutral, kein Einfluss)
@@ -500,7 +525,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 **Stufe 1 — Kern**
 | # | Feature | Warum |
 |---|---------|-------|
-| 1 | Regime-Score (ADX+ATR+Slope) | Filtert ~70% Range-Trades raus |
+| 1 | Regime-Score (ADX+ATR+Slope+OI) | Filtert ~70% Range-Trades raus, OI bestätigt echten Trend |
 | 2 | Sniper-Modul (4-5x) | Conviction-Upgrade auf Top-Asset |
 | 3 | DD-basierte Positionsreduktion | 10/15/20% Stufen |
 
@@ -516,7 +541,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 **Stufe 3 — Advanced**
 | # | Feature | Warum |
 |---|---------|-------|
-| 9 | Sentiment Kill-Switch | Crash-Schutz, KI-Filter |
+| 9 | Sentiment Kill-Switch (Funding Rate + News) | Crash-Schutz, Funding Rate als Priority-0 |
 | 10 | On-Chain Regime-Filter | Exchange Netflow |
 | 11 | Limit-Orders | Fee-Reduktion |
 | 12 | Asset-Ranking (ROC) | Stärkster Momentum bevorzugen |
@@ -527,6 +552,11 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 |---------|-------|
 | ATR-Stops | Kein Improvement bewiesen |
 | Kelly Criterion | Win-Rate zu instabil |
+| L2 Orderbuch-Imbalance | Ändert sich in Sekunden, 1h-Chart glättet das weg |
+| Volume Profile | Bereits in Candle-Daten enthalten |
+| Liquidation Levels | Zu unzuverlässig, Preis zeigt es bereits |
+| Whale-Tracking (einzelne Adressen) | Noise auf 1h, nicht relevant bei 100€ Kapital |
+| On-Chain Microstruktur | Für 1h-Candles und 100€ Kapital Over-Engineering |
 
 ---
 
@@ -541,7 +571,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 ## V2 Implementierung — 3 Stufen, 1 Release
 
 ### Stufe 1: Kern (Regime + Sniper)
-- Regime-Score (ADX + ATR-Ratio + EMA-Slope)
+- Regime-Score (ADX + ATR-Ratio + EMA-Slope + OI Change)
 - Sniper-Modul (4-5x Upgrade auf Top-Asset)
 - DD-basierte Positionsreduktion
 - **Gate**: Regime+Sniper Sharpe > V1, DD < V1
@@ -555,7 +585,7 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 - **Gate**: Gesamt-DD verbessert, Sharpe ≥ Stufe 1
 
 ### Stufe 3: Advanced
-- Sentiment Kill-Switch
+- Sentiment Kill-Switch (Funding Rate Priority-0 + News)
 - On-Chain Regime-Filter
 - Limit-Orders
 - Dynamische Korrelationsmatrix
