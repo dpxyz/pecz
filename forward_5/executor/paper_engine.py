@@ -220,19 +220,21 @@ class PaperTradingEngine:
         Note: DataFeed now filters partial candles — only CLOSED candles
         (where close_time < now) trigger this callback. This ensures we
         only evaluate signals on complete candle data, matching backtest logic.
+        
+        Replay candles (is_replay=True) from gap recovery/backfill are used
+        to warm up indicators but MUST NOT trigger trades.
         """
         ts = candle.get("timestamp", 0)
         hour_key = f"{symbol}_{ts}"
+        is_replay = candle.get("is_replay", False)
 
         # Deduplicate: only process each closed candle once
         if hour_key in self._last_candle_hour:
             return
         self._last_candle_hour[hour_key] = True
 
-        # Skip candles older than engine start time (backfill/gap recovery noise)
-        # Only process candles from the current session or recent past
-        # DOUBLE GUARD: Also skip if candle is more than 2 hours old relative to NOW
-        # This prevents stale candles from backfill/restart from generating trades
+        # Skip stale candles (older than 2 hours) — prevents backfill garbage
+        # This is a safety net on top of the DataFeed's is_replay flag
         now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
         max_age_ms = 2 * 3600 * 1000  # 2 hours
         if self._engine_start_time and ts < self._engine_start_time:
@@ -242,6 +244,15 @@ class PaperTradingEngine:
         if (now_ms - ts) > max_age_ms:
             # Candle is too old (more than 2 hours) — skip it
             self.state.set_state("last_processed_ts", str(ts))
+            return
+
+        # Skip trading signals for replay candles (gap recovery/backfill)
+        # These candles warm up indicators but MUST NOT trigger new trades
+        if is_replay:
+            log.debug(f"⏭️ {symbol}: Replay candle @ {ts} — warming indicators only")
+            self.state.set_state("last_processed_ts", str(ts))
+            # Still update indicators for this candle so they're warm for live candles
+            # (Signal generator uses the candle data, just don't ACT on the signal)
             return
 
         # Clean up old dedup entries (keep last 24 hours = ~144 entries per asset)

@@ -30,6 +30,7 @@ except ImportError:
 INTERVAL = "1h"
 POLL_INTERVAL = 60  # seconds between REST candle polls
 BACKFILL_HOURS = 48  # how many hours to backfill on startup
+MAX_CANDLE_AGE_MS = 2 * 3600 * 1000  # candles older than 2h are stale → skip trading
 
 # Map our symbols to Hyperliquid coin names
 SYMBOL_MAP = {
@@ -237,7 +238,13 @@ class DataFeed:
                     last = self._last_processed.get(symbol, 0)
                     if ts > last and T <= now_ms:
                         self._last_processed[symbol] = ts
-                        log.info(f"Closed candle: {symbol} @ {ts} close={float(c['c']):.2f}")
+                        # Stale candle = older than MAX_CANDLE_AGE_MS → mark as replay
+                        # Replay candles warm up indicators but MUST NOT trigger trades
+                        is_stale = (now_ms - ts) > MAX_CANDLE_AGE_MS
+                        if is_stale:
+                            log.debug(f"Replay candle: {symbol} @ {ts} ({(now_ms-ts)/3600000:.0f}h old)")
+                        else:
+                            log.info(f"Closed candle: {symbol} @ {ts} close={float(c['c']):.2f}")
 
                         if self.on_candle:
                             candle_data = {
@@ -245,6 +252,7 @@ class DataFeed:
                                 "open": float(c["o"]), "high": float(c["h"]),
                                 "low": float(c["l"]), "close": float(c["c"]),
                                 "volume": float(c.get("v", 0)),
+                                "is_replay": is_stale,  # True = gap recovery/backfill, no trades
                             }
                             await self.on_candle(symbol, candle_data)
 
