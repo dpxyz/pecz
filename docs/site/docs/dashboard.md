@@ -344,9 +344,10 @@ hide:
       const entryDate = entryTs ? new Date(typeof entryTs === 'number' ? entryTs : entryTs) : null;
       const dateStr = entryDate ? entryDate.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '';
       const timeStr = entryDate ? entryDate.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '';
+      const lev = p.leverage ? p.leverage.toFixed(1) + 'x' : '';
       return `<div class="card" style="padding:0.6rem 0.8rem;">` +
         `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">` +
-          `<span><span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span> <span style="font-size:0.65rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 5px; border-radius:3px; margin-left:4px;">${side}</span></span>` +
+          `<span><span style="color:var(--fwd-text-bright); font-weight:600;">${sym}</span> <span style="font-size:0.65rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 5px; border-radius:3px; margin-left:4px;">${side}</span>${lev ? `<span style="font-size:0.6rem; color:var(--fwd-text-dim); margin-left:6px;">${lev}</span>` : ''}</span>` +
           `<span style="color:${pnlColor}; font-weight:600;">${pnlSign}${fmtEur(upnl)}</span>` +
         `</div>` +
         `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted);">` +
@@ -387,10 +388,12 @@ hide:
       const dateStr = ts.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
       const timeStr = ts.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
       const dec = t.price < 1 ? 6 : (t.price < 100 ? 4 : 2);
+      const reason = (t.reason || '').replace(/^(Trailing stop hit|KILL_SWITCH|stop_loss|max_hold):?\s*/i, '').replace(/^Entry at\s+\S+$/i, '').trim();
+      const reasonStr = reason ? `<span style="font-size:0.65rem; color:var(--fwd-text-dim); margin-left:4px;">${reason.length > 30 ? reason.substring(0,30)+'…' : reason}</span>` : '';
       const pnlStr = !isEntry ? `<span style="color:${pnlColor}; font-weight:600;">${pnl >= 0 ? '+' : ''}${fmtEur(pnl)}</span>` : '';
       return `<div class="card" style="padding:0.5rem 0.8rem;">` +
         `<div style="display:flex; justify-content:space-between; align-items:center;">` +
-          `<span>${icon} <span style="font-weight:600;">${sym}</span> <span style="font-size:0.6rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 4px; border-radius:3px; margin-left:2px;">${side}</span> <span style="color:var(--fwd-text-muted);">${t.event.toLowerCase()}</span></span>` +
+          `<span>${icon} <span style="font-weight:600;">${sym}</span> <span style="font-size:0.6rem; font-weight:700; color:${sideColor}; background:${sideBg}; padding:1px 4px; border-radius:3px; margin-left:2px;">${side}</span> <span style="color:var(--fwd-text-muted);">${t.event.toLowerCase()}</span>${reasonStr}</span>` +
           pnlStr +
         `</div>` +
         `<div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--fwd-text-muted); margin-top:0.15rem;">` +

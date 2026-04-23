@@ -285,12 +285,13 @@ title: Mission Control
           const side = (p.side || 'LONG').toUpperCase();
           const sideColor = side === 'LONG' ? P.accent : P.danger;
           const sideBg = side === 'LONG' ? 'rgba(212,255,95,0.12)' : 'rgba(255,95,95,0.12)';
+          const lev = p.leverage ? p.leverage.toFixed(1) + 'x' : '';
           const upnl = p.unrealized_pnl || 0;
           const pc = upnl >= 0 ? P.accent : P.danger;
           const ps = upnl >= 0 ? '+' : '';
           return '<div class="card" style="padding:0.5rem 0.8rem;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">' +
-              '<span><span style="color:var(--fwd-text-bright);font-weight:600;">' + sym + '</span> <span style="font-size:0.6rem;font-weight:700;color:' + sideColor + ';background:' + sideBg + ';padding:1px 5px;border-radius:3px;margin-left:4px;">' + side + '</span></span>' +
+              '<span><span style="color:var(--fwd-text-bright);font-weight:600;">' + sym + '</span> <span style="font-size:0.6rem;font-weight:700;color:' + sideColor + ';background:' + sideBg + ';padding:1px 5px;border-radius:3px;margin-left:4px;">' + side + '</span>' + (lev ? '<span style="font-size:0.58rem;color:var(--fwd-text-dim);margin-left:6px;">' + lev + '</span>' : '') + '</span>' +
               '<span style="color:' + pc + ';font-weight:600;">' + ps + fmtEur(upnl) + '</span>' +
             '</div>' +
             '<div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--fwd-text-muted);">' +
