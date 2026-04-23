@@ -5,8 +5,8 @@
     "peak_equity": 100.0,
     "pnl": -1.440696999126871,
     "pnl_pct": -1.440696999126871,
-    "unrealized_pnl": 0.267065433072018,
-    "mtm_equity": 98.82636843394515,
+    "unrealized_pnl": 0.19513905479365126,
+    "mtm_equity": 98.75444205566679,
     "drawdown_pct": 1.440696999126871,
     "guard_state": "RUNNING",
     "consecutive_losses": 2,
@@ -16,9 +16,9 @@
     "win_rate": 28.57142857142857,
     "total_pnl": -0.9125160035565699,
     "n_open_positions": 2,
-    "uptime_hours": 7.3,
+    "uptime_hours": 7.6,
     "last_candle": "2026-04-23T16:00:00+00:00",
-    "timestamp": "2026-04-23T16:08:43.136564+00:00"
+    "timestamp": "2026-04-23T16:26:32.115990+00:00"
   },
   "equity_curve": [
     {
@@ -1198,9 +1198,10 @@
       "entry_time": 1776949200000,
       "peak_price": 0.097879,
       "size": 256.0560498360182,
-      "unrealized_pnl": 0.24064202615639557,
-      "mark_price": 0.097177,
-      "entry_ts": 1776949200000
+      "unrealized_pnl": 0.21888052663496899,
+      "mark_price": 0.097092,
+      "entry_ts": 1776949200000,
+      "leverage": 1.5
     },
     {
       "symbol": "BTCUSDT",
@@ -1209,9 +1210,10 @@
       "entry_time": 1776956400000,
       "peak_price": 78367.836,
       "size": 0.0003772474440657978,
-      "unrealized_pnl": 0.026423406915622435,
-      "mark_price": 78452.0,
-      "entry_ts": 1776956400000
+      "unrealized_pnl": -0.023741471841317734,
+      "mark_price": 78319.0,
+      "entry_ts": 1776956400000,
+      "leverage": 1.8
     }
   ],
   "recent_trades": [
@@ -1384,5 +1386,5 @@
       "side": "LONG"
     }
   ],
-  "generated_at": "2026-04-23T16:08:43.137187+00:00"
+  "generated_at": "2026-04-23T16:26:32.116525+00:00"
 }
