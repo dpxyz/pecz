@@ -59,11 +59,43 @@ DEFAULT_LEVERAGE = 1.0
 
 TRADE_LOG = Path(__file__).parent / "trades.jsonl"
 
-def log_trade(event: dict):
-    """Append trade event to JSONL file."""
+# Price sanity floors: reject trades with obviously wrong prices
+PRICE_FLOORS = {
+    "BTCUSDT": 10000,  # BTC is never below $10k
+    "ETHUSDT": 100,     # ETH is never below $100
+    "SOLUSDT": 10,      # SOL is never below $10
+    "AVAXUSDT": 5,      # AVAX is never below $5
+    "DOGEUSDT": 0.01,   # DOGE is never below $0.01
+    "ADAUSDT": 0.10,    # ADA is never below $0.10
+}
+
+
+def log_trade(event: dict, path: Optional[str] = None):
+    """Append trade event to JSONL file.
+    
+    Includes price sanity check to reject garbage entries from backfill/restart.
+    BTC should be > 10000, ETH > 100, etc. If price is obviously wrong,
+    log a warning and skip the entry.
+    
+    Args:
+        event: Trade event dict with symbol, price, etc.
+        path: Override path for testing. Defaults to TRADE_LOG.
+    """
+    # Price sanity check: reject obviously wrong prices
+    symbol = event.get("symbol", "")
+    price = event.get("price", 0)
+    
+    floor = PRICE_FLOORS.get(symbol, 0)
+    if price > 0 and price < floor:
+        log.warning(f"⛔ REJECTED garbage trade: {event['event']} {symbol} @ {price:.4f} "
+                    f"(floor={floor}). Indicators: {event.get('indicators', {})}")
+        return False
+    
     event["logged_at"] = datetime.now(timezone.utc).isoformat()
-    with open(TRADE_LOG, "a") as f:
+    target = path or TRADE_LOG
+    with open(target, "a") as f:
         f.write(json.dumps(event) + "\n")
+    return True
 
 
 class PaperTradingEngine:
@@ -199,8 +231,16 @@ class PaperTradingEngine:
 
         # Skip candles older than engine start time (backfill/gap recovery noise)
         # Only process candles from the current session or recent past
+        # DOUBLE GUARD: Also skip if candle is more than 2 hours old relative to NOW
+        # This prevents stale candles from backfill/restart from generating trades
+        now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
+        max_age_ms = 2 * 3600 * 1000  # 2 hours
         if self._engine_start_time and ts < self._engine_start_time:
             # Still update last_processed_ts so gap recovery progresses
+            self.state.set_state("last_processed_ts", str(ts))
+            return
+        if (now_ms - ts) > max_age_ms:
+            # Candle is too old (more than 2 hours) — skip it
             self.state.set_state("last_processed_ts", str(ts))
             return
 
