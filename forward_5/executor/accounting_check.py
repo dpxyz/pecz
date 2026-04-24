@@ -160,6 +160,70 @@ def check_candle_freshness(conn):
 TRADE_LOG_PATH = "/data/.openclaw/workspace/forward_v5/forward_5/executor/trades.jsonl"
 
 
+
+
+def check_peak_consistency(conn):
+    """For open positions, peak_price must be >= the highest candle high since entry.
+    
+    This catches the stale peak bug: during gap recovery, is_replay candles
+    were not updating peak_price, causing trailing stops to be calculated against
+    an outdated peak. The fix moved update_peak() before the is_replay check.
+    
+    Invariant: peak_price >= MAX(high) of all candles since entry_time.
+    If violated, the trailing stop is too wide, potentially delaying exits.
+    """
+    issues = []
+    assets = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]
+    
+    for sym in assets:
+        pos = conn.execute(
+            "SELECT entry_price, peak_price, entry_time FROM positions WHERE symbol=? AND state='IN_LONG'",
+            (sym,)
+        ).fetchone()
+        if not pos:
+            continue
+        
+        entry_price, peak_price, entry_ms = pos
+        
+        # Get max high since position was opened
+        max_high_row = conn.execute(
+            "SELECT MAX(high) FROM candles WHERE symbol=? AND ts >= ?",
+            (sym, entry_ms)
+        ).fetchone()
+        
+        if not max_high_row or max_high_row[0] is None:
+            # No candles since entry — can't check
+            continue
+        
+        max_high = max_high_row[0]
+        
+        # Invariant: peak should be at least the max candle high since entry
+        if peak_price < max_high - 0.0001:  # small tolerance for float comparison
+            diff_pct = ((max_high - peak_price) / peak_price) * 100
+            issues.append(("CRITICAL", 
+                f"{sym}: peak_price={peak_price:.6f} < max_high={max_high:.6f} since entry "
+                f"(stale by {diff_pct:.2f}%) — trailing stop is too wide!"))
+        elif peak_price < max_high:
+            # peak is very slightly below max_high (float precision)
+            issues.append(("WARN", 
+                f"{sym}: peak_price={peak_price:.6f} ≈ max_high={max_high:.6f} (float precision)"))
+    
+    if not issues:
+        # Report what we checked
+        checked = []
+        for sym in assets:
+            pos = conn.execute(
+                "SELECT peak_price FROM positions WHERE symbol=? AND state='IN_LONG'",
+                (sym,)
+            ).fetchone()
+            if pos:
+                checked.append(f"{sym}(peak={pos[0]:.4f})")
+        if checked:
+            return [("OK", f"Peak consistency: {', '.join(checked)} — all peaks ≥ max_high")]
+        else:
+            return [("OK", "No open positions — peak check N/A")]
+    return issues
+
 def check_trade_balance(conn):
     """ENTRY/EXIT counts must balance per symbol (no orphaned or phantom entries).
     
@@ -250,7 +314,8 @@ def run_checks():
         ("positions", check_orphan_positions),
         ("guard", check_guard_state_consistency),
         ("candles", check_candle_freshness),
-        ("peak", check_peak_equity),
+        ("peak_equity", check_peak_equity),
+        ("peak_price", check_peak_consistency),
         ("trade_balance", check_trade_balance),
     ]
 
