@@ -5,22 +5,18 @@
 ```bash
 git clone https://github.com/dpxyz/pecz.git
 cd pecz
-bash install-hooks.sh   # Install pre-commit hook (MUST run after clone!)
+bash install-hooks.sh   # ⚠️ REQUIRED: Installs pre-commit hook (blocks broken tests)
 ```
 
-## Pre-Commit Hook
+## ⚠️ Pre-Commit Hook
 
-**This repo has a pre-commit hook that runs the full test suite before allowing commits to executor files.**
+**Every commit touching executor files MUST pass `pytest tests/` first.**
 
-If you skip this step, broken tests can be committed silently. Run `bash install-hooks.sh` after cloning.
+The hook lives at `forward_5/executor/scripts/pre-commit.sh` and gets copied to `.git/hooks/pre-commit` by `install-hooks.sh`.
 
-The hook source is tracked at `forward_5/executor/scripts/pre-commit.sh`.  
-It copies itself to `.git/hooks/pre-commit` (not tracked by git).
+**If you skip this after cloning:** broken tests can be committed silently. Run `bash install-hooks.sh`.
 
-To reinstall after a `git pull` that changed the hook:
-```bash
-bash install-hooks.sh
-```
+The hook was verified on 2026-04-24: deliberately broken test → commit correctly BLOCKED (exit 1).
 
 ## Test Suite
 
