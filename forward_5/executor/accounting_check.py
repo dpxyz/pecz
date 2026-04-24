@@ -162,67 +162,87 @@ TRADE_LOG_PATH = "/data/.openclaw/workspace/forward_v5/forward_5/executor/trades
 
 
 
-def check_peak_consistency(conn):
-    """For open positions, peak_price must be >= the highest candle high since entry.
+def check_position_sanity(conn):
+    """Comprehensive sanity check for open positions against market data.
     
-    This catches the stale peak bug: during gap recovery, is_replay candles
-    were not updating peak_price, causing trailing stops to be calculated against
-    an outdated peak. The fix moved update_peak() before the is_replay check.
+    Catches multiple classes of bugs:
+    - Stale peak_price (is_replay not updating peak)
+    - Entry at garbage price (DB corruption, replay bug)
+    - Stale data feed (candles too old)
+    - Position with no candle data (missing market data)
     
-    Invariant: peak_price >= MAX(high) of all candles since entry_time.
-    If violated, the trailing stop is too wide, potentially delaying exits.
+    This replaces the narrow check_peak_consistency with a broader check
+    that validates everything we can about an open position vs actual data.
     """
     issues = []
     assets = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]
+    checked = []
     
     for sym in assets:
         pos = conn.execute(
-            "SELECT entry_price, peak_price, entry_time FROM positions WHERE symbol=? AND state='IN_LONG'",
+            "SELECT entry_price, peak_price, entry_time, size, unrealized_pnl "
+            "FROM positions WHERE symbol=? AND state='IN_LONG'",
             (sym,)
         ).fetchone()
         if not pos:
             continue
         
-        entry_price, peak_price, entry_ms = pos
+        entry_price, peak_price, entry_ms, size, unrealized_pnl = pos
         
-        # Get max high since position was opened
-        max_high_row = conn.execute(
-            "SELECT MAX(high) FROM candles WHERE symbol=? AND ts >= ?",
+        # Get candle stats since entry
+        candle_data = conn.execute(
+            "SELECT MAX(high), MIN(low), MAX(ts), COUNT(*) "
+            "FROM candles WHERE symbol=? AND ts >= ?",
             (sym, entry_ms)
         ).fetchone()
         
-        if not max_high_row or max_high_row[0] is None:
-            # No candles since entry — can't check
+        if not candle_data or candle_data[3] == 0:
+            issues.append(("WARN", f"{sym}: No candles since entry — cannot verify position"))
             continue
         
-        max_high = max_high_row[0]
+        max_high, min_low, last_ts, candle_count = candle_data
         
-        # Invariant: peak should be at least the max candle high since entry
-        if peak_price < max_high - 0.0001:  # small tolerance for float comparison
+        # Invariant 1: peak_price >= MAX(high) since entry
+        # Catches: stale peak from gap recovery, update_peak bug, DB corruption
+        if peak_price < max_high - 0.0001:
             diff_pct = ((max_high - peak_price) / peak_price) * 100
             issues.append(("CRITICAL", 
-                f"{sym}: peak_price={peak_price:.6f} < max_high={max_high:.6f} since entry "
-                f"(stale by {diff_pct:.2f}%) — trailing stop is too wide!"))
+                f"{sym}: peak_price={peak_price:.6f} < max_high={max_high:.6f} "
+                f"(stale by {diff_pct:.2f}%) — trailing stop too wide!"))
         elif peak_price < max_high:
-            # peak is very slightly below max_high (float precision)
             issues.append(("WARN", 
                 f"{sym}: peak_price={peak_price:.6f} ≈ max_high={max_high:.6f} (float precision)"))
+        
+        # Invariant 2: entry_price within reasonable range of ±24h candles
+        # Catches: entry at garbage price, DB corruption
+        candle_range = conn.execute(
+            "SELECT MIN(low), MAX(high) FROM candles WHERE symbol=? AND ts BETWEEN ? AND ?",
+            (sym, entry_ms - 86400000, entry_ms + 86400000)  # ±24h around entry
+        ).fetchone()
+        if candle_range and candle_range[0] and candle_range[1]:
+            low_24h, high_24h = candle_range
+            if entry_price < low_24h * 0.9 or entry_price > high_24h * 1.1:
+                issues.append(("WARN", 
+                    f"{sym}: entry_price={entry_price:.4f} outside 24h range "
+                    f"[{low_24h:.4f}, {high_24h:.4f}] — possible garbage entry"))
+        
+        # Invariant 3: candles are fresh (data feed alive)
+        # Catches: data feed down, REST API errors
+        now_ms = int(time.time() * 1000)
+        last_candle_age_h = (now_ms - last_ts) / (3600 * 1000) if last_ts else 999
+        if last_candle_age_h > 4:
+            issues.append(("WARN", 
+                f"{sym}: last candle {last_candle_age_h:.1f}h old — data feed may be down"))
+        
+        checked.append(f"{sym}(peak={peak_price:.4f}≥{max_high:.4f} candles={candle_count})")
     
     if not issues:
-        # Report what we checked
-        checked = []
-        for sym in assets:
-            pos = conn.execute(
-                "SELECT peak_price FROM positions WHERE symbol=? AND state='IN_LONG'",
-                (sym,)
-            ).fetchone()
-            if pos:
-                checked.append(f"{sym}(peak={pos[0]:.4f})")
         if checked:
-            return [("OK", f"Peak consistency: {', '.join(checked)} — all peaks ≥ max_high")]
+            return [("OK", f"Position sanity: {', '.join(checked)}")]
         else:
-            return [("OK", "No open positions — peak check N/A")]
+            return [("OK", "No open positions — position sanity N/A")]
     return issues
+
 
 def check_trade_balance(conn):
     """ENTRY/EXIT counts must balance per symbol (no orphaned or phantom entries).
@@ -315,7 +335,7 @@ def run_checks():
         ("guard", check_guard_state_consistency),
         ("candles", check_candle_freshness),
         ("peak_equity", check_peak_equity),
-        ("peak_price", check_peak_consistency),
+        ("position_sanity", check_position_sanity),
         ("trade_balance", check_trade_balance),
     ]
 

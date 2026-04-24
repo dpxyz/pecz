@@ -28,7 +28,7 @@ def _init_db(db_path: str):
     conn.execute("""CREATE TABLE IF NOT EXISTS positions (
         id INTEGER PRIMARY KEY AUTOINCREMENT, symbol TEXT, state TEXT,
         entry_price REAL, entry_time INTEGER, peak_price REAL,
-        size REAL, opened_at TEXT)""")
+        size REAL, unrealized_pnl REAL DEFAULT 0.0, opened_at TEXT)""")
     conn.execute("""CREATE TABLE IF NOT EXISTS trades (
         id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT, symbol TEXT,
         side TEXT, price REAL, size REAL, pnl REAL,
@@ -176,7 +176,7 @@ class TestOrphanPositions:
         _init_db(db)
         conn = sqlite3.connect(db)
         now_ms = int(time.time() * 1000)
-        conn.execute("INSERT INTO positions VALUES (1, 'BTCUSDT', 'IN_LONG', 100, now_ms, 100, 0.1, '')".replace("now_ms", str(now_ms)))
+        conn.execute("INSERT INTO positions (id, symbol, state, entry_price, entry_time, peak_price, size, unrealized_pnl) VALUES (1, 'BTCUSDT', 'IN_LONG', 100, ?, 100, 0.1, 0.0)", (now_ms,))
         conn.commit()
         issues = check_orphan_positions(conn)
         assert issues[0][0] == "OK"
@@ -188,7 +188,7 @@ class TestOrphanPositions:
         _init_db(db)
         conn = sqlite3.connect(db)
         old_ms = int((time.time() - 50 * 3600) * 1000)
-        conn.execute(f"INSERT INTO positions VALUES (1, 'BTCUSDT', 'IN_LONG', 100, {old_ms}, 100, 0.1, '')")
+        conn.execute("INSERT INTO positions (id, symbol, state, entry_price, entry_time, peak_price, size, unrealized_pnl) VALUES (1, 'BTCUSDT', 'IN_LONG', 100, ?, 100, 0.1, 0.0)", (old_ms,))
         conn.commit()
         issues = check_orphan_positions(conn)
         assert any(s == "WARN" for s, _ in issues)
@@ -201,8 +201,8 @@ class TestOrphanPositions:
         conn = sqlite3.connect(db)
         now_ms = int(time.time() * 1000)
         old_ms = int((time.time() - 50 * 3600) * 1000)
-        conn.execute(f"INSERT INTO positions VALUES (1, 'BTCUSDT', 'IN_LONG', 100, {now_ms}, 100, 0.1, '')")
-        conn.execute(f"INSERT INTO positions VALUES (2, 'ETHUSDT', 'IN_LONG', 2000, {old_ms}, 2000, 0.01, '')")
+        conn.execute("INSERT INTO positions (id, symbol, state, entry_price, entry_time, peak_price, size, unrealized_pnl) VALUES (1, 'BTCUSDT', 'IN_LONG', 100, ?, 100, 0.1, 0.0)", (now_ms,))
+        conn.execute("INSERT INTO positions (id, symbol, state, entry_price, entry_time, peak_price, size, unrealized_pnl) VALUES (2, 'ETHUSDT', 'IN_LONG', 2000, ?, 2000, 0.01, 0.0)", (old_ms,))
         conn.commit()
         issues = check_orphan_positions(conn)
         warn_msgs = [m for s, m in issues if s == "WARN"]
@@ -374,11 +374,29 @@ class TestRunChecks:
             f.write(json.dumps({"symbol":"BTCUSDT","event":"ENTRY","price":50000,"size":0.001,"leverage":1.8,"timestamp":1776000000000})+'\n')
             f.write(json.dumps({"symbol":"BTCUSDT","event":"EXIT","price":50500,"size":0.001,"leverage":1.8,"timestamp":1776010000000,"reason":"trail"})+'\n')
         _seed_healthy_db(db)
+        # Add an open position with matching peak + recent candle
+        # so check_position_sanity passes
+        conn = sqlite3.connect(db)
+        now_ms = int(time.time() * 1000)
+        # Position entry must be within candle price range (~100)
+        conn.execute(
+            "INSERT INTO positions (symbol, state, entry_price, entry_time, peak_price, size, unrealized_pnl) "
+            "VALUES ('BTCUSDT', 'IN_LONG', 99.0, ?, 101.0, 0.01, 0.5)",
+            (now_ms - 600000,)
+        )
+        # Candle high=101 matches peak=101
+        conn.execute("INSERT INTO candles VALUES (?,?,?,?,?,?,?)",
+                     ('BTCUSDT', now_ms - 30000, 100, 101, 99, 100.5, 1000))
+        # Add corresponding ENTRY in trade log for balance check
+        conn.commit()
+        conn.close()
+        with open(trades, 'a') as f:
+            f.write(json.dumps({"symbol":"BTCUSDT","event":"ENTRY","price":99.0,"size":0.01,"leverage":1.8,"timestamp":now_ms-600000})+'\n')
         with patch("accounting_check.DB_PATH", db):
             with patch("accounting_check.get_db", lambda: sqlite3.connect(db)):
                 with patch("accounting_check.TRADE_LOG_PATH", trades):
                     results, ec = run_checks()
-        assert ec == 0
+        assert ec == 0, f"Expected 0, got {ec}: {results}"
 
     def test_db_open_failure(self, tmp_path):
         """DB open failure → exit_code=2."""
