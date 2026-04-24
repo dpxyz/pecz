@@ -145,25 +145,49 @@ _Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und u
 
 ### ⚠️ Aufgenommen und gelöst
 
-| Risiko | Schwere | Lösung | Wo im Design |
-|--------|---------|--------|-------------|
-| **Korrelations-Kollaps im Crash** | HOCH | **Global Equity Stop**: 1h-DD > 8% → alle Positionen Market-Order schließen. Verschärfung der DD-Scaling mit Zeitfenster. Stufe 1. | Prinzip 10 (erweitert) |
+| Risiko | Schwere | Loesung | Wo im Design |
+|--------|---------|---------|-------------|
+| **Korrelations-Kollaps im Crash** | HOCH | **Global Equity Stop**: 1h-DD > 8% -> alle Positionen Market-Order schliessen. Verschrfung der DD-Scaling mit Zeitfenster. Stufe 1. | Prinzip 10 (erweitert) |
 | **Limit-Order-Falle (Execution)** | HOCH | **Execution-Staffelung**: Stufe 1 = Market, Stufe 2 = IOC, Stufe 3 = Limit. Sniper = IMMER Market. | Prinzip 11 (qualifiziert) |
-| Korrelations-Filter-Lücke in Crashes | MITTEL | Crash-Einschränkung dokumentiert: Korrelations-Filter wirktungslos bei 1.0-Korrelation → Global Equity Stop als Fallback | Prinzip 12 (Ergänzung) |
+| Korrelations-Filter-Luecke in Crashes | MITTEL | Crash-Einschraenkung dokumentiert: Korrelations-Filter wirkungslos bei 1.0-Korrelation -> Global Equity Stop als Fallback | Prinzip 12 (Ergaenzung) |
+| **Funding-Rate-Falle (Kontraindikator)** | HOCH | Extreme Funding invertiert: Stark negativ = Short-Squeeze-Treibstoff (Bullish), Stark positiv = Overcrowded (Bearish). Invertierung nur bei |Funding| > 0.05%. Vor Validierung -> Score = 50. | Modul 2 |
+| **Oracle-Risiko (Daten-Integritaet)** | HOCH | **Price Sanity Check**: Unphysiologische Preisbewegungen (>5%/Min) -> Bot pausiert statt handelt. Global Stop loest nur bei validierten Daten aus. V1 hat bereits PRICE_FLOORS. | Modul 4 (neu) |
+| **Slippage beim Global Stop** | MITTEL | **TWAP-Light**: Global Exit nicht als einzelne Market-Order, sondern in Tranchen ueber 30-60s verteilt. Bei 6 Positionen a ~17EUR ist Impact gering, aber principiell richtig. | Prinzip 10 (Ergaenzung) |
+| **Dead Man's Switch** | HOCH | Exchange-seitige Stop-Loss Orders als physisches Herz. Bot zieht Trail lokal nach, aber Not-Aus liegt auf der Boerse. Hyperliquid unterstuetzt SL-on-Open. | Stufe 1 Infrastruktur |
 
 ### ❌ Bewusst abgelehnt
 
 | Vorschlag | Warum abgelehnt | Oktopus-Test |
 |-----------|-----------------|-------------|
 | Volatility-Expansion als Regime-Vorfilter | ATR-Filter im Backtest bewiesen: kein Improvement. Neuer Indikator = Indikatoren-Salat (Prinzip 5). | 9. Arm? Nein. |
-| Multi-Timeframe-Bestätigung (1h vs 4h) | Komplexitätslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als führende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
-| Bollinger Band Breakout | Dasselbe Kategorie wie ATR — nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
+| Multi-Timeframe-Bestigung (1h vs 4h) | Komplexitaetslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als fhrende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
+| Bollinger Band Breakout | Dasselbe Kategorie wie ATR - nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
 
-**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag wäre ein 9. Arm. Der Oktopus braucht keine weiteren Sensorik — er braucht bessere Reflexe (Global Equity Stop) und präzisere Execution (Market → IOC → Limit).
+**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop) und praesizere Execution (Market -> IOC -> Limit).
+
+### 🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)
+
+Das Review identifizierte 3 infrastrukturelle Schichten, die das Strategie-Design ergaenzen:
+
+| Herz | Funktion | Status |
+|------|----------|--------|
+| **Strategisches Herz** | Regime-Filter + Sniper-Logic | Ready (V2 Design) |
+| **Operatives Herz** | Global Equity Stop (1h-Window) + TWAP-Light | Stufe 1 (neu) |
+| **Physisches Herz** | Exchange-seitige Stops + Heartbeat-Monitoring | Stufe 1 Infrastruktur (neu) |
+
+**Das physische Herz ist der wichtigste neue Punkt:** Ohne exchange-seitige Stop-Loss Orders ist der Bot bei einem Infrastruktur-Ausfall "blind" im Markt. Hyperliquid erlaubt das Hinterlegen von SL bei Positionseroeffnung. Das muss in Stufe 1 implementiert werden.
 
 ---
 
 ## V2 Validierung
+
+### Global Equity Stop: Recovery nach Ausloesung
+
+Wenn der Global Equity Stop ausloest (1h-DD > 8%), bleibt der Bot **SOFT_PAUSE** bis:
+- **Automatisch nach 24h** wenn Regime-Score > 50 (Trend erkannt) und Equity stabil
+- **Manuell** durch `!resume` Command
+
+Kein automatisches Re-Entry ohne Regime-Bestaetigung. Der Oktopus zieht sich zurueck und beobachtet, er springt nicht gleich wieder rein.
 
 ### 3-Level-Test
 
@@ -341,13 +365,21 @@ News Sources → Aggregator → Gemma4 Cloud JSON-Mode → Sentiment Score (0-10
 
 **Funding Rate als Priority-0**:
 - Kommt direkt von Hyperliquid API (`/info`, `fundingHistory`) — kein externer Dienst, kein KI-Call
-- Positive Funding = Longs zahlen Shorts = überfüllt = Top-Signal
-- Negative Funding = Shorts zahlen Longs = überlevert = Bottom-Signal
-- Mapping: `funding_score = 50 + (funding_rate * scaling_factor)`, gekappt 0-100
-- Extreme Funding (>0.1%) = Score 0-10 (Crash-Risiko) oder 90-100 (Euphorie-Risiko)
-- Normale Funding (~0.01%) = Score 40-60 (neutral)
+- **Kontraindikator-Logik bei Extremen:** Funding Rate ist nicht linear!
+  - Normale positive Funding (~0.01%) = Longs zahlen Shorts = leicht überfüllt = Score 55-65 (leicht bullish, aber Vorsicht)
+  - Normale negative Funding (~-0.01%) = Shorts zahlen Longs = leicht überlevert = Score 35-45 (leicht bearish)
+  - **Extreme positive Funding (>0.05%)** = Long-Überhang, Overcrowded = Score 20-30 (Crash-Risiko, nicht Euphorie!)
+  - **Extreme negative Funding (<-0.05%)** = Short-Überhang, Short-Squeeze-Treibstoff = Score 70-80 (Bullish-Signal, nicht Fear!)
+- **Warum invertiert:** Bei Extremen ist die Funding Rate ein Kontraindikator. Stark negative Funding = Short Squeeze möglich. Stark positive Funding = Long Liquidation Cascade möglich.
+- Die Invertierung gilt nur bei |Funding| > 0.05% (5x Normal) — im Normalbereich bleibt die Logik intuitiv
+- Mapping (nicht-linear, invertiert bei Extremen): 
+  - `funding_abs = abs(funding_rate)`
+  - `if funding_abs < 0.03: score = 50 + funding_rate * 500` (linear, ~35-65 Bereich)
+  - `if funding_abs >= 0.03: score = invertiert` → positive = bearish, negative = bullish
+  - Gekappt 0-100
 - 8h Aggregation = stabil genug für 1h-Candles, filtert Noise
 - **Warum besser als Fear&Greed Index**: Echtzeit von unserer Börse, nicht aggregiert von 5 Quellen
+- **⚠️ Backtest-Pflicht:** Die Invertierungs-Logik bei Extremen muss historisch validiert werden. Vor Validierung: extreme Funding → Score = 50 (neutral), keine Invertierung.
 
 **Gemma4 Cloud Prompt (JSON-Mode)**:
 ```
