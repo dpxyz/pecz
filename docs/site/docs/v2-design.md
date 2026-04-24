@@ -375,9 +375,37 @@ regime_score = (
 
 ---
 
-### Modul 2: Sentiment (Stufe 3 — Advanced)
+### Modul 2: Sentiment
 
 **Ziel**: KI-basierter Kill-Switch bei Crash-Szenarien die Indikatoren verpassen
+
+**Stufen-Plan (Operative Realitaet)**:
+| Stufe | Sentiment-Bestandteile | Aufwand | Kapital-Voraussetzung |
+|-------|----------------------|--------|----------------------|
+| **Stufe 1** | **100% Funding Rate** (gratis von Hyperliquid) | Minimal | 100e (jetzt) |
+| **Stufe 2** | Funding Rate + News (Gemma4 JSON-Mode) | Mittel | 200e+ |
+| **Stufe 3** | + On-Chain (falls kostenlose Quelle bewiesen) | Hoch | 500e+ |
+
+**Warum Stufe 1 = nur Funding Rate:**
+- On-Chain (Glassnode 80$/Mo bei 100e = oekonomischer Selbstmord) → 0% bis kostenlose Quelle bewiesen (CryptoQuant/Coinglass pruefen)
+- Macro (10%) → kein Score 0-100, sondern **Gezeiten-Blocker**: Fed-Meeting in 2h = SOFT_PAUSE. Gehoert ins operative Herz, nicht ins Sentiment-Modul.
+- News (30%) → braucht validierten Prompt + Fail-Safe. Aufwand steht bei 100e in keinem Verhaeltnis.
+- Die restlichen 60% bleiben als leere Interfaces (Mocks) im Code, bis Datenquellen leistbar und bewiesen sind.
+- Funding Rate 40% → **60%** in Stufe 1 (oder 100% wenn rest neutral=50). Direkt von Hyperliquid, kostenlos, kein KI-Call.
+
+**Gezeiten-Blocker (Macro = Risk Management, nicht Sentiment)**:
+- Fed-Meeting, CPI-Release, FOMC → 2h vorher SOFT_PAUSE, 1h nachher
+- Wirtschaftskalender-Feed = trivial (z.B. finnhub.io gratis)
+- Das ist kein Sentiment-Score, sondern operatives Herz: "Handel nicht wenn der Markt gleich explodieren koennte"
+- Gehoert zu **Operatives Herz** (Global Equity Stop + Gezeiten-Blocker)
+
+**News Prompt = JSON-Mode + Fail-Safe 50**:
+- Prompt MUSS deterministisch sein: nur `{"score": 35, "confidence": 0.8, "regime": "fear"}`
+- Keine Interpretationen, keine Prosa, keine Halluzinationen
+- Fail-Safe: KI halluziniert oder liefert Text → Score = 50 (neutral)
+- Confidence < 0.3 → Score = 50
+- Timeout → letzter Score (decay nach 4h → 50)
+- **Niemals Upsizing** → Sentiment kann nur verkleinern, nie vergroessern
 
 **Pipeline im Detail**:
 ```
