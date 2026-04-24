@@ -62,10 +62,22 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 - V1: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry möglich
 - Sniper: Kein Re-Entry nach Max Hold oder Regime-Exit. Score muss erst < 70 fallen und wieder > 70 steigen für einen neuen Sniper-Trade.
 
-### 8. Regime-basierter Exit
+### 8. Regime-basierter Exit + Kinetischer Trail
 - Strong Trend (Score >70): weiter Trail 2.5-3%, Position atmen lassen
 - Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
 - Hoher Regime-Score = höhere Conviction = mehr Raum
+
+**Kinetischer Trail (Zeit-Ermüdung):**
+- V1 Lesson: Trailing Stop 2% zu eng, wirft Alts nach 9-21h raus
+- Lösung: Trail zieht sich mit der Haltedauer enger — wie ein Oktopus dessen Muskeln ermüden
+- Stunde 0-4 (frischer Trend): Trail = 2.5% (Luft zum Atmen)
+- Stunde 4-12 (Trend reift): Trail zieht sich pro Stunde 0.1% enger
+- Stunde 12+ (Trend altert): Trail nur noch ~1.0-1.5% → Break-Even-Exit bei totem Trade
+- Formel: `current_trail = base_trail - (hours_open * decay_factor)`
+- Kein neuer Indikator — reine Zeitlogik (`entry_time - now`)
+- Ersetzt das starre "Max Hold 24h" durch organischen Decay
+- **Nur für Sniper:** V1 behält starren Trail (einfacher), Sniper bekommt kinetischen Trail
+- Warum: Sniper hat 5x Hebel — zu langes Halten in einem sterbenden Trend ist teuer
 
 ### 9. Partial Exits
 - 50% bei Trail nehmen, 50% laufen lassen
@@ -124,7 +136,7 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 | Regime-Score fällt < 50 | Sofort raus (Trend bricht) |
 | Regime-Score fällt 50-70 | Downgrade auf V1-Hebel, Trail auf 2.0% |
 | Trailing Stop 2.5% | Standard-Exit im Strong Trend |
-| Max Hold 24h | Raus, egal was passiert |
+| Kinetischer Trail (Zeit-Delay) | Trail zieht sich enger je laenger der Trade offen ist (2.5% -> 1.0%). Ersetzt starres Max Hold. |
 
 Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
 DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case 1 Trade = 2.5% Trail × 5x = 12.5% auf 30€ = 3.75€ = 3.75% des Gesamtportfolios. Heißt: 1 Sniper-Verlust verbraucht ~38% des DD-Budgets. Max 2-3 Sniper-Verluste bevor Sniper pausiert.
@@ -162,8 +174,17 @@ _Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und u
 | Volatility-Expansion als Regime-Vorfilter | ATR-Filter im Backtest bewiesen: kein Improvement. Neuer Indikator = Indikatoren-Salat (Prinzip 5). | 9. Arm? Nein. |
 | Multi-Timeframe-Bestigung (1h vs 4h) | Komplexitaetslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als fhrende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
 | Bollinger Band Breakout | Dasselbe Kategorie wie ATR - nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
+| L2 Orderbook Check (Saugnapf/Gravity) | Rauschen auf 1h-Timeframe. Whale-Spoofing. 3x Bid/Ask flippt sekundaerlich. Bei 100e Position = 0 Impact. Bereits im V2 Audit abgelehnt. | 9. Arm? Nein. |
+| Shadow-Bot / Parameter-Optimierung | Hyper-Optimization explizit verboten (PRINCIPLES.md). Kontinuierliche Parameter-Variation = Curve-Fitting in Echtzeit. | 9. Arm? Nein. |
+| Leader-Laggard Veto (BTC-Slope) | Korrelationsfilter (Prinzip 12) deckt denselben Fall ab. BTC-Slope Veto = redundanter Filter + False-Positives bei legitimen ALT-Breakouts. | 9. Arm? Nein. |
+| Micro-Probing (2e Test-Order) | Falscher Timeframe (3 Min Noise auf 1h). Hyperliquid Mindestgroesse ~10$. Doppelte Gebuehren. Gefuehl, nicht Strategie. | 9. Arm? Nein. |
+| Digital Twin Visualisierung | Monitor V1 reicht. JSON-Stream + PowerBI = schoen, aber kein Trading-Signal. | Kein Arm, kein Signal. |
 
-**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop) und praesizere Execution (Market -> IOC -> Limit).
+**Stufe-3 Hypothesen** (nicht abgelehnt, aber nicht jetzt):
+- Session-Timing (Gezeiten-Filter): 0.9x/1.05x Regime-Multiplikator nach Trading-Session. Vol-Score (25%) filtert Low-Liquidity bereits. Needs Backtest.
+- Sector Tags (Sektor-Topografie): Bei 6 Assets mit 3 Sektoren = statistisch irrelevant. Korrelationsmatrix (Stufe 2) ist die bessere Loesung.
+
+**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop, Kinetischer Trail) und praesizere Execution (Market -> IOC -> Limit).
 
 ### 🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)
 
@@ -181,13 +202,21 @@ Das Review identifizierte 3 infrastrukturelle Schichten, die das Strategie-Desig
 
 ## V2 Validierung
 
-### Global Equity Stop: Recovery nach Ausloesung
+### Global Equity Stop: Recovery nach Ausloesung (Parametrische Tinte)
 
-Wenn der Global Equity Stop ausloest (1h-DD > 8%), bleibt der Bot **SOFT_PAUSE** bis:
-- **Automatisch nach 24h** wenn Regime-Score > 50 (Trend erkannt) und Equity stabil
-- **Manuell** durch `!resume` Command
+Wenn der Global Equity Stop ausloest (1h-DD > 8%), bleibt der Bot **SOFT_PAUSE**:
 
-Kein automatisches Re-Entry ohne Regime-Bestaetigung. Der Oktopus zieht sich zurueck und beobachtet, er springt nicht gleich wieder rein.
+**Dynamischer Cooldown (nicht starr 24h):**
+- **Minimum 12h** Ruhepause — nach 8% DD in 1h ist 4h zu frueh, 24h zu starr
+- **Early Resume** nach 12h wenn: Regime-Score > 60 fuer 3 aufeinanderfolgende Kerzen + Equity stabil
+- **Full Resume** nach 24h wenn: Regime-Score > 50 + Equity stabil
+- **Manuell** jederzeit durch `!resume` Command
+
+Warum 12h statt 4h: Nach einem echten Crash (1h-DD > 8%) ist 4h zu frueh — der Markt braucht Zeit sich zu bereinigen. Aber 24h ist starr — wenn der Markt nach 14h ein klares Trend-Signal hat, wollen wir nicht da stehen und zusehen.
+
+Warum Regime > 60 (nicht 80): Regime > 80 nach einem Crash ist selten. > 60 fuer 3 Candles = echte Stabilitaet ohne Overfitting.
+
+Kein automatisches Re-Entry ohne Regime-Bestaetigung. Der Oktopus zieht sich zurueck und beobachtet — aber er wartet nicht starr, er tastet sich wieder heran (parametrische Tinte).
 
 ### 3-Level-Test
 
@@ -592,7 +621,7 @@ drawdown_pct = (peak_equity - current_equity) / peak_equity * 100
 **Siehe oben** — detailliert ausgearbeitet im Sniper-Modul Abschnitt
 
 Entry-Stack: Regime > 70, Asset-Ranking #1-2, Sentiment > 50, MACD, EMA-Slope > 0.5
-Exit: Trail 2.5%, Max Hold 24h, Regime < 50 = raus, Regime 50-70 = Downgrade
+Exit: Kinetischer Trail (2.5% -> 1.0%), Regime < 50 = raus, Regime 50-70 = Downgrade
 Capital: max 30€ × 5x = 150€ Notional
 Circuit-Breaker: 3 Verluste → 48h Pause
 
