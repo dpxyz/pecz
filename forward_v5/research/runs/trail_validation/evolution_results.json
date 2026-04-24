@@ -1,0 +1,514 @@
+{
+  "total_tokens": 5096,
+  "results": [
+    {
+      "iteration": 1,
+      "candidate": "V2_Volatility_Adaptive_Exit",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 329,
+      "return_pct": -34.8,
+      "pf": 0.82,
+      "dd_pct": 34.91,
+      "win_rate": 25.53,
+      "cl": 24,
+      "sharpe": -6.1,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 3.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "raw_candidate": {
+        "name": "V2_Volatility_Adaptive_Exit",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "ATR",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND close > ema_50 AND adx_14 > 20",
+        "exit_config": {
+          "trailing_stop_pct": 3.5,
+          "stop_loss_pct": 4.0,
+          "max_hold_bars": 72
+        }
+      }
+    },
+    {
+      "iteration": 1,
+      "candidate": "V2_Trend_Follower_Wide",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 293,
+      "return_pct": -43.64,
+      "pf": 0.75,
+      "dd_pct": 43.01,
+      "win_rate": 27.99,
+      "cl": 21,
+      "sharpe": -8.94,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 4.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 96
+      },
+      "raw_candidate": {
+        "name": "V2_Trend_Follower_Wide",
+        "type": "trend",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "RSI",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_line > macd_signal AND close > ema_50 AND adx_14 > 25 AND rsi_14 > 50",
+        "exit_config": {
+          "trailing_stop_pct": 4.0,
+          "stop_loss_pct": 5.0,
+          "max_hold_bars": 96
+        }
+      }
+    },
+    {
+      "iteration": 1,
+      "candidate": "V2_Momentum_Squeeze_Exit",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 340,
+      "return_pct": -41.95,
+      "pf": 0.79,
+      "dd_pct": 38.25,
+      "win_rate": 25.29,
+      "cl": 24,
+      "sharpe": -7.27,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 2.8,
+        "stop_loss_pct": 3.0,
+        "max_hold_bars": 48
+      },
+      "raw_candidate": {
+        "name": "V2_Momentum_Squeeze_Exit",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "BB",
+            "params": {
+              "period": 20,
+              "std_dev": 2.0
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND close > ema_50 AND adx_14 > 20 AND close > bb_mid_20",
+        "exit_config": {
+          "trailing_stop_pct": 2.8,
+          "stop_loss_pct": 3.0,
+          "max_hold_bars": 48
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "candidate": "V3_Trend_Sustainer_Wide",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 329,
+      "return_pct": -34.8,
+      "pf": 0.82,
+      "dd_pct": 34.91,
+      "win_rate": 25.53,
+      "cl": 24,
+      "sharpe": -6.1,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 3.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "raw_candidate": {
+        "name": "V3_Trend_Sustainer_Wide",
+        "type": "trend",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND close > ema_50 AND adx_14 > 20",
+        "exit_config": {
+          "trailing_stop_pct": 3.5,
+          "stop_loss_pct": 4.0,
+          "max_hold_bars": 72
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "candidate": "V3_Volatility_Buffer_Exit",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 292,
+      "return_pct": -43.78,
+      "pf": 0.75,
+      "dd_pct": 41.91,
+      "win_rate": 27.74,
+      "cl": 21,
+      "sharpe": -8.69,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 4.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 96
+      },
+      "raw_candidate": {
+        "name": "V3_Volatility_Buffer_Exit",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ATR",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_line > macd_signal AND close > ema_50 AND adx_14 > 25",
+        "exit_config": {
+          "trailing_stop_pct": 4.0,
+          "stop_loss_pct": 5.0,
+          "max_hold_bars": 96
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "candidate": "V3_Momentum_RSI_Filter",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 333,
+      "return_pct": -41.9,
+      "pf": 0.79,
+      "dd_pct": 40.86,
+      "win_rate": 26.43,
+      "cl": 23,
+      "sharpe": -7.42,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "raw_candidate": {
+        "name": "V3_Momentum_RSI_Filter",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "RSI",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND rsi_14 > 50 AND close > ema_50 AND adx_14 > 20",
+        "exit_config": {
+          "trailing_stop_pct": 3.0,
+          "stop_loss_pct": 3.5,
+          "max_hold_bars": 48
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "candidate": "V2_ATR_Adaptive_Trend",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 329,
+      "return_pct": -34.8,
+      "pf": 0.82,
+      "dd_pct": 34.91,
+      "win_rate": 25.53,
+      "cl": 24,
+      "sharpe": -6.1,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 3.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "raw_candidate": {
+        "name": "V2_ATR_Adaptive_Trend",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "ATR",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND close > ema_50 AND adx_14 > 20",
+        "exit_config": {
+          "trailing_stop_pct": 3.5,
+          "stop_loss_pct": 4.0,
+          "max_hold_bars": 72
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "candidate": "V2_Volatility_Expansion_Exit",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 295,
+      "return_pct": -44.01,
+      "pf": 0.76,
+      "dd_pct": 41.26,
+      "win_rate": 28.14,
+      "cl": 21,
+      "sharpe": -8.7,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 3.0,
+        "max_hold_bars": 48
+      },
+      "raw_candidate": {
+        "name": "V2_Volatility_Expansion_Exit",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "BB",
+            "params": {
+              "period": 20,
+              "std_dev": 2.0
+            }
+          }
+        ],
+        "entry_condition": "macd_line > macd_signal AND close > ema_50 AND adx_14 > 25",
+        "exit_config": {
+          "trailing_stop_pct": 3.0,
+          "stop_loss_pct": 3.0,
+          "max_hold_bars": 48
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "candidate": "V2_Sustained_Momentum_Wide",
+      "asset": "BTCUSDT",
+      "period": "2024",
+      "trades": 462,
+      "return_pct": -85.23,
+      "pf": 0.57,
+      "dd_pct": 58.28,
+      "win_rate": 35.5,
+      "cl": 13,
+      "sharpe": -18.81,
+      "gate_pass": false,
+      "exit_config": {
+        "trailing_stop_pct": 4.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 96
+      },
+      "raw_candidate": {
+        "name": "V2_Sustained_Momentum_Wide",
+        "type": "momentum",
+        "indicators": [
+          {
+            "name": "MACD",
+            "params": {
+              "fast": 12,
+              "slow": 26,
+              "signal": 9
+            }
+          },
+          {
+            "name": "EMA",
+            "params": {
+              "period": 50
+            }
+          },
+          {
+            "name": "ADX",
+            "params": {
+              "period": 14
+            }
+          },
+          {
+            "name": "RSI",
+            "params": {
+              "period": 14
+            }
+          }
+        ],
+        "entry_condition": "macd_hist > 0 AND close > ema_50 AND adx_14 > 20 AND rsi_14 < 70",
+        "exit_config": {
+          "trailing_stop_pct": 4.0,
+          "stop_loss_pct": 5.0,
+          "max_hold_bars": 96
+        }
+      }
+    }
+  ]
+}
