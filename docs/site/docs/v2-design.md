@@ -179,10 +179,16 @@ _Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und u
 | Leader-Laggard Veto (BTC-Slope) | Korrelationsfilter (Prinzip 12) deckt denselben Fall ab. BTC-Slope Veto = redundanter Filter + False-Positives bei legitimen ALT-Breakouts. | 9. Arm? Nein. |
 | Micro-Probing (2e Test-Order) | Falscher Timeframe (3 Min Noise auf 1h). Hyperliquid Mindestgroesse ~10$. Doppelte Gebuehren. Gefuehl, nicht Strategie. | 9. Arm? Nein. |
 | Digital Twin Visualisierung | Monitor V1 reicht. JSON-Stream + PowerBI = schoen, aber kein Trading-Signal. | Kein Arm, kein Signal. |
+| Ghost-Mode Recovery (Schatten-Trades) | Dynamic Cooldown (12h + Regime > 60 x 3) loest dasselbe Problem einfacher. 2 Paper-Trades auf 1h = statistisch irrelevant. | Dynamic Cooldown bereits implementiert. |
+| Tiefsee-Vakuum (Crash-Limit-Buys) | Widerspricht Oktopus-Identitaet: Bei Gefahr RUECKZUG, nicht Angriff. Auf Perps: Long bei -20% im Crash = Liquidationsrisiko. Global Equity Stop schliesst ALLES, nicht nur schlechte Positionen. | Oktopus-Test: Ja, aber falsche Richtung. |
+| Actor Model Architecture | 6 Assets / 1h Candles / 60s Polling = zero Contention. Over-Engineering. 326 Tests muessen komplett neu geschrieben werden. | Falsche Skala. |
+| Event Sourcing | Bereits geloest: trades.jsonl + state.db (SQLite) + equity_history. Unsere Crash-Probleme waren nie State-Korruption. | Bereits implementiert. |
 
 **Stufe-3 Hypothesen** (nicht abgelehnt, aber nicht jetzt):
 - Session-Timing (Gezeiten-Filter): 0.9x/1.05x Regime-Multiplikator nach Trading-Session. Vol-Score (25%) filtert Low-Liquidity bereits. Needs Backtest.
 - Sector Tags (Sektor-Topografie): Bei 6 Assets mit 3 Sektoren = statistisch irrelevant. Korrelationsmatrix (Stufe 2) ist die bessere Loesung.
+- House-Money Sniper (Core/Prey Wallets): Sniper nutzt nur Profit-Kapital, nie Start-Kapital. Elegant bei 1000e+, aber bei 100e keine "Beute" vorhanden. Stufe-3 wenn Kapital signifikant waechst.
+- Schmerzgedaechtnis (Per-Asset Cooldown): 3 consecutive SLs auf einem Asset = 48h Bann. Granularer als globaler Circuit Breaker. Bei 6 Assets + niedriger Trade-Frequenz selten triggert. Regime-Score + Korrelations-Filter decken denselben Fall ab.
 
 **Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop, Kinetischer Trail) und praesizere Execution (Market -> IOC -> Limit).
 
