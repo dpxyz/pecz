@@ -1,0 +1,1625 @@
+{
+  "total_tokens": 18691,
+  "results": [
+    {
+      "name": "Mean_Reversion_BB_V2_Volatility_Filter",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200 AND atr_14 > (atr_14 * 0.8)",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 1
+    },
+    {
+      "name": "BB_Squeeze_Mean_Reversion",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND (bb_upper_20 - bb_lower_20) < (bb_upper_20 - bb_lower_20)[1] AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 1
+    },
+    {
+      "name": "RSI_Divergence_BB_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 > rsi_14[1] AND rsi_14[1] < 30 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 1
+    },
+    {
+      "name": "Mean_Reversion_BB_V3_RSI_Recovery",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.02,
+      "avg_dd": 7.86,
+      "max_cl": 11,
+      "min_trades": 47,
+      "profitable_assets": "3/6",
+      "score": 2.36,
+      "assets": {
+        "BTCUSDT": {
+          "R": -6.26,
+          "DD": 10.42,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -4.85,
+          "DD": 10.18,
+          "CL": 8,
+          "T": 55
+        },
+        "SOLUSDT": {
+          "R": 1.29,
+          "DD": 6.11,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": -1.65,
+          "DD": 7.8,
+          "CL": 4,
+          "T": 47
+        },
+        "DOGEUSDT": {
+          "R": 1.56,
+          "DD": 8.5,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 10.03,
+          "DD": 4.18,
+          "CL": 3,
+          "T": 51
+        }
+      },
+      "iteration": 2
+    },
+    {
+      "name": "Mean_Reversion_BB_V4_Volatility_Squeeze",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND atr_14 < (close * 0.02)",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 2
+    },
+    {
+      "name": "Mean_Reversion_BB_V5_Trend_Squeeze",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 32 AND close > ema_200 AND atr_14 > 0",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 4.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": 1.66,
+      "avg_dd": 6.91,
+      "max_cl": 6,
+      "min_trades": 37,
+      "profitable_assets": "3/6",
+      "score": 3.28,
+      "assets": {
+        "BTCUSDT": {
+          "R": -1.4,
+          "DD": 7.42,
+          "CL": 6,
+          "T": 45
+        },
+        "ETHUSDT": {
+          "R": -0.39,
+          "DD": 7.3,
+          "CL": 4,
+          "T": 43
+        },
+        "SOLUSDT": {
+          "R": 3.35,
+          "DD": 5.64,
+          "CL": 4,
+          "T": 40
+        },
+        "AVAXUSDT": {
+          "R": 4.95,
+          "DD": 5.71,
+          "CL": 5,
+          "T": 38
+        },
+        "DOGEUSDT": {
+          "R": -6.31,
+          "DD": 10.72,
+          "CL": 4,
+          "T": 38
+        },
+        "ADAUSDT": {
+          "R": 9.73,
+          "DD": 4.65,
+          "CL": 2,
+          "T": 37
+        }
+      },
+      "iteration": 2
+    },
+    {
+      "name": "Mean_Reversion_BB_V6_Dynamic_RSI",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 72
+      },
+      "avg_return": -0.09,
+      "avg_dd": 8.1,
+      "max_cl": 11,
+      "min_trades": 45,
+      "profitable_assets": "4/6",
+      "score": 1.98,
+      "assets": {
+        "BTCUSDT": {
+          "R": -6.87,
+          "DD": 10.98,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -4.92,
+          "DD": 10.26,
+          "CL": 7,
+          "T": 54
+        },
+        "SOLUSDT": {
+          "R": 1.22,
+          "DD": 6.96,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": 0.45,
+          "DD": 7.69,
+          "CL": 4,
+          "T": 45
+        },
+        "DOGEUSDT": {
+          "R": 0.18,
+          "DD": 8.5,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 9.42,
+          "DD": 4.18,
+          "CL": 3,
+          "T": 50
+        }
+      },
+      "iteration": 3
+    },
+    {
+      "name": "Mean_Reversion_BB_V7_Volatility_Squeeze",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND atr_14 < (atr_14 * 1.2)",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 3
+    },
+    {
+      "name": "Mean_Reversion_BB_V8_EMA_Cross_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close < ema_200 * 1.02 AND close > ema_200 * 0.95",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 96
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 3
+    },
+    {
+      "name": "Mean_Reversion_BB_V8_ATR_Filtered",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200 AND atr_14 > 0",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -0.92,
+      "avg_dd": 8.59,
+      "max_cl": 11,
+      "min_trades": 45,
+      "profitable_assets": "2/6",
+      "score": 1.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": -7.37,
+          "DD": 11.44,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -4.92,
+          "DD": 10.26,
+          "CL": 7,
+          "T": 54
+        },
+        "SOLUSDT": {
+          "R": 1.22,
+          "DD": 6.96,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": -0.05,
+          "DD": 8.17,
+          "CL": 4,
+          "T": 45
+        },
+        "DOGEUSDT": {
+          "R": -2.32,
+          "DD": 10.03,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 7.92,
+          "DD": 4.7,
+          "CL": 3,
+          "T": 50
+        }
+      },
+      "iteration": 4
+    },
+    {
+      "name": "Mean_Reversion_BB_V9_Momentum_Shift",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND macd_hist > -0.1",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.93,
+      "avg_dd": 2.97,
+      "max_cl": 4,
+      "min_trades": 0,
+      "profitable_assets": "2/6",
+      "score": 0.04,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": -2.08,
+          "DD": 3.5,
+          "CL": 4,
+          "T": 9
+        },
+        "DOGEUSDT": {
+          "R": 3.6,
+          "DD": 8.27,
+          "CL": 4,
+          "T": 27
+        },
+        "ADAUSDT": {
+          "R": 4.08,
+          "DD": 6.05,
+          "CL": 3,
+          "T": 28
+        }
+      },
+      "iteration": 4
+    },
+    {
+      "name": "Mean_Reversion_BB_V10_Aggressive_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 40 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 3.5,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -1.8,
+      "avg_dd": 10.82,
+      "max_cl": 5,
+      "min_trades": 59,
+      "profitable_assets": "2/6",
+      "score": -0.04,
+      "assets": {
+        "BTCUSDT": {
+          "R": -9.83,
+          "DD": 12.75,
+          "CL": 5,
+          "T": 84
+        },
+        "ETHUSDT": {
+          "R": -6.03,
+          "DD": 9.96,
+          "CL": 5,
+          "T": 66
+        },
+        "SOLUSDT": {
+          "R": 6.28,
+          "DD": 5.3,
+          "CL": 3,
+          "T": 64
+        },
+        "AVAXUSDT": {
+          "R": 0.65,
+          "DD": 7.95,
+          "CL": 4,
+          "T": 59
+        },
+        "DOGEUSDT": {
+          "R": -0.53,
+          "DD": 12.04,
+          "CL": 3,
+          "T": 66
+        },
+        "ADAUSDT": {
+          "R": -1.34,
+          "DD": 16.9,
+          "CL": 4,
+          "T": 64
+        }
+      },
+      "iteration": 4
+    },
+    {
+      "name": "Mean_Reversion_BB_V10_Pivot",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200 AND close > open",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -1.53,
+      "avg_dd": 2.5,
+      "max_cl": 7,
+      "min_trades": 4,
+      "profitable_assets": "2/6",
+      "score": -1.88,
+      "assets": {
+        "BTCUSDT": {
+          "R": -0.13,
+          "DD": 1.18,
+          "CL": 3,
+          "T": 9
+        },
+        "ETHUSDT": {
+          "R": -7.41,
+          "DD": 7.26,
+          "CL": 7,
+          "T": 12
+        },
+        "SOLUSDT": {
+          "R": 0.82,
+          "DD": 0.32,
+          "CL": 2,
+          "T": 4
+        },
+        "AVAXUSDT": {
+          "R": -2.63,
+          "DD": 3.53,
+          "CL": 3,
+          "T": 4
+        },
+        "DOGEUSDT": {
+          "R": 0.26,
+          "DD": 1.06,
+          "CL": 2,
+          "T": 5
+        },
+        "ADAUSDT": {
+          "R": -0.11,
+          "DD": 1.65,
+          "CL": 3,
+          "T": 4
+        }
+      },
+      "iteration": 5
+    },
+    {
+      "name": "Mean_Reversion_BB_V11_LowVol_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND atr_14 < (atr_14 * 1.2)",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 5
+    },
+    {
+      "name": "Mean_Reversion_BB_V12_DualEMA_Support",
+      "entry_condition": "(close < bb_lower_20 AND rsi_14 < 30) AND (close > ema_50 OR close > ema_200)",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 5
+    },
+    {
+      "name": "Mean_Reversion_BB_V13_RSI_Relaxed",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -1.35,
+      "avg_dd": 8.76,
+      "max_cl": 11,
+      "min_trades": 45,
+      "profitable_assets": "2/6",
+      "score": 0.52,
+      "assets": {
+        "BTCUSDT": {
+          "R": -7.27,
+          "DD": 11.35,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -5.35,
+          "DD": 10.64,
+          "CL": 8,
+          "T": 55
+        },
+        "SOLUSDT": {
+          "R": 1.73,
+          "DD": 6.47,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": -1.97,
+          "DD": 8.33,
+          "CL": 4,
+          "T": 45
+        },
+        "DOGEUSDT": {
+          "R": -1.82,
+          "DD": 9.91,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 6.55,
+          "DD": 5.84,
+          "CL": 3,
+          "T": 50
+        }
+      },
+      "iteration": 6
+    },
+    {
+      "name": "Mean_Reversion_BB_V14_Volatility_Squeeze",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND atr_14 > (atr_14 * 0.5)",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 4.5,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 6
+    },
+    {
+      "name": "Mean_Reversion_BB_V15_Momentum_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 > 30 AND rsi_14 < 40 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": -6.69,
+      "avg_dd": 10.61,
+      "max_cl": 8,
+      "min_trades": 37,
+      "profitable_assets": "1/6",
+      "score": -6.18,
+      "assets": {
+        "BTCUSDT": {
+          "R": -9.88,
+          "DD": 10.96,
+          "CL": 8,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -9.12,
+          "DD": 9.2,
+          "CL": 7,
+          "T": 38
+        },
+        "SOLUSDT": {
+          "R": 0.57,
+          "DD": 4.61,
+          "CL": 5,
+          "T": 43
+        },
+        "AVAXUSDT": {
+          "R": -13.15,
+          "DD": 12.83,
+          "CL": 3,
+          "T": 37
+        },
+        "DOGEUSDT": {
+          "R": -2.81,
+          "DD": 12.63,
+          "CL": 3,
+          "T": 47
+        },
+        "ADAUSDT": {
+          "R": -5.76,
+          "DD": 13.45,
+          "CL": 4,
+          "T": 47
+        }
+      },
+      "iteration": 6
+    },
+    {
+      "name": "Mean_Reversion_BB_V15_Dynamic_RSI",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 32 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 72
+      },
+      "avg_return": 1.52,
+      "avg_dd": 6.58,
+      "max_cl": 6,
+      "min_trades": 38,
+      "profitable_assets": "3/6",
+      "score": 3.35,
+      "assets": {
+        "BTCUSDT": {
+          "R": -0.8,
+          "DD": 6.85,
+          "CL": 6,
+          "T": 45
+        },
+        "ETHUSDT": {
+          "R": -0.31,
+          "DD": 7.21,
+          "CL": 5,
+          "T": 44
+        },
+        "SOLUSDT": {
+          "R": 3.42,
+          "DD": 4.62,
+          "CL": 4,
+          "T": 40
+        },
+        "AVAXUSDT": {
+          "R": 2.52,
+          "DD": 6.4,
+          "CL": 5,
+          "T": 39
+        },
+        "DOGEUSDT": {
+          "R": -4.3,
+          "DD": 10.68,
+          "CL": 5,
+          "T": 39
+        },
+        "ADAUSDT": {
+          "R": 8.59,
+          "DD": 3.7,
+          "CL": 2,
+          "T": 38
+        }
+      },
+      "iteration": 7
+    },
+    {
+      "name": "Mean_Reversion_BB_V16_ATR_Volatility_Floor",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND atr_14 > 0",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": 2.67,
+      "avg_dd": 6.25,
+      "max_cl": 7,
+      "min_trades": 26,
+      "profitable_assets": "5/6",
+      "score": 3.39,
+      "assets": {
+        "BTCUSDT": {
+          "R": -1.22,
+          "DD": 6.71,
+          "CL": 7,
+          "T": 41
+        },
+        "ETHUSDT": {
+          "R": 0.93,
+          "DD": 7.45,
+          "CL": 4,
+          "T": 38
+        },
+        "SOLUSDT": {
+          "R": 3.82,
+          "DD": 5.21,
+          "CL": 2,
+          "T": 30
+        },
+        "AVAXUSDT": {
+          "R": 4.29,
+          "DD": 4.24,
+          "CL": 5,
+          "T": 32
+        },
+        "DOGEUSDT": {
+          "R": 5.1,
+          "DD": 6.85,
+          "CL": 3,
+          "T": 26
+        },
+        "ADAUSDT": {
+          "R": 3.08,
+          "DD": 7.02,
+          "CL": 3,
+          "T": 28
+        }
+      },
+      "iteration": 7
+    },
+    {
+      "name": "Mean_Reversion_BB_V17_Mid_Target_Exit",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 1.5,
+        "stop_loss_pct": 3.0,
+        "max_hold_bars": 36
+      },
+      "avg_return": 3.88,
+      "avg_dd": 5.66,
+      "max_cl": 8,
+      "min_trades": 27,
+      "profitable_assets": "5/6",
+      "score": 4.88,
+      "assets": {
+        "BTCUSDT": {
+          "R": -1.27,
+          "DD": 6.75,
+          "CL": 8,
+          "T": 42
+        },
+        "ETHUSDT": {
+          "R": 2.3,
+          "DD": 6.16,
+          "CL": 4,
+          "T": 38
+        },
+        "SOLUSDT": {
+          "R": 3.57,
+          "DD": 5.66,
+          "CL": 2,
+          "T": 30
+        },
+        "AVAXUSDT": {
+          "R": 5.23,
+          "DD": 4.48,
+          "CL": 5,
+          "T": 33
+        },
+        "DOGEUSDT": {
+          "R": 5.61,
+          "DD": 7.31,
+          "CL": 4,
+          "T": 27
+        },
+        "ADAUSDT": {
+          "R": 7.86,
+          "DD": 3.62,
+          "CL": 3,
+          "T": 29
+        }
+      },
+      "iteration": 7
+    },
+    {
+      "name": "Mean_Reversion_BB_V18_Dynamic_RSI_BTC_Fix",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.02,
+      "avg_dd": 7.86,
+      "max_cl": 11,
+      "min_trades": 47,
+      "profitable_assets": "3/6",
+      "score": 2.36,
+      "assets": {
+        "BTCUSDT": {
+          "R": -6.26,
+          "DD": 10.42,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -4.85,
+          "DD": 10.18,
+          "CL": 8,
+          "T": 55
+        },
+        "SOLUSDT": {
+          "R": 1.29,
+          "DD": 6.11,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": -1.65,
+          "DD": 7.8,
+          "CL": 4,
+          "T": 47
+        },
+        "DOGEUSDT": {
+          "R": 1.56,
+          "DD": 8.5,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 10.03,
+          "DD": 4.18,
+          "CL": 3,
+          "T": 51
+        }
+      },
+      "iteration": 8
+    },
+    {
+      "name": "Mean_Reversion_BB_Squeeze_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND atr_14 < (atr_14 * 1.1)",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 8
+    },
+    {
+      "name": "Mean_Reversion_BB_EMA_Cross_Hybrid",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND close > bb_mid_20[1]",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 8
+    },
+    {
+      "name": "Mean_Reversion_BB_V2_Volume_Confirmation",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200 AND atr_14 > (atr_14[1] * 1.1)",
+      "exit_config": {
+        "trailing_stop_pct": 2.0,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 48
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 9
+    },
+    {
+      "name": "Mean_Reversion_RSI_EMA_Squeeze",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200 AND (bb_upper_20 - bb_lower_20) < (bb_upper_20[10] - bb_lower_20[10])",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 9
+    },
+    {
+      "name": "Mean_Reversion_BB_Aggressive_BTC_Fix",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -2.19,
+      "avg_dd": 12.43,
+      "max_cl": 8,
+      "min_trades": 86,
+      "profitable_assets": "2/6",
+      "score": -0.92,
+      "assets": {
+        "BTCUSDT": {
+          "R": -9.39,
+          "DD": 14.42,
+          "CL": 8,
+          "T": 92
+        },
+        "ETHUSDT": {
+          "R": -9.08,
+          "DD": 11.91,
+          "CL": 6,
+          "T": 88
+        },
+        "SOLUSDT": {
+          "R": -3.63,
+          "DD": 19.37,
+          "CL": 5,
+          "T": 86
+        },
+        "AVAXUSDT": {
+          "R": 15.49,
+          "DD": 6.18,
+          "CL": 2,
+          "T": 87
+        },
+        "DOGEUSDT": {
+          "R": -8.87,
+          "DD": 14.54,
+          "CL": 4,
+          "T": 89
+        },
+        "ADAUSDT": {
+          "R": 2.35,
+          "DD": 8.14,
+          "CL": 4,
+          "T": 86
+        }
+      },
+      "iteration": 9
+    },
+    {
+      "name": "Mean_Reversion_BB_V3_Optimized_Frequency",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 35 AND close > ema_200",
+      "exit_config": {
+        "trailing_stop_pct": 3.0,
+        "stop_loss_pct": 4.0,
+        "max_hold_bars": 48
+      },
+      "avg_return": -0.92,
+      "avg_dd": 8.59,
+      "max_cl": 11,
+      "min_trades": 45,
+      "profitable_assets": "2/6",
+      "score": 1.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": -7.37,
+          "DD": 11.44,
+          "CL": 11,
+          "T": 59
+        },
+        "ETHUSDT": {
+          "R": -4.92,
+          "DD": 10.26,
+          "CL": 7,
+          "T": 54
+        },
+        "SOLUSDT": {
+          "R": 1.22,
+          "DD": 6.96,
+          "CL": 5,
+          "T": 51
+        },
+        "AVAXUSDT": {
+          "R": -0.05,
+          "DD": 8.17,
+          "CL": 4,
+          "T": 45
+        },
+        "DOGEUSDT": {
+          "R": -2.32,
+          "DD": 10.03,
+          "CL": 5,
+          "T": 55
+        },
+        "ADAUSDT": {
+          "R": 7.92,
+          "DD": 4.7,
+          "CL": 3,
+          "T": 50
+        }
+      },
+      "iteration": 10
+    },
+    {
+      "name": "Mean_Reversion_BB_Squeeze_Bounce",
+      "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND atr_14 < atr_14[1]",
+      "exit_config": {
+        "trailing_stop_pct": 2.5,
+        "stop_loss_pct": 3.5,
+        "max_hold_bars": 36
+      },
+      "avg_return": 0.0,
+      "avg_dd": 0.0,
+      "max_cl": 0,
+      "min_trades": 0,
+      "profitable_assets": "0/6",
+      "score": 0.0,
+      "assets": {
+        "BTCUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ETHUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "SOLUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "AVAXUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "DOGEUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        },
+        "ADAUSDT": {
+          "R": 0.0,
+          "DD": 0.0,
+          "CL": 0,
+          "T": 0
+        }
+      },
+      "iteration": 10
+    },
+    {
+      "name": "Mean_Reversion_RSI_EMA_Dynamic",
+      "entry_condition": "rsi_14 < 30 AND close > ema_200 AND close < bb_mid_20",
+      "exit_config": {
+        "trailing_stop_pct": 3.5,
+        "stop_loss_pct": 5.0,
+        "max_hold_bars": 72
+      },
+      "avg_return": 0.05,
+      "avg_dd": 13.62,
+      "max_cl": 6,
+      "min_trades": 71,
+      "profitable_assets": "3/6",
+      "score": 0.97,
+      "assets": {
+        "BTCUSDT": {
+          "R": -11.99,
+          "DD": 16.63,
+          "CL": 6,
+          "T": 91
+        },
+        "ETHUSDT": {
+          "R": -5.01,
+          "DD": 13.27,
+          "CL": 6,
+          "T": 81
+        },
+        "SOLUSDT": {
+          "R": -14.9,
+          "DD": 25.07,
+          "CL": 4,
+          "T": 77
+        },
+        "AVAXUSDT": {
+          "R": 10.07,
+          "DD": 10.0,
+          "CL": 6,
+          "T": 86
+        },
+        "DOGEUSDT": {
+          "R": 10.34,
+          "DD": 8.38,
+          "CL": 5,
+          "T": 82
+        },
+        "ADAUSDT": {
+          "R": 11.79,
+          "DD": 8.34,
+          "CL": 5,
+          "T": 71
+        }
+      },
+      "iteration": 10
+    }
+  ]
+}
