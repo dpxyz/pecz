@@ -246,6 +246,14 @@ class PaperTradingEngine:
             self.state.set_state("last_processed_ts", str(ts))
             return
 
+        # ── Always update peak price for open positions ──
+        # This is NOT a trading signal — it's a safety-critical price update.
+        # If we skip this for replay candles, the trailing stop is calculated
+        # against a stale peak, which could delay exits or miss stop triggers.
+        open_pos = self.state.get_open_position(symbol)
+        if open_pos and candle.get("high", 0) > open_pos.get("peak_price", 0):
+            self.state.update_peak(symbol, candle["high"])
+
         # Skip trading signals for replay candles (gap recovery/backfill)
         # These candles warm up indicators but MUST NOT trigger new trades
         if is_replay:
@@ -419,7 +427,8 @@ class PaperTradingEngine:
         # ── Check exit for open position ──
         open_pos = self.state.get_open_position(symbol)
         if open_pos:
-            # Update peak for trailing stop
+            # Update peak for trailing stop (also done in _on_candle for replay candles,
+            # but we check again here for live candles in case the high changed)
             if current_candle["high"] > open_pos.get("peak_price", 0):
                 self.state.update_peak(symbol, current_candle["high"])
 
