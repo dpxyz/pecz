@@ -38,3 +38,4 @@ __pycache__/
 *.pyc
 research/data/
 research/research/
+forward_5/executor/trades.jsonl.bak*
