@@ -1,3 +1,10 @@
+---
+summary: "Mandatory crash recovery checklist — follow every time a new agent session starts"
+read_when:
+  - Every session startup
+  - After any crash or restart
+---
+
 # Crash Recovery Checklist
 
 **Wann:** Nach jedem Agent-Crash, Engine-Neustart, oder Docker-Neustart.
