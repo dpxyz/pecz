@@ -54,6 +54,12 @@ def _seed_healthy_db(db_path: str):
     for sym in ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT", "DOGEUSDT", "ADAUSDT"]:
         conn.execute("INSERT INTO candles VALUES (?,?,?,?,?,?,?)",
                      (sym, now_ms - 60000, 100, 101, 99, 100.5, 1000))
+    # Add equity_history
+    conn.execute("""CREATE TABLE IF NOT EXISTS equity_history (
+        ts INTEGER, equity REAL, unrealized_pnl REAL, drawdown_pct REAL,
+        guard_state TEXT, n_positions INTEGER)""")
+    conn.execute("INSERT INTO equity_history VALUES (?,?,?,?,?,?)",
+                 (now_ms, 99.50, -0.50, 0.5, 'RUNNING', 0))
     conn.commit()
     conn.close()
 
@@ -362,10 +368,16 @@ class TestRunChecks:
     def test_all_ok(self, tmp_path):
         """Healthy DB → exit_code=0."""
         db = str(tmp_path / "state.db")
+        trades = str(tmp_path / "trades.jsonl")
+        # Create clean trade log
+        with open(trades, 'w') as f:
+            f.write(json.dumps({"symbol":"BTCUSDT","event":"ENTRY","price":50000,"size":0.001,"leverage":1.8,"timestamp":1776000000000})+'\n')
+            f.write(json.dumps({"symbol":"BTCUSDT","event":"EXIT","price":50500,"size":0.001,"leverage":1.8,"timestamp":1776010000000,"reason":"trail"})+'\n')
         _seed_healthy_db(db)
         with patch("accounting_check.DB_PATH", db):
             with patch("accounting_check.get_db", lambda: sqlite3.connect(db)):
-                results, ec = run_checks()
+                with patch("accounting_check.TRADE_LOG_PATH", trades):
+                    results, ec = run_checks()
         assert ec == 0
 
     def test_db_open_failure(self, tmp_path):
