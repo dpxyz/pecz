@@ -22,6 +22,30 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 
 ---
 
+## V2 Stufe 1 Scope — Was wir bauen und beweisen
+
+**Nur 7 Features in Stufe 1.** Alles andere = Stufe 2+ bis bewiesen.
+
+| Feature | Details | Beweis |
+|---------|---------|--------|
+| Regime-Score | ADX 45% + Slope 30% + Vol 25%, OI 0% | Backtest: Sharpe > V1 |
+| Sniper | Regime > 70, 5x, starr Trail 2.5%, Max Hold 24h | Backtest + Paper |
+| DD-Scaling | 10/15/20% Stufen + Global Equity Stop | Paper DD < 25% |
+| Global Equity Stop | 1h-DD > 8%, starr 24h Cooldown | Paper |
+| Sentiment = Funding Rate | Kontraindikator bei Extremen, 100% in Stufe 1 | Backtest Invertierung |
+| Slippage Tax | SLIPPAGE_BPS auf jeden Paper-Entry | Trivial |
+| Decision Logging | SKIP-Events loggen (Asset, Regime, Grund) | Telemetrie |
+
+**Was NICHT in Stufe 1:**
+- Kinetischer Trail → Stufe 2 (braucht Trade-Daten)
+- Dynamic Cooldown → Stufe 2 (starr 24h reicht erstmal)
+- Volatility-Parität → Stufe 2 (braucht ATR-Daten)
+- SHORT → Stufe 2 (braucht separaten Backtest)
+- Gezeiten-Blocker → Stufe 2 (braucht Kalender-Feed)
+- News Sentiment → Stufe 3 (braucht validierten Prompt)
+
+---
+
 ## V2 Design Principles
 
 ### 1. Regime-Erkennung als Herzstück
@@ -67,7 +91,12 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 - Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
 - Hoher Regime-Score = höhere Conviction = mehr Raum
 
-**Kinetischer Trail (Zeit-Ermüdung):**
+**Stufe 1: Starrer Trail** (simpel, bewiesen)
+- Sniper: Trail = 2.5% starr (Strong Trend = mehr Raum)
+- V1: Trail = 2.0% starr (wie bisher)
+- Max Hold 24h bleibt als harte Grenze
+
+**Stufe 2: Kinetischer Trail** (Zeit-Ermüdung — braucht Trade-Daten zum Tunen)
 - V1 Lesson: Trailing Stop 2% zu eng, wirft Alts nach 9-21h raus
 - Lösung: Trail zieht sich mit der Haltedauer enger — wie ein Oktopus dessen Muskeln ermüden
 - Stunde 0-4 (frischer Trend): Trail = 2.5% (Luft zum Atmen)
@@ -77,7 +106,8 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 - Kein neuer Indikator — reine Zeitlogik (`entry_time - now`)
 - Ersetzt das starre "Max Hold 24h" durch organischen Decay
 - **Nur für Sniper:** V1 behält starren Trail (einfacher), Sniper bekommt kinetischen Trail
-- Warum: Sniper hat 5x Hebel — zu langes Halten in einem sterbenden Trend ist teuer
+- Warum Stufe 2: `decay_factor` ist ein Tuning-Parameter — ohne Trade-Daten können wir ihn nicht beweisen
+- Stufe 1 liefert die Daten (Haltedauer, Win-Rate nach Stunden) → Stufe 2 optimiert darauf
 
 ### 9. Partial Exits
 - 50% bei Trail nehmen, 50% laufen lassen
@@ -136,7 +166,7 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 | Regime-Score fällt < 50 | Sofort raus (Trend bricht) |
 | Regime-Score fällt 50-70 | Downgrade auf V1-Hebel, Trail auf 2.0% |
 | Trailing Stop 2.5% | Standard-Exit im Strong Trend |
-| Kinetischer Trail (Zeit-Delay) | Trail zieht sich enger je laenger der Trade offen ist (2.5% -> 1.0%). Ersetzt starres Max Hold. |
+| Kinetischer Trail (Stufe 2) | Trail zieht sich enger je laenger der Trade offen ist (2.5% -> 1.0%). Stufe 1: starr 2.5%. |
 
 Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
 DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case 1 Trade = 2.5% Trail × 5x = 12.5% auf 30€ = 3.75€ = 3.75% des Gesamtportfolios. Heißt: 1 Sniper-Verlust verbraucht ~38% des DD-Budgets. Max 2-3 Sniper-Verluste bevor Sniper pausiert.
@@ -199,7 +229,7 @@ Das Review identifizierte 3 infrastrukturelle Schichten, die das Strategie-Desig
 | Herz | Funktion | Status |
 |------|----------|--------|
 | **Strategisches Herz** | Regime-Filter + Sniper-Logic | Ready (V2 Design) |
-| **Operatives Herz** | Global Equity Stop (1h-Window) + TWAP-Light | Stufe 1 (neu) |
+| **Operatives Herz** | Global Equity Stop (1h-Window) + TWAP-Light + Gezeiten-Blocker (Stufe 2) | Stufe 1 Kern (neu) |
 | **Physisches Herz** | Exchange-seitige Stops + Heartbeat-Monitoring | Stufe 1 Infrastruktur (neu) |
 
 **Das physische Herz ist der wichtigste neue Punkt:** Ohne exchange-seitige Stop-Loss Orders ist der Bot bei einem Infrastruktur-Ausfall "blind" im Markt. Hyperliquid erlaubt das Hinterlegen von SL bei Positionseroeffnung. Das muss in Stufe 1 implementiert werden.
@@ -208,21 +238,25 @@ Das Review identifizierte 3 infrastrukturelle Schichten, die das Strategie-Desig
 
 ## V2 Validierung
 
-### Global Equity Stop: Recovery nach Ausloesung (Parametrische Tinte)
+### Global Equity Stop: Recovery nach Ausloesung
 
 Wenn der Global Equity Stop ausloest (1h-DD > 8%), bleibt der Bot **SOFT_PAUSE**:
 
-**Dynamischer Cooldown (nicht starr 24h):**
+**Stufe 1: Starrer 24h Cooldown** (simpel, konservativ)
+- 24h Ruhepause — kein automatischer Re-Entry
+- Nach 24h: Resume wenn Regime-Score > 50 + Equity stabil
+- Manuell jederzeit durch `!resume` Command
+- Warum starr: Einfach zu implementieren, einfach zu testen, kein Tuning noetig
+
+**Stufe 2: Dynamischer Cooldown (Parametrische Tinte)** — braucht Regime-Daten aus Stufe 1
 - **Minimum 12h** Ruhepause — nach 8% DD in 1h ist 4h zu frueh, 24h zu starr
 - **Early Resume** nach 12h wenn: Regime-Score > 60 fuer 3 aufeinanderfolgende Kerzen + Equity stabil
 - **Full Resume** nach 24h wenn: Regime-Score > 50 + Equity stabil
-- **Manuell** jederzeit durch `!resume` Command
+- Warum 12h statt 4h: Nach einem echten Crash ist 4h zu frueh
+- Warum Regime > 60 (nicht 80): Regime > 80 nach Crash ist selten. > 60 fuer 3 Candles = echte Stabilitaet
+- Warum Stufe 2: 2 Pfade + 2 Schwellenwerte = mehr Komplexitaet. Erst bauen wenn Stufe 1 Daten zeigen dass 24h zu starr ist.
 
-Warum 12h statt 4h: Nach einem echten Crash (1h-DD > 8%) ist 4h zu frueh — der Markt braucht Zeit sich zu bereinigen. Aber 24h ist starr — wenn der Markt nach 14h ein klares Trend-Signal hat, wollen wir nicht da stehen und zusehen.
-
-Warum Regime > 60 (nicht 80): Regime > 80 nach einem Crash ist selten. > 60 fuer 3 Candles = echte Stabilitaet ohne Overfitting.
-
-Kein automatisches Re-Entry ohne Regime-Bestaetigung. Der Oktopus zieht sich zurueck und beobachtet — aber er wartet nicht starr, er tastet sich wieder heran (parametrische Tinte).
+Der Oktopus zieht sich zurueck und beobachtet — Stufe 1 starr, Stufe 2 parametrisch.
 
 ### 3-Level-Test
 
@@ -655,7 +689,7 @@ drawdown_pct = (peak_equity - current_equity) / peak_equity * 100
 **Siehe oben** — detailliert ausgearbeitet im Sniper-Modul Abschnitt
 
 Entry-Stack: Regime > 70, Asset-Ranking #1-2, Sentiment > 50, MACD, EMA-Slope > 0.5
-Exit: Kinetischer Trail (2.5% -> 1.0%), Regime < 50 = raus, Regime 50-70 = Downgrade
+Exit: Stufe 1 = starr Trail 2.5% + Max Hold 24h. Stufe 2 = Kinetischer Trail (2.5% -> 1.0%). Regime < 50 = raus, Regime 50-70 = Downgrade
 Capital: max 30€ × 5x = 150€ Notional
 Circuit-Breaker: 3 Verluste → 48h Pause
 
@@ -683,30 +717,42 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 
 ## Alpha Stack V2 (Priorität, nach Stufen)
 
-**Stufe 1 — Kern**
+**Stufe 1 — Kern** (bauen + beweisen)
 | # | Feature | Warum |
 |---|---------|-------|
-| 1 | Regime-Score (ADX+ATR+Slope, OI zu validieren) | Filtert ~70% Range-Trades raus |
-| 2 | Sniper-Modul (4-5x) | Conviction-Upgrade auf Top-Asset |
+| 1 | Regime-Score (ADX+ATR+Slope, OI 0%) | Filtert ~70% Range-Trades raus |
+| 2 | Sniper-Modul (4-5x, starr Trail 2.5%) | Conviction-Upgrade auf Top-Asset |
 | 3 | DD-basierte Positionsreduktion | 10/15/20% Stufen |
+| 4 | Global Equity Stop (1h-DD > 8%, starr 24h Cooldown) | Crash-Antwort |
+| 5 | Sentiment = Funding Rate only | Gratis von Hyperliquid, Kontraindikator |
+| 6 | Slippage Tax (SLIPPAGE_BPS) | Pessimistisches Paper Trading |
+| 7 | Decision Logging | Warum kein Trade? Telemetrie |
 
-**Stufe 2 — Enhancement**
+**Stufe 2 — Enhancement** (nach Stufe 1 bewiesen)
 | # | Feature | Warum |
 |---|---------|-------|
-| 4 | Volatility-Parität | Riskoparität statt Equal-Weight |
-| 5 | Partial Exits (V1 only) | Gewinn sichern, Upside offen |
-| 6 | Re-Entry Logik | 1h Cooldown, dann wieder möglich |
-| 7 | Korrelations-Filter | max 2 korrelierte Positionen |
-| 8 | Regime-basierter Exit | Trail dynamisch nach Regime-Score |
+| 8 | Kinetischer Trail (Zeit-Ermuedung) | Loest V1 Trailing-Problem, braucht Trade-Daten |
+| 9 | Dynamic Cooldown (12h + Regime > 60) | Flexibler als starr 24h, braucht Stufe 1 Daten |
+| 10 | Volatility-Parität | Riskoparität statt Equal-Weight |
+| 11 | Partial Exits (V1 only) | Gewinn sichern, Upside offen |
+| 12 | Re-Entry Logik | 1h Cooldown, dann wieder möglich |
+| 13 | Korrelations-Filter | max 2 korrelierte Positionen |
+| 14 | Regime-basierter Exit (dynamischer Trail) | Trail dynamisch nach Regime-Score |
+| 15 | SHORT-Positionen | Bidirektional, braucht separaten Backtest |
+| 16 | Gezeiten-Blocker (Fed/CPI Pause) | Risk Management, braucht Kalender-Feed |
+| 17 | Exchange-seitige Stop-Loss | Physisches Herz, Stufe 1 Infra vor Live |
 
-**Stufe 3 — Advanced**
+**Stufe 3 — Advanced** (Hypothesen, brauchen Daten)
 | # | Feature | Warum |
 |---|---------|-------|
-| 9 | Sentiment Kill-Switch (Funding Rate + News) | Crash-Schutz, Funding Rate als Priority-0 |
-| 10 | On-Chain Regime-Filter | Exchange Netflow |
-| 11 | Limit-Orders | Fee-Reduktion |
-| 12 | Asset-Ranking (ROC) | Stärkster Momentum bevorzugen |
-| 13 | Dynamische Korrelationsmatrix | Statt max 2-Regel |
+| 18 | News Sentiment (Gemma4 JSON-Mode) | Crash-Schutz, braucht validierten Prompt |
+| 19 | On-Chain Regime-Filter | Exchange Netflow, braucht kostenlose Quelle |
+| 20 | Limit-Orders | Fee-Reduktion |
+| 21 | Asset-Ranking (ROC) | Stärkster Momentum bevorzugen |
+| 22 | Dynamische Korrelationsmatrix | Statt max 2-Regel |
+| 23 | Session-Timing (Gezeiten-Filter) | 0.9x/1.05x Regime-Multiplikator, needs Backtest |
+| 24 | House-Money Sniper | Core/Prey Wallets, braucht >1000e |
+| 25 | Schmerzgedaechtnis | Per-Asset Cooldown, needs Validation |
 
 **Abgelehnt**
 | Feature | Warum |
