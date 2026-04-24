@@ -74,23 +74,36 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 - **Nur für V1-Trades** — Sniper hat 100% Entry/Exit
 - Sniper-Exit: Regime < 50 = komplett raus, Trail 2.5% = komplett raus, kein Halbschritt bei 5x Hebel
 
-### 10. DD-basierte Positionsreduktion
+### 10. DD-basierte Positionsreduktion + Global Equity Stop
 - Portfolio-DD > 10% → alle Positionen halbieren
 - Portfolio-DD > 15% → keine neuen Entries (SOFT_PAUSE)
 - Portfolio-DD > 20% → KILL (alles schließen)
+- **1h-DD > 8% → Global Equity Stop** (alle Positionen Market-Order schließen)
+- Global Equity Stop ist die **Crash-Antwort** auf Korrelations-Kollaps: Wenn alle Assets gleichzeitig fallen, hilft kein Korrelations-Filter mehr
+- Zeitfenster wichtig: DD über 1h (nicht seit Start) misst akuten Stress
 - V2 macht das glatter als V1 Risk Guard
 
-### 11. Limit-Orders statt Market
-- Hyperliquid Maker 0.01% vs Taker 0.035%
-- Bei 6 Trades/Tag: ~1€/Monat gespart auf 100€
-- Auf 1000€+ relevant
-- Entry = Limit an EMA-50, Exit = Limit an Trail
+**Warum Global Equity Stop in Stufe 1:**
+- Korrelations-Filter (Prinzip 6/12) funktioniert in Normalmärkten, aber in Crashes korrelieren alle Assets zu 1.0
+- Sentiment-Kill-Switch (Prinzip 3) hat Lag bei Flash-Crashes
+- Der Global Equity Stop ist der **harte Anker**: wenn 1h-DD > 8%, ist das System im Crash-Modus und zieht sich komplett zurück
+- DD > 20% ist der Gesamt-Stopp, aber 1h-DD > 8% ist der **frühzeitige Rückzug** — bevor der Gesamtschaden kritisch wird
+- Das ist keine neue Idee, sondern eine **Verschärfung der bestehenden DD-Scaling** mit Zeitfenster
+
+### 11. Execution-Strategie (Staffelung nach Kapital)
+- **Stufe 1: Market-Orders** — Sniper schießt im Strong Trend, da zählt Fill-Rate, nicht 0.025% Savings
+- **Stufe 2: IOC-Orders (Immediate-or-Cancel)** — leicht über Marktpreis, garantiert Fill oder Abbruch
+- **Stufe 3: Limit-Orders** — erst ab 500€+ Kapital relevant, bei 100€ sind Maker-Savings ~1€/Monat
+- **Sniper bekommt IMMER Market-Orders** — bei 5x Hebel ist ein verpasster Entry schlimmer als 3bp Slippage
+- Entry = Limit an EMA-50 (Stufe 3) oder Market (Stufe 1)
+- Exit = Limit an Trail (Stufe 3) oder Market (Stufe 1)
 
 ### 12. Dynamische Korrelationsmatrix
 - Rolling-Correlation berechnen (20-Bar-Window)
 - Entry blocken wenn Korrelation > 0.7 mit bestehender Position
 - Besser als willkürliche "max 2"-Regel
 - **Stufe 2** — baut auf Regime-Score auf
+- **⚠️ Crash-Einschränkung:** In Black-Swan-Events korrelieren alle Assets zu 1.0 → Korrelations-Filter wird wirkungslos → Global Equity Stop (Prinzip 10) fängt diesen Fall ab
 
 ---
 
@@ -115,6 +128,38 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 
 Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
 DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case 1 Trade = 2.5% Trail × 5x = 12.5% auf 30€ = 3.75€ = 3.75% des Gesamtportfolios. Heißt: 1 Sniper-Verlust verbraucht ~38% des DD-Budgets. Max 2-3 Sniper-Verluste bevor Sniper pausiert.
+
+---
+
+## Strategy Review: Bewertete Risiken
+
+_Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und unsere Principles._
+
+### ✅ Bereits abgedeckt
+
+| Risiko | Oktopus-Lösung | Wo im Design |
+|--------|---------------|-------------|
+| Sentiment-Lag bei Flash-Crash | Funding Rate = Priority-0 (40%, direkt von Börse, kein KI-Lag). Regime-Herz (ADX+Vol) fängt Flash-Crash. | Prinzip 3, Modul 2 |
+| Regime-Score Hysterese | 5-Puffer-Zonen: Range→Trend >35, Trend→Range <25, Trend→Strong >75, Strong→Trend <65 | Modul 1 |
+| API-Rate-Limits | V1: 60s Polling. V2: OI+Funding alle 4-8h. Hyperliquid Limit 1200/min, wir nutzen <5. | Nicht relevant |
+
+### ⚠️ Aufgenommen und gelöst
+
+| Risiko | Schwere | Lösung | Wo im Design |
+|--------|---------|--------|-------------|
+| **Korrelations-Kollaps im Crash** | HOCH | **Global Equity Stop**: 1h-DD > 8% → alle Positionen Market-Order schließen. Verschärfung der DD-Scaling mit Zeitfenster. Stufe 1. | Prinzip 10 (erweitert) |
+| **Limit-Order-Falle (Execution)** | HOCH | **Execution-Staffelung**: Stufe 1 = Market, Stufe 2 = IOC, Stufe 3 = Limit. Sniper = IMMER Market. | Prinzip 11 (qualifiziert) |
+| Korrelations-Filter-Lücke in Crashes | MITTEL | Crash-Einschränkung dokumentiert: Korrelations-Filter wirktungslos bei 1.0-Korrelation → Global Equity Stop als Fallback | Prinzip 12 (Ergänzung) |
+
+### ❌ Bewusst abgelehnt
+
+| Vorschlag | Warum abgelehnt | Oktopus-Test |
+|-----------|-----------------|-------------|
+| Volatility-Expansion als Regime-Vorfilter | ATR-Filter im Backtest bewiesen: kein Improvement. Neuer Indikator = Indikatoren-Salat (Prinzip 5). | 9. Arm? Nein. |
+| Multi-Timeframe-Bestätigung (1h vs 4h) | Komplexitätslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als führende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
+| Bollinger Band Breakout | Dasselbe Kategorie wie ATR — nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
+
+**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag wäre ein 9. Arm. Der Oktopus braucht keine weiteren Sensorik — er braucht bessere Reflexe (Global Equity Stop) und präzisere Execution (Market → IOC → Limit).
 
 ---
 
