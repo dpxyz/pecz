@@ -21,11 +21,13 @@ PYTHONUNBUFFERED=1 python3 -u run_evolution_v4.py --iterations 10 --candidates 3
 
 EXIT_CODE=${PIPESTATUS[0]:-0}
 
-# Generate and send Discord report
+# Generate report JSON for the agent to send via message tool
+# The agent (OpenClaw cron) will pick this up and format it properly
 python3 -c "
-import json, subprocess
+import json
 
 RESULTS_FILE = '$LOG_DIR/evolution_v4_results.json'
+REPORT_FILE = '$LOG_DIR/daily_${DATE}_report.json'
 
 try:
     with open(RESULTS_FILE) as f:
@@ -33,26 +35,37 @@ try:
     hof = data.get('hall_of_fame', [])
     v17_score = 4.88
     total = len(data.get('results', []))
-    lines = ['🏭 **Foundry V4 Daily Report**', '']
-    lines.append(f'Kandidaten: {total} | Hall of Fame: {len(hof)}')
-    lines.append(f'V17 Benchmark: Score {v17_score:.2f}')
+
+    report = {
+        'date': '$DATE',
+        'total_candidates': total,
+        'hof_count': len(hof),
+        'v17_score': v17_score,
+        'top': []
+    }
+
+    for r in hof[:5]:
+        report['top'].append({
+            'name': r['name'],
+            'score': r['score'],
+            'avg_return': r['avg_return'],
+            'avg_dd': r['avg_dd'],
+            'max_cl': r['max_cl'],
+            'profitable_assets': r['profitable_assets']
+        })
+
     if hof:
-        for i, r in enumerate(hof[:5]):
-            vs = '🏆' if r['score'] > v17_score else '  '
-            lines.append(f\"{i+1}. \`{r['name'][:35]}\` Score={r['score']:.2f} R={r['avg_return']:+.1f}% DD={r['avg_dd']:.1f}% CL={r['max_cl']} Profit={r['profitable_assets']} {vs}\")
-        best = hof[0]['score']
-        if best > v17_score:
-            lines.append('')
-            lines.append(f'🎉 **NEW CHAMPION beats V17!** Score {best:.2f} > {v17_score:.2f}')
-        else:
-            lines.append(f'V17 leads by {v17_score - best:.2f} points (V17: {v17_score:.2f} vs best: {best:.2f})')
-    else:
-        lines.append('❌ No positive scores')
-    report = '\n'.join(lines)
-    print(report)
-    subprocess.run(['openclaw', 'message', 'send', '--channel', 'discord', '--target', '1476565086708695104', report], timeout=30)
+        report['best_score'] = hof[0]['score']
+        report['gap'] = round(v17_score - hof[0]['score'], 2)
+        report['new_champion'] = hof[0]['score'] > v17_score
+
+    with open(REPORT_FILE, 'w') as f:
+        json.dump(report, f, indent=2)
+
+    print(f'Report saved to {REPORT_FILE}')
+
 except Exception as e:
-    print(f'⚠️ Discord report failed: {e}')
+    print(f'Error generating report: {e}')
 " 2>&1 | tee -a "$LOG"
 
 echo "" | tee -a "$LOG"
