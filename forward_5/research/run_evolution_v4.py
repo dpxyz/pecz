@@ -435,7 +435,7 @@ def run_evolution_v4(n_iterations: int = 10, candidates_per_iter: int = 3):
         # Show current best
         if hall_of_fame:
             best = hall_of_fame[0]
-            vs_v17 = "🏆 BEATS V17!" if best["score"] > V17_BENCHMARK["score_v3"] else f"({V17_BENCHMARK['score_v3'] - best['score']:.2f} behind V17)"
+            vs_v17 = "🏆 BEATS V17!" if best["score"] > V17_BENCHMARK["score_v3"] else f"({V17_BENCHMARK['score_v3']:.2f} - {best['score']:.2f} = {V17_BENCHMARK['score_v3'] - best['score']:.2f} behind V17)"
             print(f"\n  🏆 Best: {best['name']} = Score {best['score']:.2f} {vs_v17}")
     
     # ═══════════════════════════════════════════════════════════════

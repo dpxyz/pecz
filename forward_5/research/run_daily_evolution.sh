@@ -45,7 +45,7 @@ try:
             lines.append('')
             lines.append(f'🎉 **NEW CHAMPION beats V17!** Score {best:.2f} > {v17_score:.2f}')
         else:
-            lines.append(f'V17 still leads by {v17_score - best:.2f} points')
+            lines.append(f'V17 leads by {v17_score - best:.2f} points (V17: {v17_score:.2f} vs best: {best:.2f})')
     else:
         lines.append('❌ No positive scores')
     report = '\n'.join(lines)
