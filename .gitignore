@@ -19,6 +19,10 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# Research runs (large JSON)
+forward_5/research/runs/evolution_v*/
+*.log
+
 # IDE
 .vscode/
 .idea/
