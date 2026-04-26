@@ -1,0 +1,254 @@
+{
+  "strategy": "V17_MeanReversion_BB",
+  "entry": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200",
+  "exit": {
+    "trailing_stop_pct": 1.5,
+    "stop_loss_pct": 3.0,
+    "max_hold_bars": 36
+  },
+  "timestamp": "20260426_104135",
+  "n_windows": 3,
+  "train_pct": 0.7,
+  "passed_assets": 0,
+  "total_assets": 3,
+  "overall_pass": false,
+  "assets": {
+    "BTC": {
+      "strategy_name": "V17_MeanReversion_BB_BTC",
+      "symbol": "BTCUSDT",
+      "timeframe": "1h",
+      "n_windows": 3,
+      "is_results": [
+        {
+          "window": 1,
+          "return": 1.6002007594281897,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          }
+        },
+        {
+          "window": 2,
+          "return": -1.8738012197047533,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 200
+          }
+        },
+        {
+          "window": 3,
+          "return": 0.12243315445090602,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 150
+          }
+        }
+      ],
+      "oos_results": [
+        {
+          "window": 1,
+          "return": 1.1145245329854576,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          },
+          "degradation": 0.30350955877328917,
+          "trades": 1,
+          "profit_factor": Infinity,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 2,
+          "return": 0.0,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 200
+          },
+          "degradation": -1.0,
+          "trades": 0,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 3,
+          "return": 0.0,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 150
+          },
+          "degradation": 1.0,
+          "trades": 0,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.0
+        }
+      ],
+      "robustness_score": 23.333333333333336,
+      "passed": false,
+      "execution_time_ms": 173
+    },
+    "ETH": {
+      "strategy_name": "V17_MeanReversion_BB_ETH",
+      "symbol": "ETHUSDT",
+      "timeframe": "1h",
+      "n_windows": 3,
+      "is_results": [
+        {
+          "window": 1,
+          "return": 1.727958453532562,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 200
+          }
+        },
+        {
+          "window": 2,
+          "return": -0.10527791726907362,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 200
+          }
+        },
+        {
+          "window": 3,
+          "return": -0.08853412181679576,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          }
+        }
+      ],
+      "oos_results": [
+        {
+          "window": 1,
+          "return": 0.3262195032622895,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 200
+          },
+          "degradation": 0.8112110261705768,
+          "trades": 1,
+          "profit_factor": Infinity,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 2,
+          "return": 0.0,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 25,
+            "ema_period": 200
+          },
+          "degradation": -1.0,
+          "trades": 0,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 3,
+          "return": -0.0026032508575387584,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          },
+          "degradation": -0.9705960729703098,
+          "trades": 1,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.002603250857537205
+        }
+      ],
+      "robustness_score": 23.333333333333336,
+      "passed": false,
+      "execution_time_ms": 95
+    },
+    "SOL": {
+      "strategy_name": "V17_MeanReversion_BB_SOL",
+      "symbol": "SOLUSDT",
+      "timeframe": "1h",
+      "n_windows": 3,
+      "is_results": [
+        {
+          "window": 1,
+          "return": 2.231757967016816,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          }
+        },
+        {
+          "window": 2,
+          "return": -2.1065461411441824,
+          "params": {
+            "bb_period": 20,
+            "rsi_threshold": 25,
+            "ema_period": 150
+          }
+        },
+        {
+          "window": 3,
+          "return": 0.38170936390722066,
+          "params": {
+            "bb_period": 20,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          }
+        }
+      ],
+      "oos_results": [
+        {
+          "window": 1,
+          "return": 0.0,
+          "params": {
+            "bb_period": 18,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          },
+          "degradation": 1.0,
+          "trades": 0,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 2,
+          "return": 0.6233834950389417,
+          "params": {
+            "bb_period": 20,
+            "rsi_threshold": 25,
+            "ema_period": 150
+          },
+          "degradation": -1.2959268172974117,
+          "trades": 1,
+          "profit_factor": Infinity,
+          "max_drawdown": 0.0
+        },
+        {
+          "window": 3,
+          "return": 0.0,
+          "params": {
+            "bb_period": 20,
+            "rsi_threshold": 30,
+            "ema_period": 150
+          },
+          "degradation": 1.0,
+          "trades": 0,
+          "profit_factor": 0.0,
+          "max_drawdown": 0.0
+        }
+      ],
+      "robustness_score": 16.666666666666668,
+      "passed": false,
+      "execution_time_ms": 87
+    }
+  }
+}
