@@ -81,6 +81,9 @@ try:
         report['gap'] = round(v17_score - hof[0]['score'], 2)
         report['new_champion'] = hof[0]['score'] > v17_score
 
+    # V17 WF status
+    report['v17_wf_status'] = 'FAILED'
+
     # Add Walk-Forward results if available
     if WF_FILE:
         try:

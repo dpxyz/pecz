@@ -52,6 +52,7 @@ V17_BENCHMARK = {
     "score_v3": 4.88,
     "profitable_assets": "5/6",
     "avg_return": "+3.88%",
+    "wf_status": "FAILED",  # Walk-Forward failed: 53/100 robustness, 2/6 assets profitable OOS
 }
 
 
@@ -456,12 +457,14 @@ def run_evolution_v4(n_iterations: int = 10, candidates_per_iter: int = 3):
     else:
         print("\n❌ No candidates scored > 0")
     
-    # Compare with V17
-    print(f"\n📊 V17 BENCHMARK: Score {V17_BENCHMARK['score_v3']:.2f} | R={V17_BENCHMARK['avg_return']} | Profitable={V17_BENCHMARK['profitable_assets']}")
+    # Compare with V17 (IS benchmark, but WF-failed)
+    wf_note = " (⚠️ WF-FAILED)" if V17_BENCHMARK.get("wf_status") == "FAILED" else ""
+    print(f"\n📊 V17 IS-BENCHMARK: Score {V17_BENCHMARK['score_v3']:.2f} | R={V17_BENCHMARK['avg_return']} | Profitable={V17_BENCHMARK['profitable_assets']}{wf_note}")
+    print(f"🚪 WF-GATE: Only WF-passed candidates are declared champion")
     if hall_of_fame and hall_of_fame[0]["score"] > V17_BENCHMARK["score_v3"]:
-        print(f"🎉 NEW CHAMPION: {hall_of_fame[0]['name']} beats V17!")
+        print(f"🎉 NEW IS-CHAMPION: {hall_of_fame[0]['name']} beats V17 on IS! (Needs WF-pass for full champion status)")
     elif hall_of_fame:
-        print(f"📉 No strategy beats V17 yet. Best: {hall_of_fame[0]['name']} (Score {hall_of_fame[0]['score']:.2f})")
+        print(f"📉 No strategy beats V17 on IS yet. Best: {hall_of_fame[0]['name']} (Score {hall_of_fame[0]['score']:.2f})")
     
     # Save results
     results_file = RESULTS_DIR / "evolution_v4_results.json"
