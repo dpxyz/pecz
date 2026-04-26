@@ -87,7 +87,7 @@ title: Roadmap
     <span style="font-weight:600;color:var(--fwd-text-bright);">Phase 8: Paper Trading</span>
     <div style="display:flex;align-items:center;gap:0.5rem;">
       <span class="badge badge--accent">● active</span>
-      <span style="font-size:0.65rem;color:var(--fwd-text-dim);">DAY 3/14</span>
+      <span id="roadmap-day" style="font-size:0.65rem;color:var(--fwd-text-dim);">—</span>
     </div>
   </div>
 
@@ -167,3 +167,12 @@ title: Roadmap
 </div>
 
 </div>
+
+<script>
+(function() {
+  const start = new Date('2026-04-20T00:00:00+02:00');
+  const day = Math.floor((Date.now() - start) / 86400000) + 1;
+  const el = document.getElementById('roadmap-day');
+  if (el) el.textContent = 'DAY ' + Math.max(day,1) + '/14';
+})();
+</script>
