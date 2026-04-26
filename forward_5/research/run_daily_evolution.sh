@@ -1,7 +1,8 @@
 #!/bin/bash
-# Foundry Evolution V4 — Daily Run
+# Foundry Evolution V4 — Daily Run + Walk-Forward Gate
 # Runs at 4:30 AM Berlin time, reports to Discord
 # Learns from previous runs (Hall of Fame)
+# NEW: Walk-Forward gate for any candidate that beats V17
 
 set -euo pipefail
 
@@ -16,18 +17,39 @@ echo "======================================================================" | 
 
 cd "$RESEARCH_DIR"
 
-# Run evolution with 10 iterations, 3 candidates
+# Step 1: Run evolution
 PYTHONUNBUFFERED=1 python3 -u run_evolution_v4.py --iterations 10 --candidates 3 2>&1 | tee -a "$LOG"
 
 EXIT_CODE=${PIPESTATUS[0]:-0}
 
-# Generate report JSON for the agent to send via message tool
-# The agent (OpenClaw cron) will pick this up and format it properly
+# Step 2: Walk-Forward Gate — validate any candidate that beats V17
+echo "" | tee -a "$LOG"
+echo "======================================================================" | tee -a "$LOG"
+echo "WALK-FORWARD GATE — Validating HOF candidates" | tee -a "$LOG"
+echo "======================================================================" | tee -a "$LOG"
+
+HOF_FILE="$LOG_DIR/evolution_v4_results.json"
+WF_LOG="$LOG_DIR/wf_gate_${DATE}.log"
+
+if [ -f "$HOF_FILE" ]; then
+    python3 -u walk_forward_gate.py --hof "$HOF_FILE" --windows 5 2>&1 | tee -a "$WF_LOG"
+else
+    echo "⚠️  No HOF file found, skipping WF gate" | tee -a "$LOG"
+fi
+
+# Step 3: Generate report JSON for the agent
 python3 -c "
 import json
 
 RESULTS_FILE = '$LOG_DIR/evolution_v4_results.json'
+WF_FILE = None
 REPORT_FILE = '$LOG_DIR/daily_${DATE}_report.json'
+
+# Find latest WF gate file
+from pathlib import Path
+wf_files = sorted(Path('$LOG_DIR').parent.glob('runs/walk_forward/wf_gate_*.json'))
+if wf_files:
+    WF_FILE = str(wf_files[-1])
 
 try:
     with open(RESULTS_FILE) as f:
@@ -58,6 +80,23 @@ try:
         report['best_score'] = hof[0]['score']
         report['gap'] = round(v17_score - hof[0]['score'], 2)
         report['new_champion'] = hof[0]['score'] > v17_score
+
+    # Add Walk-Forward results if available
+    if WF_FILE:
+        try:
+            with open(WF_FILE) as f:
+                wf_data = json.load(f)
+            report['walk_forward'] = {
+                'results': [{
+                    'name': r['name'],
+                    'passed': r['passed'],
+                    'robustness': r['robustness_score'],
+                    'avg_oos_return': r['avg_oos_return'],
+                    'profitable_assets': r['profitable_assets'],
+                } for r in wf_data.get('results', [])]
+            }
+        except Exception:
+            report['walk_forward'] = 'error'
 
     with open(REPORT_FILE, 'w') as f:
         json.dump(report, f, indent=2)
