@@ -26,7 +26,7 @@ sys.path.insert(0, str(RESEARCH_DIR))
 sys.path.insert(0, str(RESEARCH_DIR / "backtest"))
 sys.path.insert(0, str(RESEARCH_DIR / "strategy_lab"))
 
-from dsl_translator import translate_candidate_with_name
+
 from backtest.backtest_engine import BacktestEngine
 from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 
@@ -92,16 +92,7 @@ def load_df(asset: str, start: str, end: str) -> pl.DataFrame:
         (pl.col("timestamp") >= start_dt) & (pl.col("timestamp") <= end_dt)
     )
 
-def candidate_to_strategy_spec(candidate: dict) -> dict:
-    return {
-        'strategy': {
-            'name': candidate.get('name', 'V7_Unknown'),
-            'type': candidate.get('type', 'mean_reversion'),
-            'indicators': candidate.get('indicators', []),
-            'entry': {'condition': candidate.get('entry_condition', '')},
-            'exit': candidate.get('exit_config', {}),
-        }
-    }
+
 
 # ============================================================================
 # LLM CALLS
@@ -206,9 +197,12 @@ def parse_strategy(text: str) -> dict | None:
 
 def run_is_backtest(entry_condition: str, exit_config: dict) -> dict | None:
     try:
-        candidate = {"name": "eval", "entry_condition": entry_condition, "exit_config": exit_config, "indicators": [], "type": "mean_reversion"}
-        strategy_spec = candidate_to_strategy_spec(candidate)
-        _, strategy_func = translate_candidate_with_name(strategy_spec)
+        # Use build_strategy_func (same as WF) instead of dsl_translator
+        # dsl_translator needs structured indicators[], which V7 LLM doesn't provide
+        strategy_func, parseable = build_strategy_func(entry_condition)
+        if not parseable or strategy_func is None:
+            return None
+
         engine = BacktestEngine(data_path=str(DATA_PATH))
 
         all_returns, all_dds, all_cls, all_trades = [], [], [], []
