@@ -115,6 +115,26 @@ title: Roadmap
     </div>
   </div>
 
+  <div style="margin-top:0.4rem;" class="section-label">foundry v7</div>
+  <div class="grid-2" style="gap:0.3rem;">
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 champion</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">WF 88.3 · IS 1.28</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">V17 benchmark</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">WF FAIL · IS 4.88</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">HOF size</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">150+ tested · 1 passed</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">10w hard check</span>
+      <span style="font-size:0.65rem;color:var(--fwd-warning);">⚠ pending</span>
+    </div>
+  </div>
+
   <div style="margin-top:0.4rem;" class="section-label">phase 1 criteria</div>
   <div class="grid-2" style="gap:0.3rem;">
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
