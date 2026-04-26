@@ -40,24 +40,49 @@ def load_asset_data(symbol: str, timeframe: str = "1h") -> pl.DataFrame:
     raise FileNotFoundError(f"No data for {symbol}")
 
 
+# ─── Strategy Function Builder ───────────────────────────────────────
+
+# Known native strategies — always parseable, high-fidelity
+NATIVE_STRATEGIES = {
+    "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200": "mean_reversion_bb",
+}
+
+# Only these indicator types can be parsed by the DSL parser
+SIMPLE_INDICATORS = {'close', 'open', 'high', 'low', 'volume'}
+SIMPLE_PREFIXES = ['bb_lower_', 'bb_upper_', 'rsi_', 'ema_', 'sma_']
+# Complex indicators: macd, adx, atr, stochastic, z-score → NEEDS_MANUAL_REVIEW
+
+
 def build_strategy_func(entry_condition: str):
     """
     Build a strategy function from a DSL entry condition string.
-    Uses the strategy_lab module for known strategies, falls back to DSL parser.
+    Returns (strategy_func, parseable_bool) tuple.
+    
+    Native strategies use their Python implementation.
+    Simple DSL (BB, RSI, EMA, SMA) gets parsed automatically.
+    Complex DSL (MACD, ADX, etc.) → NEEDS_MANUAL_REVIEW.
     """
     import re
 
-    # Known strategies: use their native implementations
-    V17_ENTRY = "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200"
-    
-    if entry_condition.strip() == V17_ENTRY:
+    # 1) Native strategies: exact match → use Python implementation
+    native_name = NATIVE_STRATEGIES.get(entry_condition.strip())
+    if native_name == "mean_reversion_bb":
         from strategy_lab.mean_reversion_bb import mean_reversion_bb_strategy
-        return mean_reversion_bb_strategy
+        return mean_reversion_bb_strategy, True
 
-    # Generic DSL parser for unknown strategies
+    # 2) Check if entry uses only simple (parseable) indicators
+    cond_lower = entry_condition.lower()
+    tokens = re.findall(r'[a-z_]+\d*', cond_lower)
+    for t in tokens:
+        if t in ('and', 'or', 'not', '') or t in SIMPLE_INDICATORS:
+            continue
+        if any(t.startswith(p) for p in SIMPLE_PREFIXES):
+            continue
+        # Unknown/complex indicator → cannot parse reliably
+        return None, False
+
+    # 3) Simple DSL parser (BB, RSI, EMA, SMA only)
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
-        # Compute indicators based on entry condition
-        # Parse all referenced indicators
         indicators = {}
 
         # BB bands: bb_lower_N, bb_upper_N
@@ -91,98 +116,74 @@ def build_strategy_func(entry_condition: str):
             if key not in indicators:
                 indicators[key] = pl.col('close').rolling_mean(window_size=period, min_periods=period)
 
-        # ATR: atr_N
-        for m in re.finditer(r'atr_(\d+)', entry_condition):
-            period = int(m.group(1))
-            key = f'atr_{period}'
-            if key not in indicators:
-                tr = pl.max_horizontal(
-                    (pl.col('high') - pl.col('low')).abs(),
-                    (pl.col('high') - pl.col('close').shift(1)).abs(),
-                    (pl.col('low') - pl.col('close').shift(1)).abs(),
-                )
-                indicators[key] = tr.rolling_mean(window_size=period, min_periods=period)
-
         # Add all indicators as columns
-        df = df.with_columns([
-            v.alias(k) for k, v in indicators.items()
-        ])
+        df = df.with_columns([v.alias(k) for k, v in indicators.items()])
 
-        # Build signal from entry condition
-        # Replace indicator names with column references in a Polars expression
-        cond_str = entry_condition
-        # Map to Polars: just use column names directly
-        # Simple eval: close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200
-        try:
-            # Build Polars expression from simple DSL
-            signal = _parse_condition(cond_str)
-            df = df.with_columns(signal.alias('signal'))
-        except Exception:
-            # Fallback: no signal
-            df = df.with_columns(pl.lit(0).alias('signal'))
+        # Build signal: split AND conditions, evaluate each as boolean, combine
+        conditions = [c.strip() for c in entry_condition.split(' AND ')]
+        signal = pl.lit(True)
+        for cond in conditions:
+            signal = signal & _parse_simple_condition(cond)
+        df = df.with_columns((pl.when(signal).then(1).otherwise(0)).alias('signal'))
 
         return df
 
-    return strategy_func
+    return strategy_func, True
 
 
-def _parse_condition(cond: str):
-    """Parse simple DSL condition into Polars expression. Handles AND/OR."""
-    cond = cond.strip()
-    
-    # Handle OR
-    if ' OR ' in cond:
-        parts = cond.split(' OR ', 1)
-        left = _parse_condition(parts[0].strip())
-        right = _parse_condition(parts[1].strip())
-        return pl.when(left | right).then(1).otherwise(0)
-    
-    # Handle AND
-    if ' AND ' in cond:
-        parts = cond.split(' AND ', 1)
-        left = _parse_condition(parts[0].strip())
-        right = _parse_condition(parts[1].strip())
-        return pl.when(left & right).then(1).otherwise(0)
-    
-    # Single comparison: a < b, a > b
-    for op in ['<', '>', '<=', '>=', '==', '!=']:
+def _parse_simple_condition(cond: str):
+    """Parse a single comparison like 'close < bb_lower_20' into a Polars boolean expression."""
+    for op in ['<=', '>=', '!=', '==', '<', '>']:
         if op in cond:
             parts = cond.split(op, 1)
-            left_expr = _parse_value(parts[0].strip())
-            right_expr = _parse_value(parts[1].strip())
-            if op == '<':
-                return left_expr < right_expr
-            elif op == '>':
-                return left_expr > right_expr
-            elif op == '<=':
-                return left_expr <= right_expr
-            elif op == '>=':
-                return left_expr >= right_expr
-            elif op == '==':
-                return left_expr == right_expr
-            else:
-                return left_expr != right_expr
-    
+            left = _parse_value(parts[0].strip())
+            right = _parse_value(parts[1].strip())
+            if op == '<=': return left <= right
+            if op == '>=': return left >= right
+            if op == '!=': return left != right
+            if op == '==': return left == right
+            if op == '<': return left < right
+            if op == '>': return left > right
     return pl.lit(False)
 
 
 def _parse_value(val: str):
     """Parse a value reference into a Polars expression."""
     val = val.strip()
-    # Numeric literal
     try:
         return pl.lit(float(val))
     except ValueError:
-        pass
-    # Column reference
-    return pl.col(val)
+        return pl.col(val)
 
+
+# ─── Walk-Forward Runner ──────────────────────────────────────────────
 
 def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
                           n_windows: int = 5, oos_pct: float = 0.3) -> dict:
     """Run Walk-Forward validation for a candidate strategy."""
     
-    strategy_func = build_strategy_func(entry)
+    strategy_func, parseable = build_strategy_func(entry)
+    
+    if not parseable or strategy_func is None:
+        # Cannot parse this strategy — mark as NEEDS_MANUAL_REVIEW
+        return {
+            "name": name,
+            "entry": entry,
+            "exit_config": exit_config,
+            "robustness_score": 0.0,
+            "passed": False,
+            "profitable_assets": "0/0",
+            "avg_oos_return": 0.0,
+            "avg_trades": 0.0,
+            "assets": {},
+            "n_windows": n_windows,
+            "timestamp": datetime.now().isoformat(),
+            "wf_status": "NEEDS_MANUAL_REVIEW",
+            "wf_reason": f"DSL parser cannot handle: {entry[:80]}",
+            "is_score": 0.0,
+            "tier": "needs_review",
+        }
+    
     results = {}
     
     for asset in ASSETS:
@@ -224,13 +225,14 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
             })
         
         if oos_metrics:
+            profitable_windows = sum(1 for m in oos_metrics if m["net_return"] > 0)
             avg_return = np.mean([m["net_return"] for m in oos_metrics])
             avg_trades = np.mean([m["trade_count"] for m in oos_metrics])
-            profitable_windows = sum(1 for m in oos_metrics if m["net_return"] > 0)
-            
+            avg_dd = np.mean([m["max_drawdown"] for m in oos_metrics])
             results[asset] = {
                 "avg_oos_return": round(avg_return, 4),
                 "avg_trades": round(avg_trades, 1),
+                "avg_drawdown": round(avg_dd, 4),
                 "profitable_windows": f"{profitable_windows}/{len(oos_metrics)}",
                 "windows": oos_metrics,
             }
@@ -251,7 +253,8 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         robustness = min(100, round(robustness, 1))
     
     passed = robustness >= 50 and profitable_assets >= 3
-    
+    wf_status = "PASS" if passed else "FAIL"
+
     return {
         "name": name,
         "entry": entry,
@@ -264,12 +267,17 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         "assets": results,
         "n_windows": n_windows,
         "timestamp": datetime.now().isoformat(),
+        "wf_status": wf_status,
+        "is_score": 0.0,
+        "tier": "overfitted",  # will be overwritten by caller
     }
 
 
+# ─── CLI ──────────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Walk-Forward Gate")
+    parser = argparse.ArgumentParser(description="Walk-Forward Gate for Strategy Candidates")
     parser.add_argument("--candidate", help="JSON string or file with {name, entry, exit_config}")
     parser.add_argument("--hof", help="JSON file with hall_of_fame to validate")
     parser.add_argument("--windows", type=int, default=5, help="Number of WF windows")
@@ -317,22 +325,21 @@ if __name__ == "__main__":
                 n_windows=args.windows,
             )
             result["is_score"] = is_score
-            # Combined score: WF-pass + IS quality
-            # WF-passed with IS≥4 = champion
-            # WF-passed with IS<4 = robust but conservative
-            # WF-failed = overfitted risk
-            if result["passed"]:
+            # Tier assignment
+            if result.get("wf_status") == "NEEDS_MANUAL_REVIEW":
+                result["tier"] = "needs_review"
+            elif result["passed"]:
                 if is_score >= 4.0:
-                    result["tier"] = "champion"  # WF-pass + high IS
+                    result["tier"] = "champion"
                 elif is_score >= 2.0:
-                    result["tier"] = "robust"  # WF-pass + decent IS
+                    result["tier"] = "robust"
                 else:
-                    result["tier"] = "marginal"  # WF-pass but weak IS
+                    result["tier"] = "marginal"
             else:
-                result["tier"] = "overfitted"  # WF-fail regardless of IS
+                result["tier"] = "overfitted"
             
             tier = result["tier"]
-            status = "✅ PASS" if result["passed"] else "❌ FAIL"
+            status = "✅ PASS" if result["passed"] else ("⚠️ REVIEW" if result.get("wf_status") == "NEEDS_MANUAL_REVIEW" else "❌ FAIL")
             print(f"  {status} [{tier.upper()}] — Robustness: {result['robustness_score']}/100 "
                   f"(OOS: {result['avg_oos_return']:+.2f}%, {result['profitable_assets']} profitable)")
             results.append(result)
@@ -340,8 +347,13 @@ if __name__ == "__main__":
         # Summary
         passed = [r for r in results if r["passed"]]
         champions = [r for r in results if r["tier"] == "champion"]
+        needs_review = [r for r in results if r.get("wf_status") == "NEEDS_MANUAL_REVIEW"]
         print(f"\n{'='*50}")
         print(f"WF GATE SUMMARY: {len(passed)}/{len(results)} passed")
+        if needs_review:
+            print(f"📋 NEEDS MANUAL REVIEW: {len(needs_review)} strategies")
+            for r in needs_review:
+                print(f"   {r['name']}: {r.get('wf_reason', 'complex DSL')}")
         if champions:
             print(f"🎉 CHAMPIONS (WF-pass + IS≥4.0):")
             for c in champions:
