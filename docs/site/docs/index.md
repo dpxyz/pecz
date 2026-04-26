@@ -9,7 +9,7 @@ title: Mission Control
 <h1><span class="logo"><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><polygon points="5,0.5 9.5,9.5 0.5,9.5"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.2"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0.8" y="0.8" width="8.4" height="8.4"/></svg></span>PECZ<span class="accent">_</span></h1>
 <div class="dash-meta">
 <span><span class="live-dot"></span>PHASE 8 LIVE</span>
-<span>DAY 3/14</span>
+<span id="dash-day">—</span>
 <span id="dash-timestamp">⏳</span>
 </div>
 </div>
@@ -308,6 +308,15 @@ title: Mission Control
       }
     } catch(e) {}
   }
+  // Dynamic day counter (paper trading start: 2026-04-20)
+  (function() {
+    const start = new Date('2026-04-20T00:00:00+02:00');
+    const now = new Date();
+    const day = Math.floor((now - start) / 86400000) + 1;
+    const el = document.getElementById('dash-day');
+    if (el) el.textContent = 'DAY ' + Math.max(day,1) + '/14';
+  })();
+
   load();
   setInterval(load, 300000);
 })();
