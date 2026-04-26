@@ -49,7 +49,7 @@ NATIVE_STRATEGIES = {
 
 # Only these indicator types can be parsed by the DSL parser
 SIMPLE_INDICATORS = {'close', 'open', 'high', 'low', 'volume'}
-SIMPLE_PREFIXES = ['bb_lower_', 'bb_upper_', 'rsi_', 'ema_', 'sma_']
+SIMPLE_PREFIXES = ['bb_lower_', 'bb_upper_', 'bb_width_', 'bb_mid_', 'rsi_', 'ema_', 'sma_', 'zscore_']
 # Complex indicators: macd, adx, atr, stochastic, z-score → NEEDS_MANUAL_REVIEW
 
 
@@ -81,19 +81,22 @@ def build_strategy_func(entry_condition: str):
         # Unknown/complex indicator → cannot parse reliably
         return None, False
 
-    # 3) Simple DSL parser (BB, RSI, EMA, SMA only)
+    # 3) Simple DSL parser (BB, RSI, EMA, SMA, ZScore, bb_width)
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
         indicators = {}
 
-        # BB bands: bb_lower_N, bb_upper_N
-        for m in re.finditer(r'bb_(lower|upper)_(\d+)', entry_condition):
+        # BB bands: bb_lower_N, bb_upper_N, bb_width_N, bb_mid_N
+        for m in re.finditer(r'bb_(lower|upper|mid|width)_(\d+)', entry_condition):
+            kind = m.group(1)
             period = int(m.group(2))
             key = m.group(0)
-            if key not in indicators:
+            if f'bb_upper_{period}' not in indicators:
                 sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
                 std = pl.col('close').rolling_std(window_size=period, min_periods=period)
                 indicators[f'bb_upper_{period}'] = sma + 2.0 * std
                 indicators[f'bb_lower_{period}'] = sma - 2.0 * std
+                indicators[f'bb_mid_{period}'] = sma
+                indicators[f'bb_width_{period}'] = (4.0 * std) / pl.when(sma == 0).then(0.001).otherwise(sma)
 
         # RSI: rsi_N
         for m in re.finditer(r'rsi_(\d+)', entry_condition):
@@ -107,6 +110,15 @@ def build_strategy_func(entry_condition: str):
                 avg_loss = loss.rolling_mean(window_size=period, min_periods=period)
                 rs = avg_gain / pl.when(avg_loss == 0).then(0.0001).otherwise(avg_loss)
                 indicators[key] = 100 - (100 / (1 + rs))
+
+        # ZScore: zscore_N
+        for m in re.finditer(r'zscore_(\d+)', entry_condition):
+            period = int(m.group(1))
+            key = f'zscore_{period}'
+            if key not in indicators:
+                sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
+                std = pl.col('close').rolling_std(window_size=period, min_periods=period)
+                indicators[key] = (pl.col('close') - sma) / pl.when(std == 0).then(0.001).otherwise(std)
 
         # EMA/SMA: ema_N, sma_N
         for m in re.finditer(r'(ema|sma)_(\d+)', entry_condition):
