@@ -22,10 +22,11 @@ PYTHONUNBUFFERED=1 python3 -u run_evolution_v4.py --iterations 10 --candidates 3
 
 EXIT_CODE=${PIPESTATUS[0]:-0}
 
-# Step 2: Walk-Forward Gate — validate any candidate that beats V17
+    # Step 2: Walk-Forward Gate — validate ALL HOF candidates (not just V17-beaters)
+# A strategy with lower IS but WF-pass is MORE robust than V17 with IS=4.88 but WF-failed
 echo "" | tee -a "$LOG"
 echo "======================================================================" | tee -a "$LOG"
-echo "WALK-FORWARD GATE — Validating HOF candidates" | tee -a "$LOG"
+echo "WALK-FORWARD GATE — Validating ALL HOF candidates" | tee -a "$LOG"
 echo "======================================================================" | tee -a "$LOG"
 
 HOF_FILE="$LOG_DIR/evolution_v4_results.json"

@@ -287,31 +287,74 @@ if __name__ == "__main__":
         print(json.dumps(result, indent=2))
         
     elif args.hof:
-        # Validate all HOF entries
+        # Validate all HOF entries + V17 benchmark
         with open(args.hof) as f:
             data = json.load(f)
         
         hof = data.get("hall_of_fame", data if isinstance(data, list) else [])
+        
+        # Always include V17 benchmark in WF validation
+        V17 = {
+            "name": "V17_Mid_Target_Exit",
+            "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200",
+            "exit_config": {"trailing_stop_pct": 1.5, "stop_loss_pct": 3.0, "max_hold_bars": 36},
+            "score": 4.88,
+        }
+        
+        # Check if V17 is already in HOF
+        v17_in_hof = any(e.get("name") == "V17_Mid_Target_Exit" for e in hof)
+        if not v17_in_hof:
+            hof.insert(0, V17)  # Always test V17
+        
         results = []
         for entry in hof:
-            print(f"\n🔍 Validating: {entry['name']} (Score: {entry.get('score', '?')})")
+            is_score = entry.get("score", 0)
+            print(f"\n🔍 Validating: {entry['name']} (IS-Score: {is_score})")
             result = run_wf_on_candidate(
                 entry["name"],
                 entry.get("entry", entry.get("entry_condition", "")),
                 entry.get("exit_config", entry.get("exit_rule", {})),
                 n_windows=args.windows,
             )
+            result["is_score"] = is_score
+            # Combined score: WF-pass + IS quality
+            # WF-passed with IS≥4 = champion
+            # WF-passed with IS<4 = robust but conservative
+            # WF-failed = overfitted risk
+            if result["passed"]:
+                if is_score >= 4.0:
+                    result["tier"] = "champion"  # WF-pass + high IS
+                elif is_score >= 2.0:
+                    result["tier"] = "robust"  # WF-pass + decent IS
+                else:
+                    result["tier"] = "marginal"  # WF-pass but weak IS
+            else:
+                result["tier"] = "overfitted"  # WF-fail regardless of IS
+            
+            tier = result["tier"]
             status = "✅ PASS" if result["passed"] else "❌ FAIL"
-            print(f"  {status} — Robustness: {result['robustness_score']}/100 "
+            print(f"  {status} [{tier.upper()}] — Robustness: {result['robustness_score']}/100 "
                   f"(OOS: {result['avg_oos_return']:+.2f}%, {result['profitable_assets']} profitable)")
             results.append(result)
+        
+        # Summary
+        passed = [r for r in results if r["passed"]]
+        champions = [r for r in results if r["tier"] == "champion"]
+        print(f"\n{'='*50}")
+        print(f"WF GATE SUMMARY: {len(passed)}/{len(results)} passed")
+        if champions:
+            print(f"🎉 CHAMPIONS (WF-pass + IS≥4.0):")
+            for c in champions:
+                print(f"   {c['name']}: WF={c['robustness_score']}/100, IS={c['is_score']:.2f}, OOS={c['avg_oos_return']:+.2f}%")
+        else:
+            print(f"⚠️  No champions yet. Best WF-passed candidate gets robust tier.")
         
         # Save
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         out_file = OUTPUT_DIR / f"wf_gate_{timestamp}.json"
         with open(out_file, 'w') as f:
-            json.dump({"timestamp": timestamp, "results": results}, f, indent=2, default=str)
+            json.dump({"timestamp": timestamp, "results": results, "v17_always_tested": True}, f, indent=2, default=str)
         print(f"\n💾 Saved to {out_file}")
     else:
         parser.print_help()
