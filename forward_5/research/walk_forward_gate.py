@@ -171,7 +171,7 @@ def _parse_value(val: str):
 # ─── Walk-Forward Runner ──────────────────────────────────────────────
 
 def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
-                          n_windows: int = 5, oos_pct: float = 0.3) -> dict:
+                          n_windows: int = 10, oos_pct: float = 0.3) -> dict:
     """Run Walk-Forward validation for a candidate strategy."""
     
     strategy_func, parseable = build_strategy_func(entry)
@@ -292,7 +292,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Walk-Forward Gate for Strategy Candidates")
     parser.add_argument("--candidate", help="JSON string or file with {name, entry, exit_config}")
     parser.add_argument("--hof", help="JSON file with hall_of_fame to validate")
-    parser.add_argument("--windows", type=int, default=5, help="Number of WF windows")
+    parser.add_argument("--windows", type=int, default=10, help="Number of WF windows")
     args = parser.parse_args()
     
     if args.candidate:

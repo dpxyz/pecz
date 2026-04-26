@@ -31,16 +31,36 @@ from backtest.backtest_engine import BacktestEngine
 from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 
 # ============================================================================
-# CONFIG
+# ADAPTIVE CONFIG — Budget shifts based on Phase 1 results
 # ============================================================================
 
-N_EXPLORATION_CONSERVATIVE = 5  # temp 0.3
-N_EXPLORATION_CREATIVE = 5      # temp 0.7
-N_MUTATIONS = 3                 # per top-3 parent
-N_CROSSEOVERS = 3               # random pairs from HOF
-N_HARD_CHECK_TOP = 3           # top-3 get 10-window WF
-WF_WINDOWS_NORMAL = 5
+# Phase 1: Exploration (base values, get adjusted dynamically)
+N_EXPLORATION_CONSERVATIVE_BASE = 5  # temp 0.3
+N_EXPLORATION_CREATIVE_BASE = 5      # temp 0.7
+
+# Phase 2: Evolution (base values, get adjusted dynamically)
+N_MUTATIONS_BASE = 3                 # per top parent
+N_CROSSOVERS_BASE = 3               # random pairs from HOF
+
+# Phase 3: Hard Check
+N_HARD_CHECK_TOP = 3                # top-3 get hard-check WF
+
+# WF — 10 windows is the standard now (5 was too lenient)
+WF_WINDOWS_NORMAL = 10
 WF_WINDOWS_HARD = 10
+
+# WF thresholds (on 10 windows)
+WF_PASS_ROBUSTNESS = 50.0
+WF_PASS_PROFITABLE = 3
+
+# Adaptive rules:
+# - If Phase 1 finds >2 WF-passed candidates → shift budget to Phase 2 (more evolution)
+# - If Phase 1 finds 0 WF-passed → shift budget to Phase 1 (more exploration, higher temp)
+# - If HOF is empty → Phase 2 gets skipped, all budget to Phase 1
+# - Phase 3 always runs on top candidates
+
+# Niche tracking — avoid repeating same entry patterns
+ENTRY_PATTERNS_SEEN = set()  # Track unique entry patterns to enforce diversity
 
 API_URL = os.environ.get("OLLAMA_API_URL", "http://172.17.0.1:32771/v1/chat/completions")
 API_KEY = os.environ.get("OLLAMA_API_KEY", "ollama-cloud")
@@ -57,10 +77,6 @@ PERIODS = {
 HOF_DIR = RESEARCH_DIR / "runs" / "evolution_v7"
 HOF_FILE = HOF_DIR / "evolution_v7_hof.json"
 HOF_DIR.mkdir(parents=True, exist_ok=True)
-
-# WF thresholds
-WF_PASS_ROBUSTNESS = 50.0
-WF_PASS_PROFITABLE = 3
 
 # ============================================================================
 # DATA LOADING
@@ -291,70 +307,136 @@ def save_hof(hof: list[dict]):
     HOF_FILE.write_text(json.dumps({"updated": datetime.now().isoformat(), "champion": champion, "hof": hof[:30]}, indent=2))
 
 # ============================================================================
-# MAIN
+# NICHE DIVERSITY — avoid repeating same entry patterns
+# ============================================================================
+
+def entry_pattern(entry: str) -> str:
+    """Extract a simplified pattern from an entry condition for diversity tracking."""
+    # e.g. 'close < bb_lower_14 AND rsi_7 < 25 AND close > ema_50' → 'bb_lower+rsi+ema'
+    import re
+    indicators = sorted(set(re.findall(r'(bb_lower|bb_upper|bb_width|rsi|ema|sma|macd|adx|zscore|atr|volume)', entry.lower())))
+    return '+'.join(indicators) if indicators else 'unknown'
+
+
+# ============================================================================
+# MAIN — Adaptive Three-Phase Search
 # ============================================================================
 
 def main():
-    print("=" * 70)
-    print("FOUNDRY V7 — Three-Phase Evolutionary Search")
-    print(f"Phase 1: {N_EXPLORATION_CONSERVATIVE} conservative + {N_EXPLORATION_CREATIVE} creative")
-    print(f"Phase 2: {N_MUTATIONS}×3 mutations + {N_CROSSEOVERS} crossovers from HOF")
+    hof = load_hof()
+    total_budget = 20  # max candidates this run
+
+    # --- ADAPTIVE: Determine Phase 1 budget based on HOF health ---
+    hof_passed = [s for s in hof if s.get("wf_passed")]
+    hof_10w_passed = [s for s in hof if s.get("wf_passed_10w")]
+
+    if len(hof_passed) >= 2:
+        # HOF has good candidates → more evolution, less exploration
+        n_conservative = 3
+        n_creative = 3
+        n_mutations_per_parent = 4
+        n_crossovers = 4
+        print("🎯 ADAPTIVE: HOF healthy (≥2 passed) → shifting budget to evolution")
+    elif len(hof_passed) == 1:
+        # One champion → balanced, but push creative harder
+        n_conservative = 4
+        n_creative = 5
+        n_mutations_per_parent = 3
+        n_crossovers = 3
+        print("🎯 ADAPTIVE: HOF thin (1 passed) → balanced + creative push")
+    else:
+        # No champions yet → heavy exploration
+        n_conservative = 5
+        n_creative = 7
+        n_mutations_per_parent = 2
+        n_crossovers = 2
+        print("🎯 ADAPTIVE: HOF empty → maximizing exploration")
+
+    # --- Track known entry patterns for diversity ---
+    seen_patterns = set()
+    for s in hof:
+        p = entry_pattern(s.get("entry_condition", ""))
+        seen_patterns.add(p)
+    print(f"   Known entry patterns: {len(seen_patterns)} ({', '.join(sorted(seen_patterns)[:8])})")
+
+    print("\n" + "=" * 70)
+    print("FOUNDRY V7 — Adaptive Three-Phase Evolutionary Search")
+    print(f"Phase 1: {n_conservative} conservative + {n_creative} creative (adaptive)")
+    print(f"Phase 2: {n_mutations_per_parent}×N mutations + {n_crossovers} crossovers (adaptive)")
     print(f"Phase 3: Top-{N_HARD_CHECK_TOP} hard-check (10-window WF)")
+    print(f"WF windows: {WF_WINDOWS_NORMAL} (standard) | {WF_WINDOWS_HARD} (hard check)")
+    print(f"HOF: {len(hof)} total, {len(hof_passed)} passed, {len(hof_10w_passed)} 10w-champions")
     print("=" * 70)
 
-    hof = load_hof()
-    print(f"\n🏆 HOF: {len(hof)} strategies")
     for s in hof[:5]:
         wf = "✅" if s.get("wf_passed") else "❌"
-        print(f"   {s['name']}: WF={s.get('wf_robustness', 0):.1f} {wf} | IS={s.get('is_score', 0):.2f}")
+        hc = f" 10w={'✅' if s.get('wf_passed_10w') else '❌'}" if "wf_robustness_10w" in s else ""
+        print(f"   {s['name']}: WF={s.get('wf_robustness', 0):.1f} {wf}{hc} | IS={s.get('is_score', 0):.2f}")
 
     all_candidates = []
 
     # =========================================================================
-    # PHASE 1: EXPLORATION
+    # PHASE 1: EXPLORATION (with diversity enforcement)
     # =========================================================================
     print(f"\n{'='*70}")
     print("PHASE 1: EXPLORATION")
     print(f"{'='*70}")
 
     # Conservative (temp 0.3)
-    print(f"\n📝 Generating {N_EXPLORATION_CONSERVATIVE} conservative candidates (temp=0.3)...")
-    for i in range(N_EXPLORATION_CONSERVATIVE):
+    print(f"\n📝 Generating {n_conservative} conservative candidates (temp=0.3)...")
+    for i in range(n_conservative):
         response = call_llm(EXPLORATION_PROMPT_CONSERVATIVE, temperature=0.3)
         candidate = parse_strategy(response)
         if candidate:
+            pat = entry_pattern(candidate.get("entry_condition", ""))
             candidate["phase"] = "exploration_conservative"
+            candidate["entry_pattern"] = pat
+            is_new_pattern = pat not in seen_patterns
+            candidate["is_new_pattern"] = is_new_pattern
+            seen_patterns.add(pat)
             all_candidates.append(candidate)
-            print(f"  ✅ Parsed: {candidate.get('name', '?')}")
+            diversity_tag = " 🌱 NEW PATTERN" if is_new_pattern else ""
+            print(f"  ✅ Parsed: {candidate.get('name', '?')} [{pat}]{diversity_tag}")
         else:
             print(f"  ⚠️ Parse error on conservative #{i+1}")
 
     # Creative (temp 0.7)
-    print(f"\n🎨 Generating {N_EXPLORATION_CREATIVE} creative candidates (temp=0.7)...")
-    for i in range(N_EXPLORATION_CREATIVE):
+    print(f"\n🎨 Generating {n_creative} creative candidates (temp=0.7)...")
+    for i in range(n_creative):
         response = call_llm(EXPLORATION_PROMPT_CREATIVE, temperature=0.7)
         candidate = parse_strategy(response)
         if candidate:
+            pat = entry_pattern(candidate.get("entry_condition", ""))
             candidate["phase"] = "exploration_creative"
+            candidate["entry_pattern"] = pat
+            is_new_pattern = pat not in seen_patterns
+            candidate["is_new_pattern"] = is_new_pattern
+            seen_patterns.add(pat)
             all_candidates.append(candidate)
-            print(f"  ✅ Parsed: {candidate.get('name', '?')}")
+            diversity_tag = " 🌱 NEW PATTERN" if is_new_pattern else ""
+            print(f"  ✅ Parsed: {candidate.get('name', '?')} [{pat}]{diversity_tag}")
         else:
             print(f"  ⚠️ Parse error on creative #{i+1}")
 
     # Evaluate Phase 1
     print(f"\n📊 Evaluating {len(all_candidates)} Phase 1 candidates...")
     phase1_evaluated = []
+    phase1_passed = []
     for c in all_candidates:
         result = evaluate(c)
         phase1_evaluated.append(result)
-        # Immediately add WF-passed to HOF
         if result.get("wf_passed") and result.get("wf_robustness", 0) > 0:
             hof.append(result)
-    
+            phase1_passed.append(result)
+
     save_hof(hof)
+    print(f"\n📊 Phase 1 Results: {len(phase1_passed)}/{len(phase1_evaluated)} WF-passed")
+    new_patterns_found = sum(1 for c in phase1_evaluated if c.get("is_new_pattern"))
+    print(f"   New entry patterns: {new_patterns_found}")
+    print(f"   Total known patterns: {len(seen_patterns)}")
 
     # =========================================================================
-    # PHASE 2: EVOLUTION (only if HOF has entries)
+    # PHASE 2: EVOLUTION (adaptive budget)
     # =========================================================================
     print(f"\n{'='*70}")
     print("PHASE 2: EVOLUTION")
@@ -363,11 +445,12 @@ def main():
     phase2_candidates = []
 
     if hof:
-        # Mutate top-3
-        top3 = sorted(hof, key=lambda x: x.get("wf_robustness", 0), reverse=True)[:3]
-        print(f"\n🧬 Mutating top-3 HOF entries...")
-        for parent in top3:
-            for j in range(N_MUTATIONS):
+        # Mutate top entries
+        top_n = min(3, len(hof_passed) if hof_passed else len(hof))
+        parents = sorted(hof, key=lambda x: x.get("wf_robustness", 0), reverse=True)[:top_n]
+        print(f"\n🧬 Mutating top-{top_n} HOF entries ({n_mutations_per_parent} each)...")
+        for parent in parents:
+            for j in range(n_mutations_per_parent):
                 prompt = MUTATION_PROMPT.format(
                     parent_name=parent["name"], parent_entry=parent["entry_condition"],
                     parent_exit=json.dumps(parent["exit_config"]), parent_wf=parent.get("wf_robustness", "?"))
@@ -378,11 +461,10 @@ def main():
                     phase2_candidates.append(child)
 
         # Crossover random pairs
-        print(f"\n🔀 Crossover from HOF pairs...")
-        for _ in range(N_CROSSEOVERS):
+        print(f"\n🔀 Crossover from HOF pairs ({n_crossovers})...")
+        for _ in range(n_crossovers):
             if len(hof) >= 2:
                 a, b = random.sample(hof, min(2, len(hof)))
-                # Put higher-WF parent first
                 if a.get("wf_robustness", 0) < b.get("wf_robustness", 0):
                     a, b = b, a
                 prompt = CROSSOVER_PROMPT.format(
@@ -401,26 +483,30 @@ def main():
     # Evaluate Phase 2
     print(f"\n📊 Evaluating {len(phase2_candidates)} Phase 2 candidates...")
     phase2_evaluated = []
+    phase2_passed = []
     for c in phase2_candidates:
         result = evaluate(c)
         phase2_evaluated.append(result)
         if result.get("wf_passed") and result.get("wf_robustness", 0) > 0:
             hof.append(result)
+            phase2_passed.append(result)
 
     save_hof(hof)
+    print(f"\n📊 Phase 2 Results: {len(phase2_passed)}/{len(phase2_evaluated)} WF-passed")
 
     # =========================================================================
-    # PHASE 3: HARD CHECK
+    # PHASE 3: HARD CHECK (10-window WF, always runs)
     # =========================================================================
     print(f"\n{'='*70}")
     print("PHASE 3: HARD CHECK (10-window WF)")
     print(f"{'='*70}")
 
     hof_sorted = sorted(hof, key=lambda x: x.get("wf_robustness", 0), reverse=True)
-    hard_check_candidates = [s for s in hof_sorted if s.get("wf_passed")][:N_HARD_CHECK_TOP]
+    # Only hard-check candidates that haven't been 10w-checked yet
+    hard_check_candidates = [s for s in hof_sorted if s.get("wf_passed") and "wf_robustness_10w" not in s][:N_HARD_CHECK_TOP]
 
     if hard_check_candidates:
-        print(f"\n🔍 Re-validating top-{len(hard_check_candidates)} with {WF_WINDOWS_HARD} windows...")
+        print(f"\n🔍 Re-validating {len(hard_check_candidates)} candidates with {WF_WINDOWS_HARD} windows...")
         for s in hard_check_candidates:
             print(f"  🧐 {s['name']} (current WF={s.get('wf_robustness', 0):.1f})...")
             wf_hard = run_wf(s["entry_condition"], s["exit_config"], n_windows=WF_WINDOWS_HARD)
@@ -433,50 +519,70 @@ def main():
 
         save_hof(hof)
     else:
-        print("\n  ⚠️ No WF-passed candidates for hard check")
+        print("\n  ⚠️ No new WF-passed candidates for hard check (all already 10w-checked or no candidates)")
 
     # =========================================================================
     # FINAL SUMMARY
     # =========================================================================
+    hof_sorted = sorted(hof, key=lambda x: x.get("wf_robustness", 0), reverse=True)
+    hof_passed = [s for s in hof_sorted if s.get("wf_passed")]
+    hof_10w = [s for s in hof_sorted if s.get("wf_passed_10w")]
+    total_patterns = len(seen_patterns)
+
     print(f"\n{'='*70}")
     print("FINAL SUMMARY")
     print(f"{'='*70}")
-    print(f"Phase 1 evaluated: {len(phase1_evaluated)}")
-    phase1_passed = [c for c in phase1_evaluated if c.get("wf_passed")]
-    print(f"Phase 1 WF-passed: {len(phase1_passed)}")
-    print(f"Phase 2 evaluated: {len(phase2_evaluated)}")
-    phase2_passed = [c for c in phase2_evaluated if c.get("wf_passed")]
-    print(f"Phase 2 WF-passed: {len(phase2_passed)}")
+    print(f"Phase 1: {len(phase1_evaluated)} evaluated, {len(phase1_passed)} WF-passed")
+    print(f"Phase 2: {len(phase2_evaluated)} evaluated, {len(phase2_passed)} WF-passed")
+    print(f"Entry patterns explored: {total_patterns}")
+    print(f"HOF total: {len(hof)} | WF-passed: {len(hof_passed)} | 10w-champions: {len(hof_10w)}")
 
     print(f"\n🏆 HALL OF FAME (top 10 by WF Robustness):")
     for i, s in enumerate(hof_sorted[:10]):
         wf = "✅" if s.get("wf_passed") else "❌"
-        hc = f" | 10w={s.get('wf_robustness_10w', '?')}" if "wf_robustness_10w" in s else ""
-        print(f"  {i+1}. {s['name']:45s} WF={s.get('wf_robustness', 0):5.1f} {wf} | IS={s.get('is_score', 0):5.2f}{hc}")
+        hc = f" 10w={'✅' if s.get('wf_passed_10w') else '❌' if 'wf_passed_10w' in s else '—'}"
+        pat = s.get("entry_pattern", "?")
+        print(f"  {i+1}. {s['name']:40s} WF={s.get('wf_robustness', 0):5.1f} {wf}{hc} | IS={s.get('is_score', 0):5.2f} [{pat}]")
 
     # Champion declaration
-    champions_10w = [s for s in hof_sorted if s.get("wf_passed_10w")]
-    if champions_10w:
-        champ = champions_10w[0]
+    if hof_10w:
+        champ = hof_10w[0]
         print(f"\n🎉 CHAMPION (10-window validated): {champ['name']}")
         print(f"   WF={champ.get('wf_robustness_10w', '?')} | IS={champ.get('is_score', '?')} | OOS={champ.get('avg_oos_return', '?')}%")
-    elif hard_check_candidates:
-        print(f"\n⚠️  No candidate passed 10-window hard check")
+    elif hof_passed:
+        print(f"\n⚠️  {len(hof_passed)} candidates passed 5w WF but NOT 10w — no true champion")
     else:
         print(f"\n⚠️  No WF-passed candidates this run")
+
+    # Adaptive hints for next run
+    print(f"\n💡 NEXT RUN HINT:")
+    if len(phase1_passed) >= 2:
+        print("   → HOF growing: next run will shift to evolution-heavy")
+    elif len(phase1_passed) == 0:
+        print("   → No new discoveries: next run will maximize exploration")
+    if new_patterns_found == 0:
+        print("   → No new entry patterns found — consider wider temperature or different indicator families")
 
     # Save full results
     results_file = HOF_DIR / f"evolution_v7_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     results_file.write_text(json.dumps({
         "timestamp": datetime.now().isoformat(),
+        "adaptive_config": {
+            "n_conservative": n_conservative,
+            "n_creative": n_creative,
+            "n_mutations_per_parent": n_mutations_per_parent,
+            "n_crossovers": n_crossovers,
+            "hof_passed_before_run": len(hof_passed) - len(phase1_passed) - len(phase2_passed),
+        },
         "phase1_evaluated": len(phase1_evaluated),
         "phase1_passed": len(phase1_passed),
         "phase2_evaluated": len(phase2_evaluated),
         "phase2_passed": len(phase2_passed),
+        "entry_patterns_total": total_patterns,
         "phase1_results": phase1_evaluated,
         "phase2_results": phase2_evaluated,
         "hof": hof_sorted,
-        "champion": champions_10w[0] if champions_10w else None,
+        "champion": hof_10w[0] if hof_10w else None,
     }, indent=2, default=str))
     print(f"\n💾 Results saved to {results_file}")
 

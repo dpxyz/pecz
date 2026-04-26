@@ -118,20 +118,20 @@ title: Roadmap
   <div style="margin-top:0.4rem;" class="section-label">foundry v7</div>
   <div class="grid-2" style="gap:0.3rem;">
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 champion</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 (5w)</span>
       <span style="font-size:0.65rem;color:var(--fwd-accent);">WF 88.3 · IS 1.28</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">V17 benchmark</span>
-      <span style="font-size:0.65rem;color:var(--fwd-danger);">WF FAIL · IS 4.88</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 (10w)</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">WF 23.3 · FAIL</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">HOF size</span>
-      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">150+ tested · 1 passed</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">search</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">150+ · 0 10w-passed</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">10w hard check</span>
-      <span style="font-size:0.65rem;color:var(--fwd-warning);">⚠ pending</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">mode</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">adaptive · 10w std</span>
     </div>
   </div>
 
