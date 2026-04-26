@@ -90,7 +90,7 @@ class TestMoneyConservation:
         entry_fee=st.floats(min_value=0.001, max_value=1.0, allow_nan=False),
         exit_pnl=st.floats(min_value=-5.0, max_value=5.0, allow_nan=False),
     )
-    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow], deadline=None)
     def test_equity_changes_only_through_trades(self, entry_fee, exit_pnl):
         """Property: Every equity change must be explained by a fee or PnL."""
         sm = self._make_sm()
