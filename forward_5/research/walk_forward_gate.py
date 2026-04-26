@@ -325,16 +325,11 @@ if __name__ == "__main__":
                 n_windows=args.windows,
             )
             result["is_score"] = is_score
-            # Tier assignment
+            # Tier assignment: WF result only, IS is just context
             if result.get("wf_status") == "NEEDS_MANUAL_REVIEW":
                 result["tier"] = "needs_review"
             elif result["passed"]:
-                if is_score >= 4.0:
-                    result["tier"] = "champion"
-                elif is_score >= 2.0:
-                    result["tier"] = "robust"
-                else:
-                    result["tier"] = "marginal"
+                result["tier"] = "wf_passed"  # sorted later by robustness_score
             else:
                 result["tier"] = "overfitted"
             
@@ -344,22 +339,36 @@ if __name__ == "__main__":
                   f"(OOS: {result['avg_oos_return']:+.2f}%, {result['profitable_assets']} profitable)")
             results.append(result)
         
-        # Summary
-        passed = [r for r in results if r["passed"]]
-        champions = [r for r in results if r["tier"] == "champion"]
+        # Sort WF-passed by robustness_score (best first)
+        wf_passed = sorted(
+            [r for r in results if r["passed"]],
+            key=lambda r: r["robustness_score"], reverse=True
+        )
+        # Best WF-passed = Champion, rest = Robust
+        if len(wf_passed) >= 1:
+            wf_passed[0]["tier"] = "champion"  # best robustness = champion
+            for r in wf_passed[1:]:
+                r["tier"] = "robust"  # other WF-passed = robust
         needs_review = [r for r in results if r.get("wf_status") == "NEEDS_MANUAL_REVIEW"]
+        overfitted = [r for r in results if not r["passed"] and r.get("wf_status") != "NEEDS_MANUAL_REVIEW"]
+        
         print(f"\n{'='*50}")
-        print(f"WF GATE SUMMARY: {len(passed)}/{len(results)} passed")
+        print(f"WF GATE SUMMARY: {len(wf_passed)}/{len(results)} passed")
         if needs_review:
             print(f"📋 NEEDS MANUAL REVIEW: {len(needs_review)} strategies")
             for r in needs_review:
                 print(f"   {r['name']}: {r.get('wf_reason', 'complex DSL')}")
-        if champions:
-            print(f"🎉 CHAMPIONS (WF-pass + IS≥4.0):")
-            for c in champions:
-                print(f"   {c['name']}: WF={c['robustness_score']}/100, IS={c['is_score']:.2f}, OOS={c['avg_oos_return']:+.2f}%")
+        if wf_passed:
+            print(f"🎉 CHAMPION (best WF-robustness):")
+            print(f"   {wf_passed[0]['name']}: WF={wf_passed[0]['robustness_score']}/100, "
+                  f"IS={wf_passed[0]['is_score']:.2f}, OOS={wf_passed[0]['avg_oos_return']:+.2f}%")
+            if len(wf_passed) > 1:
+                print(f"✅ ROBUST (WF-passed, ranked):")
+                for r in wf_passed[1:]:
+                    print(f"   {r['name']}: WF={r['robustness_score']}/100, IS={r['is_score']:.2f}")
         else:
-            print(f"⚠️  No champions yet. Best WF-passed candidate gets robust tier.")
+            print(f"⚠️  No WF-passed candidates. All overfitted.")
+        print(f"❌ OVERFITTED: {len(overfitted)}")
         
         # Save
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
