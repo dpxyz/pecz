@@ -240,8 +240,8 @@ def autopsie(candidate: dict, wf_result: dict) -> dict:
                 mutations.append({
                     "type": "asset_filter",
                     "msg": f"Nur auf {strong} traden — evtl. EMA-Filter enger für Alts",
-                    "entry_modifier": None,
-                    "suggestion": f"Versuche: close > ema_200 statt close > ema_100 für besseres Trend-Filtering auf Alts",
+                    "entry_modifier": entry + " AND close > ema_200" if "ema_200" not in entry else (entry + " AND close > ema_50" if "ema_50" not in entry else entry),
+                    "exit_modifier": None,
                 })
 
         # Major vs Alt Pattern

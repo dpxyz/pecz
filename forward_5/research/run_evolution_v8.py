@@ -744,10 +744,17 @@ def main():
                     for m in feed_entry.get('mutations', []):
                         modified_entry = m.get('entry_modifier')
                         if modified_entry and modified_entry not in seen_entries:
+                            # Merge exit_modifier with defaults (partial dicts are ok)
+                            exit_mod = m.get('exit_modifier')
+                            base_exit = {'trailing_stop_pct': 2.0, 'stop_loss_pct': 3.0, 'max_hold_bars': 24}
+                            if exit_mod and isinstance(exit_mod, dict):
+                                exit_config = {**base_exit, **exit_mod}
+                            else:
+                                exit_config = base_exit.copy()
                             mutation_pool.append({
                                 'name': f"Autopsie_{feed_entry.get('candidate_name', '?')}_{m['type']}",
                                 'entry_condition': modified_entry,
-                                'exit_config': m.get('exit_modifier', {}),
+                                'exit_config': exit_config,
                                 'strategy_type': classify_strategy_type(modified_entry),
                                 'is_score': 0,
                                 'wf_robustness': 0,
