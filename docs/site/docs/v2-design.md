@@ -22,6 +22,21 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 
 ---
 
+## V1 Lessons → V2 Requirements
+
+**Fundamentale Erkenntnis aus 170+ Foundry-Kandidaten:**
+- 1h-Crypto mit Standard-Indikatoren (BB/RSI/EMA/MACD/ADX) hat **keinen robusten Edge**
+- TREND: -13% bis -79% Return | MOM: -50% | VOL: -24% | MR: -3% bis -28%
+- 4H IS=+1.09 ist overfitted | REGIME hat nur 4 Trades
+- Nur MR hat genug Trades, aber 10-Window-WF = FAIL
+- **V2 braucht fundamental andere Ansätze**, nicht nur Indikator-Variationen:
+  - Zeitreihen-Muster (Pattern-Erkennung, nicht nur Indikator-Schwellen)
+  - Multi-Timeframe-Korrelationen (1h Entry + 4h Trend + 15s Execution)
+  - Cross-Asset-Signale (BTC führt, Alts folgen)
+  - Regime-Score als 6. Sinn (nicht nur ADX > 25)
+  - Volatility-Parity statt Equal-Weight
+  - Sentiment als Kill-Switch (nicht als Signal)
+
 ## V2 Stufe 1 Scope — Was wir bauen und beweisen
 
 **Nur 7 Features in Stufe 1.** Alles andere = Stufe 2+ bis bewiesen.
