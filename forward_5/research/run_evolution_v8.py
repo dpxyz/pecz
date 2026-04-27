@@ -447,10 +447,19 @@ def run_is_backtest(entry_condition: str, exit_config: dict, strategy_type: str 
         profitable_ratio = profitable / n
         trade_quality = min(1.0, min_trades / 5)
 
+        # Floor profitable_ratio at 0.05 so terrible strategies (0/12) don't score IS=0
+        # (same as "untested"). Without floor: -79% return * 0/12 * 0.1 = 0.00 — misleading.
+        pr = max(profitable_ratio, 0.05)
+
+        # 4H penalty: aggregating 1h→4h then testing on same data is in-sample.
+        # Discount IS by 50% to reflect overfitting risk.
+        is_4h = strategy_type == "4H"
+        four_h_discount = 0.5 if is_4h else 1.0
+
         if total_return > 0 and avg_dd > 0:
-            score = (total_return / avg_dd) * profitable_ratio * trade_quality
+            score = (total_return / avg_dd) * pr * trade_quality * four_h_discount
         elif total_return <= 0:
-            score = total_return * profitable_ratio * trade_quality * 0.1
+            score = total_return * pr * trade_quality * 0.1 * four_h_discount
         else:
             score = 0
 
@@ -635,7 +644,8 @@ def main():
         print(f"  {s.get('name','?'):40s} WF={s.get('wf_robustness',0):5.1f} {wf} IS={s.get('is_score',0):6.2f} [{stype}]")
 
     seen_patterns = set(entry_pattern(s.get("entry_condition", "")) for s in hof)
-    print(f"  Known patterns: {len(seen_patterns)}")
+    seen_exact_entries = set(s.get("entry_condition", "").strip().lower() for s in hof)
+    print(f"  Known patterns: {len(seen_patterns)}, exact entries: {len(seen_exact_entries)}")
 
     all_candidates = []
     all_results_for_save = []
@@ -688,6 +698,12 @@ def main():
                 parsed["is_new_pattern"] = is_new
                 if is_new:
                     seen_patterns.add(pat)
+                # Deduplicate exact entry conditions (LLM often generates same entry with different names)
+                exact_entry = parsed["entry_condition"].strip().lower()
+                if exact_entry in seen_exact_entries:
+                    print(f"  ⏭️ Duplicate entry (skip): {parsed.get('name', '?')}")
+                    continue
+                seen_exact_entries.add(exact_entry)
                 diversity_tag = " 🌱 NEW PATTERN" if is_new else ""
                 print(f"  ✅ Parsed: {parsed.get('name', '?')} [{pat}]{diversity_tag}")
                 all_candidates.append(parsed)
