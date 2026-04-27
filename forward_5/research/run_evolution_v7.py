@@ -289,7 +289,19 @@ def evaluate(candidate: dict) -> dict:
 def load_hof() -> list[dict]:
     if HOF_FILE.exists():
         try:
-            return json.loads(HOF_FILE.read_text()).get("hof", [])
+            hof = json.loads(HOF_FILE.read_text()).get("hof", [])
+            # Backfill IS scores for entries that have WF but no IS data
+            needs_save = False
+            for entry in hof:
+                if entry.get("wf_passed") and entry.get("is_score", 0) == 0 and entry.get("avg_return", 0) == 0:
+                    is_result = run_is_backtest(entry["entry_condition"], entry.get("exit_config", {}))
+                    if is_result:
+                        entry.update(is_result)
+                        needs_save = True
+                        print(f"  🔄 Backfilled IS for {entry.get('name', '?')}: IS={is_result['is_score']:.2f}")
+            if needs_save:
+                save_hof(hof)
+            return hof
         except:
             pass
     return []

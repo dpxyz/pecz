@@ -1,18 +1,33 @@
 #!/usr/bin/env python3
 """
-Walk-Forward Gate for Evolution Candidates
+Walk-Forward Gate for Evolution Candidates (V8 — Extended DSL)
 
 Runs Walk-Forward validation on a candidate strategy.
 Used as a quality gate: only candidates that pass WF enter the Hall of Fame.
 
+Supported indicators (V8):
+  close, open, high, low, volume
+  bb_lower_N, bb_upper_N, bb_mid_N, bb_width_N
+  rsi_N, ema_N, sma_N, zscore_N
+  stoch_k_N, stoch_d_N           (NEW)
+  williams_r_N                   (NEW)
+  atr_N                          (NEW)
+  roc_N                          (NEW)
+  macd_N_M, macd_signal_N_M      (NEW, simplified)
+  macd_hist_N_M                  (NEW)
+  adx_N                          (NEW, simplified)
+  volume_sma_N                   (NEW)
+  ema_slope_N, sma_slope_N       (NEW)
+
 Usage:
     python3 walk_forward_gate.py --candidate <json_file_or_string>
-    python3 walk_forward_gate.py --hof <json_file>   # validate all HOF entries
+    python3 walk_forward_gate.py --hof <json_file>
 """
 
 import sys
 import json
 import time
+import re
 from pathlib import Path
 from datetime import datetime
 
@@ -24,6 +39,19 @@ sys.path.insert(0, str(RESEARCH_DIR))
 sys.path.insert(0, str(RESEARCH_DIR / "backtest"))
 
 from backtest.backtest_engine import BacktestEngine
+
+
+def aggregate_to_4h(df_1h: pl.DataFrame) -> pl.DataFrame:
+    """Aggregate 1h candles to 4h candles."""
+    return df_1h.sort("timestamp").group_by_dynamic(
+        "timestamp", every="4h", label="left"
+    ).agg([
+        pl.col("open").first(),
+        pl.col("high").max(),
+        pl.col("low").min(),
+        pl.col("close").last(),
+        pl.col("volume").sum(),
+    ])
 
 ASSETS = ["BTC", "ETH", "SOL", "AVAX", "DOGE", "ADA"]
 SYMBOLS = [f"{a}USDT" for a in ASSETS]
@@ -40,116 +68,239 @@ def load_asset_data(symbol: str, timeframe: str = "1h") -> pl.DataFrame:
     raise FileNotFoundError(f"No data for {symbol}")
 
 
-# ─── Strategy Function Builder ───────────────────────────────────────
+# ─── Strategy Function Builder (V8 Extended) ─────────────────────────
 
-# Known native strategies — always parseable, high-fidelity
 NATIVE_STRATEGIES = {
     "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200": "mean_reversion_bb",
 }
 
-# Only these indicator types can be parsed by the DSL parser
 SIMPLE_INDICATORS = {'close', 'open', 'high', 'low', 'volume'}
-SIMPLE_PREFIXES = ['bb_lower_', 'bb_upper_', 'bb_width_', 'bb_mid_', 'rsi_', 'ema_', 'sma_', 'zscore_']
-# Complex indicators: macd, adx, atr, stochastic, z-score → NEEDS_MANUAL_REVIEW
+PARSABLE_PREFIXES = [
+    'bb_lower_', 'bb_upper_', 'bb_width_', 'bb_mid_',
+    'rsi_', 'ema_', 'sma_', 'zscore_',
+    'stoch_k_', 'stoch_d_',
+    'williams_r_',
+    'atr_',
+    'roc_',
+    'macd_', 'macd_signal_', 'macd_hist_',
+    'adx_',
+    'volume_sma_',
+    'ema_slope_', 'sma_slope_',
+]
 
 
 def build_strategy_func(entry_condition: str):
     """
     Build a strategy function from a DSL entry condition string.
     Returns (strategy_func, parseable_bool) tuple.
-    
-    Native strategies use their Python implementation.
-    Simple DSL (BB, RSI, EMA, SMA) gets parsed automatically.
-    Complex DSL (MACD, ADX, etc.) → NEEDS_MANUAL_REVIEW.
     """
-    import re
-
-    # 1) Native strategies: exact match → use Python implementation
+    # 1) Native strategies: exact match
     native_name = NATIVE_STRATEGIES.get(entry_condition.strip())
     if native_name == "mean_reversion_bb":
         from strategy_lab.mean_reversion_bb import mean_reversion_bb_strategy
         return mean_reversion_bb_strategy, True
 
-    # 2) Check if entry uses only simple (parseable) indicators
+    # 2) Check if entry uses only parseable indicators
     cond_lower = entry_condition.lower()
     tokens = re.findall(r'[a-z_]+\d*', cond_lower)
     for t in tokens:
         if t in ('and', 'or', 'not', '') or t in SIMPLE_INDICATORS:
             continue
-        if any(t.startswith(p) for p in SIMPLE_PREFIXES):
+        if any(t.startswith(p) for p in PARSABLE_PREFIXES):
             continue
-        # Unknown/complex indicator → cannot parse reliably
+        if t.startswith('volume'):
+            continue
+        # Bare number fragments from compound names like macd_12_26 → _26
+        if re.match(r'^_?\d+$', t):
+            continue
+        # Multiplication like '* 1.5' may leave stray tokens
+        if t in ('*', '/', '+', '-'):
+            continue
+        # Unknown indicator → cannot parse
         return None, False
 
-    # 3) Simple DSL parser (BB, RSI, EMA, SMA, ZScore, bb_width)
+    # 3) Extended DSL parser
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
-        indicators = {}
-
-        # BB bands: bb_lower_N, bb_upper_N, bb_width_N, bb_mid_N
-        for m in re.finditer(r'bb_(lower|upper|mid|width)_(\d+)', entry_condition):
-            kind = m.group(1)
-            period = int(m.group(2))
-            key = m.group(0)
-            if f'bb_upper_{period}' not in indicators:
-                sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
-                std = pl.col('close').rolling_std(window_size=period, min_periods=period)
-                indicators[f'bb_upper_{period}'] = sma + 2.0 * std
-                indicators[f'bb_lower_{period}'] = sma - 2.0 * std
-                indicators[f'bb_mid_{period}'] = sma
-                indicators[f'bb_width_{period}'] = (4.0 * std) / pl.when(sma == 0).then(0.001).otherwise(sma)
-
-        # RSI: rsi_N
-        for m in re.finditer(r'rsi_(\d+)', entry_condition):
-            period = int(m.group(1))
-            key = f'rsi_{period}'
-            if key not in indicators:
-                delta = pl.col('close').diff()
-                gain = pl.when(delta > 0).then(delta).otherwise(0.0)
-                loss = pl.when(delta < 0).then(-delta).otherwise(0.0)
-                avg_gain = gain.rolling_mean(window_size=period, min_periods=period)
-                avg_loss = loss.rolling_mean(window_size=period, min_periods=period)
-                rs = avg_gain / pl.when(avg_loss == 0).then(0.0001).otherwise(avg_loss)
-                indicators[key] = 100 - (100 / (1 + rs))
-
-        # ZScore: zscore_N
-        for m in re.finditer(r'zscore_(\d+)', entry_condition):
-            period = int(m.group(1))
-            key = f'zscore_{period}'
-            if key not in indicators:
-                sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
-                std = pl.col('close').rolling_std(window_size=period, min_periods=period)
-                indicators[key] = (pl.col('close') - sma) / pl.when(std == 0).then(0.001).otherwise(std)
-
-        # EMA/SMA: ema_N, sma_N
-        for m in re.finditer(r'(ema|sma)_(\d+)', entry_condition):
-            kind = m.group(1)
-            period = int(m.group(2))
-            key = f'{kind}_{period}'
-            if key not in indicators:
-                indicators[key] = pl.col('close').rolling_mean(window_size=period, min_periods=period)
-
-        # Add all indicators as columns
+        indicators = _compute_indicators(entry_condition, df)
         df = df.with_columns([v.alias(k) for k, v in indicators.items()])
-
-        # Build signal: split AND conditions, evaluate each as boolean, combine
         conditions = [c.strip() for c in entry_condition.split(' AND ')]
         signal = pl.lit(True)
         for cond in conditions:
             signal = signal & _parse_simple_condition(cond)
         df = df.with_columns((pl.when(signal).then(1).otherwise(0)).alias('signal'))
-
         return df
 
     return strategy_func, True
 
 
+def _compute_indicators(entry_condition: str, df: pl.DataFrame) -> dict:
+    """Compute all indicators referenced in the entry condition."""
+    indicators = {}
+
+    # BB bands: bb_lower_N, bb_upper_N, bb_width_N, bb_mid_N
+    for m in re.finditer(r'bb_(lower|upper|mid|width)_(\d+)', entry_condition):
+        period = int(m.group(2))
+        if f'bb_upper_{period}' not in indicators:
+            sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
+            std = pl.col('close').rolling_std(window_size=period, min_periods=period)
+            indicators[f'bb_upper_{period}'] = sma + 2.0 * std
+            indicators[f'bb_lower_{period}'] = sma - 2.0 * std
+            indicators[f'bb_mid_{period}'] = sma
+            indicators[f'bb_width_{period}'] = (4.0 * std) / pl.when(sma == 0).then(0.001).otherwise(sma)
+
+    # RSI: rsi_N
+    for m in re.finditer(r'rsi_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'rsi_{period}'
+        if key not in indicators:
+            delta = pl.col('close').diff()
+            gain = pl.when(delta > 0).then(delta).otherwise(0.0)
+            loss = pl.when(delta < 0).then(-delta).otherwise(0.0)
+            avg_gain = gain.rolling_mean(window_size=period, min_periods=period)
+            avg_loss = loss.rolling_mean(window_size=period, min_periods=period)
+            rs = avg_gain / pl.when(avg_loss == 0).then(0.0001).otherwise(avg_loss)
+            indicators[key] = 100 - (100 / (1 + rs))
+
+    # ZScore: zscore_N
+    for m in re.finditer(r'zscore_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'zscore_{period}'
+        if key not in indicators:
+            sma = pl.col('close').rolling_mean(window_size=period, min_periods=period)
+            std = pl.col('close').rolling_std(window_size=period, min_periods=period)
+            indicators[key] = (pl.col('close') - sma) / pl.when(std == 0).then(0.001).otherwise(std)
+
+    # EMA/SMA: ema_N, sma_N (on close)
+    for m in re.finditer(r'(ema|sma)_(\d+)', entry_condition):
+        kind = m.group(1)
+        period = int(m.group(2))
+        key = f'{kind}_{period}'
+        # Skip if it's part of slope or macd
+        if 'slope' in entry_condition and key in indicators:
+            continue
+        if key not in indicators:
+            indicators[key] = pl.col('close').rolling_mean(window_size=period, min_periods=period)
+
+    # EMA/SMA Slope: ema_slope_N, sma_slope_N
+    for m in re.finditer(r'(ema|sma)_slope_(\d+)', entry_condition):
+        kind = m.group(1)
+        period = int(m.group(2))
+        base_key = f'{kind}_{period}'
+        slope_key = f'{kind}_slope_{period}'
+        if base_key not in indicators:
+            indicators[base_key] = pl.col('close').rolling_mean(window_size=period, min_periods=period)
+        if slope_key not in indicators:
+            indicators[slope_key] = indicators[base_key] - indicators[base_key].shift(1)
+
+    # Stochastic %K/%D: stoch_k_N, stoch_d_N
+    for m in re.finditer(r'stoch_(k|d)_(\d+)', entry_condition):
+        period = int(m.group(2))
+        k_key = f'stoch_k_{period}'
+        d_key = f'stoch_d_{period}'
+        if k_key not in indicators:
+            lowest = pl.col('low').rolling_min(window_size=period, min_periods=period)
+            highest = pl.col('high').rolling_max(window_size=period, min_periods=period)
+            k_val = (pl.col('close') - lowest) / pl.when(highest - lowest == 0).then(0.001).otherwise(highest - lowest) * 100
+            indicators[k_key] = k_val
+        if d_key not in indicators:
+            indicators[d_key] = indicators[k_key].rolling_mean(window_size=3, min_periods=3)
+
+    # Williams %R: williams_r_N
+    for m in re.finditer(r'williams_r_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'williams_r_{period}'
+        if key not in indicators:
+            highest = pl.col('high').rolling_max(window_size=period, min_periods=period)
+            lowest = pl.col('low').rolling_min(window_size=period, min_periods=period)
+            # Williams %R: -100 to 0 (oversold < -80)
+            indicators[key] = (highest - pl.col('close')) / pl.when(highest - lowest == 0).then(0.001).otherwise(highest - lowest) * -100
+
+    # ATR: atr_N
+    for m in re.finditer(r'atr_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'atr_{period}'
+        if key not in indicators:
+            tr = pl.max_horizontal([
+                (pl.col('high') - pl.col('low')).abs(),
+                (pl.col('high') - pl.col('close').shift(1)).abs(),
+                (pl.col('low') - pl.col('close').shift(1)).abs(),
+            ])
+            indicators[key] = tr.rolling_mean(window_size=period, min_periods=period)
+
+    # ROC: roc_N (Rate of Change in %)
+    for m in re.finditer(r'roc_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'roc_{period}'
+        if key not in indicators:
+            indicators[key] = (pl.col('close') / pl.col('close').shift(period) - 1) * 100
+
+    # MACD: macd_N_M, macd_signal_N_M, macd_hist_N_M
+    macd_matches = re.finditer(r'macd_(?:hist_)?(?:(\d+)_(\d+))', entry_condition)
+    macd_periods = set()
+    for m in macd_matches:
+        fast, slow = int(m.group(1)), int(m.group(2))
+        macd_periods.add((fast, slow))
+    # Also match simple macd_N references
+    for m in re.finditer(r'macd_(\d+)(?!_)', entry_condition):
+        fast = int(m.group(1))
+        macd_periods.add((fast, fast * 2 + 2))
+    if not macd_periods and ('macd_' in entry_condition.lower()):
+        macd_periods.add((12, 26))
+
+    for fast, slow in macd_periods:
+        macd_key = f'macd_{fast}_{slow}'
+        signal_key = f'macd_signal_{fast}_{slow}'
+        hist_key = f'macd_hist_{fast}_{slow}'
+        if macd_key not in indicators:
+            ema_fast = pl.col('close').rolling_mean(window_size=fast, min_periods=fast)
+            ema_slow = pl.col('close').rolling_mean(window_size=slow, min_periods=slow)
+            macd_line = ema_fast - ema_slow
+            signal_line = macd_line.rolling_mean(window_size=9, min_periods=9)
+            indicators[macd_key] = macd_line
+            indicators[signal_key] = signal_line
+            indicators[hist_key] = macd_line - signal_line
+
+    # ADX: adx_N (simplified)
+    for m in re.finditer(r'adx_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'adx_{period}'
+        if key not in indicators:
+            plus_dm = pl.when(pl.col('high') - pl.col('high').shift(1) > pl.col('low').shift(1) - pl.col('low')).then(
+                pl.max_horizontal([pl.col('high') - pl.col('high').shift(1), pl.lit(0.0)])
+            ).otherwise(pl.lit(0.0))
+            minus_dm = pl.when(pl.col('low').shift(1) - pl.col('low') > pl.col('high') - pl.col('high').shift(1)).then(
+                pl.max_horizontal([pl.col('low').shift(1) - pl.col('low'), pl.lit(0.0)])
+            ).otherwise(pl.lit(0.0))
+            tr = pl.max_horizontal([
+                (pl.col('high') - pl.col('low')).abs(),
+                (pl.col('high') - pl.col('close').shift(1)).abs(),
+                (pl.col('low') - pl.col('close').shift(1)).abs(),
+            ])
+            atr_val = tr.rolling_mean(window_size=period, min_periods=period)
+            plus_di = 100 * plus_dm.rolling_mean(window_size=period, min_periods=period) / pl.when(atr_val == 0).then(0.001).otherwise(atr_val)
+            minus_di = 100 * minus_dm.rolling_mean(window_size=period, min_periods=period) / pl.when(atr_val == 0).then(0.001).otherwise(atr_val)
+            di_sum = plus_di + minus_di
+            dx = 100 * (plus_di - minus_di).abs() / pl.when(di_sum == 0).then(0.001).otherwise(di_sum)
+            indicators[key] = dx.rolling_mean(window_size=period, min_periods=period)
+
+    # Volume SMA: volume_sma_N
+    for m in re.finditer(r'volume_sma_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'volume_sma_{period}'
+        if key not in indicators:
+            indicators[key] = pl.col('volume').rolling_mean(window_size=period, min_periods=period)
+
+    return indicators
+
+
 def _parse_simple_condition(cond: str):
-    """Parse a single comparison like 'close < bb_lower_20' into a Polars boolean expression."""
+    """Parse a single comparison like 'close < bb_lower_20' into a Polars boolean expression.
+    Supports multiplication: volume > volume_sma_20 * 1.5"""
     for op in ['<=', '>=', '!=', '==', '<', '>']:
         if op in cond:
             parts = cond.split(op, 1)
             left = _parse_value(parts[0].strip())
-            right = _parse_value(parts[1].strip())
+            right = _parse_expr(parts[1].strip())
             if op == '<=': return left <= right
             if op == '>=': return left >= right
             if op == '!=': return left != right
@@ -157,6 +308,24 @@ def _parse_simple_condition(cond: str):
             if op == '<': return left < right
             if op == '>': return left > right
     return pl.lit(False)
+
+
+def _parse_expr(val: str):
+    """Parse a value or simple expression (with * or /) into a Polars expression."""
+    val = val.strip()
+    # Handle multiplication: col_name * number
+    if '*' in val:
+        parts = val.split('*', 1)
+        left = _parse_value(parts[0].strip())
+        right = _parse_value(parts[1].strip())
+        return left * right
+    # Handle division: col_name / number
+    if '/' in val:
+        parts = val.split('/', 1)
+        left = _parse_value(parts[0].strip())
+        right = _parse_value(parts[1].strip())
+        return left / right
+    return _parse_value(val)
 
 
 def _parse_value(val: str):
@@ -171,13 +340,16 @@ def _parse_value(val: str):
 # ─── Walk-Forward Runner ──────────────────────────────────────────────
 
 def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
-                          n_windows: int = 10, oos_pct: float = 0.3) -> dict:
-    """Run Walk-Forward validation for a candidate strategy."""
+                          n_windows: int = 10, oos_pct: float = 0.3,
+                          strategy_type: str = "") -> dict:
+    """Run Walk-Forward validation for a candidate strategy.
+    
+    If strategy_type is '4H', data is aggregated to 4h candles.
+    """
     
     strategy_func, parseable = build_strategy_func(entry)
     
     if not parseable or strategy_func is None:
-        # Cannot parse this strategy — mark as NEEDS_MANUAL_REVIEW
         return {
             "name": name,
             "entry": entry,
@@ -205,6 +377,12 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         except FileNotFoundError:
             continue
         
+        # Aggregate to 4h if this is a 4h strategy
+        if strategy_type == "4H":
+            df = aggregate_to_4h(df)
+        
+        timeframe = "4h" if strategy_type == "4H" else "1h"
+        
         n_rows = len(df)
         window_size = n_rows // n_windows
         
@@ -224,7 +402,7 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
                 strategy_func=strategy_func,
                 params={},
                 symbol=symbol,
-                timeframe="1h",
+                timeframe=timeframe,
                 exit_config=exit_config,
                 df=oos_df,
             )
@@ -255,13 +433,12 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
     avg_all_return = np.mean([r["avg_oos_return"] for r in results.values()]) if results else 0
     avg_all_trades = np.mean([r["avg_trades"] for r in results.values()]) if results else 0
     
-    # Robustness: ≥50% assets profitable in OOS + avg trades ≥3
     robustness = 0
     if assets_with_data > 0:
         profitable_ratio = profitable_assets / assets_with_data
-        robustness = profitable_ratio * 70  # max 70 from profitability
+        robustness = profitable_ratio * 70
         if avg_all_trades >= 3:
-            robustness += 30  # max 30 from trade count
+            robustness += 30
         robustness = min(100, round(robustness, 1))
     
     passed = robustness >= 50 and profitable_assets >= 3
@@ -281,7 +458,7 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         "timestamp": datetime.now().isoformat(),
         "wf_status": wf_status,
         "is_score": 0.0,
-        "tier": "overfitted",  # will be overwritten by caller
+        "tier": "overfitted",
     }
 
 
@@ -296,24 +473,28 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.candidate:
-        # Single candidate
         if Path(args.candidate).exists():
             with open(args.candidate) as f:
                 c = json.load(f)
         else:
             c = json.loads(args.candidate)
         
-        result = run_wf_on_candidate(c["name"], c["entry"], c.get("exit_config", {}), n_windows=args.windows)
-        print(json.dumps(result, indent=2))
-        
+        result = run_wf_on_candidate(
+            c["name"],
+            c.get("entry", c.get("entry_condition", "")),
+            c.get("exit_config", c.get("exit_rule", {})),
+            n_windows=args.windows,
+        )
+        if "is_score" not in result:
+            result["is_score"] = c.get("score", 0)
+        print(json.dumps(result, indent=2, default=str))
+    
     elif args.hof:
-        # Validate all HOF entries + V17 benchmark
         with open(args.hof) as f:
             data = json.load(f)
         
         hof = data.get("hall_of_fame", data if isinstance(data, list) else [])
         
-        # Always include V17 benchmark in WF validation
         V17 = {
             "name": "V17_Mid_Target_Exit",
             "entry_condition": "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200",
@@ -321,15 +502,14 @@ if __name__ == "__main__":
             "score": 4.88,
         }
         
-        # Check if V17 is already in HOF
         v17_in_hof = any(e.get("name") == "V17_Mid_Target_Exit" for e in hof)
         if not v17_in_hof:
-            hof.insert(0, V17)  # Always test V17
+            hof.insert(0, V17)
         
         results = []
         for entry in hof:
             is_score = entry.get("score", 0)
-            print(f"\n🔍 Validating: {entry['name']} (IS-Score: {is_score})")
+            print(f"\nValidating: {entry['name']} (IS-Score: {is_score})")
             result = run_wf_on_candidate(
                 entry["name"],
                 entry.get("entry", entry.get("entry_condition", "")),
@@ -337,57 +517,44 @@ if __name__ == "__main__":
                 n_windows=args.windows,
             )
             result["is_score"] = is_score
-            # Tier assignment: WF result only, IS is just context
             if result.get("wf_status") == "NEEDS_MANUAL_REVIEW":
                 result["tier"] = "needs_review"
             elif result["passed"]:
-                result["tier"] = "wf_passed"  # sorted later by robustness_score
+                result["tier"] = "wf_passed"
             else:
                 result["tier"] = "overfitted"
             
             tier = result["tier"]
-            status = "✅ PASS" if result["passed"] else ("⚠️ REVIEW" if result.get("wf_status") == "NEEDS_MANUAL_REVIEW" else "❌ FAIL")
-            print(f"  {status} [{tier.upper()}] — Robustness: {result['robustness_score']}/100 "
+            status = "PASS" if result["passed"] else ("REVIEW" if result.get("wf_status") == "NEEDS_MANUAL_REVIEW" else "FAIL")
+            print(f"  {status} [{tier.upper()}] Robustness: {result['robustness_score']}/100 "
                   f"(OOS: {result['avg_oos_return']:+.2f}%, {result['profitable_assets']} profitable)")
             results.append(result)
         
-        # Sort WF-passed by robustness_score (best first)
         wf_passed = sorted(
             [r for r in results if r["passed"]],
             key=lambda r: r["robustness_score"], reverse=True
         )
-        # Best WF-passed = Champion, rest = Robust
         if len(wf_passed) >= 1:
-            wf_passed[0]["tier"] = "champion"  # best robustness = champion
+            wf_passed[0]["tier"] = "champion"
             for r in wf_passed[1:]:
-                r["tier"] = "robust"  # other WF-passed = robust
+                r["tier"] = "robust"
         needs_review = [r for r in results if r.get("wf_status") == "NEEDS_MANUAL_REVIEW"]
         overfitted = [r for r in results if not r["passed"] and r.get("wf_status") != "NEEDS_MANUAL_REVIEW"]
         
         print(f"\n{'='*50}")
         print(f"WF GATE SUMMARY: {len(wf_passed)}/{len(results)} passed")
         if needs_review:
-            print(f"📋 NEEDS MANUAL REVIEW: {len(needs_review)} strategies")
-            for r in needs_review:
-                print(f"   {r['name']}: {r.get('wf_reason', 'complex DSL')}")
+            print(f"NEEDS MANUAL REVIEW: {len(needs_review)}")
         if wf_passed:
-            print(f"🎉 CHAMPION (best WF-robustness):")
-            print(f"   {wf_passed[0]['name']}: WF={wf_passed[0]['robustness_score']}/100, "
-                  f"IS={wf_passed[0]['is_score']:.2f}, OOS={wf_passed[0]['avg_oos_return']:+.2f}%")
-            if len(wf_passed) > 1:
-                print(f"✅ ROBUST (WF-passed, ranked):")
-                for r in wf_passed[1:]:
-                    print(f"   {r['name']}: WF={r['robustness_score']}/100, IS={r['is_score']:.2f}")
+            print(f"CHAMPION: {wf_passed[0]['name']} WF={wf_passed[0]['robustness_score']}/100")
         else:
-            print(f"⚠️  No WF-passed candidates. All overfitted.")
-        print(f"❌ OVERFITTED: {len(overfitted)}")
+            print(f"No WF-passed candidates.")
         
-        # Save
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         out_file = OUTPUT_DIR / f"wf_gate_{timestamp}.json"
         with open(out_file, 'w') as f:
-            json.dump({"timestamp": timestamp, "results": results, "v17_always_tested": True}, f, indent=2, default=str)
-        print(f"\n💾 Saved to {out_file}")
+            json.dump({"timestamp": timestamp, "results": results}, f, indent=2, default=str)
+        print(f"Saved to {out_file}")
     else:
         parser.print_help()
