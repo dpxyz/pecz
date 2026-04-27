@@ -721,17 +721,20 @@ def main():
     phase2_evaluated = []
     phase2_passed = []
 
-    # Build mutation pool: HOF-passed + best Phase 1 (by IS-score) + autopsie feed
+    # Build mutation pool: HOF-passed + best Phase 1 PER ARM TYPE + autopsie feed
     mutation_pool = list(hof_passed) if hof_passed else []
     
-    # Add top Phase 1 candidates that are NOT already in mutation pool
+    # Add top Phase 1 candidates PER ARM TYPE (ensures diversity, not just MR)
     phase1_sorted = sorted(phase1_evaluated, key=lambda x: x.get('is_score', -10), reverse=True)
     seen_entries = {s.get('entry_condition', '') for s in mutation_pool}
-    for cand in phase1_sorted[:5]:
+    type_added = {}  # track how many per type
+    for cand in phase1_sorted:
         entry = cand.get('entry_condition', '')
-        if entry not in seen_entries:
+        stype = cand.get('strategy_type', classify_strategy_type(entry))
+        if entry not in seen_entries and type_added.get(stype, 0) < 2:
             mutation_pool.append(cand)
             seen_entries.add(entry)
+            type_added[stype] = type_added.get(stype, 0) + 1
     
     # Add autopsie mutation feed if exists
     autopsie_feed_file = HOF_DIR / 'mutation_feed.json'
@@ -854,9 +857,18 @@ def main():
     phase25_results = []
     sweep_wf_candidates = []
 
-    # Sweep top HOF entries (both passed and near-passed)
+    # Sweep top HOF entry PER ARM TYPE (not just top-3 overall which are all MR)
     sweepable = sorted(hof, key=lambda x: (1 if x.get('wf_passed') else 0, x.get('wf_robustness', 0), x.get('is_score', 0)), reverse=True)
-    top_sweep = sweepable[:3]
+    # Pick top-1 per strategy type for diversity
+    seen_types = set()
+    top_sweep = []
+    for s in sweepable:
+        stype = s.get('strategy_type', classify_strategy_type(s.get('entry_condition', '')))
+        if stype not in seen_types:
+            top_sweep.append(s)
+            seen_types.add(stype)
+        if len(top_sweep) >= 3:  # max 3 sweep targets per run
+            break
 
     if top_sweep:
         for candidate in top_sweep:
