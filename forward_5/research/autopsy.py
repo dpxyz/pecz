@@ -275,7 +275,7 @@ def autopsie(candidate: dict, wf_result: dict) -> dict:
     # aus der Asset-Korrelation Rückschlüsse ziehen:
     # - MR-Strategien: gut in volatilen Märkten (DOGE, ADA)
     # - Trend-Strategien: gut in Trend-Märkten (BTC, ETH)
-    stype = classify_strategy_type(entry)
+    stype = candidate.get('strategy_type', classify_strategy_type(entry))
 
     # Cross-Check: Strategy-Typ vs Asset-Performance
     if per_asset_returns and stype in ["TREND", "MOM"]:

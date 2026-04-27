@@ -34,7 +34,7 @@ from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 # CONFIG
 # ============================================================================
 
-N_EXPLORATION_PER_TYPE = 2  # candidates per strategy type
+N_EXPLORATION_PER_TYPE = 5  # candidates per strategy type (was 2, raised for more diversity)
 N_MUTATIONS_PER_PARENT = 3
 N_CROSSOVERS = 3
 N_HARD_CHECK_TOP = 3
@@ -631,7 +631,7 @@ def main():
         print(f"  HOF types: {hof_types}")
     for s in hof[:5]:
         wf = "✅" if s.get("wf_passed") else "❌"
-        stype = classify_strategy_type(s.get("entry_condition", ""))
+        stype = s.get("strategy_type", classify_strategy_type(s.get("entry_condition", "")))
         print(f"  {s.get('name','?'):40s} WF={s.get('wf_robustness',0):5.1f} {wf} IS={s.get('is_score',0):6.2f} [{stype}]")
 
     seen_patterns = set(entry_pattern(s.get("entry_condition", "")) for s in hof)
@@ -868,7 +868,7 @@ def main():
                     sweep_name = f"Sweep_{candidate.get('name', '?')}_{wc.get('regime', 'none')}"
 
                     # Full WF on sweep candidates
-                    sweep_stype = classify_strategy_type(sweep_entry)
+                    sweep_stype = candidate.get('strategy_type', classify_strategy_type(sweep_entry))
                     wf_result = run_wf(sweep_entry, sweep_exit, strategy_type=sweep_stype)
                     if wf_result:
                         hof_entry = {
@@ -911,7 +911,7 @@ def main():
     if top_for_hard:
         for candidate in top_for_hard:
             print(f"\n  🔍 Hard-checking: {candidate.get('name', '?')} (WF={candidate.get('wf_robustness', 0):.1f})")
-            cand_type = classify_strategy_type(candidate.get("entry_condition", ""))
+            cand_type = candidate.get('strategy_type', classify_strategy_type(candidate.get("entry_condition", "")))
             wf_10w = run_wf(candidate["entry_condition"], candidate.get("exit_config", {}), n_windows=WF_WINDOWS_HARD, strategy_type=cand_type)
             if wf_10w:
                 candidate["wf_robustness_10w"] = wf_10w.get("wf_robustness", 0)
@@ -1026,7 +1026,7 @@ def main():
     for i, s in enumerate(sorted_hof[:10]):
         wf = "✅" if s.get("wf_passed") else "❌"
         hc = f" 10w={'✅' if s.get('wf_passed_10w') else '❌'}" if "wf_robustness_10w" in s else ""
-        stype = classify_strategy_type(s.get("entry_condition", ""))
+        stype = s.get("strategy_type", classify_strategy_type(s.get("entry_condition", "")))
         pat = entry_pattern(s.get("entry_condition", ""))
         print(f"  {i+1}. {s.get('name', '?'):40s} WF={s.get('wf_robustness', 0):5.1f} {wf}{hc} | IS={s.get('is_score', 0):6.2f} [{stype}] {pat}")
 
@@ -1049,7 +1049,7 @@ def main():
     # =========================================================================
     all_arm_results = phase1_evaluated + phase2_evaluated + sweep_wf_candidates
     for arm_key in ["MR", "TREND", "MOM", "VOL", "REGIME", "4H"]:
-        arm_cands = [c for c in all_arm_results if classify_strategy_type(c.get("entry_condition", c.get("entry", ""))) == arm_key]
+        arm_cands = [c for c in all_arm_results if c.get("strategy_type", classify_strategy_type(c.get("entry_condition", c.get("entry", "")))) == arm_key]
         if arm_key not in arm_performance:
             arm_performance[arm_key] = {"candidates_total": 0, "wf_passed": 0, "avg_is": 0, "trend": "new", "history": []}
         perf = arm_performance[arm_key]
