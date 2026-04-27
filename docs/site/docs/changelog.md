@@ -1,5 +1,25 @@
 # Changelog
 
+## [v8-oktopus] - 2026-04-27
+
+### Foundry V8 Oktopus Architecture
+- 6 arms: MR, Trend, Momentum, Volume, Regime, 4H
+- Deep Autopsy V2: 6 analyses (Exit-Reason, Window, Asset, Regime, Trade-Density, DD)
+- Parameter Sweep with Grid + Regime Overlay
+- Budget steering: arm performance → dead=probe, producing=extra
+- 4h arm with on-the-fly aggregation
+- Gradient IS-Score (negative = losing but comparable)
+- Mutation feed from autopsy generates concrete entry_modifier + exit_modifier
+- Fixed: 4H arm candidates=0 bug (strategy_type vs classify_strategy_type)
+- Fixed: exit_modifier {} overwriting defaults → merge with base config
+- N_EXPLORATION_PER_TYPE raised from 2 to 5
+
+### Key Insight
+- 170+ strategies tested, 0 with 10-Window WF-passed
+- 92% signal_exit, 0.6-2.5 trades/window (too restrictive)
+- MR works only on volatile alts (DOGE, ADA)
+- 1h-crypto with standard indicators has no robust edge
+
 ## [v5.0.0-phase4-frozen] - 2026-03-28
 
 ### ✅ Phase 4 FREEZE COMPLETE — 24 Hours, No Incidents

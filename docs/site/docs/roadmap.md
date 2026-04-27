@@ -115,7 +115,7 @@ title: Roadmap
     </div>
   </div>
 
-  <div style="margin-top:0.4rem;" class="section-label">foundry v7</div>
+  <div style="margin-top:0.4rem;" class="section-label">foundry v8 · oktopus</div>
   <div class="grid-2" style="gap:0.3rem;">
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:0.72rem;color:var(--fwd-text);">V32 (5w)</span>
@@ -127,11 +127,19 @@ title: Roadmap
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:0.72rem;color:var(--fwd-text);">search</span>
-      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">150+ · 0 10w-passed</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">170+ · 0 10w-passed</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">mode</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">adaptive · 10w std</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">6 arms</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">MR · TREND · MOM · VOL · REGIME · 4H</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">autopsy</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">✓ deep · 6 analyses</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">key insight</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">92% signal_exit · too few trades</span>
     </div>
   </div>
 
