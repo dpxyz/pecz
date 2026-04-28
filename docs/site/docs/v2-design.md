@@ -3,6 +3,28 @@
 **Status:** PLANNED (post Paper Trading)
 **ADR:** Will be formalized as ADR-008 after Phase 8
 
+## Inhalt
+
+- [Die Oktopus-Metapher](#die-oktopus-metapher)
+- [V1 Lessons → V2 Requirements](#v1-lessons--v2-requirements)
+- [V2 Stufe 1 Scope](#v2-stufe-1-scope--was-wir-bauen-und-beweisen)
+- [V2 Design Principles (1–12)](#v2-design-principles)
+- [Sniper-Upgrade & Exit-Regeln](#sniper-upgrade-modus-b)
+- [Strategy Review: Bewertete Risiken](#strategy-review-bewertete-risiken)
+- [V2 Validierung](#v2-validierung)
+- [V2 Module](#v2-module)
+  - [Modul 1: Regime Detection](#modul-1-regime-detection-stufe-1--kern)
+  - [Modul 2: Sentiment](#modul-2-sentiment)
+  - [Modul 3: Asset Selection](#modul-3-asset-selection-stufe-3--advanced)
+  - [Modul 4: Risk Management](#modul-4-risk-management-stufe-1-2)
+  - [Modul 5: Sniper](#modul-5-sniper-stufe-1--kern)
+- [KI-Einsatz-Strategie](#ki-einsatz-strategie)
+- [Alpha Stack V2 (Priorität)](#alpha-stack-v2-priorität-nach-stufen)
+- [SHORT-Positionen](#short-positionen--hypothese-stufe-2-kandidat)
+- [V2 Implementierung — 3 Stufen](#v2-implementierung--3-stufen-1-release)
+
+---
+
 ## Die Oktopus-Metapher
 
 Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, sondern ein **Entscheidungsrahmen**.
@@ -63,108 +85,28 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 
 ## V2 Design Principles
 
-### 1. Regime-Erkennung als Herzstück
-- Trend / Range / Crash → **nicht in Range handeln**
-- ADX+EMA filtert bereits → V2 macht das explizit als Score
-- Regime-Score 0-100 statt binärer Filter
+Die Principles sind kurz gefasst — Details stehen in den [V2 Modulen](#v2-module) unten.
 
-### 2. Volatility-Parity statt Equal-Weight
-- Risiko pro Trade konstant, nicht Kapital
-- High-Vol Assets (AVAX) → kleinere Position
-- Low-Vol Assets (BTC) → größere Position
-- Ersetzt die starren Leverage-Tiers
-
-### 3. Sentiment als Kill-Switch (Score 0-100)
-- **KI als Signalgeber**, nicht als Richter
-- JSON-Mode für deterministische Extraktion
-- Fail-safe: Bei Fehler → ignorieren (nicht handeln ist sicherer)
-- Nur Downsizing, nie Upsizing
-- Sentiment Score ≤ 30 → Position halbieren
-- Sentiment Score ≤ 15 → kein neuer Entry
-
-### 4. On-Chain als Regime-Filter
-- Exchange Netflow 7-14d Aggregation
-- Nicht: Whale-Tracking, einzelne Transactions
-- Großflächiger Netflow → Regime-Wechsel Signal
-
-### 5. Kein Indikatoren-Salat
-- Bessere Regeln, nicht mehr Indikatoren
-- Jeder neue Indikator muss Pass-Rate verbessern
-- ATR-Filter abgelehnt (bewiesen: kein Improvement)
-
-### 6. Korrelations-Filter
-- V1 öffnet oft 5+ LONGs gleichzeitig — alle BTC-korreliert
-- V2: max 2 stark korrelierte Positionen gleichzeitig
-- Reduziert DD massiv ohne Return zu schneiden
-
-### 7. Re-Entry Logik
-- V1: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry möglich
-- Sniper: Kein Re-Entry nach Max Hold oder Regime-Exit. Score muss erst < 70 fallen und wieder > 70 steigen für einen neuen Sniper-Trade.
-
-### 8. Regime-basierter Exit + Kinetischer Trail
-- Strong Trend (Score >70): weiter Trail 2.5-3%, Position atmen lassen
-- Weak Trend (Score 30-50): tighter Trail 1.5%, schneller raus
-- Hoher Regime-Score = höhere Conviction = mehr Raum
-
-**Stufe 1: Starrer Trail** (simpel, bewiesen)
-- Sniper: Trail = 2.5% starr (Strong Trend = mehr Raum)
-- V1: Trail = 2.0% starr (wie bisher)
-- Max Hold 24h bleibt als harte Grenze
-
-**Stufe 2: Kinetischer Trail** (Zeit-Ermüdung — braucht Trade-Daten zum Tunen)
-- V1 Lesson: Trailing Stop 2% zu eng, wirft Alts nach 9-21h raus
-- Lösung: Trail zieht sich mit der Haltedauer enger — wie ein Oktopus dessen Muskeln ermüden
-- Stunde 0-4 (frischer Trend): Trail = 2.5% (Luft zum Atmen)
-- Stunde 4-12 (Trend reift): Trail zieht sich pro Stunde 0.1% enger
-- Stunde 12+ (Trend altert): Trail nur noch ~1.0-1.5% → Break-Even-Exit bei totem Trade
-- Formel: `current_trail = base_trail - (hours_open * decay_factor)`
-- Kein neuer Indikator — reine Zeitlogik (`entry_time - now`)
-- Ersetzt das starre "Max Hold 24h" durch organischen Decay
-- **Nur für Sniper:** V1 behält starren Trail (einfacher), Sniper bekommt kinetischen Trail
-- Warum Stufe 2: `decay_factor` ist ein Tuning-Parameter — ohne Trade-Daten können wir ihn nicht beweisen
-- Stufe 1 liefert die Daten (Haltedauer, Win-Rate nach Stunden) → Stufe 2 optimiert darauf
-
-### 9. Partial Exits
-- 50% bei Trail nehmen, 50% laufen lassen
-- Trend-following-Klassiker: Gewinn sichern, aber Raum für weiteren Upside
-- Komplexer zu implementieren, aber messbar besser als Voll-Exit
-- **Nur für V1-Trades** — Sniper hat 100% Entry/Exit
-- Sniper-Exit: Regime < 50 = komplett raus, Trail 2.5% = komplett raus, kein Halbschritt bei 5x Hebel
-
-### 10. DD-basierte Positionsreduktion + Global Equity Stop
-- Portfolio-DD > 10% → alle Positionen halbieren
-- Portfolio-DD > 15% → keine neuen Entries (SOFT_PAUSE)
-- Portfolio-DD > 20% → KILL (alles schließen)
-- **1h-DD > 8% → Global Equity Stop** (alle Positionen Market-Order schließen)
-- Global Equity Stop ist die **Crash-Antwort** auf Korrelations-Kollaps: Wenn alle Assets gleichzeitig fallen, hilft kein Korrelations-Filter mehr
-- Zeitfenster wichtig: DD über 1h (nicht seit Start) misst akuten Stress
-- V2 macht das glatter als V1 Risk Guard
-
-**Warum Global Equity Stop in Stufe 1:**
-- Korrelations-Filter (Prinzip 6/12) funktioniert in Normalmärkten, aber in Crashes korrelieren alle Assets zu 1.0
-- Sentiment-Kill-Switch (Prinzip 3) hat Lag bei Flash-Crashes
-- Der Global Equity Stop ist der **harte Anker**: wenn 1h-DD > 8%, ist das System im Crash-Modus und zieht sich komplett zurück
-- DD > 20% ist der Gesamt-Stopp, aber 1h-DD > 8% ist der **frühzeitige Rückzug** — bevor der Gesamtschaden kritisch wird
-- Das ist keine neue Idee, sondern eine **Verschärfung der bestehenden DD-Scaling** mit Zeitfenster
-
-### 11. Execution-Strategie (Staffelung nach Kapital)
-- **Stufe 1: Market-Orders** — Sniper schießt im Strong Trend, da zählt Fill-Rate, nicht 0.025% Savings
-- **Stufe 2: IOC-Orders (Immediate-or-Cancel)** — leicht über Marktpreis, garantiert Fill oder Abbruch
-- **Stufe 3: Limit-Orders** — erst ab 500€+ Kapital relevant, bei 100€ sind Maker-Savings ~1€/Monat
-- **Sniper bekommt IMMER Market-Orders** — bei 5x Hebel ist ein verpasster Entry schlimmer als 3bp Slippage
-- Entry = Limit an EMA-50 (Stufe 3) oder Market (Stufe 1)
-- Exit = Limit an Trail (Stufe 3) oder Market (Stufe 1)
-
-### 12. Dynamische Korrelationsmatrix
-- Rolling-Correlation berechnen (20-Bar-Window)
-- Entry blocken wenn Korrelation > 0.7 mit bestehender Position
-- Besser als willkürliche "max 2"-Regel
-- **Stufe 2** — baut auf Regime-Score auf
-- **⚠️ Crash-Einschränkung:** In Black-Swan-Events korrelieren alle Assets zu 1.0 → Korrelations-Filter wird wirkungslos → Global Equity Stop (Prinzip 10) fängt diesen Fall ab
+| # | Principle | Kurz | Modul |
+|---|-----------|------|-------|
+| 1 | **Regime-Erkennung** | Score 0-100, nicht binär. Range = kein Trade. | [Modul 1](#modul-1-regime-detection-stufe-1--kern) |
+| 2 | **Volatility-Parity** | Risiko konstant, nicht Kapital. Ersetzt Leverage-Tiers. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 3 | **Sentiment = Kill-Switch** | Nur Downsizing, nie Upsizing. Score ≤ 15 = kein Entry. | [Modul 2](#modul-2-sentiment) |
+| 4 | **On-Chain als Regime-Filter** | Exchange Netflow 7-14d, keine Whale-Jagd. | [Modul 2](#modul-2-sentiment) |
+| 5 | **Kein Indikatoren-Salat** | Bessere Regeln, nicht mehr Indikatoren. ATR abgelehnt. | — |
+| 6 | **Korrelations-Filter** | Max 2 stark korrelierte Positionen. Fallback: Global Equity Stop. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 7 | **Re-Entry Logik** | V1: 1h Cooldown. Sniper: Score muss <70 fallen und wieder >70. | [Modul 5](#modul-5-sniper-stufe-1--kern) |
+| 8 | **Regime-basierter Exit** | Strong=Trail 2.5%, Weak=1.5%. Stufe 2: Kinetischer Trail. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 9 | **Partial Exits** | 50% bei Trail, 50% laufen lassen. Nur V1. Sniper = 100%. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 10 | **DD-Scaling + Global Equity Stop** | 10/15/20% Stufen. 1h-DD > 8% = alles schließen. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 11 | **Execution-Staffelung** | Stufe 1=Market, Stufe 2=IOC, Stufe 3=Limit. Sniper=immer Market. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
+| 12 | **Dynamische Korrelationsmatrix** | Rolling 20-Bar, r>0.7 blockt Entry. Stufe 2. | [Modul 4](#modul-4-risk-management-stufe-1-2) |
 
 ---
 
 ### Sniper-Upgrade (Modus B)
+
+> ℹ️ Vollständige Details im [Sniper-Modul](#modul-5-sniper-stufe-1--kern) unten.
 - Kein separater Pool — Sniper **upgraded** den besten V1-Trade
 - V1 entscheidet welcher Trade. Sniper-Bedingungen erfüllt → Hebel von 1.8x auf 4-5x
 - Keine doppelte Position auf demselben Asset
@@ -175,6 +117,8 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 ---
 
 ## Sniper-Exit: Vier Regeln
+
+> ℹ️ Ergänzt das [Sniper-Modul](#modul-5-sniper-stufe-1--kern) — Exit-Regeln im Detail.
 
 | Signal | Aktion |
 |--------|--------|
@@ -212,12 +156,13 @@ _Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und u
 | **Slippage beim Global Stop** | MITTEL | **TWAP-Light**: Global Exit nicht als einzelne Market-Order, sondern in Tranchen ueber 30-60s verteilt. Bei 6 Positionen a ~17EUR ist Impact gering, aber principiell richtig. | Prinzip 10 (Ergaenzung) |
 | **Dead Man's Switch** | HOCH | Exchange-seitige Stop-Loss Orders als physisches Herz. Bot zieht Trail lokal nach, aber Not-Aus liegt auf der Boerse. Hyperliquid unterstuetzt SL-on-Open. | Stufe 1 Infrastruktur |
 
-### ❌ Bewusst abgelehnt
+<details>
+<summary>❌ Bewusst abgelehnt (12 Vorschläge) — klicken zum Aufklappen</summary>
 
 | Vorschlag | Warum abgelehnt | Oktopus-Test |
 |-----------|-----------------|-------------|
 | Volatility-Expansion als Regime-Vorfilter | ATR-Filter im Backtest bewiesen: kein Improvement. Neuer Indikator = Indikatoren-Salat (Prinzip 5). | 9. Arm? Nein. |
-| Multi-Timeframe-Bestigung (1h vs 4h) | Komplexitaetslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als fhrende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
+| Multi-Timeframe-Bestaerkung (1h vs 4h) | Komplexitaetslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als fhrende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
 | Bollinger Band Breakout | Dasselbe Kategorie wie ATR - nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
 | L2 Orderbook Check (Saugnapf/Gravity) | Rauschen auf 1h-Timeframe. Whale-Spoofing. 3x Bid/Ask flippt sekundaerlich. Bei 100e Position = 0 Impact. Bereits im V2 Audit abgelehnt. | 9. Arm? Nein. |
 | Shadow-Bot / Parameter-Optimierung | Hyper-Optimization explizit verboten (PRINCIPLES.md). Kontinuierliche Parameter-Variation = Curve-Fitting in Echtzeit. | 9. Arm? Nein. |
@@ -236,6 +181,8 @@ _Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und u
 - Schmerzgedaechtnis (Per-Asset Cooldown): 3 consecutive SLs auf einem Asset = 48h Bann. Granularer als globaler Circuit Breaker. Bei 6 Assets + niedriger Trade-Frequenz selten triggert. Regime-Score + Korrelations-Filter decken denselben Fall ab.
 
 **Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop, Kinetischer Trail) und praesizere Execution (Market -> IOC -> Limit).
+
+</details>
 
 ### 🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)
 
@@ -441,6 +388,20 @@ regime_score = (
 - News (30%) → braucht validierten Prompt + Fail-Safe. Aufwand steht bei 100e in keinem Verhaeltnis.
 - Die restlichen 60% bleiben als leere Interfaces (Mocks) im Code, bis Datenquellen leistbar und bewiesen sind.
 - Funding Rate 40% → **60%** in Stufe 1 (oder 100% wenn rest neutral=50). Direkt von Hyperliquid, kostenlos, kein KI-Call.
+
+**AIXBT Evaluation (2026-04-28):**
+
+AIXBT wurde als potenzielle Datenquelle evaluiert. Ergebnis: DIY reicht für V2.
+
+| Feature | AIXBT | DIY | Entscheidung |
+|---------|-------|-----|-------------|
+| Regime-Feed (Macro/Crypto) | Grounding API (kostenlos, 10/min, 300/Tag) | Eigene Aggregation | **AIXBT Grounding nutzen** — kostenlos, 1h-Polling reicht |
+| Sentiment-Kill-Switch | Data-Plan $100/Mo | Funding Rate (Hyperliquid, gratis) + Fear&Greed Index (gratis) | **DIY** — Funding Rate ist bereits Priority-0, FGI ergänzt |
+| Momentum-Clustering | Data-Plan $100/Mo | Eigener Twitter/Reddit Scraper | **Skip für V2** — erst evaluieren wenn V2 profitabel |
+| Intel-Events | Data-Plan | CoinGecko/CoinMarketCap API (teils gratis) + Hyperliquid Funding | **DIY** — 3-5 Tage Aufwand |
+| Historisches Backtesting | `?at=ISO8601` | Eigene Datensammlung (Wochen) | **Später** — braucht erst Datensammlung |
+
+**Fazit:** AIXBT Grounding API (kostenlos) als Regime-Layer nutzen. Bezahlte Features ($100/Mo) durch DIY ersetzen. Momentum-Clustering erst nach V2-Profitabilität evaluieren.
 
 **Gezeiten-Blocker (Macro = Risk Management, nicht Sentiment)**:
 - Fed-Meeting, CPI-Release, FOMC → 2h vorher SOFT_PAUSE, 1h nachher
