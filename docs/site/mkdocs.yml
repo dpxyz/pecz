@@ -61,6 +61,7 @@ nav:
       - "ADR-007: Leverage Tiers": architecture/adr-007.md
     - "ADR-008: Crash & Uptime": architecture/adr-008.md
     - "ADR-009: V2 Data Availability": architecture/adr-009.md
+    - "ADR-010: V2 Strategy (Oktopus)": architecture/adr-010.md
     - "🔬 Strategy Lab":
       - "Overview": strategy-lab/index.md
       - "Phase 7 Report": strategy-lab/PHASE7_ACCEPTANCE_REPORT.md
