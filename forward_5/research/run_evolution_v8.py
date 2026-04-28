@@ -34,9 +34,9 @@ from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 # CONFIG
 # ============================================================================
 
-N_EXPLORATION_PER_TYPE = 5  # candidates per strategy type (was 2, raised for more diversity)
-N_MUTATIONS_PER_PARENT = 3
-N_CROSSOVERS = 3
+N_EXPLORATION_PER_TYPE = 10  # candidates per strategy type (was 2→5, raised for more diversity)
+N_MUTATIONS_PER_PARENT = 5
+N_CROSSOVERS = 5
 N_HARD_CHECK_TOP = 3
 
 WF_WINDOWS_NORMAL = 10
@@ -339,11 +339,17 @@ Antworte NUR mit JSON:
 # ============================================================================
 
 def call_llm(prompt: str, temperature: float = 0.3) -> str:
+    # DeepSeek-V4-Pro: use high reasoning effort for better strategy quality
+    extra_params = {}
+    if "deepseek" in MODEL.lower():
+        extra_params["reasoning_effort"] = "high"
+
     payload = json.dumps({
         "model": MODEL,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": temperature,
-        "max_tokens": 1024,
+        "max_tokens": 2048,
+        **extra_params,
     })
     req = urllib.request.Request(
         API_URL, data=payload.encode(),
@@ -352,7 +358,16 @@ def call_llm(prompt: str, temperature: float = 0.3) -> str:
     try:
         with urllib.request.urlopen(req, timeout=120) as resp:
             data = json.loads(resp.read())
-            return data["choices"][0]["message"]["content"]
+            msg = data["choices"][0]["message"]
+            content = msg.get("content", "")
+            # DeepSeek-V4-Pro thinking models: content may be empty, answer in reasoning
+            # NOTE: reasoning contains the full thought chain, not just the answer.
+            # This is a fallback — may produce noisy output for strategy generation.
+            # DeepSeek works best when content field is populated (non-thinking mode).
+            if not content.strip() and msg.get("reasoning", "").strip():
+                print(f"  ⚠️ Thinking model returned empty content, using reasoning field")
+                content = msg["reasoning"]
+            return content
     except Exception as e:
         print(f"  ⚠️ LLM error: {e}")
         return ""
@@ -1121,6 +1136,7 @@ def main():
     report = {
         "date": datetime.now().strftime("%Y-%m-%d"),
         "version": "V8_multi_strategy",
+        "model": MODEL,
         "phase1_evaluated": len(phase1_evaluated),
         "phase1_passed": len(phase1_passed),
         "phase2_evaluated": len(phase2_evaluated),
@@ -1148,6 +1164,7 @@ def main():
         json.dump({
             "date": datetime.now().strftime("%Y-%m-%d"),
             "version": "V8_multi_strategy",
+            "model": MODEL,
             "phase1_evaluated": len(phase1_evaluated),
             "phase1_passed": len(phase1_passed),
             "phase2_evaluated": len(phase2_evaluated),

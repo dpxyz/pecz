@@ -8,6 +8,8 @@
 set -euo pipefail
 
 RESEARCH_DIR="/data/.openclaw/workspace/forward_v5/forward_5/research"
+OLLAMA_API_URL="${OLLAMA_API_URL:-http://172.17.0.1:32771/v1/chat/completions}"
+OLLAMA_API_KEY="${OLLAMA_API_KEY:-ollama-cloud}"
 LOG_DIR="$RESEARCH_DIR/runs/evolution_v7"
 DATE=$(date +%Y-%m-%d)
 LOG="$LOG_DIR/daily_${DATE}.log"
@@ -19,6 +21,17 @@ echo "FOUNDRY EVOLUTION V8 — Multi-Strategy Daily Run $DATE" | tee -a "$LOG"
 echo "======================================================================" | tee -a "$LOG"
 
 cd "$RESEARCH_DIR"
+
+# Model selection: Try DeepSeek-V4-Pro first, fallback to Gemma4
+# DeepSeek has better reasoning but may be overloaded
+SELECTED_MODEL=$(python3 "$RESEARCH_DIR/test_model.py" "$OLLAMA_API_URL" "$OLLAMA_API_KEY" 2>&1 | grep -E "^[a-z].*:cloud$" | head -1)
+
+if [ -z "$SELECTED_MODEL" ]; then
+    echo "❌ No model available! Aborting." | tee -a "$LOG"
+    exit 1
+fi
+
+export GENERATOR_MODEL="$SELECTED_MODEL"
 
 # Run V8
 PYTHONUNBUFFERED=1 python3 -u run_evolution_v8.py 2>&1 | tee -a "$LOG"
