@@ -28,6 +28,7 @@ sys.path.insert(0, str(RESEARCH_DIR / "backtest"))
 sys.path.insert(0, str(RESEARCH_DIR / "strategy_lab"))
 
 from backtest.backtest_engine import BacktestEngine
+from composite_fitness import compute_fitness, parse_profitable_ratio
 from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 
 # ============================================================================
@@ -1144,17 +1145,24 @@ def main():
         print(f"  {i+1}. {s.get('name', '?'):40s} WF={s.get('wf_robustness', 0):5.1f} {wf}{hc} | IS={s.get('is_score', 0):6.2f} [{stype}] {pat}")
 
     hof_10w = [s for s in hof if s.get("wf_passed_10w")]
+    # Composite fitness ranking for ALL HOF entries
+    hof_scored = []
+    for s in hof:
+        fitness, components = compute_fitness(s)
+        s["composite_fitness"] = fitness
+        hof_scored.append((s, fitness))
+    hof_scored.sort(key=lambda x: x[1], reverse=True)
+
     if hof_10w:
-        # Sort by OOS return (best measure of real performance)
-        hof_10w_oos = sorted(hof_10w, key=lambda s: s.get("avg_oos_return", -999), reverse=True)
-        best_oos = hof_10w_oos[0]
-        best_wf = sorted(hof_10w, key=lambda s: s.get("wf_robustness_10w", 0), reverse=True)[0]
-        print(f"\n🏆 10W CHAMPIONS (ranked by OOS):")
-        for i, s in enumerate(hof_10w_oos, 1):
-            print(f"   {i}. {s.get('name','?')[:45]:45s} OOS={s.get('avg_oos_return',0):+.2f}% WF10w={s.get('wf_robustness_10w','?')} profitable={s.get('wf_profitable_10w','?')}")
-        print(f"\n🌟 BEST OOS: {best_oos.get('name','?')} | OOS={best_oos.get('avg_oos_return',0):+.2f}%")
-        if best_oos.get('name') != best_wf.get('name'):
-            print(f"📈 BEST WF:  {best_wf.get('name','?')} | WF10w={best_wf.get('wf_robustness_10w','?')} (but OOS={best_wf.get('avg_oos_return',0):+.2f}%)")
+        champs_scored = [(s, f) for s, f in hof_scored if s.get("wf_passed_10w")]
+        print(f"\n🏆 10W CHAMPIONS (ranked by Composite Fitness):")
+        for i, (s, fitness) in enumerate(champs_scored, 1):
+            oos = s.get('avg_oos_return', 0)
+            wf10 = s.get('wf_robustness_10w', '?')
+            oos_pct = s.get('wf_profitable_10w', '?')
+            print(f"   {i}. fitness={fitness:.3f} {s.get('name','?')[:45]:45s} OOS={oos:+.2f}% WF10w={wf10} profitable={oos_pct}")
+        best = champs_scored[0][0]
+        print(f"\n🌟 BEST OVERALL: {best.get('name','?')} | fitness={champs_scored[0][1]:.3f} | OOS={best.get('avg_oos_return',0):+.2f}%")
     else:
         print(f"\n⚠️  {len([s for s in hof if s.get('wf_passed')])} candidates passed WF but NOT 10w — no true champion")
 
