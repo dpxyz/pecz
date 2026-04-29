@@ -183,6 +183,13 @@ class BacktestEngine:
         sl_pct = exit_config.get("stop_loss_pct", None)
         max_hold = exit_config.get("max_hold_bars", None)
         trailing_stop_pct = exit_config.get("trailing_stop_pct", None)
+        exit_signal_col = exit_config.get("exit_signal_col", None)
+
+        # If exit_condition is provided, compute exit signal column
+        if exit_signal_col and exit_signal_col in df.columns:
+            exit_signals = df[exit_signal_col].to_numpy()
+        else:
+            exit_signals = None
 
         signals = df["signal"].to_numpy()
         opens = df["open"].to_numpy()
@@ -274,7 +281,22 @@ class BacktestEngine:
                 i += 1
                 continue
 
-            # Signal exit
+            # Explicit exit condition (V9: signal-reversal exit)
+            # Takes priority over entry-signal flip when exit_signals are provided
+            if exit_signals is not None and exit_signals[i] == 1:
+                exit_price = opens[i + 1] * (1 - self.slippage) if i + 1 < n else closes[i] * (1 - self.slippage)
+                gross_pnl = (exit_price - entry_price) / entry_price
+                net_pnl = gross_pnl - self.fee_rate * 2
+                trades.append(Trade(entry_time=str(entry_bar), exit_time=str(i),
+                    entry_price=entry_price, exit_price=exit_price, side='long',
+                    pnl=net_pnl * 100, exit_reason='exit_condition'))
+                equity *= (1 + net_pnl)
+                equity_curve.append(equity)
+                in_position = False
+                i += 1
+                continue
+
+            # Signal exit (legacy: entry condition no longer true)
             if signals[i] != 1:
                 exit_price = opens[i + 1] * (1 - self.slippage) if i + 1 < n else closes[i] * (1 - self.slippage)
                 gross_pnl = (exit_price - entry_price) / entry_price

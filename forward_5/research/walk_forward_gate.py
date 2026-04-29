@@ -95,10 +95,15 @@ PARSABLE_PREFIXES = [
 ]
 
 
-def build_strategy_func(entry_condition: str):
+def build_strategy_func(entry_condition: str, exit_condition: str = None):
     """
     Build a strategy function from a DSL entry condition string.
+    Optionally builds an exit signal column from exit_condition (V9 signal-reversal exits).
     Returns (strategy_func, parseable_bool) tuple.
+    
+    When exit_condition is provided, the strategy_func adds an 'exit_signal' column
+    and the exit_config should include {"exit_signal_col": "exit_signal"} for the
+    backtest engine to use explicit exit conditions.
     """
     # 1) Native strategies: exact match
     native_name = NATIVE_STRATEGIES.get(entry_condition.strip())
@@ -125,15 +130,47 @@ def build_strategy_func(entry_condition: str):
         # Unknown indicator → cannot parse
         return None, False
 
+    # Also validate exit_condition indicators if provided
+    if exit_condition:
+        exit_lower = exit_condition.lower()
+        exit_tokens = re.findall(r'[a-z_]+\d*', exit_lower)
+        for t in exit_tokens:
+            if t in ('and', 'or', 'not', '') or t in SIMPLE_INDICATORS:
+                continue
+            if any(t.startswith(p) for p in PARSABLE_PREFIXES):
+                continue
+            if t.startswith('volume'):
+                continue
+            if re.match(r'^_?\d+$', t):
+                continue
+            if t in ('*', '/', '+', '-'):
+                continue
+            return None, False
+
     # 3) Extended DSL parser
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
-        indicators = _compute_indicators(entry_condition, df)
+        # Compute indicators needed for both entry and exit
+        combined = entry_condition
+        if exit_condition:
+            combined = f"{entry_condition} AND {exit_condition}"
+        indicators = _compute_indicators(combined, df)
         df = df.with_columns([v.alias(k) for k, v in indicators.items()])
+        
+        # Entry signal
         conditions = [c.strip() for c in entry_condition.split(' AND ')]
         signal = pl.lit(True)
         for cond in conditions:
             signal = signal & _parse_simple_condition(cond)
         df = df.with_columns((pl.when(signal).then(1).otherwise(0)).alias('signal'))
+        
+        # Exit signal (V9: explicit exit condition different from entry)
+        if exit_condition:
+            exit_conds = [c.strip() for c in exit_condition.split(' AND ')]
+            exit_signal = pl.lit(True)
+            for cond in exit_conds:
+                exit_signal = exit_signal & _parse_simple_condition(cond)
+            df = df.with_columns((pl.when(exit_signal).then(1).otherwise(0)).alias('exit_signal'))
+        
         return df
 
     return strategy_func, True
@@ -432,13 +469,17 @@ def _parse_value(val: str):
 
 def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
                           n_windows: int = 10, oos_pct: float = 0.3,
-                          strategy_type: str = "") -> dict:
+                          strategy_type: str = "",
+                          target_assets: list = None) -> dict:
     """Run Walk-Forward validation for a candidate strategy.
     
     If strategy_type is '4H', data is aggregated to 4h candles.
+    target_assets: list of primary assets for V9 target-asset grouping.
+        If None, all assets are targets (legacy behavior).
     """
     
-    strategy_func, parseable = build_strategy_func(entry)
+    exit_condition = exit_config.get("exit_condition", None) if exit_config else None
+    strategy_func, parseable = build_strategy_func(entry, exit_condition=exit_condition)
     
     if not parseable or strategy_func is None:
         return {
@@ -524,29 +565,48 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
     avg_all_return = np.mean([r["avg_oos_return"] for r in results.values()]) if results else 0
     avg_all_trades = np.mean([r["avg_trades"] for r in results.values()]) if results else 0
 
-    # V8.1 Scoring: Reward making money, not just not losing
+    # V9 Scoring: Target-asset aware
     #
-    # OLD: robustness = profitable_ratio * 70 + (trades >= 3) * 30
-    # PROBLEM: rewarded "rarely trade, never lose" over "trade and profit"
-    #          +0.001% counted same as +5%, rewarding noise over edge
+    # If target_assets specified, scoring focuses on those assets.
+    # MR strategies target DOGE/ADA/AVAX; non-MR target all 6.
     #
-    # NEW: 3 components that matter:
+    # Components:
     #   1. OOS Return (40%) — did we actually make money?
     #   2. Profitable Ratio (30%) — how consistent across assets?
     #   3. Trade Floor (30%) — enough trades for statistical validity?
-    #
-    # Return bonus: Strategies with positive OOS get boosted,
-    # negative OOS get penalized. Scale: ±5% → ±20 points.
-    #
-    # Minimum bar: avg_all_trades >= 2 per window, otherwise
-    # the result is statistical noise (0-1 trades = luck).
 
-    profitable_ratio = profitable_assets / assets_with_data if assets_with_data > 0 else 0
+    if target_assets:
+        target_results = {k: v for k, v in results.items() if k in target_assets}
+        bonus_results = {k: v for k, v in results.items() if k not in target_assets}
+        
+        if target_results:
+            target_profitable = sum(1 for r in target_results.values() if r["avg_oos_return"] > 0)
+            target_assets_count = len(target_results)
+            target_avg_return = np.mean([r["avg_oos_return"] for r in target_results.values()])
+            target_avg_trades = np.mean([r["avg_trades"] for r in target_results.values()])
+            target_profitable_ratio = target_profitable / target_assets_count
+        else:
+            target_profitable = 0
+            target_assets_count = 0
+            target_avg_return = 0
+            target_avg_trades = 0
+            target_profitable_ratio = 0
+        
+        # Use target-asset metrics for scoring
+        profitable_ratio = target_profitable_ratio
+        avg_all_return = target_avg_return
+        avg_all_trades = target_avg_trades
+        
+        # For reporting, show target + bonus
+        target_profitable_str = f"{target_profitable}/{target_assets_count}"
+    else:
+        profitable_ratio = profitable_assets / assets_with_data if assets_with_data > 0 else 0
+        target_profitable_str = f"{profitable_assets}/{assets_with_data}"
 
     # Component 1: OOS Return score (map -2%..+1% → 0..20)
     return_score = max(0, min(20, (avg_all_return + 2) / 3 * 20))
 
-    # Component 2: Profitable Ratio score (0/6..6/6 → 0..30)
+    # Component 2: Profitable Ratio score (0..1 → 0..30)
     consistency_score = profitable_ratio * 30
 
     # Component 3: Trade floor (≥3 trades/window → full 30, else scaled down)
@@ -554,12 +614,20 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
 
     robustness = round(min(100, return_score + consistency_score + trade_score), 1)
 
-    # PASS requires: (a) positive OOS return, (b) ≥3 profitable assets, (c) avg ≥2 trades/window
-    # This eliminates "0 trades, 0 loss" false champions
-    passed = (robustness >= 40
-              and profitable_assets >= 3
-              and avg_all_trades >= 2
-              and avg_all_return > 0)
+    # V9 PASS criteria: target-asset aware
+    if target_assets and target_results:
+        n_target = len(target_assets)
+        min_profitable = 2 if n_target == 3 else max(3, n_target // 2)
+        passed = (robustness >= 40
+                  and target_profitable >= min_profitable
+                  and target_avg_trades >= 3
+                  and target_avg_return > 0)
+    else:
+        # Legacy pass criteria
+        passed = (robustness >= 40
+                  and profitable_assets >= 3
+                  and avg_all_trades >= 2
+                  and avg_all_return > 0)
     wf_status = "PASS" if passed else "FAIL"
 
     return {
@@ -568,10 +636,11 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         "exit_config": exit_config,
         "robustness_score": robustness,
         "passed": passed,
-        "profitable_assets": f"{profitable_assets}/{assets_with_data}",
+        "profitable_assets": target_profitable_str if target_assets else f"{profitable_assets}/{assets_with_data}",
         "avg_oos_return": round(avg_all_return, 4),
         "avg_trades": round(avg_all_trades, 1),
         "assets": results,
+        "target_assets": target_assets,
         "n_windows": n_windows,
         "timestamp": datetime.now().isoformat(),
         "wf_status": wf_status,

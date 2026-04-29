@@ -20,25 +20,24 @@ from pathlib import Path
 
 HOF_PATH = Path(__file__).parent / "runs/evolution_v7/evolution_v7_hof.json"
 
-# ─── Weight Configuration ───
+# ─── Weight Configuration (V9) ───
+# V9 weights: target-asset aware, no IS score, added drawdown
 # All components normalized to [0, 1] before weighting
 WEIGHTS = {
-    "oos_return": 0.25,      # Out-of-sample return (most important reality check)
-    "oos_profitable": 0.25,  # Fraction of OOS periods profitable (consistency)
-    "wf_robustness": 0.20,   # Walk-forward robustness (stability across windows)
-    "is_score": 0.10,        # In-sample quality (floor, not driver)
-    "trade_count": 0.15,     # Minimum trade count (statistical significance — higher weight!)
-    "drawdown": 0.05,        # Drawdown penalty (risk-adjusted — lower weight)
+    "oos_return": 0.30,          # Out-of-sample return (30% — the reality check)
+    "target_asset_profitable": 0.25,  # Per target-asset-group ratio (25%)
+    "trade_quality": 0.20,       # Min trades per asset/window (20%)
+    "wf_robustness": 0.15,       # Walk-forward robustness (15%)
+    "drawdown": 0.10,            # Drawdown penalty (10%)
 }
 
-# Normalization ranges (based on observed HOF data)
+# Normalization ranges (V9)
 NORM = {
-    "oos_return": (-2.0, 1.0),      # -2% to +1% mapped to 0..1
-    "oos_profitable": (0, 1.0),     # already 0..1 ratio
-    "wf_robustness": (0, 100),      # 0..100 mapped to 0..1
-    "is_score": (-1.0, 1.0),        # -1 to +1 mapped to 0..1
-    "trade_count": (0, 100),        # 0..100 trades mapped to 0..1
-    "drawdown": (0, 50),            # 0..50% DD mapped to 0..1 (inverted: less = better)
+    "oos_return": (0, 2.0),              # 0..+2% mapped to 0..1, hard floor at 0
+    "target_asset_profitable": (0, 1.0),  # already 0..1 ratio
+    "trade_quality": (3, 50),             # 3..50 trades per asset/window, floor at 3
+    "wf_robustness": (0, 100),            # 0..100 mapped to 0..1
+    "drawdown": (0, 20),                   # 0..20% DD mapped to 0..1 (inverted), >20% = 0
 }
 
 
@@ -59,48 +58,56 @@ def parse_profitable_ratio(s):
     return 0.0
 
 
-def compute_fitness(h):
-    """Compute composite fitness score for a HOF entry."""
-    # 1. OOS Return
-    oos = h.get("avg_oos_return", 0)
+def compute_fitness(h, target_assets=None):
+    """Compute composite fitness score for a HOF entry.
+    
+    target_assets: list of primary assets (e.g., ['DOGE', 'ADA', 'AVAX'] for MR).
+        If None, all assets are targets (legacy behavior).
+    """
+    # 1. OOS Return (hard floor at 0 — negative returns = 0)
+    oos = max(0, h.get("avg_oos_return", 0))
     oos_norm = normalize(oos, *NORM["oos_return"])
 
-    # 2. OOS Profitable Ratio
-    oos_pr = parse_profitable_ratio(h.get("wf_profitable_10w", h.get("wf_profitable_assets", "0/6")))
-    oos_pr_norm = normalize(oos_pr, *NORM["oos_profitable"])
+    # 2. Target-Asset Profitable Ratio
+    #    If target_assets specified, check profitable ratio among those assets
+    if target_assets:
+        wf_assets = h.get("assets", {})
+        target_profitable = sum(1 for a in target_assets if a in wf_assets and wf_assets[a].get("avg_oos_return", 0) > 0)
+        target_count = max(1, sum(1 for a in target_assets if a in wf_assets))
+        tap_ratio = target_profitable / target_count
+    else:
+        tap_ratio = parse_profitable_ratio(h.get("wf_profitable_10w", h.get("wf_profitable_assets", "0/6")))
+    tap_norm = normalize(tap_ratio, *NORM["target_asset_profitable"])
 
-    # 3. WF Robustness
+    # 3. Trade Quality (min_trades, floor at 3)
+    trades = max(3, h.get("min_trades", 0))
+    trades_norm = normalize(trades, *NORM["trade_quality"])
+
+    # 4. WF Robustness
     wf = h.get("wf_robustness_10w", h.get("wf_robustness", 0))
     wf_norm = normalize(wf, *NORM["wf_robustness"])
 
-    # 4. IS Score
-    is_score = h.get("is_score", 0)
-    is_norm = normalize(is_score, *NORM["is_score"])
-
-    # 5. Trade Count (min_trades across all IS windows)
-    trades = h.get("min_trades", 0)
-    trades_norm = normalize(trades, *NORM["trade_count"])
-
-    # 6. Drawdown (inverted: lower = better)
+    # 5. Drawdown (inverted: lower = better, >20% = 0)
     dd = h.get("avg_dd", 50)
-    dd_norm = 1.0 - normalize(dd, *NORM["drawdown"])  # invert
+    if dd > 20:
+        dd_norm = 0.0
+    else:
+        dd_norm = 1.0 - normalize(dd, *NORM["drawdown"])
 
     # Weighted sum
     fitness = (
         WEIGHTS["oos_return"] * oos_norm +
-        WEIGHTS["oos_profitable"] * oos_pr_norm +
+        WEIGHTS["target_asset_profitable"] * tap_norm +
+        WEIGHTS["trade_quality"] * trades_norm +
         WEIGHTS["wf_robustness"] * wf_norm +
-        WEIGHTS["is_score"] * is_norm +
-        WEIGHTS["trade_count"] * trades_norm +
         WEIGHTS["drawdown"] * dd_norm
     )
 
     components = {
         "oos_return": round(oos_norm, 3),
-        "oos_profitable": round(oos_pr_norm, 3),
+        "target_asset_profitable": round(tap_norm, 3),
+        "trade_quality": round(trades_norm, 3),
         "wf_robustness": round(wf_norm, 3),
-        "is_score": round(is_norm, 3),
-        "trade_count": round(trades_norm, 3),
         "drawdown": round(dd_norm, 3),
     }
 
@@ -127,23 +134,22 @@ def main():
     # Display
     print("=" * 80)
     print("📊 HOF COMPOSITE FITNESS RANKING")
-    print(f"   Weights: OOS_R={WEIGHTS['oos_return']:.0%} OOS_P={WEIGHTS['oos_profitable']:.0%} "
-          f"WF={WEIGHTS['wf_robustness']:.0%} IS={WEIGHTS['is_score']:.0%} "
-          f"Trades={WEIGHTS['trade_count']:.0%} DD={WEIGHTS['drawdown']:.0%}")
+    print(f"   Weights: OOS_R={WEIGHTS['oos_return']:.0%} TAP={WEIGHTS['target_asset_profitable']:.0%} "
+          f"TQ={WEIGHTS['trade_quality']:.0%} WF={WEIGHTS['wf_robustness']:.0%} "
+          f"DD={WEIGHTS['drawdown']:.0%}")
     print("=" * 80)
 
     # Top 10
-    print(f"\n{'#':<3} {'Fitness':>7} {'Name':<45} {'WF':>5} {'OOS':>7} {'OOS%':>5} {'IS':>6} {'Tr':>4} {'DD':>5} {'10w':>4}")
+    print(f"\n{'#':<3} {'Fitness':>7} {'Name':<45} {'WF':>5} {'OOS':>7} {'TAP':>5} {'TQ':>4} {'DD':>5} {'10w':>4}")
     print("-" * 95)
     for i, (h, fitness, comp) in enumerate(scored[:15], 1):
         wf = h.get("wf_robustness_10w", h.get("wf_robustness", 0))
         oos = h.get("avg_oos_return", 0)
-        oos_pct = h.get("wf_profitable_10w", h.get("wf_profitable_assets", "?"))
-        is_s = h.get("is_score", 0)
-        trades = h.get("min_trades", 0)
+        tap = comp.get("target_asset_profitable", 0)
+        tq = comp.get("trade_quality", 0)
         dd = h.get("avg_dd", 0)
         passed_10w = "✅" if h.get("wf_passed_10w") else "❌"
-        print(f"{i:<3} {fitness:>7.3f} {h['name'][:45]:<45} {wf:>5.1f} {oos:>+6.2f}% {oos_pct:>5} {is_s:>6.2f} {trades:>4} {dd:>4.1f}% {passed_10w:>4}")
+        print(f"{i:<3} {fitness:>7.3f} {h['name'][:45]:<45} {wf:>5.1f} {oos:>+6.2f}% {tap:>5.2f} {tq:>4.2f} {dd:>4.1f}% {passed_10w:>4}")
 
     # Component breakdown for top 5
     print(f"\n📋 COMPONENT BREAKDOWN (top 5):")
@@ -151,10 +157,10 @@ def main():
         wf = h.get("wf_robustness_10w", h.get("wf_robustness", 0))
         oos = h.get("avg_oos_return", 0)
         print(f"\n  {i}. {h['name'][:50]} (fitness={fitness:.3f})")
-        print(f"     OOS_ret={comp['oos_return']:.2f} OOS_prof={comp['oos_profitable']:.2f} "
-              f"WF={comp['wf_robustness']:.2f} IS={comp['is_score']:.2f} "
-              f"Trades={comp['trade_count']:.2f} DD={comp['drawdown']:.2f}")
-        print(f"     Raw: OOS={oos:+.2f}% WF={wf:.1f} IS={h.get('is_score',0):.2f} "
+        print(f"     OOS_ret={comp['oos_return']:.2f} TAP={comp['target_asset_profitable']:.2f} "
+              f"TQ={comp['trade_quality']:.2f} WF={comp['wf_robustness']:.2f} "
+              f"DD={comp['drawdown']:.2f}")
+        print(f"     Raw: OOS={oos:+.2f}% WF={wf:.1f} "
               f"trades={h.get('min_trades',0)} DD={h.get('avg_dd',0):.1f}%")
         print(f"     Entry: {h['entry_condition']}")
 

@@ -1,8 +1,8 @@
 #!/bin/bash
-# Foundry Evolution V8 — Multi-Strategy Daily Run
-# 5 Strategy Types: MR, Trend, Momentum, Volume-Boosted, Regime
-# Extended DSL: Stochastic, Williams %R, ATR, ROC, MACD, ADX, Volume
-# Gradient IS-Score (negative = losing but comparable)
+# Foundry Evolution V9 — Oktopus Evolution Daily Run
+# 6 Asset-Specific Arms: MR-ALT, MR-RELAXED, TREND-REGIME, SIGNAL-EXIT, VOL-BOOSTED, CROSS-ASSET
+# Signal-Reversal Exits (no trailing stop), Entry-Only Mutations
+# IS pre-filter: ≥3 trades/asset/window
 # Runs at 4:30 AM Berlin time
 
 set -euo pipefail
@@ -10,20 +10,19 @@ set -euo pipefail
 RESEARCH_DIR="/data/.openclaw/workspace/forward_v5/forward_5/research"
 OLLAMA_API_URL="${OLLAMA_API_URL:-http://172.17.0.1:32771/v1/chat/completions}"
 OLLAMA_API_KEY="${OLLAMA_API_KEY:-ollama-cloud}"
-LOG_DIR="$RESEARCH_DIR/runs/evolution_v7"
+LOG_DIR="$RESEARCH_DIR/runs/evolution_v9"
 DATE=$(date +%Y-%m-%d)
 LOG="$LOG_DIR/daily_${DATE}.log"
 
 mkdir -p "$LOG_DIR"
 
 echo "======================================================================" | tee -a "$LOG"
-echo "FOUNDRY EVOLUTION V8 — Multi-Strategy Daily Run $DATE" | tee -a "$LOG"
+echo "FOUNDRY EVOLUTION V9 — Oktopus Evolution Daily Run $DATE" | tee -a "$LOG"
 echo "======================================================================" | tee -a "$LOG"
 
 cd "$RESEARCH_DIR"
 
 # Model selection: Try DeepSeek-V4-Pro first, fallback to Gemma4
-# DeepSeek has better reasoning but may be overloaded
 SELECTED_MODEL=$(python3 "$RESEARCH_DIR/test_model.py" "$OLLAMA_API_URL" "$OLLAMA_API_KEY" 2>&1 | grep -E "^[a-z].*:cloud$" | head -1)
 
 if [ -z "$SELECTED_MODEL" ]; then
@@ -33,8 +32,8 @@ fi
 
 export GENERATOR_MODEL="$SELECTED_MODEL"
 
-# Run V8
-PYTHONUNBUFFERED=1 python3 -u run_evolution_v8.py 2>&1 | tee -a "$LOG"
+# Run V9
+PYTHONUNBUFFERED=1 python3 -u run_evolution_v9.py 2>&1 | tee -a "$LOG"
 
 EXIT_CODE=${PIPESTATUS[0]:-0}
 
@@ -46,11 +45,11 @@ from pathlib import Path
 LOG_DIR = '$LOG_DIR'
 REPORT_FILE = '$LOG_DIR/daily_${DATE}_report.json'
 
-v8_files = sorted(Path(LOG_DIR).glob('evolution_v7_results_*.json'))
+v9_files = sorted(Path(LOG_DIR).glob('evolution_v9_results_*.json'))
 
 try:
-    if v8_files:
-        with open(v8_files[-1]) as f:
+    if v9_files:
+        with open(v9_files[-1]) as f:
             data = json.load(f)
         
         # Build 10w champions ranked by OOS
@@ -64,7 +63,7 @@ try:
         
         report = {
             'date': '$DATE',
-            'version': 'V8_multi_strategy',
+            'version': 'V9_oktopus',
             'phase1_evaluated': data.get('phase1_evaluated', 0),
             'phase1_passed': data.get('phase1_passed', 0),
             'phase2_evaluated': data.get('phase2_evaluated', 0),
@@ -77,14 +76,17 @@ try:
                 'wf_10w': best_oos.get('wf_robustness_10w', 0),
                 'profitable_10w': best_oos.get('wf_profitable_10w', '?'),
                 'entry': best_oos['entry_condition'],
+                'exit_condition': best_oos.get('exit_condition', ''),
             } if best_oos else None,
             'champions_10w_ranked': [{
                 'name': c['name'],
                 'oos': c.get('avg_oos_return', 0),
                 'wf_10w': c.get('wf_robustness_10w', 0),
                 'profitable_10w': c.get('wf_profitable_10w', '?'),
+                'exit_condition': c.get('exit_condition', ''),
             } for c in champs_10w],
             'type_stats': data.get('type_stats', {}),
+            'exit_type_stats': data.get('exit_type_stats', {}),
             'hof_top5': data.get('hof_top5', []),
         }
     else:
