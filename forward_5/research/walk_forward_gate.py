@@ -165,10 +165,16 @@ def build_strategy_func(entry_condition: str, exit_condition: str = None):
         
         # Exit signal (V9: explicit exit condition different from entry)
         if exit_condition:
-            exit_conds = [c.strip() for c in exit_condition.split(' AND ')]
-            exit_signal = pl.lit(True)
-            for cond in exit_conds:
-                exit_signal = exit_signal & _parse_simple_condition(cond)
+            # Support AND + OR in exit conditions
+            # Split on OR first (lower precedence), then AND within each group
+            or_groups = [g.strip() for g in re.split(r'\s+OR\s+', exit_condition, flags=re.IGNORECASE)]
+            exit_signal = pl.lit(False)
+            for or_group in or_groups:
+                and_conds = [c.strip() for c in or_group.split(' AND ')]
+                group_signal = pl.lit(True)
+                for cond in and_conds:
+                    group_signal = group_signal & _parse_simple_condition(cond)
+                exit_signal = exit_signal | group_signal
             df = df.with_columns((pl.when(exit_signal).then(1).otherwise(0)).alias('exit_signal'))
         
         return df

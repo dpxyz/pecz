@@ -428,6 +428,41 @@ def call_llm(prompt: str, temperature: float = 0.3) -> str:
                 print(f"  ⚠️ Thinking model returned empty content, using reasoning field")
                 content = msg["reasoning"]
             return content
+    except urllib.error.HTTPError as e:
+        if e.code == 503:
+            # Server overloaded — retry once after 10s, then fallback to gemma4
+            print(f"  ⚠️ LLM 503 (overloaded), retrying in 10s...")
+            time.sleep(10)
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read())
+                    msg = data["choices"][0]["message"]
+                    content = msg.get("content", "")
+                    if not content.strip() and msg.get("reasoning", "").strip():
+                        print(f"  ⚠️ Thinking model returned empty content, using reasoning field")
+                        content = msg["reasoning"]
+                    return content
+            except Exception as e2:
+                print(f"  ⚠️ LLM retry failed: {e2}, trying fallback model")
+                fallback_payload = json.dumps({
+                    "model": "gemma4:31b-cloud",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": temperature,
+                    "max_tokens": 2048,
+                })
+                fallback_req = urllib.request.Request(
+                    API_URL, data=fallback_payload.encode(),
+                    headers={"Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}"},
+                )
+                try:
+                    with urllib.request.urlopen(fallback_req, timeout=120) as resp:
+                        data = json.loads(resp.read())
+                        return data["choices"][0]["message"].get("content", "")
+                except Exception as e3:
+                    print(f"  ⚠️ Fallback model also failed: {e3}")
+                    return ""
+        print(f"  ⚠️ LLM error: {e}")
+        return ""
     except Exception as e:
         print(f"  ⚠️ LLM error: {e}")
         return ""
@@ -451,12 +486,9 @@ def parse_strategy(text: str) -> dict | None:
                 if re.search(r'\w+\[', entry):
                     print(f"    ⚠️ Rejected array comparison in entry: {entry[:60]}")
                     return None
-                # Validate exit_condition if present (no OR, no arrays)
+                # Validate exit_condition if present (OR allowed in exit, no arrays)
                 if "exit_condition" in d:
                     ec = d["exit_condition"]
-                    if " OR " in ec.upper():
-                        print(f"    ⚠️ Rejected OR in exit_condition: {ec[:60]}")
-                        return None
                     if re.search(r'\w+\[', ec):
                         print(f"    ⚠️ Rejected array comparison in exit_condition: {ec[:60]}")
                         return None
