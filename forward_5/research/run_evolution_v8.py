@@ -34,7 +34,7 @@ from walk_forward_gate import build_strategy_func, run_wf_on_candidate
 # CONFIG
 # ============================================================================
 
-N_EXPLORATION_PER_TYPE = 10  # candidates per strategy type (was 2→5, raised for more diversity)
+N_EXPLORATION_PER_TYPE = 10  # candidates per strategy type (was 2→5→10, raised for more diversity)
 N_MUTATIONS_PER_PARENT = 5
 N_CROSSOVERS = 5
 N_HARD_CHECK_TOP = 3
@@ -128,13 +128,22 @@ Generiere EINE Mean-Reversion-Strategie für Long-Entry.
 Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
 - bb_lower_N, bb_upper_N, bb_width_N (Bollinger, N=10-30)
+- keltner_lower_N, keltner_upper_N (Keltner Channel, N=10-30)
 - rsi_N (RSI, N=5-21)
 - zscore_N (Z-Score, N=10-30)
+- cci_N (Commodity Channel Index, N=10-30)
 - stoch_k_N, stoch_d_N (Stochastic, N=5-21)
 - williams_r_N (Williams %R, N=5-21)
 - atr_N (ATR, N=10-20)
 - ema_N, sma_N (Moving Average, N=10-200)
-- volume_sma_N (Volume SMA, N=10-50)
+- ema_slope_N (EMA Steigung %, positiv = steigend, N=10-50)
+- volume_sma_N, volume_ratio_N (Volume SMA / Ratio, N=10-50)
+- mfi_N (Money Flow Index, N=5-21)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- bull_power_N, bear_power_N (Elder Ray, N=10-21)
+
+WICHTIG: Nutze mindestens einen Volumen- oder Money-Flow-Indikator (mfi, cmf, obv, volume_ratio)!
 
 Entry: Kombiniere 2-4 Indikatoren mit AND. Jeder Vergleich: indicator operator value.
 Exit: trailing_stop_pct, stop_loss_pct, max_hold_bars.
@@ -143,7 +152,7 @@ WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
 
-Beispiel: close < bb_lower_20 AND rsi_14 < 30 AND close > ema_100
+Beispiel: close < bb_lower_20 AND rsi_14 < 30 AND mfi_14 < 20 AND close > ema_100
 
 Antworte NUR mit JSON:
 {"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}""",
@@ -157,21 +166,28 @@ Nutze ADX als Trend-Filter und gleitende Durchschnitte für Richtung.
 Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
 - ema_N, sma_N (Moving Average, N=10-200)
+- ema_slope_N (EMA Steigung %, positiv = steigend, N=10-50)
 - adx_N (ADX Trend-Stärke, N=10-20)
 - macd_12_26, macd_signal_12_26, macd_hist_12_26 (MACD)
 - roc_N (Rate of Change %, N=5-21)
 - atr_N (ATR, N=10-20)
-- ema_slope_N (EMA Steigung, positiv = steigend)
-- volume_sma_N (Volume SMA)
+- volume_sma_N, volume_ratio_N (Volume SMA / Ratio, N=10-50)
+- mfi_N (Money Flow Index, N=5-21)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- bull_power_N (Elder Ray Bull Power, N=10-21)
+- cci_N (Commodity Channel Index, N=10-30)
+
+WICHTIG: Nutze mindestens einen Volumen- oder Money-Flow-Indikator (cmf, obv, volume_ratio, mfi)!
 
 WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
 
 Gute Ansätze:
-- EMA-Crossover + ADX-Filter: close > ema_50 AND close > ema_200 AND adx_14 > 25
-- MACD-Momentum: macd_hist_12_26 > 0 AND close > ema_100 AND adx_14 > 20
-- ROC-Boost: roc_14 > 2 AND close > ema_50 AND volume > volume_sma_20
+- EMA-Crossover + ADX + Money Flow: close > ema_50 AND close > ema_200 AND adx_14 > 25 AND cmf_20 > 0
+- MACD + OBV-Momentum: macd_hist_12_26 > 0 AND close > ema_100 AND obv_20 > 0 AND adx_14 > 20
+- ROC + Volume Ratio: roc_14 > 2 AND close > ema_50 AND volume_ratio_20 > 1.5
 
 Exit: trailing_stop_pct 2.5-4.0% (Trend braucht Raum!), stop_loss_pct 3-5%, max_hold_bars 24-72.
 
@@ -188,52 +204,69 @@ Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
 - roc_N (Rate of Change %, N=3-21)
 - macd_hist_12_26 (MACD Histogram)
-- volume_sma_N (Volume SMA)
+- volume_sma_N, volume_ratio_N (Volume SMA / Ratio, N=10-50)
 - ema_N, sma_N (N=10-200)
 - adx_N (ADX, N=10-20)
 - atr_N (ATR, N=10-20)
-- bb_width_N (Bollinger Band Breite)
+- bb_width_N (Bollinger Band Breite, N=10-30)
+- mfi_N (Money Flow Index, N=5-21)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- bull_power_N (Elder Ray Bull Power, N=10-21)
+- cci_N (CCI, N=10-30)
+- ema_slope_N (EMA Steigung %, N=10-50)
+
+WICHTIG: Nutze mindestens einen Volumen- oder Money-Flow-Indikator!
 
 WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
-- KEINE _sma Endungen bei nicht-unterstützten Indikatoren (z.B. bb_width_20_sma ist ungültig)
 
-Gute Ansätze:
-- Breakout: close > bb_upper_20 AND roc_5 > 3 AND volume > volume_sma_20 * 1.5
-- Momentum-Spike: roc_10 > 5 AND macd_hist_12_26 > 0 AND adx_14 > 30
-- Vol-Explosion: bb_width_20 > 0.05 AND close > ema_50 AND volume > volume_sma_20 * 2
+Neue Ansätze (NICHT die alten wiederholen!):
+- CCI-Breakout + MFI: cci_20 > 100 AND mfi_14 > 70 AND close > ema_50
+- Bull Power + Volume: bull_power_13 > 0 AND volume_ratio_20 > 2.0 AND roc_10 > 3
+- CMF + OBV-Alignment: cmf_20 > 0.05 AND obv_20 > 0 AND close > ema_50 AND adx_14 > 20
 
-Exit: trailing_stop_pct 2.0-3.5%, stop_loss_pct 2.5-4.0%, max_hold_bars 12-48.
+Exit: trailing_stop_pct 2-3%, stop_loss_pct 2.5-4%, max_hold_bars 12-36.
 
 Antworte NUR mit JSON:
 {"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}""",
 
     "VOL": """Du bist ein Quant-Stratege für 1h Crypto Perps.
-Generiere EINE Volume-Boosted Strategie für Long-Entry.
+Generiere EINE Volume-Boosted Mean-Reversion-Strategie für Long-Entry.
 
-KONTEXT: Volume ist der beste Konfirmator. Egal ob MR oder Trend —
-Volumen-Spike + Preis-Signal = stärkster Entry.
+KONTEXT: Volume bestätigt Umkehr-Signale. Nutze Volume-Spikes als Konfirmation
+für Mean-Reversion-Entries, wenn Preis oversold ist.
 
 Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
-- volume_sma_N (Volume SMA, N=10-50)
-- bb_lower_N, bb_upper_N (Bollinger)
+- bb_lower_N, bb_upper_N, bb_width_N (Bollinger, N=10-30)
+- keltner_lower_N (Keltner Lower, N=10-30)
 - rsi_N (RSI, N=5-21)
-- ema_N, sma_N (N=10-200)
-- stoch_k_N, stoch_d_N (Stochastic)
-- zscore_N (Z-Score)
+- zscore_N (Z-Score, N=10-30)
+- cci_N (CCI, N=10-30)
+- stoch_k_N, stoch_d_N (Stochastic, N=5-21)
+- williams_r_N (Williams %R, N=5-21)
+- ema_N, sma_N (Moving Average, N=10-200)
+- volume_sma_N, volume_ratio_N (Volume SMA / Ratio, N=10-50)
+- mfi_N (Money Flow Index, N=5-21)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- bear_power_N (Elder Ray Bear Power, N=10-21)
+
+WICHTIG: volume_ratio > 1.5 ODER cmf_20 < -0.05 (Capitulation) MUSS enthalten sein!
+
+Entry: Kombiniere 2-5 Indikatoren mit AND.
+Exit: trailing_stop_pct 1.5-2.5%, stop_loss_pct 2-4%, max_hold_bars 12-36.
 
 WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
 
-Gute Ansätze:
-- Vol-Confirm MR: close < bb_lower_20 AND volume > volume_sma_20 * 1.5 AND rsi_14 < 30
-- Vol-Spike Reversal: volume > volume_sma_20 * 2 AND stoch_k_14 < 20 AND close > ema_100
-- Climax-Volume: zscore_20 < -2 AND volume > volume_sma_20 * 2.5
-
-Exit: trailing_stop_pct 1.5-3.0%, stop_loss_pct 2.5-4.0%, max_hold_bars 12-36.
+Neue Ansätze:
+- Keltner + MFI + Volume: close < keltner_lower_20 AND mfi_14 < 15 AND volume_ratio_20 > 1.5
+- Bear Power Exhaustion: bear_power_13 < -2 AND volume_ratio_20 > 2.0 AND rsi_14 < 25
+- CMF Reversal: cmf_20 < -0.1 AND close < bb_lower_14 AND stoch_k_14 < 15
 
 Antworte NUR mit JSON:
 {"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}""",
@@ -241,65 +274,71 @@ Antworte NUR mit JSON:
     "REGIME": """Du bist ein Quant-Stratege für 1h Crypto Perps.
 Generiere EINE Regime-basierte Strategie für Long-Entry.
 
-KONTEXT: Verschiedene Markt-Regimes erfordern verschiedene Strategien.
-Nutze BB-Width, ADX, ATR um das Regime zu erkennen, dann den passenden Entry.
+KONTEXT: Regime-Strategien nutzen Volatilität und Trend-Indikatoren, um
+den Marktzustand zu identifizieren. Entry NUR wenn Regime + Signal übereinstimmen.
 
 Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
-- bb_width_N (Bollinger Band Breite — niedrig = Squeeze, hoch = Expansion)
-- adx_N (ADX — niedrig = Range, hoch = Trend)
-- atr_N (ATR — niedrig = ruhig, hoch = volatil)
-- ema_N, sma_N (N=10-200)
-- rsi_N (RSI)
-- volume_sma_N
-- ema_slope_N (EMA Steigung)
-- macd_hist_12_26
+- adx_N (ADX Trend-Stärke, N=10-20)
+- bb_width_N (Bollinger Band Breite, N=10-30)
+- atr_N (ATR, N=10-20)
+- ema_N, sma_N (Moving Average, N=10-200)
+- ema_slope_N (EMA Steigung %, N=10-50)
+- macd_12_26, macd_signal_12_26, macd_hist_12_26 (MACD)
+- cci_N (CCI, N=10-30)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- mfi_N (Money Flow Index, N=5-21)
+- bull_power_N, bear_power_N (Elder Ray, N=10-21)
+- volume_ratio_N (Volume Ratio, N=10-50)
 
 WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
-- Verwende KEINE _sma Endungen bei ATR (atr_14_sma ist ungültig, nutze atr_N direkt).
 
 Gute Ansätze:
-- Squeeze-Breakout: bb_width_20 < 0.02 AND adx_14 > 25 AND close > ema_50
-- Low-Vol MR: atr_14 < 1.5 AND rsi_14 < 30 AND close > ema_100
-- Trend-Regime Entry: adx_14 > 25 AND ema_slope_50 > 0 AND close > ema_200
+- Squeeze + Money Flow: bb_width_20 < 0.03 AND cmf_20 > 0.05 AND close > ema_50
+- ADX-Surge + CCI: adx_14 > 30 AND cci_20 > 100 AND ema_slope_50 > 0
+- Bull Power Recovery: bear_power_13 > -1 AND bull_power_13 > 0 AND adx_14 > 25
 
-Exit: trailing_stop_pct 2.0-4.0%, stop_loss_pct 2.5-5.0%, max_hold_bars 18-72.
+Exit: trailing_stop_pct 2-4%, stop_loss_pct 3-5%, max_hold_bars 24-72.
 
 Antworte NUR mit JSON:
 {"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}""",
 
-    "4H": """Du bist ein Quant-Stratege für 4h Crypto Perps.
-Generiere EINE Strategie für Long-Entry auf 4-Stunden-Kerzen.
+    "4H": """Du bist ein Quant-Stratege für 4h Crypto Perps (aggregiert von 1h).
+Generiere EINE Trend-Strategie für Long-Entry auf 4h-Timeframe.
 
-KONTEXT: 4h-Kerzen haben weniger Rauschen als 1h. Trendsignale sind verlässlicher,
-aber es gibt weniger Trades. Passe die Parameter an:
-- BB-Periode: 10-40 (statt 10-20 auf 1h)
-- EMA-Periode: 20-200 (wie bei 1h, aber Trends halten länger)
-- RSI-Periode: 10-21 (wie 1h)
-- Max Hold: 6-24 bars (= 24h-96h, statt 12-48 auf 1h)
+KONTEXT: 4h-Timeframe filtert Noise. Weniger Trades, höhere Qualität.
+Nutze mehrere Konfirmationen (Trend + Momentum + Volume).
 
-Verfugbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
+Verfügbare Indikatoren (NUTZE DIESE EXAKTEN NAMEN):
 - close, open, high, low, volume
-- bb_lower_N, bb_upper_N, bb_width_N (N=10-40)
-- rsi_N (N=10-21)
-- ema_N, sma_N (N=10-200)
-- adx_N (N=10-21)
-- macd_hist_12_26
-- atr_N (N=10-20)
-- volume_sma_N (N=10-50)
+- ema_N, sma_N (Moving Average, N=10-200)
+- ema_slope_N (EMA Steigung %, N=10-50)
+- adx_N (ADX, N=10-20)
+- macd_12_26, macd_signal_12_26, macd_hist_12_26 (MACD)
+- rsi_N (RSI, N=5-21)
+- volume_sma_N, volume_ratio_N (Volume SMA / Ratio, N=10-50)
+- mfi_N (Money Flow Index, N=5-21)
+- cmf_N (Chaikin Money Flow, N=10-30)
+- obv_N (OBV Rate of Change %, N=10-30)
+- cci_N (CCI, N=10-30)
+- bull_power_N, bear_power_N (Elder Ray, N=10-21)
+- bb_width_N (Bollinger Band Breite, N=10-30)
+
+WICHTIG: Nutze mindestens einen Money-Flow-Indikator (mfi, cmf, obv)!
 
 WICHTIGE REGELN:
 - Verwende NUR AND als logischen Operator. KEIN OR!
 - Verwende NUR einfache Vergleiche (indicator > wert). KEINE Array-Vergleiche wie indicator[1]!
 
-Gute 4h-Ansätze:
-- 4h Trend: close > ema_50 AND adx_14 > 20 AND macd_hist_12_26 > 0
-- 4h MR: close < bb_lower_20 AND rsi_14 < 35 AND close > ema_100
-- 4h Breakout: bb_width_20 < 0.03 AND close > ema_50 AND adx_14 > 25
+Gute Ansätze:
+- 4H Trend + MFI: close > ema_50 AND adx_14 > 20 AND macd_hist_12_26 > 0 AND mfi_14 > 50
+- 4H CMF + OBV: cmf_20 > 0 AND obv_20 > 0 AND close > ema_100 AND ema_slope_50 > 0
+- 4H Bull Power: bull_power_13 > 0 AND adx_14 > 25 AND close > ema_50
 
-Exit: trailing_stop_pct 2.0-4.0%, stop_loss_pct 3.0-5.0%, max_hold_bars 6-24.
+Exit: trailing_stop_pct 2-4%, stop_loss_pct 3-5%, max_hold_bars 6-18 (4h bars!).
 
 Antworte NUR mit JSON:
 {"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}""",
@@ -314,7 +353,9 @@ WF Robustness: {parent_wf} | IS-Score: {parent_is}
 
 Verfügbare Indikatoren: close, open, high, low, volume, bb_lower_N, bb_upper_N, bb_width_N,
 rsi_N, zscore_N, stoch_k_N, stoch_d_N, williams_r_N, atr_N, roc_N, macd_12_26,
-macd_signal_12_26, macd_hist_12_26, adx_N, ema_N, sma_N, volume_sma_N, ema_slope_N.
+macd_signal_12_26, macd_hist_12_26, adx_N, ema_N, sma_N, volume_sma_N, ema_slope_N,
+mfi_N, cmf_N, obv_N, bull_power_N, bear_power_N, keltner_lower_N, keltner_upper_N,
+cci_N, volume_ratio_N.
 
 Antworte NUR mit JSON:
 {{"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_config": {{"trailing_stop_pct": X, "stop_loss_pct": Y, "max_hold_bars": Z}}}}"""
@@ -576,7 +617,7 @@ def save_hof(hof: list[dict]):
 def entry_pattern(entry: str) -> str:
     """Extract indicator pattern for diversity tracking."""
     indicators = sorted(set(re.findall(
-        r'(bb_lower|bb_upper|bb_width|rsi|ema|sma|macd|adx|zscore|atr|volume|stoch|williams|roc)',
+        r'(bb_lower|bb_upper|bb_width|rsi|ema|sma|macd|adx|zscore|atr|volume|stoch|williams|roc|mfi|cmf|obv|bull_power|bear_power|keltner|cci|volume_ratio|ema_slope)',
         entry.lower())))
     return '+'.join(indicators) if indicators else 'unknown'
 
@@ -588,31 +629,42 @@ def classify_strategy_type(entry: str) -> str:
     """
     e = entry.lower()
     # Primary type detection (order matters: most specific first)
-    # MR: bb_lower/zscore = oversold signal
-    if 'bb_lower' in e or 'zscore' in e:
-        if 'volume' in e:
+    # MR: bb_lower/zscore/keltner_lower = oversold signal
+    if 'bb_lower' in e or 'zscore' in e or 'keltner_lower' in e:
+        if 'volume' in e or 'mfi' in e or 'cmf' in e or 'obv' in e or 'volume_ratio' in e:
             return 'VOL'
         return 'MR'
     # rsi < threshold (oversold) is MR signal
     if 'rsi' in e and '<' in e:
-        if 'volume' in e:
+        if 'volume' in e or 'mfi' in e or 'cmf' in e or 'obv' in e or 'volume_ratio' in e:
             return 'VOL'
         return 'MR'
-    # Regime: bb_width or standalone ATR
+    # CCI oversold is MR
+    if 'cci_' in e and '<' in e:
+        return 'MR'
+    # Regime: bb_width, atr, cci (trend regime)
     if 'bb_width' in e:
         return 'REGIME'
     if 'atr_' in e and 'bb' not in e and 'rsi' not in e:
         return 'REGIME'
-    # TREND: ema crossover + adx/macd
+    # TREND: ema crossover + adx/macd/ema_slope
     if 'adx' in e or 'ema_slope' in e:
         return 'TREND'
     if 'close > ema_' in e and 'close > ema_200' in e:
         return 'TREND'
-    # MOM: roc, macd, bb_upper breakout
-    if 'roc_' in e or 'macd_hist' in e or ('bb_upper' in e and 'close >' in e):
+    # MOM: roc, macd, bull_power, cci breakout
+    if 'roc_' in e or 'macd_hist' in e or 'bull_power' in e or ('cci_' in e and '>' in e):
         return 'MOM'
+    # Money Flow as primary signal
+    if 'cmf' in e or 'mfi' in e or 'obv' in e:
+        if '>' in e:  # positive flow = trend confirmation
+            return 'TREND'
+        return 'MR'
     # Stochastic / Williams
     if 'stoch' in e or 'williams' in e:
+        return 'MR'
+    # Bear power exhaustion = MR
+    if 'bear_power' in e:
         return 'MR'
     # Fallback
     return 'MR'
@@ -679,11 +731,20 @@ def main():
         prompt = PROMPTS[stype["prompt_key"]]
         n_cands = N_EXPLORATION_PER_TYPE
 
+        # HOF Quota: if MR dominates (>60% of HOF), suppress MR and boost others
+        hof_mr_pct = hof_types.get("MR", 0) / max(len(hof), 1)
+        if stype["prompt_key"] == "MR" and hof_mr_pct > 0.6 and len(hof) > 10:
+            n_cands = max(2, n_cands // 2)  # Halve MR budget
+            print(f"  ⚖️ MR dominates HOF ({hof_mr_pct:.0%}) — reduced to {n_cands} candidates")
+        elif stype["prompt_key"] != "MR" and hof_mr_pct > 0.6 and len(hof) > 10:
+            n_cands = max(n_cands, N_EXPLORATION_PER_TYPE + 2)  # Boost non-MR
+            print(f"  🚀 Non-MR boost (MR {hof_mr_pct:.0%}) — {n_cands} candidates")
+
         # If this type is underrepresented in HOF, generate more
         hof_count = hof_types.get(stype["prompt_key"], 0)
         if hof_count < 1:
-            n_cands = max(n_cands, 3)
-            print(f"\n  📝 {stype['name']} ({n_cands} candidates, UNDERREPRESENTED in HOF)")
+            n_cands = max(n_cands, 4)
+            print(f"\n  📝 {stype['name']} ({n_cands} candidates, ZERO in HOF)")
         else:
             print(f"\n  📝 {stype['name']} ({n_cands} candidates)")
 
@@ -702,7 +763,9 @@ def main():
             print(f"     📈 PROMISING arm — extra budget ({n_cands} candidates)")
 
         for i in range(n_cands):
-            temp = 0.3 if i == 0 else 0.6
+            # Temperature varies by type: creative types get higher temp
+            base_temp = {"MR": 0.3, "VOL": 0.4, "TREND": 0.5, "MOM": 0.5, "REGIME": 0.6, "4H": 0.4}.get(stype["prompt_key"], 0.4)
+            temp = base_temp if i == 0 else min(base_temp + 0.3, 0.9)
             response = call_llm(prompt, temperature=temp)
             parsed = parse_strategy(response)
             if parsed:

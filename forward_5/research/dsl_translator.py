@@ -122,6 +122,131 @@ def calc_bb_width(df: pl.DataFrame, period: int, std_dev: float = 2.0) -> pl.Ser
     return (upper - lower) / mid_safe
 
 
+def calc_stoch(df: pl.DataFrame, period: int = 14) -> Tuple[pl.Series, pl.Series]:
+    """Stochastic Oscillator %K and %D."""
+    low_min = pl.col("low").rolling_min(window_size=period, min_periods=period)
+    high_max = pl.col("high").rolling_max(window_size=period, min_periods=period)
+    denom = high_max - low_min
+    denom_safe = pl.when(denom != 0).then(denom).otherwise(1.0)
+    k = 100 * (pl.col("close") - low_min) / denom_safe
+    d = k.rolling_mean(window_size=3, min_periods=3)
+    result = df.select([k.alias("stoch_k"), d.alias("stoch_d")])
+    return result["stoch_k"], result["stoch_d"]
+
+
+def calc_williams_r(df: pl.DataFrame, period: int = 14) -> pl.Series:
+    """Williams %R."""
+    high_max = pl.col("high").rolling_max(window_size=period, min_periods=period)
+    low_min = pl.col("low").rolling_min(window_size=period, min_periods=period)
+    denom = high_max - low_min
+    denom_safe = pl.when(denom != 0).then(denom).otherwise(1.0)
+    wr = -100 * (high_max - pl.col("close")) / denom_safe
+    result = df.select(wr.alias("williams_r"))
+    return result["williams_r"]
+
+
+def calc_ema_slope(df: pl.DataFrame, period: int = 50) -> pl.Series:
+    """EMA slope: (EMA[t] - EMA[t-1]) / EMA[t-1] * 100 (percent change)."""
+    ema = pl.col("close").ewm_mean(alpha=2/(period+1), min_samples=period)
+    ema_shifted = ema.shift(1)
+    ema_safe = pl.when(ema_shifted != 0).then(ema_shifted).otherwise(1.0)
+    slope = (ema - ema_shifted) / ema_safe * 100
+    result = df.select(slope.alias("ema_slope"))
+    return result["ema_slope"].fill_null(0)
+
+
+def calc_mfi(df: pl.DataFrame, period: int = 14) -> pl.Series:
+    """Money Flow Index — volume-weighted RSI."""
+    typical = (df["high"] + df["low"] + df["close"]) / 3
+    raw_mf = typical * df["volume"]
+    delta_typ = typical.diff()
+    pos_mf = pl.when(delta_typ > 0).then(raw_mf).otherwise(0)
+    neg_mf = pl.when(delta_typ < 0).then(raw_mf).otherwise(0)
+    pos_flow = pos_mf.rolling_mean(window_size=period, min_periods=period)
+    neg_flow = neg_mf.rolling_mean(window_size=period, min_periods=period)
+    neg_safe = pl.when(neg_flow != 0).then(neg_flow).otherwise(1.0)
+    mfi = 100 - (100 / (1 + pos_flow / neg_safe))
+    result = df.select(mfi.alias("mfi"))
+    return result["mfi"].fill_null(50)
+
+
+def calc_cmf(df: pl.DataFrame, period: int = 20) -> pl.Series:
+    """Chaikin Money Flow — buying/selling pressure."""
+    high = pl.col("high")
+    low = pl.col("low")
+    close = pl.col("close")
+    vol = pl.col("volume")
+    denom = high - low
+    denom_safe = pl.when(denom != 0).then(denom).otherwise(1.0)
+    clv = ((close - low) - (high - close)) / denom_safe
+    mf_vol = clv * vol
+    cmf = mf_vol.rolling_sum(window_size=period, min_periods=period) / \
+          vol.rolling_sum(window_size=period, min_periods=period)
+    result = df.select(cmf.alias("cmf"))
+    return result["cmf"].fill_null(0)
+
+
+def calc_obv(df: pl.DataFrame, period: int = None) -> pl.Series:
+    """On Balance Volume rate of change over N periods."""
+    close = pl.col("close")
+    vol = pl.col("volume")
+    direction = pl.when(close > close.shift(1)).then(1).when(close < close.shift(1)).then(-1).otherwise(0)
+    signed_vol = direction * vol
+    obv = signed_vol.cum_sum()
+    if period is not None and period > 0:
+        obv_shifted = obv.shift(period)
+        obv_safe = pl.when(obv_shifted != 0).then(obv_shifted).otherwise(1.0)
+        obv_roc = (obv - obv_shifted) / obv_safe.abs() * 100
+        result = df.select(obv_roc.alias("obv"))
+        return result["obv"].fill_null(0)
+    result = df.select(obv.alias("obv"))
+    return result["obv"]
+
+
+def calc_elder_ray(df: pl.DataFrame, period: int = 13) -> Tuple[pl.Series, pl.Series]:
+    """Elder Ray: Bull Power = High - EMA, Bear Power = Low - EMA."""
+    ema = pl.col("close").ewm_mean(alpha=2/(period+1), min_samples=period)
+    bull_power = pl.col("high") - ema
+    bear_power = pl.col("low") - ema
+    result = df.select([bull_power.alias("bull_power"), bear_power.alias("bear_power")])
+    return result["bull_power"].fill_null(0), result["bear_power"].fill_null(0)
+
+
+def calc_keltner(df: pl.DataFrame, period: int = 20, atr_mult: float = 1.5) -> Tuple[pl.Series, pl.Series, pl.Series]:
+    """Keltner Channel: EMA ± ATR*multiplier."""
+    ema = pl.col("close").ewm_mean(alpha=2/(period+1), min_samples=period)
+    # ATR via expressions
+    high = pl.col("high")
+    low = pl.col("low")
+    close = pl.col("close")
+    tr = pl.max_horizontal(high - low, (high - close.shift(1)).abs(), (low - close.shift(1)).abs())
+    atr = tr.rolling_mean(window_size=period, min_periods=period)
+    upper = ema + atr_mult * atr
+    lower = ema - atr_mult * atr
+    result = df.select([upper.alias("k_up"), ema.alias("k_mid"), lower.alias("k_low")])
+    return result["k_up"], result["k_mid"], result["k_low"]
+
+
+def calc_cci(df: pl.DataFrame, period: int = 20) -> pl.Series:
+    """Commodity Channel Index."""
+    typical = (pl.col("high") + pl.col("low") + pl.col("close")) / 3
+    sma_t = typical.rolling_mean(window_size=period, min_periods=period)
+    mad = (typical - sma_t).abs().rolling_mean(window_size=period, min_periods=period)
+    mad_safe = pl.when(mad != 0).then(mad).otherwise(1.0)
+    cci = (typical - sma_t) / (0.015 * mad_safe)
+    result = df.select(cci.alias("cci"))
+    return result["cci"].fill_null(0)
+
+
+def calc_volume_ratio(df: pl.DataFrame, period: int = 20) -> pl.Series:
+    """Current volume / rolling average volume."""
+    vol_sma = pl.col("volume").rolling_mean(window_size=period, min_periods=period)
+    vol_safe = pl.when(vol_sma != 0).then(vol_sma).otherwise(1.0)
+    vr = pl.col("volume") / vol_safe
+    result = df.select(vr.alias("volume_ratio"))
+    return result["volume_ratio"]
+
+
 INDICATOR_REGISTRY = {
     "SMA": ("period", calc_sma),
     "EMA": ("period", calc_ema),
@@ -132,6 +257,16 @@ INDICATOR_REGISTRY = {
     "MACD": (None, calc_macd),
     "ZSCORE": ("period", calc_zscore),
     "ADX": ("period", calc_adx),
+    "STOCH": ("period", calc_stoch),
+    "WILLIAMS_R": ("period", calc_williams_r),
+    "EMA_SLOPE": ("period", calc_ema_slope),
+    "MFI": ("period", calc_mfi),
+    "CMF": ("period", calc_cmf),
+    "OBV": ("period", calc_obv),
+    "ELDER_RAY": ("period", calc_elder_ray),
+    "KELTNER": ("period", calc_keltner),
+    "CCI": ("period", calc_cci),
+    "VOLUME_RATIO": ("period", calc_volume_ratio),
 }
 
 
@@ -142,7 +277,7 @@ _ALLOWED_LOGIC = {"AND", "OR"}
 _ALLOWED_COLUMNS = {"close", "open", "high", "low", "volume"}
 
 _IND_PATTERN = re.compile(
-    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|ATR_sma|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE|ADX|bb_width|bb_upper|bb_mid|bb_lower|bb_width_\d+|atr_sma|ema|sma|rsi|macd_line|macd_signal|macd_hist|adx|atr|zscore)(?:_(\d+))?$',
+    r'^(SMA|EMA|RSI|BB_upper|BB_mid|BB_lower|ATR|ATR_sma|VWAP|MACD_line|MACD_signal|MACD_hist|ZSCORE|ADX|bb_width|bb_upper|bb_mid|bb_lower|bb_width_\d+|atr_sma|ema|sma|rsi|macd_line|macd_signal|macd_hist|adx|atr|zscore|stoch_k|stoch_d|williams_r|ema_slope|mfi|cmf|obv|bull_power|bear_power|keltner_upper|keltner_mid|keltner_lower|cci|volume_ratio|volume_ratio_\d+)(?:_(\d+))?$',
     re.IGNORECASE
 )
 
@@ -287,6 +422,51 @@ def translate_candidate(candidate: dict) -> Callable[[pl.DataFrame, dict], pl.Da
                 col_name = f"adx_{period}"
                 df = df.with_columns(series.alias(col_name))
                 indicator_cols["adx"] = col_name
+                indicator_cols[col_name] = col_name
+                
+            elif name == "STOCH":
+                period = params.get("stoch_period", ind_params.get("period", 14))
+                k, d = calc_fn(df, period)
+                col_k = f"stoch_k_{period}"
+                col_d = f"stoch_d_{period}"
+                df = df.with_columns([k.alias(col_k), d.alias(col_d)])
+                indicator_cols["stoch_k"] = col_k
+                indicator_cols["stoch_d"] = col_d
+                indicator_cols[col_k] = col_k
+                indicator_cols[col_d] = col_d
+                
+            elif name == "ELDER_RAY":
+                period = params.get("elder_ray_period", ind_params.get("period", 13))
+                bull, bear = calc_fn(df, period)
+                col_bull = f"bull_power_{period}"
+                col_bear = f"bear_power_{period}"
+                df = df.with_columns([bull.alias(col_bull), bear.alias(col_bear)])
+                indicator_cols["bull_power"] = col_bull
+                indicator_cols["bear_power"] = col_bear
+                indicator_cols[col_bull] = col_bull
+                indicator_cols[col_bear] = col_bear
+                
+            elif name == "KELTNER":
+                period = params.get("keltner_period", ind_params.get("period", 20))
+                atr_mult = params.get("keltner_atr_mult", ind_params.get("atr_mult", 1.5))
+                upper, mid, lower = calc_fn(df, period, atr_mult)
+                col_upper = f"keltner_upper_{period}"
+                col_mid = f"keltner_mid_{period}"
+                col_lower = f"keltner_lower_{period}"
+                df = df.with_columns([upper.alias(col_upper), mid.alias(col_mid), lower.alias(col_lower)])
+                indicator_cols["keltner_upper"] = col_upper
+                indicator_cols["keltner_mid"] = col_mid
+                indicator_cols["keltner_lower"] = col_lower
+                indicator_cols[col_upper] = col_upper
+                indicator_cols[col_mid] = col_mid
+                indicator_cols[col_lower] = col_lower
+                
+            elif name == "OBV":
+                period = params.get("obv_period", ind_params.get("period", 20))
+                series = calc_fn(df, period)
+                col_name = f"obv_{period}"
+                df = df.with_columns(series.alias(col_name))
+                indicator_cols["obv"] = col_name
                 indicator_cols[col_name] = col_name
                 
             else:
