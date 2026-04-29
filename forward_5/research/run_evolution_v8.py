@@ -1145,9 +1145,16 @@ def main():
 
     hof_10w = [s for s in hof if s.get("wf_passed_10w")]
     if hof_10w:
-        champ = hof_10w[0]
-        print(f"\n🎉 TRUE CHAMPION (10w-passed):")
-        print(f"   {champ.get('name','?')} | WF10w={champ.get('wf_robustness_10w','?')} | IS={champ.get('is_score','?')} | OOS={champ.get('avg_oos_return','?')}%")
+        # Sort by OOS return (best measure of real performance)
+        hof_10w_oos = sorted(hof_10w, key=lambda s: s.get("avg_oos_return", -999), reverse=True)
+        best_oos = hof_10w_oos[0]
+        best_wf = sorted(hof_10w, key=lambda s: s.get("wf_robustness_10w", 0), reverse=True)[0]
+        print(f"\n🏆 10W CHAMPIONS (ranked by OOS):")
+        for i, s in enumerate(hof_10w_oos, 1):
+            print(f"   {i}. {s.get('name','?')[:45]:45s} OOS={s.get('avg_oos_return',0):+.2f}% WF10w={s.get('wf_robustness_10w','?')} profitable={s.get('wf_profitable_10w','?')}")
+        print(f"\n🌟 BEST OOS: {best_oos.get('name','?')} | OOS={best_oos.get('avg_oos_return',0):+.2f}%")
+        if best_oos.get('name') != best_wf.get('name'):
+            print(f"📈 BEST WF:  {best_wf.get('name','?')} | WF10w={best_wf.get('wf_robustness_10w','?')} (but OOS={best_wf.get('avg_oos_return',0):+.2f}%)")
     else:
         print(f"\n⚠️  {len([s for s in hof if s.get('wf_passed')])} candidates passed WF but NOT 10w — no true champion")
 

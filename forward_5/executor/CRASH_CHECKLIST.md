@@ -80,8 +80,18 @@ ls -la /data/.openclaw/workspace/forward_v5/forward_5/executor/monitor_data.json
 ```bash
 cd /data/.openclaw/workspace/forward_v5/forward_5/executor && python3 -m pytest tests/ -q
 ```
-- Alle passed (außer bekannte Bug-Tests)? → fertig.
+- Alle passed (außer bekannte Bug-Tests)? → weiter zu 8.
 - Neue Failures? → Bug→Test-Workflow (PRINCIPLES.md)
+
+## 8. Foundry HOF Check
+```bash
+cd /data/.openclaw/workspace/forward_v5/forward_5/research && python3 hof_summary.py
+```
+- Zeigt ALLE 10w-Champions ranked by OOS
+- **VOR jeder Champion-Behauptung:** dieses Skript laufen lassen!
+- Nie einen "neuen Champion" verkünden ohne bestehende HOF-Einträge zu prüfen
+
+---
 
 ---
 
