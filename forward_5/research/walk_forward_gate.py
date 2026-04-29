@@ -86,6 +86,12 @@ PARSABLE_PREFIXES = [
     'adx_',
     'volume_sma_',
     'ema_slope_', 'sma_slope_',
+    # New V8 indicators
+    'mfi_', 'cmf_', 'obv_',
+    'cci_',
+    'volume_ratio_',
+    'keltner_lower_', 'keltner_mid_', 'keltner_upper_',
+    'bull_power_', 'bear_power_',
 ]
 
 
@@ -289,6 +295,91 @@ def _compute_indicators(entry_condition: str, df: pl.DataFrame) -> dict:
         key = f'volume_sma_{period}'
         if key not in indicators:
             indicators[key] = pl.col('volume').rolling_mean(window_size=period, min_periods=period)
+
+    # ---- New V8 Indicators ----
+
+    # MFI: mfi_N (Money Flow Index)
+    for m in re.finditer(r'mfi_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'mfi_{period}'
+        if key not in indicators:
+            typical = (pl.col('high') + pl.col('low') + pl.col('close')) / 3
+            raw_mf = typical * pl.col('volume')
+            delta = typical.diff()
+            pos_mf = pl.when(delta > 0).then(raw_mf).otherwise(0)
+            neg_mf = pl.when(delta < 0).then(raw_mf).otherwise(0)
+            pos_flow = pos_mf.rolling_mean(window_size=period, min_periods=period)
+            neg_flow = neg_mf.rolling_mean(window_size=period, min_periods=period)
+            neg_safe = pl.when(neg_flow == 0).then(1.0).otherwise(neg_flow)
+            indicators[key] = 100 - (100 / (1 + pos_flow / neg_safe))
+
+    # CMF: cmf_N (Chaikin Money Flow)
+    for m in re.finditer(r'cmf_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'cmf_{period}'
+        if key not in indicators:
+            denom = pl.col('high') - pl.col('low')
+            denom_safe = pl.when(denom == 0).then(1.0).otherwise(denom)
+            clv = ((pl.col('close') - pl.col('low')) - (pl.col('high') - pl.col('close'))) / denom_safe
+            mf_vol = clv * pl.col('volume')
+            indicators[key] = mf_vol.rolling_sum(window_size=period, min_periods=period) / \
+                pl.col('volume').rolling_sum(window_size=period, min_periods=period)
+
+    # OBV: obv_N (On-Balance Volume ROC)
+    for m in re.finditer(r'obv_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'obv_{period}'
+        if key not in indicators:
+            direction = pl.when(pl.col('close') > pl.col('close').shift(1)).then(1) \
+                .when(pl.col('close') < pl.col('close').shift(1)).then(-1).otherwise(0)
+            signed_vol = direction * pl.col('volume')
+            obv = signed_vol.cum_sum()
+            obv_shifted = obv.shift(period)
+            obv_safe = pl.when(obv_shifted == 0).then(1.0).otherwise(obv_shifted)
+            indicators[key] = (obv - obv_shifted) / obv_safe.abs() * 100
+
+    # CCI: cci_N (Commodity Channel Index)
+    for m in re.finditer(r'cci_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'cci_{period}'
+        if key not in indicators:
+            typical = (pl.col('high') + pl.col('low') + pl.col('close')) / 3
+            sma_t = typical.rolling_mean(window_size=period, min_periods=period)
+            mad = (typical - sma_t).abs().rolling_mean(window_size=period, min_periods=period)
+            mad_safe = pl.when(mad == 0).then(1.0).otherwise(mad)
+            indicators[key] = (typical - sma_t) / (0.015 * mad_safe)
+
+    # Volume Ratio: volume_ratio_N
+    for m in re.finditer(r'volume_ratio_(\d+)', entry_condition):
+        period = int(m.group(1))
+        key = f'volume_ratio_{period}'
+        if key not in indicators:
+            vol_sma = pl.col('volume').rolling_mean(window_size=period, min_periods=period)
+            vol_safe = pl.when(vol_sma == 0).then(1.0).otherwise(vol_sma)
+            indicators[key] = pl.col('volume') / vol_safe
+
+    # Keltner Channel: keltner_lower_N, keltner_mid_N, keltner_upper_N
+    for m in re.finditer(r'keltner_(lower|mid|upper)_(\d+)', entry_condition):
+        period = int(m.group(2))
+        if f'keltner_upper_{period}' not in indicators:
+            ema = pl.col('close').ewm_mean(alpha=2/(period+1), min_samples=period)
+            tr = pl.max_horizontal([
+                (pl.col('high') - pl.col('low')).abs(),
+                (pl.col('high') - pl.col('close').shift(1)).abs(),
+                (pl.col('low') - pl.col('close').shift(1)).abs(),
+            ])
+            atr = tr.rolling_mean(window_size=period, min_periods=period)
+            indicators[f'keltner_upper_{period}'] = ema + 1.5 * atr
+            indicators[f'keltner_mid_{period}'] = ema
+            indicators[f'keltner_lower_{period}'] = ema - 1.5 * atr
+
+    # Elder Ray: bull_power_N, bear_power_N
+    for m in re.finditer(r'(bull|bear)_power_(\d+)', entry_condition):
+        period = int(m.group(2))
+        if f'bull_power_{period}' not in indicators:
+            ema = pl.col('close').ewm_mean(alpha=2/(period+1), min_samples=period)
+            indicators[f'bull_power_{period}'] = pl.col('high') - ema
+            indicators[f'bear_power_{period}'] = pl.col('low') - ema
 
     return indicators
 

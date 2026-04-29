@@ -731,12 +731,12 @@ def main():
         prompt = PROMPTS[stype["prompt_key"]]
         n_cands = N_EXPLORATION_PER_TYPE
 
-        # HOF Quota: if MR dominates (>60% of HOF), suppress MR and boost others
-        hof_mr_pct = hof_types.get("MR", 0) / max(len(hof), 1)
-        if stype["prompt_key"] == "MR" and hof_mr_pct > 0.6 and len(hof) > 10:
+        # HOF Quota: if MR dominates (>60% of HOF passed), suppress MR and boost others
+        hof_mr_pct = hof_types.get("MR", 0) / max(sum(hof_types.values()), 1)
+        if stype["prompt_key"] == "MR" and hof_mr_pct > 0.6:
             n_cands = max(2, n_cands // 2)  # Halve MR budget
             print(f"  ⚖️ MR dominates HOF ({hof_mr_pct:.0%}) — reduced to {n_cands} candidates")
-        elif stype["prompt_key"] != "MR" and hof_mr_pct > 0.6 and len(hof) > 10:
+        elif stype["prompt_key"] != "MR" and hof_mr_pct > 0.6:
             n_cands = max(n_cands, N_EXPLORATION_PER_TYPE + 2)  # Boost non-MR
             print(f"  🚀 Non-MR boost (MR {hof_mr_pct:.0%}) — {n_cands} candidates")
 
@@ -755,10 +755,10 @@ def main():
         if arm_trend == "dead":
             n_cands = 1  # Probe mode only
             print(f"     💀 DEAD arm — probe mode ({n_cands} candidate)")
-        elif arm_trend == "producing":
-            n_cands = max(n_cands, 3)  # More tentacles
+        elif arm_trend == "producing" and not (stype["prompt_key"] == "MR" and hof_mr_pct > 0.6):
+            n_cands = max(n_cands, 3)  # More tentacles (but not for MR if it dominates)
             print(f"     🌟 PRODUCING arm — extra budget ({n_cands} candidates)")
-        elif arm_trend == "promising":
+        elif arm_trend == "promising" and not (stype["prompt_key"] == "MR" and hof_mr_pct > 0.6):
             n_cands = max(n_cands, 3)
             print(f"     📈 PROMISING arm — extra budget ({n_cands} candidates)")
 
