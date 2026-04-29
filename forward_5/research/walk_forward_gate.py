@@ -523,16 +523,43 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
     profitable_assets = sum(1 for r in results.values() if r["avg_oos_return"] > 0)
     avg_all_return = np.mean([r["avg_oos_return"] for r in results.values()]) if results else 0
     avg_all_trades = np.mean([r["avg_trades"] for r in results.values()]) if results else 0
-    
-    robustness = 0
-    if assets_with_data > 0:
-        profitable_ratio = profitable_assets / assets_with_data
-        robustness = profitable_ratio * 70
-        if avg_all_trades >= 3:
-            robustness += 30
-        robustness = min(100, round(robustness, 1))
-    
-    passed = robustness >= 50 and profitable_assets >= 3
+
+    # V8.1 Scoring: Reward making money, not just not losing
+    #
+    # OLD: robustness = profitable_ratio * 70 + (trades >= 3) * 30
+    # PROBLEM: rewarded "rarely trade, never lose" over "trade and profit"
+    #          +0.001% counted same as +5%, rewarding noise over edge
+    #
+    # NEW: 3 components that matter:
+    #   1. OOS Return (40%) — did we actually make money?
+    #   2. Profitable Ratio (30%) — how consistent across assets?
+    #   3. Trade Floor (30%) — enough trades for statistical validity?
+    #
+    # Return bonus: Strategies with positive OOS get boosted,
+    # negative OOS get penalized. Scale: ±5% → ±20 points.
+    #
+    # Minimum bar: avg_all_trades >= 2 per window, otherwise
+    # the result is statistical noise (0-1 trades = luck).
+
+    profitable_ratio = profitable_assets / assets_with_data if assets_with_data > 0 else 0
+
+    # Component 1: OOS Return score (map -2%..+1% → 0..20)
+    return_score = max(0, min(20, (avg_all_return + 2) / 3 * 20))
+
+    # Component 2: Profitable Ratio score (0/6..6/6 → 0..30)
+    consistency_score = profitable_ratio * 30
+
+    # Component 3: Trade floor (≥3 trades/window → full 30, else scaled down)
+    trade_score = min(30, avg_all_trades / 3 * 30) if avg_all_trades > 0 else 0
+
+    robustness = round(min(100, return_score + consistency_score + trade_score), 1)
+
+    # PASS requires: (a) positive OOS return, (b) ≥3 profitable assets, (c) avg ≥2 trades/window
+    # This eliminates "0 trades, 0 loss" false champions
+    passed = (robustness >= 40
+              and profitable_assets >= 3
+              and avg_all_trades >= 2
+              and avg_all_return > 0)
     wf_status = "PASS" if passed else "FAIL"
 
     return {
