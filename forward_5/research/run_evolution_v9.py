@@ -719,7 +719,21 @@ def load_hof() -> list[dict]:
 def save_hof(hof: list[dict]):
     hof.sort(key=lambda x: (1 if x.get("wf_passed") else 0, x.get("wf_robustness", 0), x.get("is_score", 0)), reverse=True)
     champion = hof[0] if hof else None
-    HOF_FILE.write_text(json.dumps({"updated": datetime.now().isoformat(), "champion": champion, "hof": hof[:50]}, indent=2))
+    data = {"updated": datetime.now().isoformat(), "champion": champion, "hof": hof[:50]}
+    # Sanitize numpy types for JSON
+    def sanitize(obj):
+        if isinstance(obj, dict):
+            return {k: sanitize(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [sanitize(v) for v in obj]
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            return float(obj)
+        return obj
+    HOF_FILE.write_text(json.dumps(sanitize(data), indent=2))
 
 
 def hof_mr_count(hof: list[dict]) -> int:
