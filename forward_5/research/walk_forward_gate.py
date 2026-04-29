@@ -149,25 +149,29 @@ def build_strategy_func(entry_condition: str, exit_condition: str = None):
 
     # 3) Extended DSL parser
     def strategy_func(df: pl.DataFrame, params: dict) -> pl.DataFrame:
+        # Normalize conditions (lowercase and/or, parens, &|)
+        entry_norm = _normalize_condition(entry_condition)
+        exit_norm = _normalize_condition(exit_condition) if exit_condition else None
+
         # Compute indicators needed for both entry and exit
-        combined = entry_condition
-        if exit_condition:
-            combined = f"{entry_condition} AND {exit_condition}"
+        combined = entry_norm
+        if exit_norm:
+            combined = f"{entry_norm} AND {exit_norm}"
         indicators = _compute_indicators(combined, df)
         df = df.with_columns([v.alias(k) for k, v in indicators.items()])
         
         # Entry signal
-        conditions = [c.strip() for c in entry_condition.split(' AND ')]
+        conditions = [c.strip() for c in entry_norm.split(' AND ')]
         signal = pl.lit(True)
         for cond in conditions:
             signal = signal & _parse_simple_condition(cond)
         df = df.with_columns((pl.when(signal).then(1).otherwise(0)).alias('signal'))
         
         # Exit signal (V9: explicit exit condition different from entry)
-        if exit_condition:
+        if exit_norm:
             # Support AND + OR in exit conditions
             # Split on OR first (lower precedence), then AND within each group
-            or_groups = [g.strip() for g in re.split(r'\s+OR\s+', exit_condition, flags=re.IGNORECASE)]
+            or_groups = [g.strip() for g in re.split(r'\s+OR\s+', exit_norm, flags=re.IGNORECASE)]
             exit_signal = pl.lit(False)
             for or_group in or_groups:
                 and_conds = [c.strip() for c in or_group.split(' AND ')]
@@ -180,6 +184,33 @@ def build_strategy_func(entry_condition: str, exit_condition: str = None):
         return df
 
     return strategy_func, True
+
+
+def _normalize_condition(cond: str) -> str:
+    """Normalize LLM-generated condition strings for DSL parsing.
+    Handles: lowercase and/or, parentheses around comparisons, &/| operators."""
+    if not cond:
+        return cond
+    import re as _re
+    # Replace & with AND, | with OR
+    cond = _re.sub(r'\s*&\s*', ' AND ', cond)
+    cond = _re.sub(r'\s*\|\s*', ' OR ', cond)
+    # Normalize lowercase and/or (word boundaries)
+    cond = _re.sub(r'(?<=\s)and(?=\s)', 'AND', cond, flags=_re.IGNORECASE)
+    cond = _re.sub(r'(?<=\s)or(?=\s)', 'OR', cond, flags=_re.IGNORECASE)
+    # Handle leading lowercase
+    cond = _re.sub(r'^and\s', 'AND ', cond, flags=_re.IGNORECASE)
+    cond = _re.sub(r'^or\s', 'OR ', cond, flags=_re.IGNORECASE)
+    # Strip parens around individual comparisons: (close > ema_50) -> close > ema_50
+    def _strip_parens(s):
+        prev = None
+        while prev != s:
+            prev = s
+            s = _re.sub(r'\(([A-Za-z_\d.]+\s*[<>!=]+\s*[A-Za-z_\d.*]+)\)', r'\1', s)
+        return s
+    cond = _strip_parens(cond)
+    cond = _re.sub(r'\s+', ' ', cond).strip()
+    return cond
 
 
 def _compute_indicators(entry_condition: str, df: pl.DataFrame) -> dict:

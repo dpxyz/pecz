@@ -479,6 +479,10 @@ def parse_strategy(text: str) -> dict | None:
         try:
             d = json.loads(attempt)
             if "entry_condition" in d:
+                # Normalize condition strings (lowercase and/or, parens, &|)
+                d["entry_condition"] = normalize_condition(d["entry_condition"])
+                if "exit_condition" in d:
+                    d["exit_condition"] = normalize_condition(d["exit_condition"])
                 entry = d["entry_condition"]
                 if " OR " in entry.upper():
                     print(f"    ⚠️ Rejected OR in entry: {entry[:60]}")
@@ -743,6 +747,35 @@ def hof_mr_count(hof: list[dict]) -> int:
 # ============================================================================
 # DIVERSITY & CLASSIFICATION
 # ============================================================================
+
+def normalize_condition(cond: str) -> str:
+    """Normalize LLM-generated condition strings for DSL parsing.
+    Handles: lowercase and/or, parentheses around comparisons, &/| operators."""
+    if not cond:
+        return cond
+    import re as _re
+    # Replace & with AND, | with OR (but not inside indicator names)
+    cond = _re.sub(r'\s*&\s*', ' AND ', cond)
+    cond = _re.sub(r'\s*\|\s*', ' OR ', cond)
+    # Normalize lowercase and/or (word boundaries)
+    cond = _re.sub(r'(?<=\s)and(?=\s)', 'AND', cond, flags=_re.IGNORECASE)
+    cond = _re.sub(r'(?<=\s)or(?=\s)', 'OR', cond, flags=_re.IGNORECASE)
+    # Handle leading lowercase (e.g. "rsi_14 < 30 and close > ema_50")
+    cond = _re.sub(r'^and\s', 'AND ', cond, flags=_re.IGNORECASE)
+    cond = _re.sub(r'^or\s', 'OR ', cond, flags=_re.IGNORECASE)
+    # Strip parens around individual comparisons: (close > ema_50) -> close > ema_50
+    # Only strip if no AND/OR inside the parens
+    def strip_singleton_parens(s):
+        prev = None
+        while prev != s:
+            prev = s
+            s = _re.sub(r'\(([A-Za-z_\d.]+\s*[<>!=]+\s*[A-Za-z_\d.*]+)\)', r'\1', s)
+        return s
+    cond = strip_singleton_parens(cond)
+    # Clean up multiple spaces
+    cond = _re.sub(r'\s+', ' ', cond).strip()
+    return cond
+
 
 def entry_pattern(entry: str) -> str:
     indicators = sorted(set(re.findall(
