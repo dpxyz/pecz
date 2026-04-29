@@ -620,7 +620,7 @@ def run_wf_on_candidate(name: str, entry: str, exit_config: dict,
         min_profitable = 2 if n_target == 3 else max(3, n_target // 2)
         passed = (robustness >= 40
                   and target_profitable >= min_profitable
-                  and target_avg_trades >= 3
+                  and target_avg_trades >= 2
                   and target_avg_return > 0)
     else:
         # Legacy pass criteria

@@ -122,8 +122,8 @@ ARMS = [
         "default_exit_condition": "rsi_14 > 60",
     },
     {
-        "name": "CROSS-ASSET",
-        "prompt_key": "CROSS_ASSET",
+        "name": "VOLATILITY-BREAK",
+        "prompt_key": "VOLATILITY_BREAK",
         "target_assets": NON_MR_TARGET_ASSETS,
         "temperature": 0.6,
         "is_mr": False,
@@ -329,8 +329,8 @@ Stop Loss: 3.5%, Max Hold: 20 Bars.
 Antworte NUR mit JSON:
 {{"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_condition": "rsi_14 > 60", "exit_config": {{"stop_loss_pct": 3.5, "max_hold_bars": 20}}}}""",
 
-    "CROSS_ASSET": f"""Du bist ein Quant-Stratege für 1h Crypto Perps.
-Generiere EINE Cross-Asset / Relative-Strength Strategie für Long-Entry.
+    "VOLATILITY_BREAK": f"""Du bist ein Quant-Stratege für 1h Crypto Perps.
+Generiere EINE Volatility-Breakout / ATR-Expansion Strategie für Long-Entry.
 
 ZIEL-ASSETS: ALLE 6 (BTC, ETH, SOL, AVAX, DOGE, ADA)
 
@@ -338,28 +338,28 @@ ZIEL-ASSETS: ALLE 6 (BTC, ETH, SOL, AVAX, DOGE, ADA)
 
 {INDICATOR_LIST}
 
-KONZEPT: Cross-Asset Strategien nutzen Korrelationen.
-BTC führt, Alts folgen mit Verzögerung. Wenn BTC steigt und ein Alt
-noch nicht, kauf den Alt (Relative Weakness = Opportunity).
+KONZEPT: Volatility-Breakout nutzt Phasen niedriger Volatilität (Squeeze),
+gefolgt von Expansion. Wenn BB_Width oder ATR schrumpft und dann expandiert,
+steht ein großer Move bevor. Keltner-Channel Breakouts sind ein klassisches Signal.
 
 ENTRY-REGELN:
-- Kombiniere Trend-Indikatoren (EMA, ADX) mit Volume-Bestätigung
-- Fokus auf "Laggard"-Entries: Asset ist schwach aber Markt ist stark
-- Mindestens 3 Indikatoren mit AND
+- Kombiniere Volatility-Indikatoren (BB_Width, ATR, Keltner) mit Trend-Bestätigung
+- Fokus auf Squeeze-Breakout: niedrige Volatilität + plötzliche Expansion
+- Mindestens 2-3 Indikatoren mit AND
 - KEIN OR! Nur AND als logischer Operator
 - KEINE Array-Vergleiche
 
 GUTE ANSÄTZE:
-- Trend + Volume + Momentum: close > ema_50 AND adx_14 > 20 AND volume_ratio_20 > 1.3 AND roc_14 > 0
-- EMA-Slope + MFI + CCI: ema_slope_50 > 0 AND mfi_14 > 40 AND cci_20 > 0
-- OBV-Momentum + Trend: obv_20 > 0 AND close > ema_100 AND cmf_20 > 0
+- Squeeze + Trend: bb_width_20 < 0.02 AND close > bb_mid_20 AND adx_14 > 25
+- Keltner Breakout: close > keltner_upper_20 AND volume_ratio_20 > 1.5 AND roc_14 > 0
+- ATR Expansion + Momentum: atr_14 > 0.5 AND roc_14 > 1 AND close > ema_50
 
 EXIT: KEIN trailing_stop! Nutze exit_condition.
-Exit wenn Relativer Strength nachlässt: close < ema_50 ODER roc_14 < -2.
+Exit wenn Volatility nachlässt: close < bb_mid_20 ODER bb_width_20 < 0.01.
 Stop Loss: 4%, Max Hold: 24 Bars.
 
 Antworte NUR mit JSON:
-{{"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_condition": "close < ema_50", "exit_config": {{"stop_loss_pct": 4.0, "max_hold_bars": 24}}}}""",
+{{"name": "DESCRIPTIVE_NAME", "entry_condition": "...", "exit_condition": "close < bb_mid_20", "exit_config": {{"stop_loss_pct": 4.0, "max_hold_bars": 24}}}}""",
 }
 
 MUTATION_PROMPT = """MUTIERE diese Strategie. Ändere 1-3 Entry-Parameter oder füge einen Entry-Filter hinzu.
@@ -723,7 +723,7 @@ def classify_strategy_type(entry: str) -> str:
     if 'adx' in e or 'ema_slope' in e:
         return 'TREND_REGIME'
     if 'roc_' in e or 'macd_hist' in e or 'bull_power' in e:
-        return 'CROSS_ASSET'
+        return 'VOLATILITY_BREAK'
     if 'cmf' in e or 'mfi' in e or 'obv' in e:
         return 'VOL_BOOSTED'
     if 'stoch' in e or 'williams' in e:

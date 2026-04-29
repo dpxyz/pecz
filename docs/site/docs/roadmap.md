@@ -131,7 +131,7 @@ title: Roadmap
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:0.72rem;color:var(--fwd-text);">v9 arms</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">ALT · RELAX · REGIME · SIGNAL · VOL · CROSS</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">ALT · RELAX · REGIME · SIGNAL · VOL · VOLATILITY</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:0.72rem;color:var(--fwd-text);">exit overhaul</span>
