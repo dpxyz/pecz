@@ -1,5 +1,26 @@
 # Changelog
 
+## [v9-redesign] - 2026-04-29
+
+### Foundry V9 Oktopus Redesign (ADR-011)
+- **WF-Gate V8.1**: New scoring — OOS Return 40% + Profitable Ratio 30% + Trade Floor 30%
+- **ALL 4 old champions DEMOTED** — were statistical noise, not real edge
+- **Zero strategies pass new gate** — confirms: no edge on 1h standard indicators
+- **V9 Arms**: MR-ALT (alts only), MR-RELAXED, TREND-REGIME, SIGNAL-EXIT, VOL-BOOSTED, CROSS-ASSET
+- **Exit Overhaul**: Trailing Stop removed, Signal-Reversal-Exit instead
+- **Mutation Guards**: HOF-only, entry-only, trade floor ≥3, MR max 40%
+- **Composite Fitness V9**: OOS 30%, Target-Asset 25%, Trades 20%, WF 15%, DD 10%
+- **HOF Reset**: Starts empty — all V8 entries failed V8.1 gate
+- **IS Pre-Filter**: <3 trades/asset/window → skip WF (saves 80% compute)
+
+### Key Lessons (150+ strategies)
+1. MR works only on DOGE/ADA/AVAX — never on BTC/ETH
+2. Trailing Stop 2-3% never fires (80-91% signal_exit)
+3. Entries too restrictive — 0.4 trades/window = noise
+4. IS-Score overfits 150x (V17: IS=4.88, OOS=-0.15%)
+5. "Not losing" ≠ "making money" — old gate rewarded 0-trade strategies
+6. Standard indicators (BB/RSI/EMA) have no edge on 1h crypto
+
 ## [v8-oktopus] - 2026-04-27
 
 ### Foundry V8 Oktopus Architecture

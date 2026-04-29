@@ -115,31 +115,31 @@ title: Roadmap
     </div>
   </div>
 
-  <div style="margin-top:0.4rem;" class="section-label">foundry v8 · oktopus</div>
+  <div style="margin-top:0.4rem;" class="section-label">foundry v9 · redesigned</div>
   <div class="grid-2" style="gap:0.3rem;">
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 (5w)</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">WF 88.3 · IS 1.28</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">gate v8.1</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">0/4 champions pass · fixed</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">V32 (10w)</span>
-      <span style="font-size:0.65rem;color:var(--fwd-danger);">WF 23.3 · FAIL</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">old champs</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">all demoted · noise</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">search</span>
-      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">170+ · 0 10w-passed</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">key lesson</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">no edge on 1h standard indicators</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">6 arms</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">MR · TREND · MOM · VOL · REGIME · 4H</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">v9 arms</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">ALT · RELAX · REGIME · SIGNAL · VOL · CROSS</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">autopsy</span>
-      <span style="font-size:0.65rem;color:var(--fwd-success);">✓ deep · 6 analyses</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">exit overhaul</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">signal-reversal · no trail</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">key insight</span>
-      <span style="font-size:0.65rem;color:var(--fwd-danger);">92% signal_exit · too few trades</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">hof</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">reset · empty start</span>
     </div>
   </div>
 

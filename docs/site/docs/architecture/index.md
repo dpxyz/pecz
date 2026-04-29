@@ -14,6 +14,7 @@
 | [ADR-008](adr-008.md) | Crash & Uptime Strategy | 🔄 Proposed |
 | [ADR-009](adr-009.md) | V2 Data Availability | ✅ Accepted |
 | [ADR-010](adr-010.md) | V2 Strategy — Der Oktopus | 🔄 Proposed |
+| [ADR-011](adr-011.md) | Foundry V9 Oktopus Redesign | ✅ Accepted |
 
 ## Design Principles
 
@@ -25,4 +26,4 @@
 
 ---
 
-*Last updated: 2026-04-28*
+*Last updated: 2026-04-29*
