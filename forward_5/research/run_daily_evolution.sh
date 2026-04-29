@@ -53,6 +53,15 @@ try:
         with open(v8_files[-1]) as f:
             data = json.load(f)
         
+        # Build 10w champions ranked by OOS
+        hof = data.get('hof', [])
+        champs_10w = sorted(
+            [h for h in hof if h.get('wf_passed_10w')],
+            key=lambda h: h.get('avg_oos_return', -999),
+            reverse=True
+        )
+        best_oos = champs_10w[0] if champs_10w else None
+        
         report = {
             'date': '$DATE',
             'version': 'V8_multi_strategy',
@@ -62,6 +71,19 @@ try:
             'phase2_passed': data.get('phase2_passed', 0),
             'hof_size': data.get('hof_size', 0),
             'champion': data.get('champion'),
+            'best_oos_champion': {
+                'name': best_oos['name'],
+                'oos': best_oos.get('avg_oos_return', 0),
+                'wf_10w': best_oos.get('wf_robustness_10w', 0),
+                'profitable_10w': best_oos.get('wf_profitable_10w', '?'),
+                'entry': best_oos['entry_condition'],
+            } if best_oos else None,
+            'champions_10w_ranked': [{
+                'name': c['name'],
+                'oos': c.get('avg_oos_return', 0),
+                'wf_10w': c.get('wf_robustness_10w', 0),
+                'profitable_10w': c.get('wf_profitable_10w', '?'),
+            } for c in champs_10w],
             'type_stats': data.get('type_stats', {}),
             'hof_top5': data.get('hof_top5', []),
         }
