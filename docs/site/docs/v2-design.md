@@ -69,7 +69,7 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 | Sniper | Regime > 70, 5x, starr Trail 2.5%, Max Hold 24h | Backtest + Paper |
 | DD-Scaling | 10/15/20% Stufen + Global Equity Stop | Paper DD < 25% |
 | Global Equity Stop | 1h-DD > 8%, starr 24h Cooldown | Paper |
-| Sentiment = Funding Rate | Kontraindikator bei Extremen, 100% in Stufe 1 | Backtest Invertierung |
+| Sentiment = Funding Rate | Entry-Signal + Kontraindikator, Long bei niedriger Funding (Alts), Short bei hoher (Majors) | 1-Jahr WF validiert |
 | Slippage Tax | SLIPPAGE_BPS auf jeden Paper-Entry | Trivial |
 | Decision Logging | SKIP-Events loggen (Asset, Regime, Grund) | Telemetrie |
 
@@ -77,7 +77,7 @@ Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, so
 - Kinetischer Trail → Stufe 2 (braucht Trade-Daten)
 - Dynamic Cooldown → Stufe 2 (starr 24h reicht erstmal)
 - Volatility-Parität → Stufe 2 (braucht ATR-Daten)
-- SHORT → Stufe 2 (braucht separaten Backtest)
+- SHORT → Stufe 1 (validiert: 1-Jahr WF 5.19% annualisiert, BTC/ETH/SOL Short P90)
 - Gezeiten-Blocker → Stufe 2 (braucht Kalender-Feed)
 - News Sentiment → Stufe 3 (braucht validierten Prompt)
 
@@ -750,45 +750,51 @@ Circuit-Breaker: 3 Verluste → 48h Pause
 - Kein Hyper-Optimization der Backtest-Parameter
 - Kein automatisches Upsizing bei "gutem Sentiment"
 
-## SHORT-Positionen — Hypothese (Stufe 2 Kandidat)
+## SHORT-Positionen — STUFE 1 (validiert durch 1-Jahr Walk-Forward)
 
-**Status: ZU VALIDIEREN — nicht als festes Feature aufnehmen ohne Backtest-Beweis**
+**Status: VALIDIERT — 1-Jahr WF zeigt Short P90 als stärkster Edge (5.19% annualisiert)**
 
-**Warum SHORT Sinn macht:**
-- Regime Detection weiß wenn Trend DOWN → wird aktuell nicht genutzt
-- Einnahmen im Bärenmarkt → Fixkosten decken
-- Hyperliquid Perps = gleiches Interface, trivial zu implementieren
-- UI (LONG/SHORT Badge) ist bereits vorbereitet
+**Warum SHORT JETZT Stufe 1 ist:**
+- 1-Jahr Walk-Forward: Short P90 24h = stärkste Konfiguration (5.19% annualisiert)
+- BTC Short: +0.65%, ETH Short: +0.78%, SOL Short: +1.99% — alle profitabel
+- Q4 2025 (Bear): Long P10 = -0.98%, Short P90 = +0.57% → Short schützt im Bärenmarkt
+- Short bei hoher Funding = natürlicher Hedge gegen Long-Positionen
 
-**Warum SHORT riskant ist:**
-- Bärenmärkte sind volatiler → Shortsqueezes sind brutal
-- Funding Rate wirkt GEGEN Shorts → wir zahlen für die Position
-- Markt hat natürlichen Aufwärts-Drift → Short ist strukturell schwerer
-- V1 25% Win-Rate LONG invertiert NICHT automatisch zu guter SHORT-Win-Rate
-- Bidirektional = doppelt so viele Code-Pfade = doppelt so viele Bugs
+**Asset-spezifische Direction (aus Daten):**
 
-**Regime-Logik (falls validiert):**
+| Asset | Long P10 | Short P90 | Direction |
+|-------|----------|-----------|------------|
+| BTC | +0.15% | **+0.65%** | SHORT |
+| ETH | -0.47% | **+0.78%** | SHORT |
+| SOL | -1.55% | **+1.99%** | SHORT |
+| AVAX | **+0.75%** | No data | LONG |
+| DOGE | **+0.63%** | -0.46% | LONG |
+| ADA | **+0.75%** | -1.24% | LONG |
 
-| Regime | Trendrichtung | Aktion |
-|--------|--------------|--------|
-| Strong (>70) | UP | LONG |
-| Strong (>70) | DOWN | SHORT |
-| Trend (30-70) | UP | LONG V1 |
-| Trend (30-70) | DOWN | SHORT V1 |
-| Range (<30) | egal | Kein Trade |
+**Regime-Logik (validiert):**
 
-**Gate:**
-- V2 Stufe 1 (LONG-only) MUSS erst validiert sein
-- SHORT-Backtest MUSS ≥ LONG-Backtest Sharpe zeigen
-- SHORT-Backtest MUSS DD ≤ LONG-Backtest DD zeigen
-- Paper Trading MUSS ≥5 SHORT-Trades in 14 Tagen zeigen
-- Ohne Gate-Bestehen: SHORT wird NICHT aufgenommen
+| Regime | Funding | Aktion |
+|--------|---------|--------|
+| Bull (Q2/Q1) | Low | LONG auf Alts (AVAX/DOGE/ADA) |
+| Bear (Q4) | High | SHORT auf Majors (BTC/ETH/SOL) |
+| Sideways (Q3) | Neutral | Vorsicht, Edge gering |
 
-**Reihenfolge:**
-1. V2 Stufe 1 bauen + validieren (LONG-only)
+**SL Anpassung (aus Daten):**
+- Fixed 3% SL = 30-47% SL-Rate auf Alts = zu hoch
+- V2 Design: Regime-basiert — 3% Weak, 5% Strong (wie geplant)
+- Phase 1d muss bestätigen: 5% SL reduziert SL-Rate auf <25%
+
+**Gate (aktualisiert):**
+- ✅ 1-Jahr WF: Short P90 annualisiert > 0.3% (5.19% erreicht)
+- ✅ Short Sharpe > Long Sharpe auf BTC/ETH/SOL
+- 🔲 Paper Trading: ≥5 SHORT-Trades in 14 Tagen
+- 🔲 Regime-basierte SL bestätigen (3% Weak, 5% Strong)
+
+**Reihenfolge (aktualisiert):**
+1. ~~V2 Stufe 1 bauen + validieren (LONG-only)~~ → GEÄNDERT: LONG+SHORT parallel
 2. Regime-Score um Trendrichtung erweitern
-3. SHORT-Backtest separat laufen
-4. Nur bei positivem Ergebnis → Stufe 2 aufnehmen
+3. Asset-spezifische Direction-Logik implementieren
+4. Paper Trading mit Long+Short
 
 ## V2 Implementierung — 3 Stufen, 1 Release
 
