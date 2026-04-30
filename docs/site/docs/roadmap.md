@@ -115,7 +115,7 @@ title: Roadmap
     </div>
   </div>
 
-  <div style="margin-top:0.4rem;" class="section-label">foundry v9 · redesigned</div>
+  <div style="margin-top:0.4rem;" class="section-label">foundry v9 · 0 wf-passed</div>
   <div class="grid-2" style="gap:0.3rem;">
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:0.72rem;color:var(--fwd-text);">gate v8.1</span>
@@ -130,16 +130,28 @@ title: Roadmap
       <span style="font-size:0.65rem;color:var(--fwd-danger);">no edge on 1h standard indicators</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">v9 arms</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">ALT · RELAX · REGIME · SIGNAL · VOL · VOLATILITY</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">v9 results</span>
+      <span style="font-size:0.65rem;color:var(--fwd-danger);">150+ strategies · 0 wf-passed</span>
+    </div>
+  </div>
+
+  <div style="margin-top:0.4rem;" class="section-label">v10 · funding-first (next)</div>
+  <div class="grid-2" style="gap:0.3rem;">
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">new signal</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">funding rate · +0.43% vs random</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">exit overhaul</span>
-      <span style="font-size:0.65rem;color:var(--fwd-success);">signal-reversal · no trail</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">6/6 assets</span>
+      <span style="font-size:0.65rem;color:var(--fwd-success);">all profitable · DOGE best</span>
     </div>
     <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:0.72rem;color:var(--fwd-text);">hof</span>
-      <span style="font-size:0.65rem;color:var(--fwd-accent);">reset · empty start</span>
+      <span style="font-size:0.72rem;color:var(--fwd-text);">phase 1</span>
+      <span style="font-size:0.65rem;color:var(--fwd-accent);">validate edge · 1yr data · fees</span>
+    </div>
+    <div class="card" style="padding:0.25rem 0.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.72rem;color:var(--fwd-text);">phase 2</span>
+      <span style="font-size:0.65rem;color:var(--fwd-text-muted);">foundry v10 · funding as kraftstoff</span>
     </div>
   </div>
 

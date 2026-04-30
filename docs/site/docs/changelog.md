@@ -1,5 +1,25 @@
 # Changelog
 
+## [v10-funding-first] - 2026-04-30
+
+### V10 Funding-First Strategy
+- **Funding Rate Standalone Test**: 6/6 assets profitable vs random, +0.43% avg per trade
+- **DOGE strongest**: +1.12% per trade, 70.2% win rate, +0.76% vs random
+- **V9 CONFIRMED**: 150+ strategies, 0 WF-passed — standard indicators have zero alpha
+- **Foundry CRON PAUSED**: no more runs until V2 data validated
+- **V2 Data Collector**: 6 free sources (HL Funding, Binance Funding/OI/LS/Taker, F&G)
+- **Correlation Analysis**: Funding Rate -0.11 to -0.17 with 24h returns (above 0.05 threshold)
+- **Funding Filter Test**: +1.6% improvement on existing strategies, but can't rescue negative base
+- **V10 Spec**: `/research/V10_SPEC.md` — hypothesis-driven, kill criteria at every step
+- **Dave Decision**: Foundry = Motor, Funding = Kraftstoff. Don't bypass Foundry, extend it.
+- **3 Self-Corrections**: (1) Funding as Kill-Switch vs Entry — V2 assumptions outdated, (2) WF windows overlap with 60d data — need 1yr, (3) Engineering estimate 3-5d was overblown — 1-2d realistic
+- **Key Insight**: Funding payment is a hidden cost (up to 0.15% for 24h hold) — must be modeled in backtest
+
+### Plan
+- Phase 1: Validate Edge (2 days) — 1yr data, slippage+fees, regime analysis
+- Phase 2: Foundry V10 (2 days eng, 7-14d running) — Funding data as kraftstoff
+- Phase 3: Paper Engine (2 days) — best strategy live 14 days
+
 ## [v9-redesign] - 2026-04-29
 
 ### Foundry V9 Oktopus Redesign (ADR-011)

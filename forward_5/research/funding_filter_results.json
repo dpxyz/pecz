@@ -1,0 +1,578 @@
+[
+  {
+    "strategy": "V32_MR",
+    "asset": "BTC",
+    "filter": "None",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "BTC",
+    "filter": "P90",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "BTC",
+    "filter": "P75",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "BTC",
+    "filter": "P50",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ETH",
+    "filter": "None",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ETH",
+    "filter": "P90",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ETH",
+    "filter": "P75",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ETH",
+    "filter": "P50",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "SOL",
+    "filter": "None",
+    "oos_return": -0.224841,
+    "trades": 1,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "SOL",
+    "filter": "P90",
+    "oos_return": -0.224841,
+    "trades": 1,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "SOL",
+    "filter": "P75",
+    "oos_return": -0.224841,
+    "trades": 1,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "SOL",
+    "filter": "P50",
+    "oos_return": -0.224841,
+    "trades": 1,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "AVAX",
+    "filter": "None",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "AVAX",
+    "filter": "P90",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "AVAX",
+    "filter": "P75",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "AVAX",
+    "filter": "P50",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "DOGE",
+    "filter": "None",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "DOGE",
+    "filter": "P90",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "DOGE",
+    "filter": "P75",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "DOGE",
+    "filter": "P50",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ADA",
+    "filter": "None",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ADA",
+    "filter": "P90",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ADA",
+    "filter": "P75",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "V32_MR",
+    "asset": "ADA",
+    "filter": "P50",
+    "oos_return": 0.0,
+    "trades": 0,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "BTC",
+    "filter": "None",
+    "oos_return": 0.115639,
+    "trades": 7,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "BTC",
+    "filter": "P90",
+    "oos_return": 0.115639,
+    "trades": 7,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "BTC",
+    "filter": "P75",
+    "oos_return": 0.062706,
+    "trades": 6,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "BTC",
+    "filter": "P50",
+    "oos_return": 0.062706,
+    "trades": 6,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ETH",
+    "filter": "None",
+    "oos_return": -0.099787,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ETH",
+    "filter": "P90",
+    "oos_return": -0.099787,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ETH",
+    "filter": "P75",
+    "oos_return": -0.099787,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ETH",
+    "filter": "P50",
+    "oos_return": 0.01574,
+    "trades": 4,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "SOL",
+    "filter": "None",
+    "oos_return": -0.107839,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "SOL",
+    "filter": "P90",
+    "oos_return": -0.107839,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "SOL",
+    "filter": "P75",
+    "oos_return": -0.032594,
+    "trades": 4,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "SOL",
+    "filter": "P50",
+    "oos_return": -0.032594,
+    "trades": 4,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "AVAX",
+    "filter": "None",
+    "oos_return": -0.376203,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "AVAX",
+    "filter": "P90",
+    "oos_return": -0.376203,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "AVAX",
+    "filter": "P75",
+    "oos_return": -0.376203,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "AVAX",
+    "filter": "P50",
+    "oos_return": -0.376203,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "DOGE",
+    "filter": "None",
+    "oos_return": -0.272008,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "DOGE",
+    "filter": "P90",
+    "oos_return": -0.272008,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "DOGE",
+    "filter": "P75",
+    "oos_return": -0.272008,
+    "trades": 4,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "DOGE",
+    "filter": "P50",
+    "oos_return": -0.312137,
+    "trades": 4,
+    "skipped": 1
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ADA",
+    "filter": "None",
+    "oos_return": 0.005377,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ADA",
+    "filter": "P90",
+    "oos_return": 0.005377,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ADA",
+    "filter": "P75",
+    "oos_return": 0.005377,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "BB_RSI_MR",
+    "asset": "ADA",
+    "filter": "P50",
+    "oos_return": 0.005377,
+    "trades": 5,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "BTC",
+    "filter": "None",
+    "oos_return": -1.866465,
+    "trades": 17,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "BTC",
+    "filter": "P90",
+    "oos_return": -1.866465,
+    "trades": 17,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "BTC",
+    "filter": "P75",
+    "oos_return": -2.161285,
+    "trades": 19,
+    "skipped": 9
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "BTC",
+    "filter": "P50",
+    "oos_return": -1.844099,
+    "trades": 20,
+    "skipped": 27
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ETH",
+    "filter": "None",
+    "oos_return": -2.557389,
+    "trades": 20,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ETH",
+    "filter": "P90",
+    "oos_return": -2.557389,
+    "trades": 20,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ETH",
+    "filter": "P75",
+    "oos_return": -2.985933,
+    "trades": 24,
+    "skipped": 26
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ETH",
+    "filter": "P50",
+    "oos_return": -1.212881,
+    "trades": 13,
+    "skipped": 56
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "SOL",
+    "filter": "None",
+    "oos_return": -2.482726,
+    "trades": 17,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "SOL",
+    "filter": "P90",
+    "oos_return": -0.11865,
+    "trades": 19,
+    "skipped": 30
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "SOL",
+    "filter": "P75",
+    "oos_return": 0.565054,
+    "trades": 16,
+    "skipped": 60
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "SOL",
+    "filter": "P50",
+    "oos_return": -0.899381,
+    "trades": 11,
+    "skipped": 82
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "AVAX",
+    "filter": "None",
+    "oos_return": -3.397547,
+    "trades": 22,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "AVAX",
+    "filter": "P90",
+    "oos_return": -3.397547,
+    "trades": 22,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "AVAX",
+    "filter": "P75",
+    "oos_return": -3.397547,
+    "trades": 22,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "AVAX",
+    "filter": "P50",
+    "oos_return": -3.397547,
+    "trades": 22,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "DOGE",
+    "filter": "None",
+    "oos_return": -0.418346,
+    "trades": 31,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "DOGE",
+    "filter": "P90",
+    "oos_return": -0.247252,
+    "trades": 31,
+    "skipped": 5
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "DOGE",
+    "filter": "P75",
+    "oos_return": -0.247252,
+    "trades": 31,
+    "skipped": 5
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "DOGE",
+    "filter": "P50",
+    "oos_return": -0.217927,
+    "trades": 7,
+    "skipped": 172
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ADA",
+    "filter": "None",
+    "oos_return": -1.587124,
+    "trades": 15,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ADA",
+    "filter": "P90",
+    "oos_return": -1.587124,
+    "trades": 15,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ADA",
+    "filter": "P75",
+    "oos_return": -1.587124,
+    "trades": 15,
+    "skipped": 0
+  },
+  {
+    "strategy": "EMA_Trend",
+    "asset": "ADA",
+    "filter": "P50",
+    "oos_return": -0.010194,
+    "trades": 4,
+    "skipped": 86
+  }
+]
