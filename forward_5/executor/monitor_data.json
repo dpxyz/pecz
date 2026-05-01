@@ -5,8 +5,8 @@
     "peak_equity": 100.0,
     "pnl": -3.0814360507823437,
     "pnl_pct": -3.0814360507823437,
-    "unrealized_pnl": 0.009517130660644049,
-    "mtm_equity": 96.9280810798783,
+    "unrealized_pnl": -0.27525094089405466,
+    "mtm_equity": 96.6433130083236,
     "drawdown_pct": 3.0814360507823437,
     "guard_state": "RUNNING",
     "consecutive_losses": 4,
@@ -16,211 +16,11 @@
     "win_rate": 34.61538461538461,
     "total_pnl": -2.486603010461557,
     "n_open_positions": 1,
-    "uptime_hours": 8.0,
-    "last_candle": "2026-05-01T06:00:00+00:00",
-    "timestamp": "2026-05-01T06:01:57.283743+00:00"
+    "uptime_hours": 12.0,
+    "last_candle": "2026-05-01T10:00:00+00:00",
+    "timestamp": "2026-05-01T10:02:06.717092+00:00"
   },
   "equity_curve": [
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.31905688718321196,
-      "drawdown_pct": 1.7679916663223452,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.31905688718321196,
-      "drawdown_pct": 1.7679916663223452,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.31905688718321196,
-      "drawdown_pct": 1.7679916663223452,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.31905688718321196,
-      "drawdown_pct": 1.7679916663223452,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.3921385371683807,
-      "drawdown_pct": 1.694910016337175,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777014000000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.3921385371683807,
-      "drawdown_pct": 1.694910016337175,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777017600000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4170932469194145,
-      "drawdown_pct": 1.6699553065861323,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777021200000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.17212966752661765,
-      "drawdown_pct": 1.9149188859789348,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024800000,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.4527428322780343,
-      "drawdown_pct": 1.6343057212275198,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
-    {
-      "ts": 1777024920623,
-      "equity": 97.91295144649445,
-      "unrealized_pnl": 0.23095148336833846,
-      "drawdown_pct": 1.85609707013721,
-      "guard_state": "RUNNING",
-      "n_positions": 1
-    },
     {
       "ts": 1777028400000,
       "equity": 97.91295144649445,
@@ -8134,10 +7934,210 @@
       "n_positions": 1
     },
     {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777615200000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1528896601478952,
+      "drawdown_pct": 3.2343257109302357,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
       "ts": 1777615317251,
       "equity": 96.91856394921766,
       "unrealized_pnl": 0.009517130660644049,
       "drawdown_pct": 3.0719189201217034,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777618800000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.1662381635020228,
+      "drawdown_pct": 3.2476742142843733,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.12174315232159949,
+      "drawdown_pct": 3.203179203103943,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.12174315232159949,
+      "drawdown_pct": 3.203179203103943,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.12174315232159949,
+      "drawdown_pct": 3.203179203103943,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.12174315232159949,
+      "drawdown_pct": 3.203179203103943,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.12174315232159949,
+      "drawdown_pct": 3.203179203103943,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777622400000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.10839464896747186,
+      "drawdown_pct": 3.1898306997498196,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777626000000,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.3219707026334982,
+      "drawdown_pct": 3.4034067534158363,
+      "guard_state": "RUNNING",
+      "n_positions": 1
+    },
+    {
+      "ts": 1777629726685,
+      "equity": 96.91856394921766,
+      "unrealized_pnl": -0.27525094089405466,
+      "drawdown_pct": 3.3566869916763977,
       "guard_state": "RUNNING",
       "n_positions": 1
     }
@@ -8150,8 +8150,8 @@
       "entry_time": 1777604400000,
       "peak_price": 0.10926,
       "size": 222.50843216693525,
-      "unrealized_pnl": 0.009517130660644049,
-      "mark_price": 0.10894,
+      "unrealized_pnl": -0.27525094089405466,
+      "mark_price": 0.10766,
       "entry_ts": 1777604400000,
       "leverage": 1.5
     }
@@ -8398,5 +8398,5 @@
       "side": "LONG"
     }
   ],
-  "generated_at": "2026-05-01T06:01:57.285354+00:00"
+  "generated_at": "2026-05-01T10:02:06.718464+00:00"
 }
