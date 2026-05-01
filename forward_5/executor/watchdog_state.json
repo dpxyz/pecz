@@ -1,10 +1,10 @@
 {
   "restart_history": [
-    1776895612040
+    1777586665823
   ],
   "circuit_breaker": false,
   "circuit_breaker_since": null,
-  "last_check": 1777557634516,
+  "last_check": 1777644206683,
   "last_status": null,
   "consecutive_failures": 0
 }

@@ -74,7 +74,11 @@ NATIVE_STRATEGIES = {
     "close < bb_lower_20 AND rsi_14 < 30 AND close > ema_200": "mean_reversion_bb",
 }
 
-SIMPLE_INDICATORS = {'close', 'open', 'high', 'low', 'volume'}
+SIMPLE_INDICATORS = {'close', 'open', 'high', 'low', 'volume',
+    # V10 Funding features (pre-computed in data_v10 parquets)
+    'funding_rate', 'funding_z', 'fund_cross_up', 'fund_cross_down',
+    'squeeze', 'vol_ratio', 'bull200', 'bull50',
+    'ret_1h', 'ret_4h', 'ema50', 'ema200'}
 PARSABLE_PREFIXES = [
     'bb_lower_', 'bb_upper_', 'bb_width_', 'bb_mid_',
     'rsi_', 'ema_', 'sma_', 'zscore_',
@@ -92,6 +96,10 @@ PARSABLE_PREFIXES = [
     'volume_ratio_',
     'keltner_lower_', 'keltner_mid_', 'keltner_upper_',
     'bull_power_', 'bear_power_',
+    # V10 Funding features (pre-computed, no calculation needed)
+    'funding_z', 'fund_cross_up', 'fund_cross_down',
+    'squeeze', 'vol_ratio', 'bull200', 'bull50',
+    'funding_rate',
 ]
 
 
@@ -460,7 +468,8 @@ def _compute_indicators(entry_condition: str, df: pl.DataFrame) -> dict:
 
 def _parse_simple_condition(cond: str):
     """Parse a single comparison like 'close < bb_lower_20' into a Polars boolean expression.
-    Supports multiplication: volume > volume_sma_20 * 1.5"""
+    Supports multiplication: volume > volume_sma_20 * 1.5
+    Supports bare column names (binary features like bull200, squeeze)."""
     for op in ['<=', '>=', '!=', '==', '<', '>']:
         if op in cond:
             parts = cond.split(op, 1)
@@ -472,6 +481,10 @@ def _parse_simple_condition(cond: str):
             if op == '==': return left == right
             if op == '<': return left < right
             if op == '>': return left > right
+    # Bare column name (binary feature) — treat as boolean
+    stripped = cond.strip()
+    if re.match(r'^[a-zA-Z_]\w*$', stripped):
+        return pl.col(stripped) == 1
     return pl.lit(False)
 
 

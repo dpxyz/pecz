@@ -1,0 +1,674 @@
+{
+  "sl_optimization": {
+    "results": {
+      "3%": {
+        "long_win_rate": 43.13725490196078,
+        "long_avg_net": -0.24845609743813443,
+        "short_win_rate": 45.68627450980392,
+        "short_avg_net": 0.13221333762376844,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 44.70588235294118,
+            "long_avg_net": -0.301746036677154,
+            "long_sl_hit_rate": 21.176470588235293,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.08303883253784423,
+            "short_sl_hit_rate": 11.176470588235295,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 44.11764705882353,
+            "long_avg_net": -0.1089664873131627,
+            "long_sl_hit_rate": 32.94117647058823,
+            "short_win_rate": 45.88235294117647,
+            "short_avg_net": 0.26960551303763086,
+            "short_sl_hit_rate": 30.0,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 44.70588235294118,
+            "long_avg_net": -0.11039766086470543,
+            "long_sl_hit_rate": 38.82352941176471,
+            "short_win_rate": 42.94117647058823,
+            "short_avg_net": 0.029695463517587395,
+            "short_sl_hit_rate": 37.05882352941177,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 43.529411764705884,
+            "long_avg_net": -0.2568617474689581,
+            "long_sl_hit_rate": 44.70588235294118,
+            "short_win_rate": 45.88235294117647,
+            "short_avg_net": 0.2177248330571171,
+            "short_sl_hit_rate": 37.64705882352941,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 42.35294117647059,
+            "long_avg_net": -0.2590136437247498,
+            "long_sl_hit_rate": 44.70588235294118,
+            "short_win_rate": 44.70588235294118,
+            "short_avg_net": 0.01353707551522121,
+            "short_sl_hit_rate": 38.23529411764706,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 39.411764705882355,
+            "long_avg_net": -0.45375100858007655,
+            "long_sl_hit_rate": 46.470588235294116,
+            "short_win_rate": 47.647058823529406,
+            "short_avg_net": 0.17967830807720991,
+            "short_sl_hit_rate": 37.64705882352941,
+            "n_trades": 170
+          }
+        }
+      },
+      "4%": {
+        "long_win_rate": 45.68627450980392,
+        "long_avg_net": -0.2804983632397127,
+        "short_win_rate": 48.13725490196078,
+        "short_avg_net": 0.13902751086656348,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.2893401506788965,
+            "long_sl_hit_rate": 10.588235294117647,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.07711564677457244,
+            "short_sl_hit_rate": 5.294117647058823,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.20676831284699893,
+            "long_sl_hit_rate": 25.294117647058822,
+            "short_win_rate": 46.470588235294116,
+            "short_avg_net": 0.17748410438611298,
+            "short_sl_hit_rate": 20.588235294117645,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 47.05882352941176,
+            "long_avg_net": -0.18868098644195475,
+            "long_sl_hit_rate": 27.058823529411764,
+            "short_win_rate": 46.470588235294116,
+            "short_avg_net": 0.018931881075043604,
+            "short_sl_hit_rate": 28.823529411764703,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 47.647058823529406,
+            "long_avg_net": -0.30608337170105177,
+            "long_sl_hit_rate": 33.52941176470588,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.12065732379834063,
+            "short_sl_hit_rate": 27.647058823529413,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 44.70588235294118,
+            "long_avg_net": -0.23095111386043202,
+            "long_sl_hit_rate": 30.0,
+            "short_win_rate": 49.411764705882355,
+            "short_avg_net": 0.08634754545810606,
+            "short_sl_hit_rate": 24.11764705882353,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 42.94117647058823,
+            "long_avg_net": -0.4611662439089422,
+            "long_sl_hit_rate": 34.705882352941174,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.3536285637072051,
+            "short_sl_hit_rate": 24.705882352941178,
+            "n_trades": 170
+          }
+        }
+      },
+      "5%": {
+        "long_win_rate": 46.56862745098039,
+        "long_avg_net": -0.33546953425132364,
+        "short_win_rate": 49.90196078431372,
+        "short_avg_net": 0.19797299912516023,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.2754524418389277,
+            "long_sl_hit_rate": 5.294117647058823,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.07741320882539404,
+            "short_sl_hit_rate": 2.941176470588235,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.3026275543093841,
+            "long_sl_hit_rate": 18.823529411764707,
+            "short_win_rate": 48.23529411764706,
+            "short_avg_net": 0.2290804320909015,
+            "short_sl_hit_rate": 13.529411764705882,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 48.23529411764706,
+            "long_avg_net": -0.23770547020614713,
+            "long_sl_hit_rate": 19.411764705882355,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.1481066221157572,
+            "short_sl_hit_rate": 18.823529411764707,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 49.411764705882355,
+            "long_avg_net": -0.3119578438744387,
+            "long_sl_hit_rate": 23.52941176470588,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.12965681230768694,
+            "short_sl_hit_rate": 18.823529411764707,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.28661250701997115,
+            "long_sl_hit_rate": 23.52941176470588,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.2335730251131656,
+            "short_sl_hit_rate": 15.88235294117647,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 42.94117647058823,
+            "long_avg_net": -0.598461388259073,
+            "long_sl_hit_rate": 25.882352941176475,
+            "short_win_rate": 54.11764705882353,
+            "short_avg_net": 0.37000789429805614,
+            "short_sl_hit_rate": 17.058823529411764,
+            "n_trades": 170
+          }
+        }
+      },
+      "6%": {
+        "long_win_rate": 46.666666666666664,
+        "long_avg_net": -0.3795411572791189,
+        "short_win_rate": 50.392156862745104,
+        "short_avg_net": 0.2041633782895291,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.2998393779227234,
+            "long_sl_hit_rate": 2.941176470588235,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.08528623086737443,
+            "short_sl_hit_rate": 0.5882352941176471,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.3444630124627642,
+            "long_sl_hit_rate": 12.352941176470589,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.2491451961702016,
+            "short_sl_hit_rate": 8.235294117647058,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 48.23529411764706,
+            "long_avg_net": -0.326244701735956,
+            "long_sl_hit_rate": 15.294117647058824,
+            "short_win_rate": 49.411764705882355,
+            "short_avg_net": 0.17387094264581762,
+            "short_sl_hit_rate": 10.588235294117647,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 49.411764705882355,
+            "long_avg_net": -0.40960140577151455,
+            "long_sl_hit_rate": 16.470588235294116,
+            "short_win_rate": 50.0,
+            "short_avg_net": 0.19120504764463764,
+            "short_sl_hit_rate": 11.76470588235294,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.32041597762199464,
+            "long_sl_hit_rate": 14.705882352941178,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.14429948163386996,
+            "short_sl_hit_rate": 13.529411764705882,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 43.529411764705884,
+            "long_avg_net": -0.5766824681597607,
+            "long_sl_hit_rate": 15.88235294117647,
+            "short_win_rate": 54.70588235294118,
+            "short_avg_net": 0.3811733707752733,
+            "short_sl_hit_rate": 10.588235294117647,
+            "n_trades": 170
+          }
+        }
+      },
+      "8%": {
+        "long_win_rate": 46.666666666666664,
+        "long_avg_net": -0.3469396838492669,
+        "short_win_rate": 50.490196078431374,
+        "short_avg_net": 0.2066426419611143,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.2616086194936308,
+            "long_sl_hit_rate": 0.5882352941176471,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.09515383487640777,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.35109803036347026,
+            "long_sl_hit_rate": 5.88235294117647,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.22942444832533804,
+            "short_sl_hit_rate": 3.5294117647058822,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 48.23529411764706,
+            "long_avg_net": -0.259841286940745,
+            "long_sl_hit_rate": 4.117647058823529,
+            "short_win_rate": 49.411764705882355,
+            "short_avg_net": 0.17058640767705435,
+            "short_sl_hit_rate": 2.941176470588235,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 49.411764705882355,
+            "long_avg_net": -0.3483868239259852,
+            "long_sl_hit_rate": 5.88235294117647,
+            "short_win_rate": 50.588235294117645,
+            "short_avg_net": 0.2327114572205509,
+            "short_sl_hit_rate": 5.88235294117647,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.2834157028536002,
+            "long_sl_hit_rate": 6.470588235294119,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.1529243907543229,
+            "short_sl_hit_rate": 5.294117647058823,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 43.529411764705884,
+            "long_avg_net": -0.5772876395181696,
+            "long_sl_hit_rate": 5.88235294117647,
+            "short_win_rate": 54.70588235294118,
+            "short_avg_net": 0.35905531291301174,
+            "short_sl_hit_rate": 5.88235294117647,
+            "n_trades": 170
+          }
+        }
+      },
+      "10%": {
+        "long_win_rate": 46.666666666666664,
+        "long_avg_net": -0.34185714361562414,
+        "short_win_rate": 50.490196078431374,
+        "short_avg_net": 0.19816593023372184,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.27337332537598374,
+            "long_sl_hit_rate": 0.5882352941176471,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.09515383487640777,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.3399785526006581,
+            "long_sl_hit_rate": 1.7647058823529411,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.24149828659406292,
+            "short_sl_hit_rate": 0.5882352941176471,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 48.23529411764706,
+            "long_avg_net": -0.26588382338888594,
+            "long_sl_hit_rate": 2.3529411764705883,
+            "short_win_rate": 49.411764705882355,
+            "short_avg_net": 0.18845726991938025,
+            "short_sl_hit_rate": 1.1764705882352942,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 49.411764705882355,
+            "long_avg_net": -0.3965910266549241,
+            "long_sl_hit_rate": 4.117647058823529,
+            "short_win_rate": 50.588235294117645,
+            "short_avg_net": 0.23109310530974245,
+            "short_sl_hit_rate": 3.5294117647058822,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.24002595491194714,
+            "long_sl_hit_rate": 3.5294117647058822,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.11380736786213592,
+            "short_sl_hit_rate": 2.941176470588235,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 43.529411764705884,
+            "long_avg_net": -0.5352901787613458,
+            "long_sl_hit_rate": 2.3529411764705883,
+            "short_win_rate": 54.70588235294118,
+            "short_avg_net": 0.31898571684060156,
+            "short_sl_hit_rate": 3.5294117647058822,
+            "n_trades": 170
+          }
+        }
+      },
+      "no_sl": {
+        "long_win_rate": 46.666666666666664,
+        "long_avg_net": -0.294803619895175,
+        "short_win_rate": 50.490196078431374,
+        "short_avg_net": 0.22176654094709627,
+        "per_asset": {
+          "BTC": {
+            "long_win_rate": 45.88235294117647,
+            "long_avg_net": -0.2530006470366391,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 47.05882352941176,
+            "short_avg_net": 0.09515383487640777,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "ETH": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.2991726896306299,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 48.8235294117647,
+            "short_avg_net": 0.22644244322851387,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "SOL": {
+            "long_win_rate": 48.23529411764706,
+            "long_avg_net": -0.2523764340119955,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 49.411764705882355,
+            "short_avg_net": 0.19420277225872237,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "AVAX": {
+            "long_win_rate": 49.411764705882355,
+            "long_avg_net": -0.292396384707698,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 50.588235294117645,
+            "short_avg_net": 0.2508003480336129,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "DOGE": {
+            "long_win_rate": 46.470588235294116,
+            "long_avg_net": -0.20058368639796148,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 52.352941176470594,
+            "short_avg_net": 0.1512759452165901,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          },
+          "ADA": {
+            "long_win_rate": 43.529411764705884,
+            "long_avg_net": -0.47129187758612606,
+            "long_sl_hit_rate": 0.0,
+            "short_win_rate": 54.70588235294118,
+            "short_avg_net": 0.41272390206873066,
+            "short_sl_hit_rate": 0.0,
+            "n_trades": 170
+          }
+        }
+      }
+    },
+    "best_sl_per_asset": {
+      "BTC": "no_sl",
+      "ETH": "3%",
+      "SOL": "no_sl",
+      "AVAX": "3%",
+      "DOGE": "no_sl",
+      "ADA": "no_sl"
+    }
+  },
+  "hl_crossval": {
+    "binance_overlap": {
+      "long_avg": -0.254475188061457,
+      "short_avg": 0.18121246568447613,
+      "long_win": 47.40740740740741,
+      "short_win": 50.55555555555556,
+      "n_long": 540,
+      "n_short": 540
+    },
+    "hl_8h": {
+      "long_avg": -0.03914667220516435,
+      "short_avg": -0.08182669593414682,
+      "long_win": 49.46236559139785,
+      "short_win": 46.50537634408602,
+      "n_long": 372,
+      "n_short": 372
+    },
+    "overlap_start": "2026-01-30 08:00:00",
+    "overlap_end": "2026-04-30 08:00:00"
+  },
+  "regime_filter": {
+    "always": {
+      "long_avg": -0.15227681281701672,
+      "short_avg": 0.103467072438902,
+      "long_win": 46.38278388278388,
+      "short_win": 50.22893772893773,
+      "n_trades": 2184,
+      "per_asset": {
+        "BTC": {
+          "long_avg": -0.12435014190321124,
+          "short_avg": -0.025361703699970466,
+          "long_win": 46.7032967032967,
+          "short_win": 46.42857142857143,
+          "n": 364
+        },
+        "ETH": {
+          "long_avg": 0.042143326845147606,
+          "short_avg": -0.10245022436390461,
+          "long_win": 48.9010989010989,
+          "short_win": 46.42857142857143,
+          "n": 364
+        },
+        "SOL": {
+          "long_avg": -0.18531199558497935,
+          "short_avg": 0.13379286537840232,
+          "long_win": 47.527472527472526,
+          "short_win": 49.72527472527473,
+          "n": 364
+        },
+        "AVAX": {
+          "long_avg": -0.23160647400560702,
+          "short_avg": 0.22704185684639536,
+          "long_win": 47.527472527472526,
+          "short_win": 51.098901098901095,
+          "n": 364
+        },
+        "DOGE": {
+          "long_avg": -0.12783972371334706,
+          "short_avg": 0.12987718663996872,
+          "long_win": 44.505494505494504,
+          "short_win": 53.2967032967033,
+          "n": 364
+        },
+        "ADA": {
+          "long_avg": -0.28669586854010326,
+          "short_avg": 0.25790245383252075,
+          "long_win": 43.13186813186813,
+          "short_win": 54.395604395604394,
+          "n": 364
+        }
+      }
+    },
+    "bull_only": {
+      "long_avg": -0.057519308868193786,
+      "short_avg": 0.037162671336221406,
+      "long_win": 50.41186161449753,
+      "short_win": 46.12850082372323,
+      "n_trades": 607,
+      "per_asset": {
+        "BTC": {
+          "long_avg": -0.11901776218222035,
+          "short_avg": -0.04742144441692269,
+          "long_win": 45.65217391304348,
+          "short_win": 45.65217391304348,
+          "n": 92
+        },
+        "ETH": {
+          "long_avg": 0.2699985524303759,
+          "short_avg": -0.3350170533313341,
+          "long_win": 53.90625,
+          "short_win": 42.1875,
+          "n": 128
+        },
+        "SOL": {
+          "long_avg": 0.02272541655193567,
+          "short_avg": -0.03945558436103556,
+          "long_win": 51.37614678899083,
+          "short_win": 45.87155963302752,
+          "n": 109
+        },
+        "AVAX": {
+          "long_avg": -0.19488999601627213,
+          "short_avg": 0.30088351982383443,
+          "long_win": 53.535353535353536,
+          "short_win": 46.464646464646464,
+          "n": 99
+        },
+        "DOGE": {
+          "long_avg": -0.28042956444288064,
+          "short_avg": 0.3557800869150706,
+          "long_win": 46.93877551020408,
+          "short_win": 50.0,
+          "n": 98
+        },
+        "ADA": {
+          "long_avg": -0.17562055007981756,
+          "short_avg": 0.1166597398638321,
+          "long_win": 49.382716049382715,
+          "short_win": 48.148148148148145,
+          "n": 81
+        }
+      }
+    },
+    "bear_only": {
+      "long_avg": -0.288058647771555,
+      "short_avg": 0.22425207367529615,
+      "long_win": 44.171779141104295,
+      "short_win": 52.60736196319018,
+      "n_trades": 1304,
+      "per_asset": {
+        "BTC": {
+          "long_avg": -0.15872059729524132,
+          "short_avg": 0.030292644201906905,
+          "long_win": 45.83333333333333,
+          "short_win": 48.80952380952381,
+          "n": 168
+        },
+        "ETH": {
+          "long_avg": -0.11076166087546449,
+          "short_avg": 0.04964784114811048,
+          "long_win": 48.63387978142077,
+          "short_win": 45.3551912568306,
+          "n": 183
+        },
+        "SOL": {
+          "long_avg": -0.37623237159949285,
+          "short_avg": 0.31184090114477314,
+          "long_win": 44.44444444444444,
+          "short_win": 52.44444444444445,
+          "n": 225
+        },
+        "AVAX": {
+          "long_avg": -0.27730222265086807,
+          "short_avg": 0.22494802758984836,
+          "long_win": 45.67901234567901,
+          "short_win": 52.2633744855967,
+          "n": 243
+        },
+        "DOGE": {
+          "long_avg": -0.31454919102348355,
+          "short_avg": 0.26455043448315185,
+          "long_win": 42.19409282700422,
+          "short_win": 56.540084388185655,
+          "n": 237
+        },
+        "ADA": {
+          "long_avg": -0.41173044524872887,
+          "short_avg": 0.36582644549253035,
+          "long_win": 39.91935483870967,
+          "short_win": 57.25806451612904,
+          "n": 248
+        }
+      }
+    },
+    "non_bear": {
+      "long_avg": 0.04892717897925366,
+      "short_avg": -0.07551433848411843,
+      "long_win": 49.65909090909091,
+      "short_win": 46.70454545454545,
+      "n_trades": 880,
+      "per_asset": {
+        "BTC": {
+          "long_avg": -0.09488975156718543,
+          "short_avg": -0.0730654304730082,
+          "long_win": 47.44897959183674,
+          "short_win": 44.38775510204081,
+          "n": 196
+        },
+        "ETH": {
+          "long_avg": 0.1967378724411256,
+          "short_avg": -0.2562289314837872,
+          "long_win": 49.171270718232044,
+          "short_win": 47.51381215469613,
+          "n": 181
+        },
+        "SOL": {
+          "long_avg": 0.12373177853923316,
+          "short_avg": -0.1544143867614066,
+          "long_win": 52.51798561151079,
+          "short_win": 45.32374100719424,
+          "n": 139
+        },
+        "AVAX": {
+          "long_avg": -0.13983732589983486,
+          "short_avg": 0.23124681973351047,
+          "long_win": 51.2396694214876,
+          "short_win": 48.760330578512395,
+          "n": 121
+        },
+        "DOGE": {
+          "long_avg": 0.22058660504651392,
+          "short_avg": -0.12144218138234941,
+          "long_win": 48.818897637795274,
+          "short_win": 47.24409448818898,
+          "n": 127
+        },
+        "ADA": {
+          "long_avg": -0.019380566611317426,
+          "short_avg": 0.027168402697327745,
+          "long_win": 50.0,
+          "short_win": 48.275862068965516,
+          "n": 116
+        }
+      }
+    }
+  }
+}
