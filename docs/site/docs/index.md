@@ -8,7 +8,7 @@ title: Mission Control
 <div class="dash-header">
 <h1><span class="logo"><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><polygon points="5,0.5 9.5,9.5 0.5,9.5"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.2"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0.8" y="0.8" width="8.4" height="8.4"/></svg></span>PECZ<span class="accent">_</span></h1>
 <div class="dash-meta">
-<span><span class="live-dot"></span>PHASE 8 LIVE</span>
+<span><span class="live-dot"></span>V2 PAPER TRADING</span>
 <span id="dash-day">—</span>
 <span id="dash-timestamp">⏳</span>
 </div>
@@ -21,7 +21,7 @@ title: Mission Control
 <div class="card status-compact">
   <div>
     <div class="status-label">engine</div>
-    <div class="status-sub">paper · rest · 60s</div>
+    <div class="status-sub">V2 · funding-first · 60s</div>
   </div>
   <span class="badge-sm" style="color:var(--fwd-success);">● run</span>
 </div>
@@ -37,7 +37,7 @@ title: Mission Control
 <div class="card status-compact">
   <div>
     <div class="status-label">database</div>
-    <div class="status-sub">30.1k candles · 6 assets</div>
+    <div class="status-sub">3 assets · BTC+ETH+SOL</div>
   </div>
   <span class="badge-sm" style="color:var(--fwd-success);">● ok</span>
 </div>
@@ -111,7 +111,7 @@ title: Mission Control
 <div class="phase-step phase-step--active">
   <div class="step-dot"></div>
   <div class="step-label">8</div>
-  <div class="step-sublabel">paper</div>
+  <div class="step-sublabel">V2 paper</div>
 </div>
 
 <div class="phase-step phase-step--pending">
@@ -308,9 +308,9 @@ title: Mission Control
       }
     } catch(e) {}
   }
-  // Dynamic day counter (paper trading start: 2026-04-20)
+  // Dynamic day counter (V2 paper trading start: 2026-05-03)
   (function() {
-    const start = new Date('2026-04-20T00:00:00+02:00');
+    const start = new Date('2026-05-03T00:00:00+02:00');
     const now = new Date();
     const day = Math.floor((now - start) / 86400000) + 1;
     const el = document.getElementById('dash-day');

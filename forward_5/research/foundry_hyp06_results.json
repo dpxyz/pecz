@@ -1,0 +1,1622 @@
+{
+  "BTCUSDT_RA01_fund_cross": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 33.4,
+    "total_trades": 138,
+    "avg_win_rate": 49.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": -2.07,
+        "win_rate": 45.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 15,
+        "cum_pnl": 16.89,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 29,
+        "cum_pnl": 5.99,
+        "win_rate": 44.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 50,
+        "cum_pnl": 17.36,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=funding crosses above 0"
+  },
+  "BTCUSDT_RA02_squeeze_breakout": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 27.67,
+    "total_trades": 138,
+    "avg_win_rate": 53.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": -4.32,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 16,
+        "cum_pnl": 17.5,
+        "win_rate": 56.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 3,
+        "cum_pnl": -2.43,
+        "win_rate": 66.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 30,
+        "cum_pnl": 6.12,
+        "win_rate": 46.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 45,
+        "cum_pnl": 15.57,
+        "win_rate": 48.9,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=squeeze+vol expansion"
+  },
+  "BTCUSDT_RA03_ema_fund_cross": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 33.93,
+    "total_trades": 138,
+    "avg_win_rate": 49.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": -2.39,
+        "win_rate": 45.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 15,
+        "cum_pnl": 16.89,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 29,
+        "cum_pnl": 5.99,
+        "win_rate": 44.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 50,
+        "cum_pnl": 18.21,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=EMA50>EMA200+fund cross up"
+  },
+  "BTCUSDT_RA04_dxy_weak_bull": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 36.83,
+    "total_trades": 243,
+    "avg_win_rate": 49.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 18,
+        "cum_pnl": -1.31,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 42,
+        "cum_pnl": 11.29,
+        "win_rate": 54.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 32,
+        "cum_pnl": 33.49,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 37,
+        "cum_pnl": -11.37,
+        "win_rate": 45.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 53,
+        "cum_pnl": -9.35,
+        "win_rate": 37.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 61,
+        "cum_pnl": 14.08,
+        "win_rate": 45.9,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=DXY falling+EMA50>EMA200"
+  },
+  "BTCUSDT_RA05_vol_expansion": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 62.1,
+    "total_trades": 454,
+    "avg_win_rate": 47.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 76,
+        "cum_pnl": 49.3,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 70,
+        "cum_pnl": -10.05,
+        "win_rate": 48.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 80,
+        "cum_pnl": 43.97,
+        "win_rate": 52.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 63,
+        "cum_pnl": -18.61,
+        "win_rate": 46.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 78,
+        "cum_pnl": -9.05,
+        "win_rate": 42.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 87,
+        "cum_pnl": 6.54,
+        "win_rate": 44.8,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=vol_ratio>1.5+EMA50>EMA200"
+  },
+  "BTCUSDT_RA06_bull_pullback": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 64.83,
+    "total_trades": 348,
+    "avg_win_rate": 52.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 78,
+        "cum_pnl": 27.95,
+        "win_rate": 51.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 58,
+        "cum_pnl": -2.75,
+        "win_rate": 55.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 68,
+        "cum_pnl": 20.32,
+        "win_rate": 51.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 10,
+        "cum_pnl": -2.29,
+        "win_rate": 60.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 58,
+        "cum_pnl": 5.32,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 76,
+        "cum_pnl": 16.28,
+        "win_rate": 47.4,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=mild neg funding in bull (pullback buy)"
+  },
+  "BTCUSDT_RA07_fgi_contrarian": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 23.13,
+    "total_trades": 179,
+    "avg_win_rate": 46.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 18,
+        "cum_pnl": -1.31,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 15,
+        "cum_pnl": 16.89,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 3,
+        "cum_pnl": -3.41,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 35,
+        "cum_pnl": 7.11,
+        "win_rate": 45.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 84,
+        "cum_pnl": 8.62,
+        "win_rate": 42.9,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1+FGI<40, Bull=FGI extreme fear in bull"
+  },
+  "BTCUSDT_RA08_fund_cross_down": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 29.08,
+    "total_trades": 136,
+    "avg_win_rate": 50.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": -0.67,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 15,
+        "cum_pnl": 16.89,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 29,
+        "cum_pnl": 5.99,
+        "win_rate": 44.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 48,
+        "cum_pnl": 11.64,
+        "win_rate": 47.9,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=fund cross down from positive (dip buy)"
+  },
+  "BTCUSDT_RA09_triple_confirm": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 27.46,
+    "total_trades": 138,
+    "avg_win_rate": 48.7,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": -2.34,
+        "win_rate": 45.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 24,
+        "cum_pnl": -4.77,
+        "win_rate": 54.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 15,
+        "cum_pnl": 16.89,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 29,
+        "cum_pnl": 5.99,
+        "win_rate": 44.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 50,
+        "cum_pnl": 11.69,
+        "win_rate": 46.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=bull50+vol>1.2+fund cross"
+  },
+  "BTCUSDT_RA10_dxy_strong_bear": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": 8.38,
+    "total_trades": 44,
+    "avg_win_rate": 28.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 2,
+        "cum_pnl": -1.08,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 1,
+        "cum_pnl": -5.87,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 8,
+        "cum_pnl": 3.84,
+        "win_rate": 37.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 11,
+        "cum_pnl": -7.89,
+        "win_rate": 36.4,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 22,
+        "cum_pnl": 19.38,
+        "win_rate": 68.2,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1+DXY rising, Bull=EMA trend"
+  },
+  "ETHUSDT_RA01_fund_cross": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 19.51,
+    "total_trades": 175,
+    "avg_win_rate": 54.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 32,
+        "cum_pnl": 8.17,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 37,
+        "cum_pnl": 11.63,
+        "win_rate": 56.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 5.95,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 26,
+        "cum_pnl": 4.38,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 51,
+        "cum_pnl": 7.61,
+        "win_rate": 51.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=funding crosses above 0"
+  },
+  "ETHUSDT_RA02_squeeze_breakout": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 33.3,
+    "total_trades": 183,
+    "avg_win_rate": 54.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 25,
+        "cum_pnl": -11.03,
+        "win_rate": 44.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 32,
+        "cum_pnl": 10.52,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 39,
+        "cum_pnl": 11.1,
+        "win_rate": 56.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 12,
+        "cum_pnl": 13.03,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 26,
+        "cum_pnl": 0.58,
+        "win_rate": 46.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 49,
+        "cum_pnl": 9.1,
+        "win_rate": 51.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=squeeze+vol expansion"
+  },
+  "ETHUSDT_RA03_ema_fund_cross": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 20.9,
+    "total_trades": 175,
+    "avg_win_rate": 53.7,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 32,
+        "cum_pnl": 8.17,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 37,
+        "cum_pnl": 11.63,
+        "win_rate": 56.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 5.95,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 26,
+        "cum_pnl": 4.09,
+        "win_rate": 46.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 51,
+        "cum_pnl": 9.29,
+        "win_rate": 51.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=EMA50>EMA200+fund cross up"
+  },
+  "ETHUSDT_RA04_dxy_weak_bull": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -23.26,
+    "total_trades": 277,
+    "avg_win_rate": 48.2,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 47,
+        "cum_pnl": 37.35,
+        "win_rate": 61.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 53,
+        "cum_pnl": 25.26,
+        "win_rate": 54.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 34,
+        "cum_pnl": -21.31,
+        "win_rate": 44.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 57,
+        "cum_pnl": -55.97,
+        "win_rate": 38.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 63,
+        "cum_pnl": 9.64,
+        "win_rate": 50.8,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=DXY falling+EMA50>EMA200"
+  },
+  "ETHUSDT_RA05_vol_expansion": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 74.45,
+    "total_trades": 464,
+    "avg_win_rate": 49.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 80,
+        "cum_pnl": 30.54,
+        "win_rate": 57.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 76,
+        "cum_pnl": 8.58,
+        "win_rate": 42.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 87,
+        "cum_pnl": 32.51,
+        "win_rate": 54.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 54,
+        "cum_pnl": -20.31,
+        "win_rate": 37.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 77,
+        "cum_pnl": 18.94,
+        "win_rate": 55.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 90,
+        "cum_pnl": 4.19,
+        "win_rate": 47.8,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=vol_ratio>1.5+EMA50>EMA200"
+  },
+  "ETHUSDT_RA06_bull_pullback": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 71.47,
+    "total_trades": 372,
+    "avg_win_rate": 52.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 92,
+        "cum_pnl": 16.34,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 69,
+        "cum_pnl": 2.37,
+        "win_rate": 46.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 67,
+        "cum_pnl": 25.35,
+        "win_rate": 61.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 13,
+        "cum_pnl": -8.05,
+        "win_rate": 53.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 57,
+        "cum_pnl": 22.52,
+        "win_rate": 50.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 74,
+        "cum_pnl": 12.94,
+        "win_rate": 48.6,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=mild neg funding in bull (pullback buy)"
+  },
+  "ETHUSDT_RA07_fgi_contrarian": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 29.63,
+    "total_trades": 222,
+    "avg_win_rate": 54.2,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 31,
+        "cum_pnl": 12.07,
+        "win_rate": 64.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 37,
+        "cum_pnl": 11.63,
+        "win_rate": 56.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 5.95,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": 12.16,
+        "win_rate": 47.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 89,
+        "cum_pnl": 6.05,
+        "win_rate": 50.6,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1+FGI<40, Bull=FGI extreme fear in bull"
+  },
+  "ETHUSDT_RA08_fund_cross_down": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 25.67,
+    "total_trades": 173,
+    "avg_win_rate": 54.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 31,
+        "cum_pnl": 12.07,
+        "win_rate": 64.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 37,
+        "cum_pnl": 11.63,
+        "win_rate": 56.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 5.95,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 26,
+        "cum_pnl": 4.37,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 50,
+        "cum_pnl": 9.88,
+        "win_rate": 52.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=fund cross down from positive (dip buy)"
+  },
+  "ETHUSDT_RA09_triple_confirm": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 20.31,
+    "total_trades": 175,
+    "avg_win_rate": 54.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 23,
+        "cum_pnl": -18.23,
+        "win_rate": 39.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 32,
+        "cum_pnl": 7.42,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 37,
+        "cum_pnl": 11.63,
+        "win_rate": 56.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 5.95,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 26,
+        "cum_pnl": 4.25,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 51,
+        "cum_pnl": 9.29,
+        "win_rate": 51.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=bull50+vol>1.2+fund cross"
+  },
+  "ETHUSDT_RA10_dxy_strong_bear": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -20.8,
+    "total_trades": 57,
+    "avg_win_rate": 37.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 2,
+        "cum_pnl": -4.84,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 22,
+        "cum_pnl": -13.41,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 2,
+        "cum_pnl": -0.24,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 13,
+        "cum_pnl": -20.92,
+        "win_rate": 30.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 18,
+        "cum_pnl": 18.61,
+        "win_rate": 55.6,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1+DXY rising, Bull=EMA trend"
+  },
+  "SOLUSDT_RA01_fund_cross": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 41.48,
+    "total_trades": 176,
+    "avg_win_rate": 54.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 13.57,
+        "win_rate": 54.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 27,
+        "cum_pnl": 8.36,
+        "win_rate": 44.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 4.69,
+        "win_rate": 75.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": -29.16,
+        "win_rate": 38.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 54,
+        "cum_pnl": 1.01,
+        "win_rate": 44.4,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=funding crosses above 0"
+  },
+  "SOLUSDT_RA02_squeeze_breakout": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 11.46,
+    "total_trades": 194,
+    "avg_win_rate": 48.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 27,
+        "cum_pnl": 25.4,
+        "win_rate": 59.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 37,
+        "cum_pnl": 13.15,
+        "win_rate": 54.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 27,
+        "cum_pnl": 0.82,
+        "win_rate": 44.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 16,
+        "cum_pnl": -10.87,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 37,
+        "cum_pnl": -28.08,
+        "win_rate": 32.4,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 50,
+        "cum_pnl": 11.04,
+        "win_rate": 48.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=squeeze+vol expansion"
+  },
+  "SOLUSDT_RA03_ema_fund_cross": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 42.63,
+    "total_trades": 175,
+    "avg_win_rate": 54.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 13.57,
+        "win_rate": 54.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 27,
+        "cum_pnl": 8.36,
+        "win_rate": 44.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 4.69,
+        "win_rate": 75.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": -29.16,
+        "win_rate": 38.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 53,
+        "cum_pnl": 2.16,
+        "win_rate": 45.3,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=EMA50>EMA200+fund cross up"
+  },
+  "SOLUSDT_RA04_dxy_weak_bull": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 0.06,
+    "total_trades": 257,
+    "avg_win_rate": 49.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 52,
+        "cum_pnl": 32.81,
+        "win_rate": 57.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 34,
+        "cum_pnl": 8.43,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 30,
+        "cum_pnl": -14.5,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 59,
+        "cum_pnl": -63.44,
+        "win_rate": 35.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 62,
+        "cum_pnl": -6.25,
+        "win_rate": 43.5,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=DXY falling+EMA50>EMA200"
+  },
+  "SOLUSDT_RA05_vol_expansion": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 23.85,
+    "total_trades": 453,
+    "avg_win_rate": 47.2,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 74,
+        "cum_pnl": 84.17,
+        "win_rate": 54.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 72,
+        "cum_pnl": 28.17,
+        "win_rate": 52.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 83,
+        "cum_pnl": 2.42,
+        "win_rate": 45.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 55,
+        "cum_pnl": 14.42,
+        "win_rate": 49.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 78,
+        "cum_pnl": -79.23,
+        "win_rate": 37.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 91,
+        "cum_pnl": -26.1,
+        "win_rate": 44.0,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=vol_ratio>1.5+EMA50>EMA200"
+  },
+  "SOLUSDT_RA06_bull_pullback": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 24.31,
+    "total_trades": 382,
+    "avg_win_rate": 52.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 81,
+        "cum_pnl": 62.45,
+        "win_rate": 53.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 69,
+        "cum_pnl": -20.74,
+        "win_rate": 53.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 76,
+        "cum_pnl": 26.85,
+        "win_rate": 53.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 11,
+        "cum_pnl": 13.16,
+        "win_rate": 72.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 62,
+        "cum_pnl": -35.03,
+        "win_rate": 38.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 83,
+        "cum_pnl": -22.38,
+        "win_rate": 44.6,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=mild neg funding in bull (pullback buy)"
+  },
+  "SOLUSDT_RA07_fgi_contrarian": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 3.33,
+    "total_trades": 216,
+    "avg_win_rate": 48.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 17.25,
+        "win_rate": 57.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 25,
+        "cum_pnl": 3.82,
+        "win_rate": 44.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 7,
+        "cum_pnl": -3.88,
+        "win_rate": 42.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 42,
+        "cum_pnl": -34.27,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 87,
+        "cum_pnl": -22.6,
+        "win_rate": 43.7,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "Bear=funding z<-1+FGI<40, Bull=FGI extreme fear in bull"
+  },
+  "SOLUSDT_RA08_fund_cross_down": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 43.95,
+    "total_trades": 173,
+    "avg_win_rate": 53.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 16.57,
+        "win_rate": 54.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 25,
+        "cum_pnl": 4.01,
+        "win_rate": 44.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 4.69,
+        "win_rate": 75.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": -30.89,
+        "win_rate": 30.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 53,
+        "cum_pnl": 6.56,
+        "win_rate": 47.2,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=fund cross down from positive (dip buy)"
+  },
+  "SOLUSDT_RA09_triple_confirm": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 46.35,
+    "total_trades": 173,
+    "avg_win_rate": 54.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 43.01,
+        "win_rate": 70.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 13.57,
+        "win_rate": 54.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 27,
+        "cum_pnl": 7.58,
+        "win_rate": 44.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 4.69,
+        "win_rate": 75.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": -29.16,
+        "win_rate": 38.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 51,
+        "cum_pnl": 6.66,
+        "win_rate": 45.1,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "Bear=funding z<-1 MR, Bull=bull50+vol>1.2+fund cross"
+  },
+  "SOLUSDT_RA10_dxy_strong_bear": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -55.17,
+    "total_trades": 59,
+    "avg_win_rate": 39.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 5,
+        "cum_pnl": -2.77,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 14,
+        "cum_pnl": -16.15,
+        "win_rate": 21.4,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 3,
+        "cum_pnl": 4.5,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 19,
+        "cum_pnl": -22.42,
+        "win_rate": 36.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 18,
+        "cum_pnl": -18.33,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "Bear=funding z<-1+DXY rising, Bull=EMA trend"
+  }
+}

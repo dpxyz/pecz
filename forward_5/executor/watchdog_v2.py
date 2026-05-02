@@ -31,10 +31,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s
 log = logging.getLogger("watchdog")
 
 ENGINE_DIR = Path(__file__).parent
-DB_PATH = ENGINE_DIR / "state.db"
-PID_FILE = ENGINE_DIR / ".paper_engine.pid"
-RUN_SCRIPT = ENGINE_DIR / "run_paper_engine.sh"
-LOG_FILE = ENGINE_DIR / "paper_engine.log"
+DB_PATH = ENGINE_DIR / "state_v2.db"
+PID_FILE = ENGINE_DIR / "engine.pid"
+RUN_SCRIPT = ENGINE_DIR / "run_paper_engine_v2.sh"
+LOG_FILE = ENGINE_DIR / "paper_engine_v2.log"
 STATE_FILE = ENGINE_DIR / "watchdog_state.json"
 TEST_DIR = ENGINE_DIR / "tests"
 TRADES_FILE = ENGINE_DIR / "trades.jsonl"

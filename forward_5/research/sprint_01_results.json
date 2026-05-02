@@ -1,0 +1,797 @@
+{
+  "BTCUSDT_z>+1.5 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -46.9,
+    "total_trades": 156,
+    "avg_win_rate": 50.1,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 51,
+        "cum_pnl": -33.38,
+        "win_rate": 45.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 36,
+        "cum_pnl": 4.42,
+        "win_rate": 52.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 40,
+        "cum_pnl": -20.05,
+        "win_rate": 42.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 5,
+        "cum_pnl": 6.18,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 16,
+        "cum_pnl": 1.36,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 8,
+        "cum_pnl": -5.43,
+        "win_rate": 37.5,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "BTCUSDT_z>+1.5 \u2192 Short (bull only)": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -52.33,
+    "total_trades": 115,
+    "avg_win_rate": 46.7,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 31,
+        "cum_pnl": -42.89,
+        "win_rate": 35.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 29,
+        "cum_pnl": 11.5,
+        "win_rate": 58.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 28,
+        "cum_pnl": -23.32,
+        "win_rate": 39.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 8,
+        "cum_pnl": 6.53,
+        "win_rate": 37.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 12,
+        "cum_pnl": 0.49,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 7,
+        "cum_pnl": -4.64,
+        "win_rate": 42.9,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "BTCUSDT_z>+1.5 \u2192 Short (bear only)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -29.69,
+    "total_trades": 46,
+    "avg_win_rate": 43.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 15,
+        "cum_pnl": -28.14,
+        "win_rate": 60.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 15,
+        "cum_pnl": -4.69,
+        "win_rate": 46.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 10,
+        "cum_pnl": 2.41,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 5,
+        "cum_pnl": 1.71,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 1,
+        "cum_pnl": -0.98,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "BTCUSDT_z>+2.0 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -41.0,
+    "total_trades": 128,
+    "avg_win_rate": 59.1,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 44,
+        "cum_pnl": -32.93,
+        "win_rate": 43.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 32,
+        "cum_pnl": 1.29,
+        "win_rate": 53.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 29,
+        "cum_pnl": -16.17,
+        "win_rate": 51.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 5,
+        "cum_pnl": 7.37,
+        "win_rate": 80.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 15,
+        "cum_pnl": 1.84,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 3,
+        "cum_pnl": -2.4,
+        "win_rate": 66.7,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "BTCUSDT_z>+1.0 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -63.97,
+    "total_trades": 221,
+    "avg_win_rate": 52.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 60,
+        "cum_pnl": -58.07,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 45,
+        "cum_pnl": 13.26,
+        "win_rate": 53.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 46,
+        "cum_pnl": -21.06,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 6,
+        "cum_pnl": 6.44,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 24,
+        "cum_pnl": 0.98,
+        "win_rate": 58.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 40,
+        "cum_pnl": -5.52,
+        "win_rate": 55.0,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "ETHUSDT_z>+1.5 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": -58.69,
+    "total_trades": 144,
+    "avg_win_rate": 54.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 55,
+        "cum_pnl": -51.06,
+        "win_rate": 38.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 39,
+        "cum_pnl": 4.34,
+        "win_rate": 48.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 30,
+        "cum_pnl": -18.19,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 15.49,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 10,
+        "cum_pnl": -9.29,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 6,
+        "cum_pnl": 0.02,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "ETHUSDT_z>+1.5 \u2192 Short (bull only)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -48.37,
+    "total_trades": 107,
+    "avg_win_rate": 45.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 34,
+        "cum_pnl": -56.35,
+        "win_rate": 17.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 33,
+        "cum_pnl": 49.16,
+        "win_rate": 57.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 21,
+        "cum_pnl": -33.18,
+        "win_rate": 38.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 8,
+        "cum_pnl": -2.4,
+        "win_rate": 25.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 9,
+        "cum_pnl": -13.93,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 2,
+        "cum_pnl": 8.33,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "ETHUSDT_z>+1.5 \u2192 Short (bear only)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -95.31,
+    "total_trades": 49,
+    "avg_win_rate": 34.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 16,
+        "cum_pnl": -90.75,
+        "win_rate": 37.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 16,
+        "cum_pnl": -21.09,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 10,
+        "cum_pnl": 18.26,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 1,
+        "cum_pnl": -2.11,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 1,
+        "cum_pnl": -0.82,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 5,
+        "cum_pnl": 1.2,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "ETHUSDT_z>+2.0 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -58.17,
+    "total_trades": 110,
+    "avg_win_rate": 47.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 40,
+        "cum_pnl": -44.83,
+        "win_rate": 37.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 33,
+        "cum_pnl": 0.28,
+        "win_rate": 48.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 23,
+        "cum_pnl": -14.89,
+        "win_rate": 43.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 12.7,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 9,
+        "cum_pnl": -7.89,
+        "win_rate": 55.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 1,
+        "cum_pnl": -3.54,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "ETHUSDT_z>+1.0 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -63.61,
+    "total_trades": 215,
+    "avg_win_rate": 56.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 71,
+        "cum_pnl": -44.46,
+        "win_rate": 43.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 50,
+        "cum_pnl": 8.97,
+        "win_rate": 48.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 42,
+        "cum_pnl": -5.17,
+        "win_rate": 54.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 15.49,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 20,
+        "cum_pnl": -22.55,
+        "win_rate": 35.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 28,
+        "cum_pnl": -15.89,
+        "win_rate": 57.1,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "SOLUSDT_z>+1.5 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -68.02,
+    "total_trades": 188,
+    "avg_win_rate": 49.2,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 61,
+        "cum_pnl": -66.21,
+        "win_rate": 39.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 42,
+        "cum_pnl": 13.53,
+        "win_rate": 52.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 47,
+        "cum_pnl": -7.44,
+        "win_rate": 53.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": -12.02,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 12,
+        "cum_pnl": -0.98,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 22,
+        "cum_pnl": 5.1,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "SOLUSDT_z>+1.5 \u2192 Short (bull only)": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -102.86,
+    "total_trades": 129,
+    "avg_win_rate": 44.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 37,
+        "cum_pnl": -34.64,
+        "win_rate": 48.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 31,
+        "cum_pnl": -36.58,
+        "win_rate": 32.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 26,
+        "cum_pnl": -16.79,
+        "win_rate": 42.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 11,
+        "cum_pnl": -14.96,
+        "win_rate": 45.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 10,
+        "cum_pnl": -4.5,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 14,
+        "cum_pnl": 4.61,
+        "win_rate": 57.1,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "SOLUSDT_z>+1.5 \u2192 Short (bear only)": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -23.16,
+    "total_trades": 67,
+    "avg_win_rate": 40.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 25,
+        "cum_pnl": -19.37,
+        "win_rate": 44.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 14,
+        "cum_pnl": -5.28,
+        "win_rate": 64.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 17,
+        "cum_pnl": 5.41,
+        "win_rate": 64.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 1,
+        "cum_pnl": -0.86,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 10,
+        "cum_pnl": -3.06,
+        "win_rate": 30.0,
+        "oos_profitable": "False"
+      }
+    ]
+  },
+  "SOLUSDT_z>+2.0 \u2192 Short (all regimes)": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -95.96,
+    "total_trades": 132,
+    "avg_win_rate": 54.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 48,
+        "cum_pnl": -75.51,
+        "win_rate": 39.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 35,
+        "cum_pnl": 1.71,
+        "win_rate": 48.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 35,
+        "cum_pnl": -3.38,
+        "win_rate": 54.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": -12.02,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 9,
+        "cum_pnl": -8.67,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 1,
+        "cum_pnl": 1.91,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      }
+    ]
+  },
+  "SOLUSDT_z>+1.0 \u2192 Short (all regimes)": {
+    "passed": "False",
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": -40.02,
+    "total_trades": 279,
+    "avg_win_rate": 50.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 76,
+        "cum_pnl": -98.96,
+        "win_rate": 39.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 51,
+        "cum_pnl": 25.29,
+        "win_rate": 54.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 56,
+        "cum_pnl": 2.91,
+        "win_rate": 57.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 5,
+        "cum_pnl": -4.25,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 36,
+        "cum_pnl": 11.79,
+        "win_rate": 55.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 55,
+        "cum_pnl": 23.2,
+        "win_rate": 54.5,
+        "oos_profitable": "True"
+      }
+    ]
+  }
+}

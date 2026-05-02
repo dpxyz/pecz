@@ -1,0 +1,294 @@
+{
+  "AVAXUSDT": {
+    "S01_z_only": {
+      "n_trades": 153,
+      "cum_pnl": 52.26,
+      "avg_pnl": 0.342,
+      "win_rate": 49.7,
+      "max_dd": 17.9,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S02_z_fgi_fear": {
+      "n_trades": 79,
+      "cum_pnl": -8.71,
+      "avg_pnl": -0.11,
+      "win_rate": 48.1,
+      "max_dd": 15.7,
+      "wf_robustness": "2/6",
+      "wf_pct": 33.0
+    },
+    "S03_z_fgi_extreme_fear": {
+      "n_trades": 51,
+      "cum_pnl": 22.67,
+      "avg_pnl": 0.445,
+      "win_rate": 51.0,
+      "max_dd": 11.8,
+      "wf_robustness": "5/6",
+      "wf_pct": 83.0
+    },
+    "S04_z_fgi_not_greed": {
+      "n_trades": 91,
+      "cum_pnl": -18.45,
+      "avg_pnl": -0.203,
+      "win_rate": 46.2,
+      "max_dd": 15.7,
+      "wf_robustness": "1/6",
+      "wf_pct": 17.0
+    },
+    "S05_z_dxy_weak": {
+      "n_trades": 53,
+      "cum_pnl": -17.65,
+      "avg_pnl": -0.333,
+      "win_rate": 43.4,
+      "max_dd": 10.7,
+      "wf_robustness": "2/6",
+      "wf_pct": 33.0
+    },
+    "S06_z_dxy_very_weak": {
+      "n_trades": 36,
+      "cum_pnl": -2.91,
+      "avg_pnl": -0.081,
+      "win_rate": 44.4,
+      "max_dd": 9.7,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S07_z_dxy_below_100": {
+      "n_trades": 98,
+      "cum_pnl": -37.67,
+      "avg_pnl": -0.384,
+      "win_rate": 44.9,
+      "max_dd": 15.7,
+      "wf_robustness": "2/6",
+      "wf_pct": 33.0
+    },
+    "S08_z_fgi_dxy": {
+      "n_trades": 45,
+      "cum_pnl": -2.12,
+      "avg_pnl": -0.047,
+      "win_rate": 46.7,
+      "max_dd": 10.7,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S09_z_fgi_dxy_strict": {
+      "n_trades": 21,
+      "cum_pnl": 19.54,
+      "avg_pnl": 0.931,
+      "win_rate": 57.1,
+      "max_dd": 7.6,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S10_z_bear_fgi": {
+      "n_trades": 62,
+      "cum_pnl": 4.51,
+      "avg_pnl": 0.073,
+      "win_rate": 50.0,
+      "max_dd": 15.7,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S11_z_bull_dxy": {
+      "n_trades": 20,
+      "cum_pnl": -28.26,
+      "avg_pnl": -1.413,
+      "win_rate": 30.0,
+      "max_dd": 10.7,
+      "wf_robustness": "1/6",
+      "wf_pct": 17.0
+    },
+    "S12_z_1.5_only": {
+      "n_trades": 103,
+      "cum_pnl": 24.81,
+      "avg_pnl": 0.241,
+      "win_rate": 45.6,
+      "max_dd": 15.7,
+      "wf_robustness": "2/6",
+      "wf_pct": 33.0
+    },
+    "S13_z_1.5_fgi": {
+      "n_trades": 64,
+      "cum_pnl": -17.5,
+      "avg_pnl": -0.273,
+      "win_rate": 40.6,
+      "max_dd": 15.7,
+      "wf_robustness": "2/6",
+      "wf_pct": 33.0
+    },
+    "S14_z_2_only": {
+      "n_trades": 79,
+      "cum_pnl": -19.9,
+      "avg_pnl": -0.252,
+      "win_rate": 34.2,
+      "max_dd": 15.7,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S15_z_btc_bear": {
+      "n_trades": 107,
+      "cum_pnl": 34.21,
+      "avg_pnl": 0.32,
+      "win_rate": 52.3,
+      "max_dd": 15.7,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S16_z_btc_bear_fgi": {
+      "n_trades": 62,
+      "cum_pnl": 4.51,
+      "avg_pnl": 0.073,
+      "win_rate": 50.0,
+      "max_dd": 15.7,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    }
+  },
+  "BTCUSDT": {
+    "S01_z_only": {
+      "n_trades": 350,
+      "cum_pnl": 9.32,
+      "avg_pnl": 0.027,
+      "win_rate": 47.4,
+      "max_dd": 12.0,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S02_z_fgi_fear": {
+      "n_trades": 153,
+      "cum_pnl": 31.36,
+      "avg_pnl": 0.205,
+      "win_rate": 48.4,
+      "max_dd": 12.0,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S03_z_fgi_extreme_fear": {
+      "n_trades": 75,
+      "cum_pnl": 40.53,
+      "avg_pnl": 0.54,
+      "win_rate": 50.7,
+      "max_dd": 8.9,
+      "wf_robustness": "5/6",
+      "wf_pct": 83.0
+    },
+    "S04_z_fgi_not_greed": {
+      "n_trades": 195,
+      "cum_pnl": 41.61,
+      "avg_pnl": 0.213,
+      "win_rate": 48.2,
+      "max_dd": 12.0,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S05_z_dxy_weak": {
+      "n_trades": 168,
+      "cum_pnl": 8.19,
+      "avg_pnl": 0.049,
+      "win_rate": 46.4,
+      "max_dd": 9.3,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S06_z_dxy_very_weak": {
+      "n_trades": 118,
+      "cum_pnl": 10.74,
+      "avg_pnl": 0.091,
+      "win_rate": 46.6,
+      "max_dd": 9.3,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S07_z_dxy_below_100": {
+      "n_trades": 142,
+      "cum_pnl": 24.23,
+      "avg_pnl": 0.171,
+      "win_rate": 45.8,
+      "max_dd": 7.9,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S08_z_fgi_dxy": {
+      "n_trades": 98,
+      "cum_pnl": 15.39,
+      "avg_pnl": 0.157,
+      "win_rate": 46.9,
+      "max_dd": 8.9,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S09_z_fgi_dxy_strict": {
+      "n_trades": 34,
+      "cum_pnl": 18.05,
+      "avg_pnl": 0.531,
+      "win_rate": 44.1,
+      "max_dd": 8.9,
+      "wf_robustness": "4/6",
+      "wf_pct": 67.0
+    },
+    "S10_z_bear_fgi": {
+      "n_trades": 110,
+      "cum_pnl": 73.9,
+      "avg_pnl": 0.672,
+      "win_rate": 55.5,
+      "max_dd": 10.7,
+      "wf_robustness": "6/6",
+      "wf_pct": 100.0
+    },
+    "S11_z_bull_dxy": {
+      "n_trades": 91,
+      "cum_pnl": -13.65,
+      "avg_pnl": -0.15,
+      "win_rate": 38.5,
+      "max_dd": 7.2,
+      "wf_robustness": "1/6",
+      "wf_pct": 17.0
+    },
+    "S12_z_1.5_only": {
+      "n_trades": 282,
+      "cum_pnl": 58.26,
+      "avg_pnl": 0.207,
+      "win_rate": 49.6,
+      "max_dd": 12.0,
+      "wf_robustness": "5/6",
+      "wf_pct": 83.0
+    },
+    "S13_z_1.5_fgi": {
+      "n_trades": 134,
+      "cum_pnl": 54.28,
+      "avg_pnl": 0.405,
+      "win_rate": 50.7,
+      "max_dd": 12.0,
+      "wf_robustness": "5/6",
+      "wf_pct": 83.0
+    },
+    "S14_z_2_only": {
+      "n_trades": 246,
+      "cum_pnl": 54.44,
+      "avg_pnl": 0.221,
+      "win_rate": 50.0,
+      "max_dd": 12.0,
+      "wf_robustness": "3/6",
+      "wf_pct": 50.0
+    },
+    "S15_z_btc_bear": {
+      "n_trades": 208,
+      "cum_pnl": 37.87,
+      "avg_pnl": 0.182,
+      "win_rate": 50.0,
+      "max_dd": 10.2,
+      "wf_robustness": "5/6",
+      "wf_pct": 83.0
+    },
+    "S16_z_btc_bear_fgi": {
+      "n_trades": 110,
+      "cum_pnl": 73.9,
+      "avg_pnl": 0.672,
+      "win_rate": 55.5,
+      "max_dd": 10.7,
+      "wf_robustness": "6/6",
+      "wf_pct": 100.0
+    }
+  }
+}
