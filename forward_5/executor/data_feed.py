@@ -276,7 +276,7 @@ class DataFeed:
             """, (symbol, limit)).fetchall()
 
         return [{
-            "timestamp": r[0], "open": r[1], "high": r[2],
+            "symbol": symbol, "timestamp": r[0], "open": r[1], "high": r[2],
             "low": r[3], "close": r[4], "volume": r[5],
         } for r in reversed(rows)]
 
