@@ -48,6 +48,7 @@ class DataFeedV2(DataFeed):
         self._funding_data: dict[str, list[dict]] = {}
         self._funding_z: dict[str, Optional[float]] = {}
         self._bull200: dict[str, bool] = {}
+        # Store engine's original callback before replacing with V2 wrapper
         self.on_candle = self._on_candle_v2  # V2: compute regime BEFORE engine callback
         self._original_on_candle = on_candle  # engine's callback
         self._oi_data: dict[str, float] = {}
@@ -59,6 +60,19 @@ class DataFeedV2(DataFeed):
         self._dxy_5d_chg: Optional[float] = None
 
         self._init_funding_db()
+
+    def _compute_initial_regime(self):
+        """Compute bull200 from existing candle data after backfill."""
+        for symbol in self.assets:
+            candles = self.get_candles(symbol, limit=210)
+            if len(candles) >= 200:
+                import polars as pl
+                closes = pl.Series([c["close"] for c in candles])
+                ema_200 = closes.ewm_mean(alpha=2/201, min_samples=200)
+                current_ema200 = ema_200[-1]
+                if current_ema200 is not None:
+                    self._bull200[symbol] = closes[-1] > current_ema200
+                    log.info(f"  📊 {symbol}: initial regime={'bull200' if self._bull200[symbol] else 'bear'} (close={closes[-1]:.2f}, ema200={current_ema200:.2f})")
 
     def _init_funding_db(self):
         """Create all V2 tables."""
@@ -101,6 +115,7 @@ class DataFeedV2(DataFeed):
 
         await self._backfill()
         await self._backfill_funding()
+        self._compute_initial_regime()  # Now we have 200+ candles for EMA200
 
         await asyncio.gather(
             self._poll_loop(),
@@ -379,7 +394,8 @@ class DataFeedV2(DataFeed):
         """V2 candle callback: compute regime THEN forward to engine."""
         # Update regime detection
         candles = self.get_candles(symbol, limit=210)
-        if len(candles) >= 200:
+        n_candles = len(candles)
+        if n_candles >= 200:
             import polars as pl
             closes = pl.Series([c["close"] for c in candles])
             ema_200 = closes.ewm_mean(alpha=2 / 201, min_samples=200)
@@ -387,6 +403,11 @@ class DataFeedV2(DataFeed):
             current_ema200 = ema_200[-1]
             if current_ema200 is not None:
                 self._bull200[symbol] = current_close > current_ema200
+                log.info(f"  📊 {symbol}: regime={'bull200' if self._bull200[symbol] else 'bear'} (close={current_close:.2f}, ema200={current_ema200:.2f}, candles={n_candles})")
+            else:
+                log.warning(f"  ⚠️ {symbol}: EMA200 is None despite {n_candles} candles")
+        else:
+            log.warning(f"  ⚠️ {symbol}: only {n_candles} candles, need 200 for regime")
 
         # Forward to engine
         if self._original_on_candle:

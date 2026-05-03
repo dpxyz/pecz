@@ -31,10 +31,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s
 log = logging.getLogger("watchdog")
 
 ENGINE_DIR = Path(__file__).parent
-DB_PATH = ENGINE_DIR / "state_v2.db"
+# Engine runs from parent dir (forward_v5/), so DB is one level up
+DB_PATH = ENGINE_DIR.parent / "state_v2.db"
 PID_FILE = ENGINE_DIR / "engine.pid"
 RUN_SCRIPT = ENGINE_DIR / "run_paper_engine_v2.sh"
-LOG_FILE = ENGINE_DIR / "paper_engine_v2.log"
+LOG_FILE = ENGINE_DIR / "v2_engine.log"
 STATE_FILE = ENGINE_DIR / "watchdog_state.json"
 TEST_DIR = ENGINE_DIR / "tests"
 TRADES_FILE = ENGINE_DIR / "trades.jsonl"

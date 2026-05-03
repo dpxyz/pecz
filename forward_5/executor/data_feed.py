@@ -29,7 +29,7 @@ except ImportError:
 
 INTERVAL = "1h"
 POLL_INTERVAL = 60  # seconds between REST candle polls
-BACKFILL_HOURS = 48  # how many hours to backfill on startup
+BACKFILL_HOURS = 240  # 10 days for EMA200 regime detection (need 200+ candles)
 MAX_CANDLE_AGE_MS = 2 * 3600 * 1000  # candles older than 2h are stale → skip trading
 
 # Map our symbols to Hyperliquid coin names
