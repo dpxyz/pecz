@@ -1,0 +1,127 @@
+================================================================================
+FOUNDRY V12 — Context-Aware LLM Strategy Discovery
+Model: gemma4:31b-cloud | 3 iterations × 10 strategies
+================================================================================
+
+============================================================
+  ITERATION 1/3
+============================================================
+  Calling LLM...
+  LLM returned 10 strategies
+    - SOL_Extreme_Z_Recovery: High conviction long on SOL when funding is severely negativ
+    - BTC_FGI_Deep_Value: Long BTC when FGI is deeply oversold and trend is bullish
+    - ETH_Volatility_Squeeze: Long ETH during high volatility spikes while in a bull regim
+    - Cross_Asset_Z_MeanReversion: Long BTC and ETH when funding is deeply negative
+    - SOL_Pullback_Capture: Long SOL during a bullish pullback phase
+    - BTC_Trend_Convergence: Long BTC when both short and long term trends align and fund
+    - ETH_FGI_Volatility_Combo: Long ETH when FGI is low and volatility is expanding
+    - SOL_FGI_Bottom_Hunt: Long SOL when FGI is extremely low and funding is negative
+    - BTC_Vol_Z_Divergence: Long BTC when funding is negative despite high volatility
+    - Multi_Asset_Bull_Squeeze: Long BTC, ETH, and SOL when funding is in the pullback zone
+
+  Backtesting 10 strategies...
+
+  Results:
+  ❌ SOL_Extreme_Z_Recovery/SOLUSDT@1h: OOS=3/6, PnL=+18.28%, n=62, WR=52.0%
+  ❌ BTC_FGI_Deep_Value/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+  ❌ ETH_Volatility_Squeeze/ETHUSDT@1h: OOS=3/6, PnL=+30.56%, n=328, WR=45.3%
+  ❌ Cross_Asset_Z_MeanReversion/BTCUSDT@4h: OOS=3/6, PnL=+20.01%, n=36, WR=60.0%
+  Cross_Asset_Z_MeanReversion/ETHUSDT@4h: SKIP (no data)
+  ❌ SOL_Pullback_Capture/SOLUSDT@1h: OOS=2/6, PnL=-15.86%, n=204, WR=46.4%
+  ✅ BTC_Trend_Convergence/BTCUSDT@4h: OOS=5/6, PnL=+31.56%, n=70, WR=52.8%
+  ❌ ETH_FGI_Volatility_Combo/ETHUSDT@1h: OOS=0/6, PnL=-49.52%, n=104, WR=41.9%
+  ❌ SOL_FGI_Bottom_Hunt/SOLUSDT@1h: OOS=1/6, PnL=-20.34%, n=40, WR=59.2%
+  ❌ BTC_Vol_Z_Divergence/BTCUSDT@4h: OOS=3/6, PnL=+10.74%, n=21, WR=61.0%
+  ❌ Multi_Asset_Bull_Squeeze/BTCUSDT@1h: OOS=3/6, PnL=+33.82%, n=235, WR=51.5%
+  ✅ Multi_Asset_Bull_Squeeze/ETHUSDT@1h: OOS=4/6, PnL=+9.81%, n=237, WR=45.3%
+  ❌ Multi_Asset_Bull_Squeeze/SOLUSDT@1h: OOS=3/6, PnL=+3.40%, n=246, WR=52.2%
+
+============================================================
+  ITERATION 2/3
+============================================================
+  Calling LLM...
+  LLM returned 10 strategies
+    - BTC_Trend_Convergence_V2: Refined version of the top performer, tightening the FGI fil
+    - ETH_Trend_Convergence_Mirror: Applying the successful BTC Trend Convergence logic to ETH w
+    - SOL_Trend_Convergence_Mirror: Applying the successful BTC Trend Convergence logic to SOL u
+    - Multi_Asset_Bull_Squeeze_Tight: Variation of the successful Multi_Asset_Bull_Squeeze focusin
+    - BTC_FGI_Trend_Hybrid: Combines the proven FGI < 40 filter with the high-performing
+    - ETH_Bull_Pullback_Vol: Targeting ETH pullbacks in a bull market confirmed by volati
+    - SOL_Extreme_Z_Trend: Combines the high PnL of SOL extreme Z with the stability of
+    - BTC_Vol_Trend_Convergence: Adding volatility ratio confirmation to the successful BTC T
+    - Cross_Asset_Bull_Z_Squeeze: A cross-asset approach using the proven bull pullback range 
+    - BTC_Deep_Value_Trend: Combining deep FGI value with the proven bull200 trend for a
+
+  Backtesting 10 strategies...
+
+  Results:
+  ❌ BTC_Trend_Convergence_V2/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+  ETH_Trend_Convergence_Mirror/ETHUSDT@4h: SKIP (no data)
+  SOL_Trend_Convergence_Mirror/SOLUSDT@4h: SKIP (no data)
+  ❌ Multi_Asset_Bull_Squeeze_Tight/BTCUSDT@1h: OOS=3/6, PnL=+40.22%, n=221, WR=50.4%
+  ✅ Multi_Asset_Bull_Squeeze_Tight/ETHUSDT@1h: OOS=4/6, PnL=+50.29%, n=213, WR=53.2%
+  ❌ Multi_Asset_Bull_Squeeze_Tight/SOLUSDT@1h: OOS=2/6, PnL=+0.91%, n=210, WR=47.7%
+  ❌ BTC_FGI_Trend_Hybrid/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+  ✅ ETH_Bull_Pullback_Vol/ETHUSDT@1h: OOS=5/6, PnL=+40.60%, n=133, WR=43.6%
+  ❌ SOL_Extreme_Z_Trend/SOLUSDT@1h: OOS=3/6, PnL=+18.28%, n=62, WR=52.0%
+  ❌ BTC_Vol_Trend_Convergence/BTCUSDT@4h: OOS=2/6, PnL=+59.80%, n=97, WR=49.1%
+  ✅ Cross_Asset_Bull_Z_Squeeze/BTCUSDT@4h: OOS=4/6, PnL=+56.58%, n=73, WR=54.6%
+  Cross_Asset_Bull_Z_Squeeze/ETHUSDT@4h: SKIP (no data)
+  Cross_Asset_Bull_Z_Squeeze/SOLUSDT@4h: SKIP (no data)
+  ❌ BTC_Deep_Value_Trend/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+
+============================================================
+  ITERATION 3/3
+============================================================
+  Calling LLM...
+  LLM returned 10 strategies
+    - ETH_Vol_Pullback_Squeeze: Combines ETH high vol_ratio with the proven bull pullback z-
+    - BTC_Z_Squeeze_FGI_Filter: BTC specific version of Cross_Asset_Bull_Z_Squeeze with a st
+    - ETH_Z_Squeeze_FGI_Filter: ETH version of the successful Z-Squeeze logic using FGI for 
+    - SOL_Deep_Z_Trend_Filter: Refined SOL extreme z-score strategy requiring bull200 align
+    - Multi_Asset_Vol_Z_Hybrid: Combines the high vol_ratio of ETH with the deep z-score of 
+    - ETH_Bull_Squeeze_Tight_V2: Tightened parameters for the successful ETH Bull Squeeze.
+    - BTC_Pullback_FGI_Convergence: BTC bull pullback range combined with FGI floor.
+    - SOL_Vol_Pullback_Squeeze: Applying the ETH vol_ratio success to SOL z-score pullbacks.
+    - Cross_Asset_Trend_Z_Squeeze: Z-Squeeze confirmed by both bull50 and bull200.
+    - ETH_Extreme_Z_Vol_Combo: Combines extreme funding z-score with volatility confirmatio
+
+  Backtesting 10 strategies...
+
+  Results:
+  ✅ ETH_Vol_Pullback_Squeeze/ETHUSDT@1h: OOS=5/6, PnL=+40.60%, n=133, WR=43.6%
+  ❌ BTC_Z_Squeeze_FGI_Filter/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+  ETH_Z_Squeeze_FGI_Filter/ETHUSDT@4h: SKIP (no data)
+  ❌ SOL_Deep_Z_Trend_Filter/SOLUSDT@1h: OOS=3/6, PnL=+18.28%, n=62, WR=52.0%
+  ❌ Multi_Asset_Vol_Z_Hybrid/BTCUSDT@1h: OOS=3/6, PnL=+5.52%, n=51, WR=48.8%
+  ❌ Multi_Asset_Vol_Z_Hybrid/ETHUSDT@1h: OOS=3/6, PnL=-1.38%, n=64, WR=58.2%
+  ❌ Multi_Asset_Vol_Z_Hybrid/SOLUSDT@1h: OOS=1/6, PnL=-29.86%, n=51, WR=45.8%
+  ❌ ETH_Bull_Squeeze_Tight_V2/ETHUSDT@1h: OOS=2/6, PnL=-5.93%, n=36, WR=53.1%
+  ❌ BTC_Pullback_FGI_Convergence/BTCUSDT@4h: OOS=0/6, PnL=+0.00%, n=0, WR=0.0%
+  ✅ SOL_Vol_Pullback_Squeeze/SOLUSDT@1h: OOS=4/6, PnL=+42.15%, n=100, WR=53.2%
+  ✅ Cross_Asset_Trend_Z_Squeeze/BTCUSDT@4h: OOS=4/6, PnL=+33.18%, n=31, WR=64.0%
+  Cross_Asset_Trend_Z_Squeeze/ETHUSDT@4h: SKIP (no data)
+  Cross_Asset_Trend_Z_Squeeze/SOLUSDT@4h: SKIP (no data)
+  ❌ ETH_Extreme_Z_Vol_Combo/ETHUSDT@1h: OOS=3/6, PnL=+6.86%, n=50, WR=58.8%
+
+================================================================================
+FINAL SUMMARY
+================================================================================
+
+  Total tested: 33
+  Total PASSED: 8
+  ✅ BTCUSDT_Cross_Asset_Bull_Z_Squeeze_4h         | OOS=4/6 | PnL= +56.58% | n=  73 | WR=54.6%
+  ✅ ETHUSDT_Multi_Asset_Bull_Squeeze_Tight_1h     | OOS=4/6 | PnL= +50.29% | n= 213 | WR=53.2%
+  ✅ SOLUSDT_SOL_Vol_Pullback_Squeeze_1h           | OOS=4/6 | PnL= +42.15% | n= 100 | WR=53.2%
+  ✅ ETHUSDT_ETH_Bull_Pullback_Vol_1h              | OOS=5/6 | PnL= +40.60% | n= 133 | WR=43.6%
+  ✅ ETHUSDT_ETH_Vol_Pullback_Squeeze_1h           | OOS=5/6 | PnL= +40.60% | n= 133 | WR=43.6%
+  ✅ BTCUSDT_Cross_Asset_Trend_Z_Squeeze_4h        | OOS=4/6 | PnL= +33.18% | n=  31 | WR=64.0%
+  ✅ BTCUSDT_BTC_Trend_Convergence_4h              | OOS=5/6 | PnL= +31.56% | n=  70 | WR=52.8%
+  ✅ ETHUSDT_Multi_Asset_Bull_Squeeze_1h           | OOS=4/6 | PnL=  +9.81% | n= 237 | WR=45.3%
+
+  V2 BASELINE COMPARISON:
+  BTC bear: 4/6, +54.3%
+  ETH bear: 5/6, +24.7%
+  SOL z<-1.5: 6/6, +77.0%
+
+  Results saved to /data/.openclaw/workspace/forward_v5/forward_5/research/foundry_v12_results.json

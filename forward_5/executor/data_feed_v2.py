@@ -48,6 +48,8 @@ class DataFeedV2(DataFeed):
         self._funding_data: dict[str, list[dict]] = {}
         self._funding_z: dict[str, Optional[float]] = {}
         self._bull200: dict[str, bool] = {}
+        self.on_candle = self._on_candle_v2  # V2: compute regime BEFORE engine callback
+        self._original_on_candle = on_candle  # engine's callback
         self._oi_data: dict[str, float] = {}
         self._oi_prev: dict[str, float] = {}
         self._oi_drop_pct: dict[str, float] = {}
@@ -374,9 +376,8 @@ class DataFeedV2(DataFeed):
     # ── Regime Detection ──
 
     async def _on_candle_v2(self, symbol: str, candle: dict):
-        """Extended candle callback that updates regime detection."""
-        if self.on_candle:
-            await self.on_candle(symbol, candle)
+        """V2 candle callback: compute regime THEN forward to engine."""
+        # Update regime detection
         candles = self.get_candles(symbol, limit=210)
         if len(candles) >= 200:
             import polars as pl
@@ -386,6 +387,10 @@ class DataFeedV2(DataFeed):
             current_ema200 = ema_200[-1]
             if current_ema200 is not None:
                 self._bull200[symbol] = current_close > current_ema200
+
+        # Forward to engine
+        if self._original_on_candle:
+            await self._original_on_candle(symbol, candle)
 
 
 async def _test():

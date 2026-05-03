@@ -18,39 +18,57 @@ OUTPUT = Path(__file__).parent / "foundry_v12_results.json"
 # ── LLM Config ──
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://172.17.0.1:32771/v1/chat/completions")
 OLLAMA_KEY = os.environ.get("OLLAMA_KEY", "ollama-cloud")
-MODEL = os.environ.get("FOUNDRY_MODEL", "gemma4:31b-cloud")
+MODEL = os.environ.get("FOUNDRY_MODEL", "deepseek-v4-flash:cloud")
 
 # ── Building Blocks ──
-CONTEXT = """You are a crypto strategy researcher. Create 10 NOVEL strategies using ONLY these building blocks:
+CONTEXT = """You are a crypto quant researcher. Create 10 NOVEL strategies using ONLY these building blocks:
 
 ASSETS: ONLY BTCUSDT, ETHUSDT, SOLUSDT. No other assets.
 
-SIGNALS: funding_z (float), bull200 (0/1), bull50 (0/1), fgi (int or None), vol_ratio (float).
+SIGNALS (each asset has its OWN data — do NOT reference other assets):
+- funding_z (float): z-score of funding rate. Negative = shorts pay longs.
+- bull200 (0/1): price above 200h EMA = bullish regime
+- bull50 (0/1): price above 50h EMA = short-term uptrend
+- fgi (int or None): Fear & Greed Index. Use (d.get('fgi') or 999) for None-safe.
+- vol_ratio (float): current volume / 24h average. >1 = above average.
 
-PROVEN: bear z<-1=Long, bull pullback z -1.0 to -0.3=Long, SOL z<-1.5=Long, BTC FGI<40 filter, ETH vol_ratio>1.5 confirm, BTC 4h=5x PnL.
-FAILED: DXY, momentum/breakout, shorts, threshold sweeping. Do NOT use these.
+PROVEN WINNERS (build on these, don't just copy):
+- bear z<-1 → Long (extreme negative funding = shorts pay longs)
+- bull pullback z in [-1.0, -0.3] → Long (mild negative funding in uptrend)
+- SOL z<-1.5 → Long (SOL extremes are strong)
+- BTC FGI<40 filter (fear confirms the opportunity)
+- ETH vol_ratio>1.5 confirm (volume surge validates entry)
+- BTC 4h timeframe = 5x more PnL than 1h
+- WidePullback [-1.0, -0.2] beats TightPullback [-0.5, -0.2]
 
-Output ONLY a JSON array. Each object: name, desc, assets (from BTCUSDT/ETHUSDT/SOLUSDT), entry_bull (python bool expr with d['key']), entry_bear (same), timeframe (1h or 4h), notes.
-None-safe: (d.get('fgi') or 999). Strict < for thresholds. No trailing commas.
-"""
+FAILED (do NOT use): DXY, momentum/breakout, shorts, threshold sweeping, cross-asset references.
 
-FEEDBACK_TEMPLATE = """
-## RESULTS FROM ITERATION {iter}
+CRITICAL RULES:
+1. DIVERSIFY: Each strategy must be meaningfully different — different asset, timeframe, or signal combo. Do NOT submit 3 variations of the same idea.
+2. ONE ASSET ONLY per strategy: entry_bull/entry_bear reference d['funding_z'] etc. for THAT asset only. No cross-asset references.
+3. 4h TIMEFRAME is valuable for BTC — use it strategically, not for every strategy.
+4. FGI is optional — only add it where fear/greed genuinely filters. Don't slap FGI<40 on everything.
+5. vol_ratio is a CONFIRMATION signal, not a primary trigger. Use >1.3 or >1.5 sparingly.
+6. bear signal (z<-1) and bull_pullback (z in [-1.0, -0.3]) are the TWO main entry types. Combine each with 0-2 confirmations.
+7. Include at least 2 strategies per asset (BTC, ETH, SOL) and at least 1 on 4h.
 
-{results}
+Output ONLY a JSON array. Each object: name, desc, assets (from BTCUSDT/ETHUSDT/SOLUSDT), entry_bull (python bool expr with d['key']), entry_bear (same), timeframe (1h or 4h). Do NOT include any extra fields like notes or reasoning.
+None-safe FGI: (d.get('fgi') or 999). Strict < for thresholds. No trailing commas."""
 
-Create 10 NEW strategies based on these results. Avoid what failed. Vary what worked.
-Output ONLY a JSON array.
-"""
 FEEDBACK_TEMPLATE = """
 ## RESULTS FROM ITERATION {iter}
 
 {results}
 
 ## INSTRUCTION
-Based on these results, create 10 NEW strategies. Avoid what failed. Double down on what worked.
-Try variations of the top performers. Explore adjacent parameter space.
-Remember: ONLY proven building blocks. NO DXY, NO momentum, NO shorts.
+Based on these results, create 10 NEW strategies.
+- DOUBLE DOWN on what worked (expand winning signal combos to other assets/timeframes)
+- AVOID what failed (0 trades = wrong signals or cross-asset references)
+- DIVERSIFY: meaningfully different combos, not minor parameter tweaks
+- 2+ strategies per asset, at least 1 on 4h
+- ONE asset per strategy, no cross-asset references
+- ONLY proven building blocks: funding_z, bull200, bull50, fgi, vol_ratio
+- NO DXY, NO momentum, NO shorts, NO threshold sweeping
 """
 
 # ── Backtest Engine ──
@@ -130,9 +148,9 @@ def call_llm(prompt: str, retries=3) -> str:
                     "model": MODEL,
                     "messages": [{"role": "user", "content": prompt}],
                     "temperature": 0.5,
-                    "max_tokens": 6000,
+                    "max_tokens": 8000,
                 },
-                timeout=120,
+                timeout=300,
             )
             data = resp.json()
             msg = data.get("choices", [{}])[0].get("message", {})
@@ -152,11 +170,15 @@ def call_llm(prompt: str, retries=3) -> str:
     return ""
 
 def parse_strategies(llm_output: str) -> list:
-    """Extract JSON array from LLM output."""
-    # Try all possible content fields
+    """Extract JSON array from LLM output, robust to truncation and extra fields."""
+    import re
     text = llm_output
     
-    # Find JSON array
+    # Strip markdown code blocks
+    text = re.sub(r'^```(?:json)?\s*', '', text)
+    text = re.sub(r'\s*```$', '', text)
+    
+    # Try full JSON array first
     start = text.find("[")
     end = text.rfind("]") + 1
     if start >= 0 and end > start:
@@ -176,9 +198,23 @@ def parse_strategies(llm_output: str) -> list:
         except:
             pass
     
-    # Try to find individual JSON objects
-    import re
-    objects = re.findall(r'\{[^{}]*\}', text)
+    # Try to close truncated JSON array
+    if start >= 0 and end <= start:
+        # Find last complete object before truncation
+        chunk = text[start:]
+        # Remove trailing incomplete object
+        last_brace = chunk.rfind('}')
+        if last_brace > 0:
+            chunk = chunk[:last_brace+1] + ']'
+        try:
+            result = json.loads(chunk)
+            if isinstance(result, list):
+                return result
+        except:
+            pass
+    
+    # Fallback: extract individual JSON objects (greedy, allows nested braces)
+    objects = re.findall(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', text)
     if objects:
         strategies = []
         for obj_str in objects:
@@ -342,6 +378,27 @@ def main():
     with open(OUTPUT, 'w') as f:
         json.dump(all_results, f, indent=2, default=str)
     print(f"\n  Results saved to {OUTPUT}")
+
+    # ── Discord Report ──
+    try:
+        import subprocess
+        lines = ["🚀 **Foundry V12 Report**", ""]
+        lines.append(f"Tested: {len(all_results)} | Passed: {len(passed)}")
+        lines.append("")
+        if passed:
+            lines.append("**Top 3:**")
+            for name, r in sorted(passed.items(), key=lambda x: -x[1]['total_oos_pnl'])[:3]:
+                lines.append(f"• {name}: OOS={r['n_profitable']}/6, PnL={r['total_oos_pnl']:+.2f}%, n={r['total_trades']}, WR={r['avg_win_rate']:.1f}%")
+        else:
+            lines.append("❌ No strategies passed the gate")
+        lines.append("")
+        lines.append("**V2 Baseline:** SOL z<-1.5: 6/6, +77.0%")
+        report = "\n".join(lines)
+        subprocess.run(["openclaw", "message", "discord", "send",
+                       "--target", "1476565086708695104", "--message", report],
+                      timeout=30, capture_output=True)
+    except Exception as e:
+        print(f"  Discord report failed: {e}")
 
 # ── Fallback Strategies (if LLM fails) ──
 FALLBACK_STRATEGIES = {

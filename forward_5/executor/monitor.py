@@ -16,7 +16,7 @@ from typing import Optional
 
 log = logging.getLogger("monitor")
 
-DB_PATH = Path(__file__).parent / "state.db"
+DB_PATH = Path(__file__).parent / "state_v2.db"
 OUTPUT_PATH = Path(__file__).parent / "monitor_data.json"
 
 # Alert thresholds
@@ -63,7 +63,7 @@ class MonitorV1:
                 WHERE state = 'IN_LONG'
                 ORDER BY entry_time ASC
             """).fetchall()
-            levs = {'BTCUSDT':1.8,'ETHUSDT':1.8,'SOLUSDT':1.5,'AVAXUSDT':1.0,'DOGEUSDT':1.5,'ADAUSDT':1.5}
+            levs = {'BTCUSDT':1.8,'ETHUSDT':1.5,'SOLUSDT':1.0}
             positions = []
             for r in rows:
                 sym, entry, entry_time, peak, size, _ = r
@@ -167,8 +167,8 @@ class MonitorV1:
 
             # Unrealized PnL from open positions
             unrealized_pnl = 0.0
-            levs = {'BTCUSDT':1.8,'ETHUSDT':1.8,'SOLUSDT':1.5,'AVAXUSDT':1.0,'DOGEUSDT':1.5,'ADAUSDT':1.5}
-            for sym in ['BTCUSDT','ETHUSDT','SOLUSDT','AVAXUSDT','DOGEUSDT','ADAUSDT']:
+            levs = {'BTCUSDT':1.8,'ETHUSDT':1.5,'SOLUSDT':1.0}
+            for sym in ['BTCUSDT','ETHUSDT','SOLUSDT']:
                 pos = conn.execute('SELECT entry_price, size FROM positions WHERE symbol=? AND state="IN_LONG"', (sym,)).fetchone()
                 if pos:
                     mark = conn.execute('SELECT close FROM candles WHERE symbol=? ORDER BY ts DESC LIMIT 1', (sym,)).fetchone()
