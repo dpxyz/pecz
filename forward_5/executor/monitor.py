@@ -18,6 +18,7 @@ log = logging.getLogger("monitor")
 
 DB_PATH = Path(__file__).parent / "state_v2.db"
 OUTPUT_PATH = Path(__file__).parent / "monitor_data.json"
+SITE_PATH = Path(__file__).parent.parent.parent / "docs" / "site" / "site" / "monitor_data.json"  # Cloudflare deploy
 
 # Alert thresholds
 DD_WARNING_PCT = 15.0   # Warning when DD > 15%
@@ -221,6 +222,15 @@ class MonitorV1:
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.output_path, "w") as f:
             json.dump(data, f, indent=2)
+
+        # Also write to Cloudflare deploy path
+        try:
+            SITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+            with open(SITE_PATH, "w") as f:
+                json.dump(data, f, indent=2)
+            log.info(f"Site JSON written: {SITE_PATH}")
+        except Exception as e:
+            log.warning(f"Site JSON write failed: {e}")
 
         log.info(f"Dashboard JSON written: {self.output_path} ({len(equity_curve)} equity points)")
         return data
