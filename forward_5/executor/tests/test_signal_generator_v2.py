@@ -40,24 +40,34 @@ class TestSignalGeneratorV2:
         assert sig.type == SignalType.SIGNAL_FLAT
         assert "no V2 signal" in sig.reason
 
-    def test_btc_bear_only_long(self):
-        """BTC: z < -1 + bear regime + FGI<40 → LONG; bull pullback works too."""
-        self.candles[0]["symbol"] = "BTCUSDT"
+    def test_btc_bear_fgi_none_allows_signal(self):
+        """Bug 4 regression: FGI=None should NOT block BTC bear signals.
+        
+        If FGI API fails, FGI=None. The original code blocked all BTC bear
+        signals when FGI was None because `fgi is not None and fgi < 40`
+        evaluated to False, falling into the else branch (no signal).
+        
+        Fix: FGI=None should be treated as 'unknown, allow signal' (conservative
+        assumption that fear may be present).
+        """
         for c in self.candles:
             c["symbol"] = "BTCUSDT"
 
-        # Bear + FGI<40 → LONG
-        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=30)
-        assert sig.type == SignalType.SIGNAL_LONG
+        # Bear + z<-1 + FGI=None → should allow signal (not block it)
+        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=None)
+        assert sig.type == SignalType.SIGNAL_LONG, (
+            f"FGI=None should not block BTC bear signal. Got: {sig.reason}"
+        )
+        assert "FGI=None" in sig.reason or "bear" in sig.reason.lower()
 
-        # Bear + FGI>=40 → no signal (need Fear)
-        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=45)
+    def test_btc_bear_fgi_high_blocks_signal(self):
+        """BTC bear + FGI>=40 → no signal (need Fear)."""
+        for c in self.candles:
+            c["symbol"] = "BTCUSDT"
+
+        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=50)
         assert sig.type == SignalType.SIGNAL_FLAT
         assert "FGI" in sig.reason
-
-        # Bear + FGI=None → no signal (need FGI data)
-        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=None)
-        assert sig.type == SignalType.SIGNAL_FLAT
 
     def test_btc_bull_pullback(self):
         """BTC: Bull pullback — V12 WidePullback range [-1.0, -0.2] → LONG."""

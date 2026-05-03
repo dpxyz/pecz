@@ -168,5 +168,46 @@ class TestBug3OnCandleV2Routing:
         assert result is None, "get_regime should return None before regime is computed"
 
 
+class TestBug4FGINoneBlocksBTCBear:
+    """Bug 4: FGI=None blocked BTC bear signals.
+
+    Original code: `if fgi is not None and fgi < 40: LONG else: NO SIGNAL`
+    When FGI=None, the condition falls into else → signal blocked.
+    Fix: FGI=None should allow the signal (assume fear may be present).
+    """
+
+    def setup_method(self):
+        from signal_generator_v2 import SignalGeneratorV2
+        self.gen = SignalGeneratorV2()
+        self.candles = []
+        for i in range(250):
+            self.candles.append({
+                "timestamp": 1700000000000 + i * 3600000,
+                "open": 78000 + i, "high": 78100 + i,
+                "low": 77900 + i, "close": 78000 + i,
+                "volume": 100, "symbol": "BTCUSDT",
+            })
+
+    def test_fgi_none_allows_btc_bear_signal(self):
+        """FGI=None should NOT block BTC bear signals."""
+        from signal_generator_v2 import SignalType
+        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=None)
+        assert sig.type == SignalType.SIGNAL_LONG, (
+            f"FGI=None should allow BTC bear. Got: {sig.reason}"
+        )
+
+    def test_fgi_high_blocks_btc_bear(self):
+        """FGI>=40 should still block BTC bear."""
+        from signal_generator_v2 import SignalType
+        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=50)
+        assert sig.type == SignalType.SIGNAL_FLAT
+
+    def test_fgi_low_allows_btc_bear(self):
+        """FGI<40 should allow BTC bear."""
+        from signal_generator_v2 import SignalType
+        sig = self.gen.evaluate(self.candles, funding_z=-1.5, bull200=False, fgi=30)
+        assert sig.type == SignalType.SIGNAL_LONG
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

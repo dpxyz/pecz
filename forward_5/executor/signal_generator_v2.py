@@ -162,10 +162,11 @@ class SignalGeneratorV2:
         if symbol == "BTCUSDT":
             if not bull200:
                 # Bear + FGI<40: V11 validated, +73.9% cum, 100% WF
+                # FGI=None → allow signal (conservative: assume fear may be present)
                 if funding_z < self.p["funding_z_long_threshold"]:
-                    if fgi is not None and fgi < 40:
+                    if fgi is None or fgi < 40:
                         signal_type = SignalType.SIGNAL_LONG
-                        reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}<40 → LONG"
+                        reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}→ LONG"
                     else:
                         reason = f"BTC: z={funding_z:.3f}, bear, but FGI={fgi}≥40 → no signal (need Fear)"
             else:
