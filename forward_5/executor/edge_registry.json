@@ -1,0 +1,120 @@
+{
+  "SOL_mild_neg_funding": {
+    "edge_id": "SOL_mild_neg_funding",
+    "name": "SOL Mild Negative Funding + Bull Trend",
+    "primary_driver": "funding_rate_z_score",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "SOL"
+    ],
+    "timeframe": "24h",
+    "entry_logic": "SOL funding z \u2208 [-0.5, 0) AND price above EMA200",
+    "exit_logic": "24h time-based exit, SL 5%",
+    "parameters": {
+      "z_low": -0.5,
+      "z_high": 0.0,
+      "sl_pct": 0.05,
+      "hold_bars": 6
+    },
+    "is_annualized_sharpe": 1.8,
+    "oos_return": 0.0483,
+    "dsr": 0.0,
+    "dsr_p_value": 1.0,
+    "walk_forward_ratio": 0.7,
+    "n_trades": 239,
+    "correlation_vector": {},
+    "status": "production",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "V13b champion, V13c confirmed. R=70 OOS=+4.83%. ONLY validated signal."
+  },
+  "SOL_mild_neg_funding_narrow": {
+    "edge_id": "SOL_mild_neg_funding_narrow",
+    "name": "SOL Mild Neg Funding (Narrow z)",
+    "primary_driver": "funding_rate_z_score",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "SOL"
+    ],
+    "timeframe": "24h",
+    "entry_logic": "SOL funding z \u2208 [-0.5, -0.1) AND price above EMA200",
+    "exit_logic": "24h time-based exit, SL 5%",
+    "parameters": {
+      "z_low": -0.5,
+      "z_high": -0.1,
+      "sl_pct": 0.05,
+      "hold_bars": 6
+    },
+    "is_annualized_sharpe": 0.8,
+    "oos_return": 0.0337,
+    "dsr": 0.0,
+    "dsr_p_value": 1.0,
+    "walk_forward_ratio": 0.7,
+    "n_trades": 203,
+    "correlation_vector": {},
+    "status": "deprecated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "Correlated with SOL_mild_neg_funding (narrower z range, fewer trades)"
+  },
+  "btc_mild_neg_bull200_4h": {
+    "edge_id": "btc_mild_neg_bull200_4h",
+    "name": "BTC Mild Negative Funding + Bull200 (4h)",
+    "primary_driver": "funding_z_mild_neg",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "BTC"
+    ],
+    "timeframe": "4h",
+    "entry_logic": "long when funding z in [-0.5, 0) AND close > EMA200",
+    "exit_logic": "24h time-based, 5% SL, no trailing",
+    "parameters": {
+      "z_low": -0.5,
+      "z_high": 0.0,
+      "bull_filter": "bull200",
+      "hold_hours": 24,
+      "sl_pct": 5.0
+    },
+    "is_annualized_sharpe": 9.05,
+    "oos_return": 31.9,
+    "dsr": 2.35,
+    "dsr_p_value": 0.0,
+    "walk_forward_ratio": 0.0,
+    "n_trades": 176,
+    "correlation_vector": {},
+    "status": "validated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "CPCV PBO=0.13, OOS WR=86.7%"
+  },
+  "eth_mild_neg_bull200_4h": {
+    "edge_id": "eth_mild_neg_bull200_4h",
+    "name": "ETH Mild Negative Funding + Bull200 (4h)",
+    "primary_driver": "funding_z_mild_neg",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "ETH"
+    ],
+    "timeframe": "4h",
+    "entry_logic": "long when funding z in [-0.5, 0) AND close > EMA200",
+    "exit_logic": "24h time-based, 5% SL, no trailing",
+    "parameters": {
+      "z_low": -0.5,
+      "z_high": 0.0,
+      "bull_filter": "bull200",
+      "hold_hours": 24,
+      "sl_pct": 5.0
+    },
+    "is_annualized_sharpe": 6.75,
+    "oos_return": 26.8,
+    "dsr": 2.35,
+    "dsr_p_value": 0.0,
+    "walk_forward_ratio": 0.0,
+    "n_trades": 168,
+    "correlation_vector": {},
+    "status": "validated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "CPCV PBO=0.13, OOS WR=86.7%"
+  }
+}
