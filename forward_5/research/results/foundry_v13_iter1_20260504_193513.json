@@ -1,0 +1,199 @@
+[
+  {
+    "name": "oi_contraction_bull",
+    "intuition": "When open interest contracts during a bullish trend, it suggests weak hands are exiting and the trend is sustainable. This contrasts with funding-driven trades because it captures position unwinding rather than cost-of-carry dynamics.",
+    "primary_driver": "oi_pct_change",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses OI decline instead of negative funding; uncorrelated with funding z-score signals.",
+    "n_signal_variants": 36,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "taker_buy_surge_breakout",
+    "intuition": "A surge in taker buy volume relative to sell volume indicates aggressive market buying, often preceding or confirming a breakout. This captures order-flow imbalance, a different dimension than funding rates.",
+    "primary_driver": "taker_ratio",
+    "secondary_driver": "vol_surge",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Focuses on aggressive buying pressure rather than funding cost; secondary vol_surge confirms participation.",
+    "n_signal_variants": 24,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "fear_buy_with_trend",
+    "intuition": "Extreme fear (low FGI) often marks capitulation, but buying into fear is only profitable when the long-term trend remains intact. This sentiment-driven entry is orthogonal to funding-based signals.",
+    "primary_driver": "fgi",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses sentiment index (FGI) instead of funding; requires bull200 to avoid catching falling knives.",
+    "n_signal_variants": 24,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "liquidation_flush_reversal",
+    "intuition": "When liquidations are high relative to open interest, overleveraged positions have been flushed, reducing selling pressure. A reversal long in a bullish trend exploits this mean-reversion, distinct from funding-based edges.",
+    "primary_driver": "liq_oi_ratio",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses liquidation metrics rather than funding; targets post-flush bounces.",
+    "n_signal_variants": 24,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "volume_exhaustion_short",
+    "intuition": "Extreme volume spikes (vol_ratio >> 1) after a prolonged uptrend can signal climax buying and exhaustion. Shorting with a bearish trend filter captures reversals, unlike funding-based longs.",
+    "primary_driver": "vol_ratio",
+    "secondary_driver": "bull50",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "short",
+    "anti_correlation": "Short-side hypothesis using volume exhaustion; secondary bull50 (short-term trend) ensures entry after a recent high.",
+    "n_signal_variants": 24,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "defi_leverage_contraction_long",
+    "intuition": "Low DeFi utilization indicates reduced borrowing demand, often coinciding with deleveraging bottoms. When utilization is low and price is above EMA200, a long captures the subsequent re-leveraging cycle.",
+    "primary_driver": "defi_utilization",
+    "secondary_driver": "bull200",
+    "assets": [
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses DeFi lending utilization, a macro leverage proxy; only applies to ETH and SOL (major DeFi chains).",
+    "n_signal_variants": 16,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "crosssec_funding_divergence_long",
+    "intuition": "When an asset's funding rate is significantly lower than the cross-sectional mean, it is relatively cheap to hold long. Combined with a bullish trend, this captures relative value without relying on absolute funding levels.",
+    "primary_driver": "crosssec_funding_z",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses relative funding across assets rather than absolute funding z; proven insight suggests it's uncorrelated with existing edges.",
+    "n_signal_variants": 36,
+    "best_sharpe": 18.199181553249872,
+    "dsr_pass": true,
+    "cpcv_pass": true,
+    "pbo": 0.0,
+    "top_results": [
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h24_sl0",
+        "asset": "BTC",
+        "n_trades": 51,
+        "win_rate": 0.6275,
+        "total_return_pct": 47.23,
+        "max_dd_pct": -7.19,
+        "sharpe": 18.2
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h24_sl5",
+        "asset": "BTC",
+        "n_trades": 51,
+        "win_rate": 0.6275,
+        "total_return_pct": 44.08,
+        "max_dd_pct": -6.71,
+        "sharpe": 16.57
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 43,
+        "win_rate": 0.6512,
+        "total_return_pct": 46.93,
+        "max_dd_pct": -9.04,
+        "sharpe": 16.23
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 43,
+        "win_rate": 0.6512,
+        "total_return_pct": 40.9,
+        "max_dd_pct": -9.96,
+        "sharpe": 13.89
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_deep_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 56,
+        "win_rate": 0.5714,
+        "total_return_pct": 33.47,
+        "max_dd_pct": -13.72,
+        "sharpe": 9.22
+      }
+    ]
+  },
+  {
+    "name": "oi_surge_trend_continuation",
+    "intuition": "A surge in open interest during an uptrend confirms new money entering the market, supporting trend continuation. This OI-based signal differs from funding-based edges by measuring commitment rather than cost.",
+    "primary_driver": "oi_pct_change",
+    "secondary_driver": "bull200",
+    "assets": [
+      "AVAX",
+      "DOGE",
+      "ADA"
+    ],
+    "direction": "long",
+    "anti_correlation": "Applies to altcoins (AVAX, DOGE, ADA) where funding alpha is absent; uses OI surge instead of funding.",
+    "n_signal_variants": 36,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  }
+]

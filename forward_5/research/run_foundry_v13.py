@@ -327,6 +327,7 @@ def call_llm(prompt: str, retries: int = 3) -> str:
     """Call the LLM and return the raw text response."""
     for attempt in range(retries):
         try:
+            log.info(f"  LLM call attempt {attempt+1}/{retries}...")
             resp = requests.post(
                 OLLAMA_URL,
                 headers={
@@ -336,16 +337,27 @@ def call_llm(prompt: str, retries: int = 3) -> str:
                 json={
                     "model": MODEL,
                     "messages": [{"role": "user", "content": prompt}],
-                    "temperature": 0.7,  # Higher than V12 for diversity
+                    "temperature": 0.7,
                     "max_tokens": 4000,
                 },
-                timeout=300,
+                timeout=600,
             )
+            log.info(f"  LLM response status: {resp.status_code}")
+            
+            if resp.status_code != 200:
+                log.warning(f"  LLM error: {resp.text[:200]}")
+                time.sleep(10)
+                continue
+            
             data = resp.json()
             msg = data.get("choices", [{}])[0].get("message", {})
             content = msg.get("content", "")
             if not content:
                 content = msg.get("reasoning", "") or msg.get("reasoning_content", "")
+            
+            log.info(f"  LLM response length: {len(content)} chars")
+            log.info(f"  LLM response preview: {content[:500]}")
+            
             if content:
                 return content
         except Exception as e:
@@ -409,8 +421,20 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
     
     # Load existing edges
     reg = EdgeRegistry()
-    existing_edges = reg.list_edges()
+    existing_edges = reg.get_all_edges()
     log.info(f"Existing edges in registry: {len(existing_edges)}")
+    
+    # Convert EdgeRecords to dicts for prompt
+    edges_for_prompt = []
+    for e in existing_edges:
+        edges_for_prompt.append({
+            'name': e.edge_id,
+            'primary_driver': getattr(e, 'primary_driver', 'funding_z'),
+            'secondary_driver': getattr(e, 'secondary_driver', None),
+            'assets': e.assets or [],
+            'sharpe': getattr(e, 'sharpe', None) or 0,
+            'validated': e.status in ('validated', 'production'),
+        })
     
     all_validated = []
     
@@ -420,7 +444,7 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
         log.info(f"{'='*60}")
         
         # Step 1: Generate hypotheses
-        prompt = build_prompt(existing_edges, iteration)
+        prompt = build_prompt(edges_for_prompt, iteration)
         log.info("\nStep 1: Calling LLM for hypotheses...")
         
         raw_text = call_llm(prompt)
@@ -580,7 +604,7 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
         
         # Register validated edges
         for h in validated:
-            existing_edges.append({
+            edges_for_prompt.append({
                 "name": h.name,
                 "primary_driver": h.primary_driver,
                 "secondary_driver": h.secondary_driver,
