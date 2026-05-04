@@ -11,7 +11,7 @@ import aiohttp
 import polars as pl
 
 from config import DATA_DIR, POLL_INTERVAL, RATE_LIMIT_PER_SECOND
-from sources import hyperliquid, binance_funding, binance_oi, binance_ls_ratio, binance_taker, fear_greed
+from sources import hyperliquid, binance_funding, binance_oi, binance_ls_ratio, binance_taker, fear_greed, binance_klines
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("collector")
@@ -23,6 +23,7 @@ SOURCES = {
     "bn_ls_ratio": (binance_ls_ratio, "bn_ls_ratio.parquet"),
     "bn_taker_ratio": (binance_taker, "bn_taker_ratio.parquet"),
     "fear_greed": (fear_greed, "fear_greed.parquet"),
+    "bn_klines": (binance_klines, "bn_klines_1h.parquet"),
 }
 
 

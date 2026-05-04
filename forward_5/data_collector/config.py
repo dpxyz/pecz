@@ -15,6 +15,7 @@ BACKFILL_DAYS = {
     "binance_ls_ratio": 30,
     "binance_taker": 180,
     "fear_greed": None,  # all available
+    "binance_klines": 365,
 }
 
 RATE_LIMIT_PER_SECOND = 10
