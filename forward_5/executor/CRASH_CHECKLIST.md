@@ -15,7 +15,7 @@ read_when:
 ps aux | grep -E "paper_engine|watchdog|monitor" | grep -v grep
 ```
 - Läuft? → weiter zu 2.
-- Nicht? → `cd /data/.openclaw/workspace/forward_v5/forward_5/executor && bash run_paper_engine.sh --background`
+- Nicht? → `cd /data/.openclaw/workspace/forward_v5/forward_5/executor && bash run_paper_engine_v2.sh --background`
 
 ## 2. Cron-Jobs
 ```bash

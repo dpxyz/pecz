@@ -1,0 +1,95 @@
+DEEP RESEARCH: HYPERLIQUID MIGRATION EVALUATION
+Source: https://docs.google.com/document/d/1nWbarMXRh_qZmKWkz4hUTjiJVhymWLzslfATkLZwAyM/
+Date: 2026-05-04
+
+============================================================
+TL;DR: Run both in parallel, gradually shift SOL exposure to Hyperliquid for lower fees + better funding granularity, keep Binance as conservative backstop.
+============================================================
+
+1. FUNDING RATE MECHANICS
+- Hyperliquid uses SAME 8h formula as Binance: F = Pavg + clamp(interestRate - Pavg, -0.0005, 0.0005)
+- BUT: settles every HOUR at 1/8 of the 8h rate → 24 settlement points/day vs Binance's 3
+- Interest rate fixed at 0.01% per 8h (same as Binance)
+- Premium index: 5-second sampling, based on impact bid/ask vs oracle spot
+- Caps: 4% per hour (much looser than Binance's ±0.75×maintenance margin ratio)
+- predictedFundings endpoint: returns predicted rates for HL + CEXs (Binance, Bybit)
+- KEY DIFFERENCE: hourly time series vs sparse 8h series on Binance
+
+2. FEE STRUCTURE
+- Tier 0 (<5M USD 14d volume): Taker 0.045%, Maker 0.015%
+- Higher tiers reduce fees progressively
+- HYPE staking: up to 40% fee reduction (but uneconomical at our scale)
+- Maker rebates: REAL but UNREACHABLE (need >0.5% global maker volume share → -0.001%, >1.5% → -0.002%, >3% → -0.003%)
+- NO gas fees on trading, NO cancellation fees
+- Deposit: USDC via Arbitrum One, no protocol fee (just L2 gas)
+- Withdrawal: flat 1 USDC bridge fee
+- No liquidation clearance fee (PnL goes to HLP/insurance)
+
+COMPARISON (retail tier):
+|            | Maker    | Taker    |
+|------------|----------|----------|
+| Hyperliquid| 0.015%   | 0.045%   |
+| Binance    | 0.020%   | 0.050%   |
+
+→ Maker on HL saves 0.005%/side vs Binance maker
+→ If we can trade maker: 0.015% vs Binance taker 0.05% = 70% reduction in per-side fee drag
+
+3. API & DATA QUALITY
+- REST: 1200 weight/min/IP, standard requests weight=1, heavy calls up to 60
+- WebSocket (wss://api.hyperliquid.xyz/ws): candle, l2Book, bbo, trades, activeAssetCtx, allDexsAssetCtxs, openOrders, orderUpdates, userFills, userEvents, userFundings
+- MORE COMPLETE than Binance's mixed REST/WS model
+- Historical candles: up to 5000 per request (1h = ~208 days)
+- Historical funding: 500 rows/call (~20.8 days at hourly), paginated, NO global cutoff → can walk back full history
+- OI: real-time via WebSocket, NO dedicated historical OI endpoint → need to self-archive or use Coinalyze/Coinglass
+- Liquidations: WebSocket userEvents for own account, NO built-in hourly aggregation by long/short → must aggregate yourself
+- Conclusion: clean APIs but need to self-archive for multi-year history
+
+4. ASSET COVERAGE
+- 200+ perp markets, 170+ crypto perps
+- ALL our assets present: BTC-USD, ETH-USD, SOL-USD, AVAX-USD, DOGE-USD, ADA-USD
+- Binance has broader overall coverage, but equivalent for majors-focused quant system
+
+5. EXECUTION QUALITY
+- SOL-USD: 24h volume hundreds of millions, OI 100M-1B, spreads 0.01-0.02%
+- At €500-5k notional: <<1% of top-of-book depth, slippage dominated by price volatility not book shape
+- Contract multiplier: 1, sizes in coin units, szDecimals for min increment
+- Minimum order sizes well below our target range
+- Stop-loss: Stop Market, Stop Limit, TP/SL supported as triggered market orders
+- Edge cases: badTriggerPxRejected, marketOrderNoLiquidityRejected possible
+- Comparable to Binance at our size, with caveat of HL being newer with at least one API outage
+
+6. ACCOUNT & KYC
+- Non-custodial DEX: wallet = account, no KYC required
+- Terms prohibit US/sanctioned users, but no enforcement
+- EU/Germany: technically accessible, but MiFID II still applies legally
+- Deposit: USDC via Arbitrum One
+- Withdrawal: 1 USDC flat fee, seconds to ~15 min
+
+7. Z-SCORE RECALCULATION
+- HL hourly rate f_h,t; equivalent 8h rate = 8 × f_h,t
+- Option A: Resample HL to 8h (sum 8 hourly payments), compare directly with Binance
+- Option B: Move entire stack to hourly for both venues (interpolate Binance's 8h rate)
+- RECOMMENDED: Keep 7-day horizon, use 168 hourly samples (7×24) for z-score
+  - Compute 8h-equivalent rates for both venues
+  - Rolling mean + stddev on normalized 8h-equivalent series
+  - This gives 8× more data points per window → statistically more robust z-scores
+- Cross-venue comparison possible via predictedFundings endpoint (shows HL + Binance + Bybit rates)
+
+8. RISKS & DOWNSIDES (from truncated section)
+- Platform risk: DEX, smart contract risk (Arbitrum bridge, HyperCore contracts)
+- JELLY incident: oracle override emergency mechanism
+- Smart contract exploits: HyperVault, JELLY vaults multi-million losses
+- Oct 2025: ~$10B liquidations, $1.23B trader capital wiped
+- Regulatory grey zone: no KYC, blocks US but no enforcement for EU
+- Binance has more mature support, fiat rails, longer track record
+- Bottom line: better funding granularity + lower fees, but higher platform/smart-contract/governance risk
+
+9. MIGRATION PATH (from truncated section)
+- Official Python SDK: hyperliquid-python-sdk (pip install)
+- CCXT supports Hyperliquid as standard exchange class
+- Migration steps:
+  1. Read-only integration: mirror 1h candle + funding pipeline into state_v2.db under sol_hl namespace
+  2. Paper-trade / shadow mode: compute existing signal on HL data, compare PnL
+  3. Partial capital deployment: 100-500 USDC, maker-only entries/exits, monitor fill ratios
+  4. Progressive WS adoption + dead-man switches
+- Can run both exchanges in parallel; no need for cross-venue hedging at our size

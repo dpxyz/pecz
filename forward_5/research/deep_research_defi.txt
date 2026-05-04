@@ -1,0 +1,221 @@
+DeFi lending rates, utilization, liquidations, and stablecoin flows do encode a meaningful risk-on/risk-off signal, but evidence is mostly indirect; they look most promising as **regime filters** (to avoid over‑levered conditions and deleveraging cascades) rather than as standalone alpha signals.  With free data from Aave/Compound subgraphs, DeFiLlama, Dune, and Solana‑native APIs, you can realistically integrate several such filters into an automated SOL‑perp system at daily–hourly frequency. [liu.diva-portal](https://liu.diva-portal.org/smash/get/diva2:1579302/FULLTEXT02.pdf)
+
+***
+
+## DeFi yields as risk signal
+
+Empirical work finds that DeFi lending rates are primarily driven by **crypto‑specific leverage demand and liquidity conditions**, not by traditional money‑market rates.  The “DeFi‑ying the Fed?” paper shows that US monetary policy explains only a limited portion of stablecoin lending‑rate variation; excess returns are largely due to demand shocks in DeFi itself, which adjust only slowly as lending supply reacts. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4673325)
+
+A Glassnode analysis of DeFi during the May 2021 crash documented that borrow rates on major platforms like Aave and Compound rose from around 2 % to roughly 12 % annualized just before a sharp deleveraging, interpreting this as a sign that leverage had become crowded and unstable.  Similar case studies repeatedly show that **spiking DeFi borrow rates co‑occur with crowded leverage and often precede or accompany drawdowns**, while post‑crash environments see low utilization and compressed rates.  However, there is **no published large‑sample study** that directly regresses DeFi borrow rates today on asset returns over the next 1–7 days, so the predictive power for your exact horizon remains an open question. [insights.glassnode](https://insights.glassnode.com/defi-uncovered-the-state-of-defi/)
+
+The BIS “Why DeFi lending? Evidence from Aave V2” study and related work show that DeFi borrowing is mainly speculative, sensitive to collateral returns and volatility; borrowing expands in rallies and contracts after shocks.  Together with Glassnode’s rate‑spike evidence, the weight of research supports using **“very high or very low DeFi rates” as a regime classifier** (crowded leverage vs washed‑out conditions), not as a finely tuned timing signal. [arxiv](https://arxiv.org/abs/2302.10252)
+
+***
+
+## On‑chain leverage and utilization metrics
+
+Most major lending protocols expose enough data to reconstruct **total supplied, total borrowed, and utilization** (borrowed / supplied). [academy.youngplatform](https://academy.youngplatform.com/en/blockchain/aave-compound-makerdao-defi-lending/)
+
+- **Aave**  
+  - Maintains official subgraphs on The Graph for v2 and v3 across many chains; these give per‑reserve liquidity, debt, interest rates and liquidation events via GraphQL. [github](https://github.com/aave/protocol-subgraphs)
+  - Utilization is effectively derived from pool liquidity and outstanding debt; Glassnode and BIS papers note that Aave interest models are **piecewise functions of utilization**, sharply increasing rates as utilization approaches 100 %. [jbba.scholasticahq](https://jbba.scholasticahq.com/article/146833-rate-discovery-in-decentralised-lending.pdf)
+
+- **Compound (v2/v3)**  
+  - Offers a public REST API (`/api/v2/account`, etc.) plus subgraphs; third‑party providers like Santiment expose metrics such as `compound_v3_total_supplied`, `compound_v3_total_borrowed`, and APYs. [academy.santiment](https://academy.santiment.net/metrics/lending-and-borrowing-protocols/compound-v3/)
+  - Interest rates are algorithmically linked to utilization so that high utilization corresponds to elevated borrowing costs and potentially stressed liquidity. [nansen](https://nansen.ai/post/what-is-compound-v3)
+
+- **Venus Protocol**  
+  - Provides an unauthenticated REST API (`https://api.venus.io`) with “Market Data” and “Pool” endpoints covering per‑asset lending markets; these include supply, borrow, and yield figures that can be used to compute utilization. [docs-v4.venus](https://docs-v4.venus.io/guides/supply-borrow)
+
+- **MarginFi (Solana)**  
+  - Public docs describe standard over‑collateralized lending with supply, borrow, and a “health factor” for accounts; a governance proposal explicitly discusses utilization defined as `total_borrows / total_supplied`, and proposes switching to `total_borrows / max_borrows_available` for isolated pools to better reflect effective leverage. [support.marginfi](https://support.marginfi.com/en/articles/4394625)
+  - Aggregate TVL and borrowing metrics for MarginFi’s lending and LST products are tracked on DeFiLlama, which exposes them via free API endpoints. [defillama](https://defillama.com/protocol/marginfi-lst)
+
+- **Utilization as signal**  
+  - Academic and industry work consistently emphasize utilization as **the key control variable** in DeFi rate models and liquidity risk management. [snb](https://www.snb.ch/dam/jcr:a289c694-e420-4201-8d18-590ef2f0e0e8/sem_2025_06_20_barbon.n.pdf)
+  - High utilization makes pools fragile: case studies (e.g., market notes on Aave WETH at 100 % utilization enabling recursive weETH leverage loops) explicitly flag “tightened exit liquidity” and elevated systemic risk in such regimes. [whale-alert](https://whale-alert.io/stories/a6a901ea492853/Aave-unfreezes-WETH-market-100-utilization-enables-recursive-weETH-leverage-loops-that-favor-LSTLRT-holders-and-tighten-exit-liquidity)
+  - Conversely, low utilization with abundant idle liquidity, falling TVL and depressed rates is associated with “yield winter” and reduced leverage, conditions that typically follow deleveraging. [binance](https://www.binance.com/en/square/post/300973550747713)
+
+This supports your intuition that **utilization > 90 % can be treated as an overheated, fragile state**, while sustained utilization < 30–40 % with low borrow demand often corresponds to under‑levered, post‑capitulation regimes. These precise thresholds are heuristic rather than empirically optimized, so you would want to calibrate them per‑protocol.  
+
+***
+
+## Liquidation cascades and potential bottom signals
+
+Multiple empirical papers study DeFi liquidations across Aave, Compound, MakerDAO and dYdX. [scribd](https://www.scribd.com/document/716962436/An-Empirical-Study-of-DeFi-Liquidations)
+
+- A large BIS study documents about 2.5 billion USD of liquidations on Aave and Compound over its sample and shows that **liquidations have negative contemporaneous price impacts**, consistent with forced selling during price drops. [bis](https://www.bis.org/publ/work1062.pdf)
+- A Bank of Canada paper on “Liquidation Mechanisms and Price Impacts in DeFi” finds that fixed‑spread liquidation schemes (Aave/Compound) create larger discounts and more aggressive collateral selling than MakerDAO auctions, which amplifies short‑term price pressure. [publications.gc](https://publications.gc.ca/collections/collection_2025/banque-bank-canada/FB3-5-2025-12-eng.pdf)
+- A 2021 IMC paper, “An Empirical Study of DeFi Liquidations,” catalogs tens of thousands of liquidation events and confirms that large clusters occur during sharp price declines, consistent with “liquidation cascades.” [scribd](https://www.scribd.com/document/716962436/An-Empirical-Study-of-DeFi-Liquidations)
+
+More recent cross‑chain work on Aave and Compound v2/v3 shows that **v3 liquidations tend to increase protocol TVL and revenue**, indicating that once the cascade is over, capital often flows back in at cheaper prices and with healthier collateralization.  However, none of these papers explicitly claim that liquidation spikes are statistically reliable **local bottoms**; they measure contemporaneous price impact and protocol‑level outcomes rather than forward returns. [arxiv](https://arxiv.org/html/2506.12855v1)
+
+For real‑time and historical liquidation data:  
+
+- **DeFiLlama** tracks liquidation levels for major lending/CDP protocols via open‑source adapters; their liquidation dashboard covers dozens of assets and protocols on several chains, and the code explains how positions and liquidation prices are computed. [github](https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/liquidations/README.md)
+- **Dune** hosts several public dashboards (“DeFi liquidations”, “Aave Liquidations”, “DeFi Liquidations & Leverage Risk Radar”) that expose event‑level liquidation data via SQL; these can be queried programmatically via Dune’s APIs (though historical data exports at scale are more convenient on paid tiers). [dune](https://www.dune.com/dsalv/Liquidations)
+- **DeFi Terminal** provides a “Liquidation Feed” with real‑time liquidations for Aave v3, Spark, Compound v3, and Morpho Blue across Ethereum and Arbitrum. [defi-terminal](https://defi-terminal.com/liquidations)
+- **Nansen** is positioned as a paid analytics platform with DeFi and liquidation tracking across many chains, but its liquidation and leverage analytics are largely behind a subscription paywall. [cow](https://cow.fi/learn/how-to-track-defi-liquidity-with-nansen)
+
+Overall, the literature strongly supports using **“deleveraging intensity” (liquidation volume relative to TVL) as a stress indicator**, but you will need to test for yourself whether “X standard deviations above baseline liquidations in last 24–72 hours” systematically marks attractive entry zones for SOL‑perps. [bis](https://www.bis.org/publ/work1062.pdf)
+
+***
+
+## Stablecoin supply and yield vs market regime
+
+Stablecoin supply has grown in lockstep with the maturation of crypto, with DeFiLlama estimating roughly 310–330 billion USD in aggregate stablecoin supply in early 2026, up from under 50 billion in 2020.  DeFiLlama’s methodology tracks mints and burns at issuer contracts per chain and aggregates across chains for global supply; a dedicated “Stables” dashboard and API expose full historical supply curves and per‑chain breakdowns. [blog.mexc](https://blog.mexc.com/news/stablecoin-supply-hits-283b-with-the-liquidity-signal-everyones-misreading/)
+
+Multiple industry and policy reports highlight that **stablecoin supply and flows are tightly linked to crypto market activity**, especially trading volumes and DeFi participation.  ESRB analysis, for example, finds that crypto trading volumes help predict stablecoin transaction volumes, implying joint dynamics between speculative activity and stablecoin usage.  Messari and OSL research further document that stablecoin supply and transfer volumes remain elevated even when prices consolidate, suggesting that supply growth is a necessary but not sufficient condition for bull markets. [banque-france](https://www.banque-france.fr/system/files/2023-02/wp908.pdf)
+
+On yields:  
+
+- Aave and Compound stablecoin supply APYs are explicitly driven by **borrow demand**; higher borrowing demand for USDC/DAI pushes up rates to attract more deposits, while low demand leads to subdued yields. [stablecoininsider](https://stablecoininsider.org/earn-stablecoin-yield-with-aave/)
+- Glassnode and others have shown cases where **DeFi lending rates rose sharply** during leveraged carry trades and then compressed after deleveraging, supporting the interpretation of high stablecoin yields as a signal of crowded leverage. [insights.glassnode](https://insights.glassnode.com/defi-uncovered-defi-valuations-dislocate/)
+- A recent BIS and stablecoin‑focused research line shows that stablecoin lending rates are not tightly tied to traditional short‑term rates, but rather respond idiosyncratically to DeFi‑specific factors—a positive for your use case as a crypto‑native regime indicator. [bis](https://www.bis.org/publ/work1270.pdf)
+
+The heuristic “rising stablecoin supply + falling DeFi stablecoin yields = risk‑on” is **not directly validated** in the literature. In practice, falling yields can mean either reduced borrow demand (post‑risk‑off) or an influx of depositors chasing yields, and you would need to condition on utilization and TVL to distinguish these regimes. [galaxy](https://www.galaxy.com/insights/research/crypto-leverage-q3-2025-defi-cefi-lending-digital-asset-treasury-debt-futures-perpetuals)
+
+***
+
+## SOL‑specific DeFi metrics and data sources
+
+On Solana, the main protocols you mentioned—MarginFi, Kamino, Solend, Drift—plus aggregators like DeFiLlama provide enough data to construct SOL‑specific leverage and yield metrics. [defillama](https://defillama.com)
+
+- **Solend**  
+  - Offers a documented REST API at `https://api.solend.fi/` with real‑time lending‑market data: APYs, reserve supply and borrow metrics, and liquidity mining rewards. [dev.solend](https://dev.solend.fi/docs/api/)
+  - The TypeScript SDK allows you to load markets and reserves, then read `totalDepositsWads`, `totalSupplyAPY`, and borrow limits for each asset, including SOL and major stablecoins. [dev.solend](https://dev.solend.fi/docs/ts-sdk/usage/)
+  - This gives you per‑asset **total supplied vs total borrowed** and yields for SOL and USDC/USDT on Solana. [dev.solend](https://dev.solend.fi/docs/ts-sdk/usage/)
+
+- **Kamino**  
+  - Provides a public API (`https://api.kamino.finance`) and detailed developer docs for Kamino Lending, with endpoints covering lending pools, APYs, and vaults. [api.kamino](https://api.kamino.finance)
+  - The open‑source `klend-sdk` includes CLIs for interacting with the Kamino lending program on Solana, allowing you to fetch pool‑level state from on‑chain accounts (e.g., supplied/borrowed amounts for SOL and staked‑SOL assets). [github](https://github.com/Kamino-Finance/klend-sdk/blob/master/README_KAMINO_MANAGER.md)
+  - DeFiLlama tracks Kamino Lend’s TVL, borrowed amounts, fees and revenue, and per‑pool APYs, exposing this via a free API and CSV download interface. [api-docs.defillama](https://api-docs.defillama.com)
+
+- **MarginFi**  
+  - Has user‑facing docs describing lending, borrowing and health factor mechanics, but no fully fleshed public REST API in the snippets; however, the governance forum and ecosystem tooling discuss utilization, `total_supplied`, and `total_borrows` fields in on‑chain accounts, which can be accessed via Solana RPC and decoded using the protocol’s IDL. [forum.marginfi](https://forum.marginfi.community/t/mimd1-maximizing-marginfis-capital-efficiency/244)
+  - MarginFi TVL and lending data (including lending vs LST products) are available via DeFiLlama’s Solana chain and protocol endpoints. [defillama](https://defillama.com/protocol/marginfi)
+
+- **Drift Protocol**  
+  - Primarily a perp DEX but also offers borrowing and funding analytics; protocol docs describe a **funding‑rate model** with hourly funding based on mark vs oracle TWAP, and a Data API for market data. [docs.drift](https://docs.drift.trade/protocol/trading/perpetuals-trading/funding-rates)
+  - Third‑party sites like CoinGlass and CoinGecko expose real‑time and historical Drift funding rates and open interest by market, including SOL‑perp. [coingecko](https://www.coingecko.com/en/exchanges/drift_protocol)
+
+- **Solana‑level aggregates**  
+  - DeFiLlama’s Solana chain dashboard reports TVL, stablecoin market cap, and protocol‑level breakdowns, giving you a **chain‑wide leverage and liquidity context** for SOL. [defillama](https://defillama.com/chain/solana)
+  - Recent reports highlight that Kamino, MarginFi and others now drive hundreds of millions in loans and high utilization on USDC pools, reflecting significant leverage demand on Solana specifically. [dlnews](https://www.dlnews.com/articles/defi/3-solana-lending-platforms-now-offer-yields-of-24-or-higher/)
+
+For your use case, **Solend + Kamino (via their APIs) and DeFiLlama (for aggregates)** are the most practical free sources to build SOL‑specific utilization and yield metrics. [kamino-finance-klend.mintlify](https://kamino-finance-klend.mintlify.app)
+
+***
+
+## Implementation feasibility and free data
+
+The table below summarizes realistic, free (or very low‑cost) options for data you’d want as regime filters.  
+
+### Key free DeFi data sources for regime metrics
+
+| Metric type | Protocol(s) | Free source & access | Typical granularity / depth | Python integration notes |
+| --- | --- | --- | --- | --- |
+| Lending TVL, borrowed, APY (multi‑chain) | Aave, Compound, Venus, Solana lenders | DeFiLlama API: `/protocol/{protocol}`, `/yields/pools`, `/yields/chartLendBorrow/{pool}`, stablecoins datasets | Usually **daily** time series over multiple years; some yield charts denser than daily but not guaranteed at 4h | Simple `requests` calls; community wrappers like `defillama2` return Pandas‑ready data frames.  [api-docs.defillama](https://api-docs.defillama.com) |
+| Per‑reserve utilization and rates (EVM) | Aave v2/v3 | Aave subgraphs on The Graph; AaveKit GraphQL API | Block‑level; practically you can sample to hourly or 4‑hourly; history back to protocol launch | Use `requests` or `gql` to query; no fees beyond The Graph rate limits.  [github](https://github.com/aave/protocol-subgraphs) |
+| Per‑market supply/borrow (EVM) | Compound v2/v3 | Compound API + subgraphs + Santiment metrics | Snapshots plus granular historical data via on‑chain or Dune; some third‑party APIs may be rate‑limited | Public `api.v2` endpoints are free; Dune for historical liquidations and utilization.  [academy.santiment](https://academy.santiment.net/metrics/lending-and-borrowing-protocols/compound-v3/) |
+| Lending & borrow metrics (BNB chain) | Venus | Venus REST API (`/pools`, etc.) | Real‑time; historical depth not fully documented—likely present for some endpoints but not guaranteed at 4h granularity | Python: `requests` against `https://api.venus.io` with version headers.  [docs-v4.venus](https://docs-v4.venus.io/services/api) |
+| Liquidation volumes & counts | Aave, Compound, Maker, Morpho, etc. | DeFiLlama liquidations dashboard & underlying adapters; Dune “liquidations” dashboards | Event‑level (per liquidation) across protocol history; effectively block‑level time stamps for ~2–4 years on major platforms | For free, you can query Dune dashboards interactively and limited API usage; for large‑scale historical backtests you may hit Dune’s paid limits.  [github](https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/liquidations/README.md) |
+| Stablecoin supply by asset & chain | USDT, USDC, DAI, others | DeFiLlama stablecoins API & pegged‑assets server | Daily history from 2018–2020 onward for each major stablecoin, plus per‑chain breakdown | `defillama2` and similar wrappers expose `get_stablecoin_hist_mcap` and related calls.  [eco](https://eco.com/support/en/articles/14800367-defillama-free-tvl-and-defi-analytics) |
+| Solana lending metrics | Solend, Kamino, MarginFi | Solend REST + SDK, Kamino public API/SDK, DeFiLlama Solana and protocol endpoints | Real‑time snapshots via protocol APIs; historical TVL/borrow & APY daily via DeFiLlama; for sub‑4h, you’d need to reconstruct from on‑chain or indexers | All accessible from Python; DeFiLlama gives CSV downloads; for finer granularity consider Flipside, Helius or custom RPC indexing.  [dev.solend](https://dev.solend.fi/docs/ts-sdk/usage/) |
+| Perp funding & open interest | Drift, CEXs | Drift Data API; CoinGlass/Glassnode for aggregated funding rate & OI | Typically hourly funding data and continuous open interest; at least 1–2 years for top assets | Some data (Glassnode Pro, CoinGlass API) may be paywalled; Drift’s own API and public explorers are free.  [docs.drift](https://docs.drift.trade/protocol/trading/perpetuals-trading/funding-rates) |
+
+In practice, **Aave subgraphs + DeFiLlama + Solend/Kamino APIs** are enough to build hourly–4‑hourly regime metrics over at least 12–24 months for ETH and SOL ecosystems, though some of the granularity will come from **your own resampling** of block‑level data rather than pre‑binned 4h series. [eco](https://eco.com/support/en/articles/14800367-defillama-free-tvl-and-defi-analytics)
+
+***
+
+## Correlation with perp funding‑rate Z‑scores
+
+There is substantial conceptual overlap between what your funding‑rate Z‑score measures and what DeFi yields/utilization capture: both are functions of **demand for leveraged long vs short exposure**, but on different rails (perp swaps vs over‑collateralized borrowing). [insights.glassnode](https://insights.glassnode.com/crypto-market-dynamics-global-view/)
+
+Available research provides related but not identical metrics:  
+
+- Glassnode tracks funding‑rate heatmaps across hundreds of assets to infer “speculative bias” from perpetuals, with broad positive funding interpreted as long‑crowded conditions and negative funding as short‑crowded or capitulatory. [insights.glassnode](https://insights.glassnode.com/leverage-position-openings-and-closures/)
+- DeFi studies show that lending rates and utilization rise with speculative borrowing, especially when users loop collateral to farm yields or lever up on ETH; these are the very conditions that also drive positive perp funding. [bis](https://www.bis.org/publ/work1183.pdf)
+
+However, **no published paper** directly reports the correlation between perp funding rates and DeFi borrowing rates/utilization, so we cannot assert that correlations exceed or fall below a specific threshold like 0.7.  Given that each venue has its own participant base and constraints (KYC, collateral, smart‑contract risk), it is reasonable to expect **moderate, time‑varying positive correlation** but also significant divergence during episodes where leverage migrates between CeFi and DeFi. [galaxy](https://www.galaxy.com/insights/research/crypto-leverage-q3-2025-defi-cefi-lending-digital-asset-treasury-debt-futures-perpetuals)
+
+For your purposes, the right approach is:  
+
+1. Pull a 12–24 month history of SOL‑perp funding rates (Binance + Drift) at 1h or 4h resolution. [coinglass](https://www.coinglass.com/FundingRate/DRIFT)
+2. Build corresponding 4h time series of key DeFi metrics (e.g., Aave/Compound ETH stablecoin utilization; Solend/Kamino USDC/SOL utilization; stablecoin yields) via subgraphs/DeFiLlama. [api-docs.defillama](https://api-docs.defillama.com)
+3. Compute **Spearman correlations and rolling correlations** between your funding Z‑score and each DeFi metric, and also test whether changes in DeFi metrics lead funding or returns by 1–3 lags.  
+
+If you find a metric with correlation < 0.5 to your funding signal but which significantly improves drawdown when used as a filter in backtests, that would be strong evidence of **orthogonal risk‑regime information**.  
+
+***
+
+## Example DeFi‑based regime filters for your SOL‑perp system
+
+Because we do not have access to your exact execution and PnL history, and no public study has run your precise strategy, we cannot honestly quantify “how many false signals filtered” or the exact Sharpe impact over the last 12 months. Any precise numbers would be fabricated. Instead, below are **three concrete filter designs** that align with the literature and are implementable with free data; for each, I describe the expected qualitative effects, and you can then backtest them in Python.  
+
+### 1. Global ETH DeFi leverage cap
+
+**Idea:** Avoid entering new longs when the broader ETH DeFi leverage system is “too hot,” even if SOL funding Z‑score is attractive.  
+
+- **Metric:** Aave v3 ETH and major stablecoin (e.g., USDC, DAI) utilization on mainnet and L2s, averaged or TVL‑weighted. [aave](https://aave.com/docs/aave-v3/getting-started/graphql)
+- **Filter condition:**  
+  - Only allow long entries when:  
+    - `funding_z_SOL < 0` (your existing condition), **and**  
+    - 4h‑smoothed Aave ETH‑stablecoin utilization < ~75 %, **and** not making new 30‑day highs.  
+- **Rationale:** The literature and case studies show that very high utilization and yields on Aave often coincide with crowded leverage and vulnerability to deleveraging, whereas “normal” utilization with negative funding is more likely to be a calm, mean‑reverting environment. [liu.diva-portal](https://liu.diva-portal.org/smash/get/diva2:1579302/FULLTEXT02.pdf)
+- **Expected backtest behavior (qualitative):**  
+  - Filters out long entries during periods like extreme ETH carry trades and LST/LRT leverage loops when Aave utilization spikes into the 90–100 % range, which often precede sharp drawdowns. [whale-alert](https://whale-alert.io/stories/a6a901ea492853/Aave-unfreezes-WETH-market-100-utilization-enables-recursive-weETH-leverage-loops-that-favor-LSTLRT-holders-and-tighten-exit-liquidity)
+  - Will likely skip some profitable trades in early‑stage uptrends where utilization is already high but prices continue grinding up.  
+  - Should improve **max drawdown** more reliably than Sharpe, by avoiding the worst liquidation cascades.  
+
+### 2. Deleveraging‑intensity entry “cooldown”
+
+**Idea:** Use liquidation spikes as a signal that the system is undergoing a deleveraging cascade; avoid initiating new longs while the cascade is still in progress, but actively seek entries once intensity collapses.  
+
+- **Metric:** Deleveraging intensity over the last 24–72 hours for major ETH‑collateralized DeFi lenders:  
+  - `intensity = liquidations_USD_lookback / TVL_lookback` on Aave + Compound + Maker. [dlnews](https://www.dlnews.com/articles/llama-u/how-to-track-liquidations-on-defillama/)
+- **Filter condition:**  
+  - **Hard block:** do not open new longs if 24h deleveraging intensity is above a high percentile of its 180‑day history (e.g., > 95th percentile).  
+  - **Attractive zone:** once intensity falls back below its 50th percentile after a spike, allow long entries with `funding_z_SOL < 0`, treating this as post‑cascade normalization.  
+- **Rationale:** Academic work confirms that large liquidations amplify downside volatility in the moment; case studies show that v3 liquidations are followed by healthier TVL and revenues, consistent with “resetting” leverage. [arxiv](http://arxiv.org/pdf/2506.12855.pdf)
+- **Expected backtest behavior (qualitative):**  
+  - Prevents entries during very turbulent 24–48 hour windows of cascading DeFi liquidations, where your mean‑reversion funding signal might otherwise enter early.  
+  - May miss some V‑shaped reversals that happen **during** the liquidation spike, but would still catch later mean‑reversion moves.  
+  - Likely to **reduce both win‑rate and loss severity**, improving tail risk but also reducing total trade count; effect on Sharpe will depend on your base strategy’s sensitivity to crash days.  
+
+### 3. Solana‑local leverage and stablecoin‑flow filter
+
+**Idea:** Condition SOL‑perp longs on the state of **Solana‑native leverage and liquidity** rather than just global ETH DeFi metrics.  
+
+- **Metrics:**  
+  - Solend + Kamino USDC utilization on Solana (TVL‑weighted across their USDC pools). [defillama](https://defillama.com/protocol/kamino-lend)
+  - Solana stablecoin market cap and share of global stablecoins via DeFiLlama. [dlnews](https://www.dlnews.com/articles/llama-u/how-to-track-stablecoins-like-tether-with-defillama/)
+- **Filter condition:**  
+  - Only open new SOL‑perp longs when:  
+    - `funding_z_SOL < 0`, **and**  
+    - Solend+Kamino USDC utilization is in a “healthy” zone: say 40–80 % on a 24h average (not < 25 %, not > 90 %), **and**  
+    - Solana’s share of total stablecoin market cap is not making new 30‑day lows (to avoid periods of capital flight from Solana).  
+- **Rationale:** High utilization on Solana USDC pools has been documented during periods of intense leverage and points farming, with yields in the 24–40 % range; low utilization and stagnant stablecoin inflows correspond to “yield winter” and diminished risk appetite on Solana. [solanafloor](https://solanafloor.com/news/solanas-lending-market-onchain-insights-from-kamino-marginfi-and-save)
+- **Expected backtest behavior (qualitative):**  
+  - Filters out longs when Solana leverage is either extremely crowded (utilization > 90 %) or when the ecosystem is starved of liquidity (utilization < 25 % and shrinking stablecoin share).  
+  - Likely to reduce signals during “Solana mania” phases (high utilization + high yields), which may be good or bad depending on whether your funding‑mean‑reversion strategy struggles in runaway trends.  
+  - Should provide **more orthogonal information** than ETH‑centric metrics, since it focuses on where your underlying collateral and perp trading actually live.  
+
+***
+
+## How to evaluate these filters in your Python stack
+
+To decide whether any of these filters clear your “no additional alpha if correlation > 0.7” bar, and to get the concrete statistics you originally asked for (false signals avoided, good signals missed, Sharpe/DD impact), you can:  
+
+1. **Download data**  
+   - Use DeFiLlama’s API to get daily or higher‑frequency series for stablecoins, TVL, borrowing and yields (plus CSV exports for quick inspection). [api-docs.defillama](https://api-docs.defillama.com/llms.txt)
+   - Use Aave/Compound subgraphs and Solend/Kamino APIs to build hourly snapshots of utilization and borrow rates. [thegraph](https://thegraph.com/explorer/subgraphs/JCNWRypm7FYwV8fx5HhzZPSFaMxgkPuw4TnR3Gpi81zk?view=Query&chain=arbitrum-one)
+   - Pull SOL funding rates and open interest from Binance/Hyperliquid and, optionally, Drift or CoinGlass. [docs.drift](https://docs.drift.trade/protocol/trading/perpetuals-trading/funding-rates)
+
+2. **Resample to 4h buckets**, matching your current funding Z calculation window.  
+
+3. **Compute correlations and lead–lag relationships** between each DeFi metric and your funding Z‑score, using rolling windows to see regime‑dependence.  
+
+4. **Backtest each filter** as an overlay to your existing strategy: simply remove trades whose entry timestamps violate a filter condition, and recompute PnL metrics (Sharpe, MAR, max DD, trade count, hit‑rate).  
+
+Given your existing Python/ccxt infrastructure, integrating these metrics programmatically is straightforward and should run comfortably alongside your current €500 / 5× levered SOL‑perp mean‑reversion system. The main work is **data engineering and backtesting**, not API access—most of the foundational DeFi and stablecoin data you need is now free and well‑documented. [defillama](https://defillama.com)

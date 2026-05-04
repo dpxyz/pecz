@@ -136,20 +136,31 @@ class TestSignalGeneratorV2:
         assert sig.type == SignalType.SIGNAL_FLAT
         assert "no V2 signal" in sig.reason
 
-    def test_sol_z_1_5_long(self):
-        """SOL: z < -1.5 → LONG (all regimes)."""
+    def test_sol_mild_negative_long(self):
+        """SOL: z∈[-0.5, 0) + bull200 → LONG (V13b champion). Extended: z<-0.5 + bull200 also LONG."""
         for c in self.candles:
             c["symbol"] = "SOLUSDT"
 
-        sig = self.gen.evaluate(self.candles, funding_z=-2.0)
+        # z∈[-0.5, 0) + bull200 → LONG (V13b champion)
+        sig = self.gen.evaluate(self.candles, funding_z=-0.3, bull200=True)
         assert sig.type == SignalType.SIGNAL_LONG
         assert "SOL" in sig.reason
 
-        # z between -1.5 and -1.0 → no signal
-        sig = self.gen.evaluate(self.candles, funding_z=-1.3)
+        # z < -0.5 + bull200 → LONG (extended)
+        sig = self.gen.evaluate(self.candles, funding_z=-1.3, bull200=True)
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "SOL" in sig.reason
+
+        # z < -0.5 but bear → no signal (need bull regime)
+        sig = self.gen.evaluate(self.candles, funding_z=-1.3, bull200=False)
         assert sig.type == SignalType.SIGNAL_FLAT
 
-        sig = self.gen.evaluate(self.candles, funding_z=1.5, bull200=True)
+        # z > 0 → no signal
+        sig = self.gen.evaluate(self.candles, funding_z=0.5, bull200=True)
+        assert sig.type == SignalType.SIGNAL_FLAT
+
+        # z ∈ [-0.5, 0) but bear → no signal
+        sig = self.gen.evaluate(self.candles, funding_z=-0.3, bull200=False)
         assert sig.type == SignalType.SIGNAL_FLAT
 
     def test_no_funding_data(self):

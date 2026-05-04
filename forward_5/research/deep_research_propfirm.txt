@@ -1,0 +1,251 @@
+DEEP RESEARCH: PROP-FIRM CRYPTO TRADING EVALUATION (COMPLETE)
+Source: https://docs.google.com/document/d/1rNm86HBzt0zDA5nO-ADmQtvBgh1LgHUWwP14oANhTm0/
+Date: 2026-05-04
+Status: COMPLETE — all 9 sections captured
+
+============================================================
+TL;DR: Prop-firm is viable but requires major strategy recalibration. 
+Breakout Prop (Kraken) = best fit. 5% SL = instant breach at any prop firm.
+Must deleverage to 0.2x effective. §15 EStG (commercial income) = actually better than §20.
+No tier-1 prop firm supports Hyperliquid. Bybit or Kraken only.
+Copy trading = parallel path with zero constraints.
+Solana Foundation grants = $5-10k seed capital, no IP dilution.
+============================================================
+
+1. EXECUTIVE SUMMARY
+- €500 @ 5x = fee drag destroys 77% of returns → prop-firm or scale-up is mathematically inevitable
+- But prop-firm drawdown rules are "fundamentally hostile to low-frequency strategies utilizing wide stop-losses"
+- 5% SL on $50k account = instant MDL breach at ANY tier-1 firm
+- Must deleverage to 0.2x effective (only use 20% of funded capital)
+- Tax: prop payouts classified as §15 EStG (commercial income), NOT §20 EStG — actually structurally advantageous
+
+2. TIER-1 CRYPTO-NATIVE PROP FIRMS
+
+2.1 HYROTRADER (Best for Crypto)
+- Exchange: Bybit API (real order books, not CFDs)
+- Evaluation: $89 for $10k, refundable on first payout, no time limit
+- 2-Step: Phase 1 = 10% profit, Phase 2 = 5%
+- Profit split: 70% → scales to 90% (+5% every 4 months)
+- Risk rules: 4-5% trailing daily drawdown, 6-10% max loss
+- Crypto leverage: up to 1:100
+- Python ccxt: YES, native support
+- CRITICAL: SL must be placed within 5 minutes or account breach
+- Consistency rule: None post-evaluation (only anti-gambling during eval)
+
+2.2 CRYPTO FUND TRADER (CFT)
+- Exchange: Bybit + MT5
+- Evaluation: from $55 for $5k, 1/2/3-phase + instant funding
+- Profit split: 80% → 90%
+- Risk rules: 4-5% daily loss, 6-10% trailing drawdown
+- Crypto leverage: up to 1:100
+- Python ccxt: Requires MT5 bridge (complicated)
+- CRITICAL: $10,000 daily/per-trade profit cap (anti-gambling rule)
+- No HFT/tick scalping (<30s trades prohibited) — irrelevant for our 24h holds
+
+2.3 BREAKOUT PROP (Acquired by Kraken) ⭐ BEST FIT
+- Exchange: Kraken (direct routing)
+- Evaluation: from $35 for $5k, 1-step, no time limit
+- Risk rules: 3-4% daily loss, STATIC 6% max drawdown (massive advantage!)
+- Profit split: 80% (upgradeable to 90%)
+- Crypto leverage: 5x BTC/ETH, 2x altcoins (SOL = 2x!) ⚠️
+- Python ccxt: YES, native API support
+- ZERO consistency rules, ZERO minimum trading days, NO mandatory SL
+- Static drawdown = anchored to initial balance, not trailing = much safer
+
+2.4 FUNDINGPIPS ❌ INCOMPATIBLE
+- Crypto leverage capped at 1:2
+- Requires cTrader/cAlgo (C#) — no native ccxt
+- NO weekend holding on funded accounts
+- News trading restrictions
+- Mathematically incompatible with our strategy
+
+COMPARATIVE MATRIX:
+| Metric | HyroTrader | CFT | Breakout Prop | FundingPips |
+|--------|-----------|-----|-------------|-------------|
+| Max Notional | $200k | $300k | $200k | $200k |
+| Exchange | Bybit | Bybit/MT5 | Kraken | cTrader |
+| Max Crypto Lev | 1:100 | 1:100 | 5x/2x ⚠️ | 1:2 |
+| Drawdown Type | Trailing | Trailing | STATIC ✅ | Static |
+| Daily Loss | 4-5% | 4-5% | 3-4% | 5% |
+| Consistency Rule | None post-eval | $10k cap | None ✅ | No weekend |
+| ccxt Support | Native ✅ | MT5 bridge | Native ✅ | Poor (cAlgo) |
+
+3. STRATEGY RECALIBRATION — CRITICAL
+
+3.1 The 5% SL Problem
+- 5% SL on $50k account at 1x leverage = $2,500 loss = 5% of equity = INSTANT MDL BREACH
+- At 5x leverage: 25% account loss per stopped trade = catastrophic
+- Solution: Decouple technical SL from equity risk
+- MUST reduce position sizing: 1% equity risk per trade → $500 risk on $50k
+- With 5% technical SL → max position = $10,000 = 0.2x effective leverage
+- Only 20% of funded capital actually deployed = fee drag still significant but manageable
+
+3.2 Consistency Rules Problem
+- 8 trades/month = lumpy PnL distribution
+- Single 4% day can = 40% of total evaluation profit → violates 30% consistency rule
+- Solution: Only use firms WITHOUT consistency rules (Breakout Prop, HyroTrader post-eval)
+- OR: Hardcode profit cap in bot logic
+
+3.3 Minimum Trading Days
+- 8 signals/month may not meet 10-day minimums
+- Solution: Use firms without minimum trading days (Breakout Prop)
+
+4. TAX & REGULATION (GERMANY)
+
+4.1 Income Classification
+- Prop payouts ≠ capital gains. Trader is independent contractor providing signal service to foreign entity
+- §15 EStG (Gewerbliche Einkünfte) = most likely classification for automated 24/7 bot
+- §22 Nr.3 EStG (Sonstige Einkünfte) = unlikely to hold for systematic bot
+- This is ACTUALLY BETTER than §20 EStG because:
+  - No €20,000 derivative loss offset cap
+  - All business expenses fully deductible (VPS, evaluation fees, API costs)
+  - Trade tax Freibetrag = €24,500/year
+
+4.2 Trade Tax (Gewerbesteuer)
+- Must register Gewerbeanmeldung
+- Freibetrag: €24,500/year for Einzelunternehmen/GbR
+- Above that: 3.5% × Hebesatz (300-500% depending on city)
+- Münster Hebesatz: ~450% → effective rate ~15.75% above Freibetrag
+- Portion credited against personal income tax
+
+4.3 VAT (Umsatzsteuer)
+- B2B service to foreign entity → Reverse-Charge Mechanism
+- Invoice without German VAT, with Steuerschuldnerschaft note
+- Must acquire USt-IdNr.
+- Evaluation fees: fully deductible as Betriebsausgaben (even failed evaluations)
+
+4.4 Loss Offsets
+- If business expenses exceed payouts in a year → loss offset against other active income (e.g. salary)
+- Evaluation fees = fully deductible Betriebsausgaben, even if failed
+- Total abolition of €20k derivative loss offset cap (§20 Abs. 6 EStG) = massive structural advantage
+
+4.5 PROFIT SPLIT REPORTING
+- 80/20 split: Trader reports ONLY the 80% received as gross revenue, NOT 100% of simulated profits
+- The 20% retained by prop firm is never reported by the trader
+
+============================================================
+5. CRYPTO-SPECIFIC ALTERNATIVES TO PROP FIRMS
+============================================================
+
+5.1 HYPERLIQUID VAULTS
+- Vault Leader retains 10% performance fee (vs 80% at prop firms)
+- 10,000 USDC gas fee to initialize vault = PROHIBITIVE for €500 capital
+- Must maintain 5% of TVL as personal equity (skin in game)
+- Technically ideal (ccxt, L1 order book, 24/7) but financially inaccessible
+- VERDICT: ❌ Not viable at current scale
+
+5.2 EXCHANGE-NATIVE COPY TRADING (Bitget / Bybit)
+- Register as "Lead Trader" → followers mirror trades via API
+- Earn 8-15% of followers' net profits
+- ZERO evaluation fees, ZERO drawdown rules, ZERO consistency caps
+- Requires 30-90 day verified track record to attract followers
+- Trade exactly as designed, no rule constraints
+- VERDICT: ✅ Attractive parallel path, but needs track record first
+
+5.3 SOLANA FOUNDATION ECOSYSTEM GRANTS
+- Micro-grants $5,000-$10,000 for quant tools + open-source
+- "Institutional Trading Program" for market makers
+- No IP transfer, no equity dilution, no prop-firm rules
+- Milestone-based or convertible grants
+- VERDICT: ✅ Worth applying, especially if open-sourcing parts of the stack
+
+============================================================
+6. REALISTIC PnL PROJECTIONS
+============================================================
+
+Assumptions: 8 trades/month, 4.83% per trade on allocated capital,
+1% equity risk/trade, 5% SL → 0.2x effective leverage (20% of account),
+80/20 prop split, ~30% German tax (EStG + GewSt above Freibetrag)
+
+| Account | Capital/Trade | PnL/Trade | Monthly PnL | Prop Cut | Gross Payout | Tax (~30%) | NET |
+|---------|--------------|-----------|-------------|----------|-------------|-----------|-----|
+| $10k | $2k | $96.60 | $772.80 | -$154.56 | $618.24 | -$185.47 | **$432.77** |
+| $25k | $5k | $241.50 | $1,932.00 | -$386.40 | $1,545.60 | -$463.68 | **$1,081.92** |
+| $50k | $10k | $483.00 | $3,864.00 | -$772.80 | $3,091.20 | -$927.36 | **$2,163.84** |
+
+6.2 IS THE EVALUATION WORTH IT?
+- First-attempt pass rate: 5-10% industry-wide
+- 10% profit target requires ~11 consecutive winning trades without MDL breach
+- BUT: Evaluation cost = $150-200 for $25k account
+- With €500 personal capital + 77% fee drag → organically reaching €25k takes YEARS
+- 2-3 evaluations = €450 sunk cost for potential €1,000+/month income
+- VERDICT: Mathematical EV strictly favors buying evaluations over organic compounding
+
+============================================================
+7. OPERATIONAL & TECHNOLOGY
+============================================================
+
+7.1 API INTEGRATION
+- HyroTrader/CFT: Institutional Bybit sub-accounts → ccxt.bybit works with minimal refactoring
+- API keys: Read+Trade only, Withdraw+Transfer DISABLED
+- IP whitelisting enforced, violations = account termination
+- Standard ccxt commands (create_market_buy_order, fetch_open_orders) work seamlessly
+
+7.2 VPS & LATENCY
+- Current €10/month VPS is compliant with prop-firm requirements
+- For Bybit API: AWS Tokyo (ap-northeast-1) or AWS Frankfurt (eu-central-1) optimal
+- No requirement from prop firms on specific VPS infrastructure
+
+============================================================
+8. RED FLAGS & DUE DILIGENCE
+============================================================
+
+1. **Tick-by-Tick Trailing Drawdowns** = PREDATORY
+   - Open equity float counts toward drawdown
+   - Trade floating +4% → closes +1% = 3% drawdown counted
+   - MUST use EOD or static balance drawdown firms (Breakout Prop!)
+
+2. **B-Book Synthetic Feeds** = AVOID
+   - Artificial spread widening during volatility to trigger SLs
+   - Must verify "Real Exchange Execution" / A-Book routing
+
+3. **Vague Prohibited Practices** = RED FLAG
+   - "Latency arbitrage" or "exploitative strategies" = intentionally vague
+   - Can be weaponized to deny payouts retroactively
+   - CFT's <30s trade ban is clear and acceptable (we hold 24h)
+
+4. **Payout Denial Waves** = CRITICAL RISK
+   - FundingPips: recent backlash for terminating accounts over disputed "tick scalping"
+   - Suppressed negative reviews on Trustpilot
+   - ALWAYS verify payouts on independent Discord communities, not website testimonials
+
+============================================================
+9. STRATEGIC DIRECTIVES (FINAL RECOMMENDATIONS)
+============================================================
+
+1. **ABANDON Hyperliquid Vault** — 10k USDC gas fee + 5% TVL lockup = impossible at €500
+2. **RECALIBRATE Algorithm** — Reduce position sizing to 0.5-1.0% equity risk/trade (0.2x effective leverage). 5% SL must never exceed MDL
+3. **SELECT Breakout Prop or HyroTrader:**
+   - Breakout Prop (Kraken): Static 6% MDL, zero consistency rules, zero min days, no mandatory SL ⭐ BEST FIT
+   - HyroTrader (Bybit): Native ccxt, 1:100 leverage, BUT trailing drawdown + SL within 5min rule
+4. **REGISTER Gewerbe** — §15 EStG classification, Reverse-Charge VAT, USt-IdNr., evaluation fees as Betriebsausgaben
+5. **PARALLEL PATH: Copy Trading** — After 30-90 day track record, register as Lead Trader on Bitget/Bybit for 8-15% of followers' profits with ZERO constraints
+
+KEY INSIGHT: Accept deleveraging (0.2x effective) → secure $25-50k capital → eliminate fee drag → unlock true algorithmic edge
+
+============================================================
+CRITICAL CONSIDERATIONS FOR OUR STRATEGY
+============================================================
+
+⚠️ BREAKOUT PROP LEVERAGE ISSUE:
+- SOL leverage capped at 2x on Breakout Prop (Kraken)
+- At 2x leverage + 0.2x effective = only $2,000 position on $50k account
+- 4.83% × $2,000 = $96.60/trade → barely covers evaluation cost
+- SOLUTION: Run BTC/ETH at 5x leverage on Breakout, SOL on HyroTrader (1:100)
+
+⚠️ HYROTRADER SL RULE:
+- Must place SL within 5 minutes of entry
+- Our bot already uses SL → can hardcode immediate SL placement
+- BUT: Trailing drawdown = float profits count against MDL
+- A trade floating +3% then closing +1% = 2% drawdown counted
+
+⚠️ EVALUATION PASS RATE:
+- 5-10% first-attempt pass rate industry-wide
+- Our strategy: ~8 trades/month, each ~0.97% expected gain
+- 10% target needs ~11 consecutive wins → challenging but possible
+- Budget 2-3 evaluation attempts (€300-600 total risk)
+
+ALTERNATIVE TIMELINE:
+- Run V2 paper engine for 30-90 days → build track record → Copy Trading path
+- Zero risk, zero evaluation cost, but slower capital accumulation
+- Can combine: Prop-firm evaluation + Copy Trading registration simultaneously

@@ -7,7 +7,8 @@ Entry signals (HYP-06 + Foundry V12 validated):
 3. BTC 4h Bull Pullback: -1.0<z<-0.2 + bull200 → Long (V12: +94% cum, 5/6 WF)
 4. ETH Bear: z<-1 → Long (V11: +24.70% cum, 5/6 WF)
 5. ETH Bull Pullback: -1.0<z<-0.2 → Long (V12 WidePullback: +71.5% cum, 5/6 WF)
-6. SOL: z<-1.5 → Long (V11: +77.02% cum, 6/6 WF)
+6. SOL: z∈[-0.5, 0) + bull200 → Long (V13b: R=70, OOS=+4.83%, 239 trades)
+   Extended: z<-0.5 + bull200 → Long (broader negative funding capture)
 
 Regime: bull200 (close > ema200 = bull)
 Z-Score: (funding_rate - rolling_mean) / rolling_std, 8h funding, 168h window
@@ -71,7 +72,7 @@ STRATEGY_PARAMS = {
 
     # Exit parameters — FUNDING-SPECIFIC
     "trailing_stop_pct": 0,               # DISABLED — trailing stops kill mean-reversion
-    "stop_loss_pct": 4.0,                 # Emergency SL only (4% = black swan protection)
+    "stop_loss_pct": 4.0,                 # Emergency SL (4% — Prop-Firm-kompatibel, 0.2x effektiv = 0.8% equity risk)
     "max_hold_bars": 24,                  # 24h max hold — PRIMARY EXIT
 
     # Position limits
@@ -92,9 +93,10 @@ class SignalGeneratorV2:
         log.info(f"SignalGeneratorV2 initialized:")
         log.info(f"  Bear: z < {self.p['funding_z_long_threshold']} (extreme negative funding)")
         log.info(f"  Bull Pullback: -1.0 < z < -0.2 (V12 WidePullback)")
-        log.info(f"  SOL: z < -1.5 (deep negative, all regimes)")
+        log.info(f"  SOL: z∈[-0.5, 0) + bull200 (V13b champion, R=70, OOS=+4.83%)")
         log.info(f"  Regime: bull200 (close > EMA{self.p['ema_trend']})")
         log.info(f"  Exit: 24h time-based (primary), Emergency SL {self.p['stop_loss_pct']}%, Trailing DISABLED")
+        log.info(f"  ⚠️ SOL z<-1.5 GESTRICHEN — V13b beweist: mild negativ = robust, extrem = zu wenige Trades")
 
     def evaluate(self, candles: list[dict], funding_z: Optional[float] = None,
                  bull200: Optional[bool] = None, fgi: Optional[int] = None) -> Optional[Signal]:
@@ -196,13 +198,18 @@ class SignalGeneratorV2:
                     reason = f"ETH: z={funding_z:.3f} > -0.2 in bull → no pullback signal"
 
         elif symbol == "SOLUSDT":
-            # SOL: z<-1.5 Long (V11 validated, 6/6 WF PASS, +77% cum)
-            # V12: SOL Deep Funding + Vol Confirm (+12.8%, 4/6) — not strong enough to replace z<-1.5
-            if funding_z < -1.5:
+            # V13b Champion: z∈[-0.5, 0) Long + EMA200 bull (R=70, OOS=+4.83%, 239 trades)
+            # Deep Research: mild negatives Funding = der Edge (z<-1.5 zu streng, zu wenige Trades)
+            # V13b-Label-Bug: "bear_z<-0.5" war eigentlich z∈[-0.5, 0) = leicht negatives Funding
+            if -0.5 <= funding_z < 0 and bull200:
                 signal_type = SignalType.SIGNAL_LONG
-                reason = f"SOL: funding_z={funding_z:.3f} < -1.5 (deep negative) → LONG"
+                reason = f"SOL: funding_z={funding_z:.3f} ∈ [-0.5, 0), bull200={bull200} → LONG (V13b champion)"
+            elif funding_z < -0.5 and bull200:
+                # Fallback: stärker negatives Funding im Bull-Regime auch erlaubt
+                signal_type = SignalType.SIGNAL_LONG
+                reason = f"SOL: funding_z={funding_z:.3f} < -0.5, bull200={bull200} → LONG (extended)"
             else:
-                reason = f"SOL: funding_z={funding_z:.3f} ≥ -1.5 → no signal (need z<-1.5)"
+                reason = f"SOL: funding_z={funding_z:.3f}, bull200={bull200} → no signal"
 
         else:
             reason = f"{symbol}: no V2 signal (BTC/ETH/SOL only)"

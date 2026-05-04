@@ -1,0 +1,265 @@
+For your constraints, Binance gives you a usable but lossy real‑time liquidation stream plus partial historical snapshots, while Hyperliquid requires either on‑chain/gRPC infra or a third‑party to get full liquidation history.  Realistically, the best fit is: self‑archiving Binance’s WebSocket feed, using free/cheap aggregate APIs (Coinalyze, Dune/Hyperliquid, possibly CryptoQuant) for research, and only paying for a history provider like Tardis.dev if you later decide you need deep tick‑level backfill. [truetech](https://truetech.dev/blockchain-development/services/blockchain-infrastructure/exchange-liquidations-data-scraping.html)
+
+***
+
+## 1. Binance Futures liquidation data
+
+**What Binance exposes**
+
+- **All‑market liquidation WebSocket.**  
+  Binance runs a public stream at `wss://fstream.binance.com/ws/!forceOrder@arr` that broadcasts *all* futures liquidations across symbols in real time; per‑symbol streams use `<symbol>@forceOrder` (e.g. `btcusdt@forceOrder`). [stackoverflow](https://stackoverflow.com/questions/67509891/how-to-view-aggregated-liquidations-for-cryptocurrencies-from-binance)
+  Each event is a `"forceOrder"` snapshot containing a nested `"o"` object with fields such as symbol `s`, side `S` (order side), quantity `q`, price `p`, average price `ap`, last fill `l`, accumulated fill `z`, and trade time `T`, plus top‑level event time `E`. [developers.binance](https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Liquidation-Order-Streams)
+
+- **Per‑user REST “force orders”.**  
+  The **User’s Force Orders** endpoint (`GET /dapi/v1/forceOrders` for coin‑margined futures) returns only *your* auto‑close orders (liquidations and ADL), with parameters `autoCloseType=LIQUIDATION`, `symbol`, `startTime`, `endTime`, `limit` (max 100), and a hard **90‑day lookback limit**. [developers.binance](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders)
+  The response includes fields such as `symbol`, `side`, `positionSide`, `origQty`, `executedQty`, `avgPrice`, `time`, etc., but cannot be used to see other traders’ liquidations, so it’s useless for global crowd‑liquidation studies. [developers.binance](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders)
+
+- **Historical snapshots on Binance Vision.**  
+  Binance publishes zipped **daily liquidation snapshots** per contract under paths like `data/futures/cm/daily/liquidationSnapshot/BTCUSD_PERP/` for COIN‑M contracts. [github](https://github.com/sammchardy/python-binance/issues/1060)
+  Community reports indicate that **USDT‑M** liquidationSnapshot data stopped updating after 2024‑03‑31, while COIN‑M snapshots continued, so coverage is incomplete if you focus on USDT‑margined perps like BTCUSDT. [github](https://github.com/binance/binance-public-data/issues/337)
+
+**Rate limits, aggregation, and known gaps**
+
+- The WebSocket “Liquidation Order Streams” and “All Market Liquidation Order Streams” send at most **one (the largest) liquidation per symbol per 1000 ms**, and if no liquidation occurs in that interval, nothing is pushed. [developers.binance](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Liquidation-Order-Streams)
+  Coinalyze independently confirms that “as of 2021‑04‑27 Binance no longer provide full liquidations, they provide only 1 liquidation order per second,” so you **miss smaller liquidations** and cannot reconstruct exact tick‑level totals. [coinalyze](https://coinalyze.net/hyperliquid/liquidations/)
+
+- REST **forceOrders** is rate‑limited at **20 weight per request with symbol and 50 without**, with `limit<=100` and only up to 90 days of history, so you cannot backfill multi‑year, all‑user data via the official REST API. [developers.binance](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders)
+  Combined with the snapshot nature of the WebSocket, any long/short liquidation volumes you derive will be **approximate and biased toward larger events**, which is still workable for “post‑liquidation mean reversion” signals that key off large sweeps. [coinalyze](https://coinalyze.net/hyperliquid/liquidations/)
+
+**Reconstructing long vs short liquidations**
+
+- In the WebSocket payload, the order side `S` indicates the *closing* order: a **`SELL` liquidation order corresponds to long positions being liquidated (closing via sell)**, while `BUY` corresponds to short liquidations. [truetech](https://truetech.dev/blockchain-development/services/blockchain-infrastructure/exchange-liquidations-data-scraping.html)
+  You can therefore aggregate per symbol and hour by mapping `S=SELL` to “long liquidations” and `S=BUY` to “short liquidations”, summing `q * ap` (or `q` if you just want size) over each interval. [developers.binance](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Liquidation-Order-Streams)
+
+- Because Binance only publishes the largest liquidation per symbol per second, these aggregates are **systematically undercounted**, especially in cascades where many small positions are wiped in rapid succession; Coinalyze explicitly calls out this limitation for their own Binance liquidation charts. [coinalyze](https://coinalyze.net/bitcoin/liquidations/)
+  For your purposes, this still yields a high‑signal “large liquidation impulse” series, but you should treat it as a *proxy* rather than true notional totals, and calibrate thresholds empirically. [coinalyze](https://coinalyze.net/bitcoin/liquidations/)
+
+**Real‑time implementation notes**
+
+- Multiple open‑source projects already implement this stream, e.g. GitHub’s `binance-liquidation-tracker` (Python script that connects to Binance WebSocket, records `forceOrder` events, and filters by value/symbol) and `binance-liquidation-feeder` (TypeScript/WebSocket wrapper), which you can adapt to your Python + SQLite stack. [github](https://github.com/aoki-h-jp/binance-liquidation-feeder)
+  There’s also a tutorial repo `binance-liquidations-2022` that shows a simple Python streaming implementation for all symbols, useful as boilerplate. [youtube](https://www.youtube.com/watch?v=RDJQTuDZuYQ)
+
+***
+
+## 2. Hyperliquid liquidation data
+
+**Official exchange API**
+
+- The official docs define a **`userEvents` WebSocket subscription** where each message is a `WsUserEvent` union that can contain fills, funding updates, **liquidation** info (`WsLiquidation`), or non‑user cancels. [hyperliquid.gitbook](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/websocket/subscriptions)
+  `WsLiquidation` includes fields like `lid`, `liquidator`, `liquidated_user`, `liquidated_ntl_pos`, and `liquidated_account_value`, but the subscription is by **user address** (`{ "type": "userEvents", "user": "<address>" }`), so it only returns *your* events, not *all* market liquidations. [hyperliquid.gitbook](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/websocket/subscriptions)
+
+- The public **info API** documented in the Hyperliquid GitHub `API.md` supports methods like `l2_book`, `candles_snapshot`, `open_interest`, and portfolio queries, but there is **no documented REST endpoint for global historical liquidations**. [github](https://github.com/carter2099/hyperliquid/blob/main/docs/API.md)
+  Hyperliquid’s liquidation mechanics themselves (maintenance margin, partial vs backstop liquidation, mark‑price based triggers) are described in the “Liquidations” docs but without a REST history feed. [hyperliquid.gitbook](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/liquidations)
+
+**On‑chain and third‑party feeds**
+
+- Hyperliquid runs on its own chain (HyperBFT/HyperCore stack) with settlement anchored to Arbitrum; Dune and others treat it as an on‑chain perps venue where “every order, cancel, trade, and liquidation happens transparently with one‑block finality.” [dune](https://www.dune.com/sealaunch/hyperliquid)
+  Dune’s Hyperliquid dashboards (e.g. “Hyperliquid – on‑chain perps volume, revenue and TVL”) and data catalog confirm on‑chain historical metrics including liquidations can be queried via SQL, though current public tables like `hyperliquid.market_data` expose per‑interval metrics (OI, funding, prices) rather than per‑trade liquidation logs. [quicknode](https://www.quicknode.com/builders-guide/tools/hyperliquid-dashboard-by-dune)
+
+- For **real‑time liquidation feeds**, providers like **HypeRPC** advertise WebSocket subscriptions “for the liquidation feed” alongside streams for trades, order book, and funding, effectively acting as a managed global liquidation bus for Hyperliquid. [hyperpc](https://hyperpc.app/blog/hyperliquid-data-api-explained)
+  Separately, **Dwellir** publishes a detailed tutorial and code showing how to build a “Hyperliquid Liquidation Tracker” using a gRPC stream `StreamFills` from Hyperliquid, then filtering fill data for liquidation events and broadcasting them via your own WebSocket server. [youtube](https://www.youtube.com/watch?v=1vEt3HAyMf8)
+
+**Historical Hyperliquid liquidation archives**
+
+- Because all trades (including liquidations) are on‑chain, you *can* reconstruct historical liquidations by replaying blocks from a node or gRPC provider, decoding fill records, and filtering flags that indicate liquidation, as demonstrated in Dwellir’s gRPC examples. [dwellir](https://www.dwellir.com/blog/building-real-time-hyperliquid-liquidation-tracker)
+  Dune already has community dashboards that chart Hyperliquid’s liquidation activity over time, showing that it is feasible to build a full history, although you’d need to inspect the SQL used in those dashboards to piggyback on their decoded tables. [quicknode](https://www.quicknode.com/builders-guide/tools/hyperliquid-dashboard-by-dune)
+
+- Coinalyze maintains a **“Hyperliquid liquidations”** chart with aggregated liquidations (coin‑ vs stablecoin‑margined, converted to USD) and historical series, though they note that real‑time updates for some charts lag, with intraday indicators updated in near‑real time on their Markets pages instead. [coinalyze](https://coinalyze.net/hyperliquid/liquidations/)
+
+***
+
+## 3. Third‑party liquidation data providers
+
+### Coinglass
+
+- Coinglass offers a **Liquidation Data API** with endpoints such as `/api/futures/liquidation/history` (raw events), `/api/futures/liquidation/aggregated-history` (aggregated by contract/asset), and `/api/futures/liquidation/heatmap/model2` (heatmap/visual model), covering major derivatives venues (Binance, OKX, Bybit, Bitget, etc.). [coinglass](https://www.coinglass.com/liquidations/ARB)
+  Their API marketing stresses tick‑level order flow, liquidation orders, funding, and historical datasets suitable for quant research. [coinglass](https://www.coinglass.com/pricing)
+
+- Pricing (USD/month, billed monthly) is roughly: **Hobbyist $29**, **Startup $79**, **Standard $299**, **Professional $699**, with increasing endpoints, rate limits, and historical depth—e.g. Startup offers ~90‑day history on 30‑minute data and 180‑day history on hourly, while Professional goes to ~720‑day hourly history. [sites.google](https://sites.google.com/view/tea-and-thunder/coinglass-review-2026-free-liquidation-heatmaps-real-time-derivatives-dat)
+  Issues on a community `coinglass-api` wrapper indicate that **liquidation heatmap data is only available to Professional‑tier subscribers**, so heatmap‑level liquidation levels are effectively behind the $699/month paywall; the cheaper tiers still give you raw liquidation time series. [github](https://github.com/dineshpinto/coinglass-api/issues/3)
+
+### Coinalyze
+
+- Coinalyze provides a **free REST API** (API key required) with a `liquidation_history` endpoint that returns per‑symbol liquidation series with fields such as timestamp and separate long/short liquidation volumes (`t, l, s` in the documented selector). [api.coinalyze](https://api.coinalyze.net/v1/doc/)
+  You can request intraday intervals from 1 minute up to 12 hours (`interval` values like `"1min","5min","15min","30min","1hour","2hour","4hour","6hour","12hour","daily"`) for up to 20 symbols per call. [api.coinalyze](https://api.coinalyze.net/v1/doc/)
+
+- A critical limitation: for intraday intervals (1 minute–12 hours) **they only retain 1500–2000 datapoints per symbol**, deleting older data each day, while daily data is kept indefinitely. [api.coinalyze](https://api.coinalyze.net/v1/doc/)
+  This means at 1‑hour resolution you get roughly 2–3 months of history per symbol, but you can get **long‑term daily liquidation history for free**, and Coinalyze’s site shows they already aggregate Binance and Hyperliquid liquidations for BTC, ETH, etc. [coinalyze](https://coinalyze.net/bitcoin/liquidations/)
+
+### Glassnode
+
+- Glassnode focuses on on‑chain and derivatives analytics; reports and news articles using their data often quote **daily long/short liquidation values** for BTC/ETH futures (e.g., “$76.4M in ETH long liquidations hit the market, with $55.8M in a single hour” in recent coverage). [bitbo](https://bitbo.io/news/bitcoin-liquidations-leverage-glassnode/)
+  However, their public API docs emphasize on‑chain metrics (supply, fees, transactions, DeFi protocols) rather than an explicit per‑exchange liquidation feed, so any liquidation metrics you get are **high‑level aggregates**, not exchange/contract‑specific. [docs.glassnode](https://docs.glassnode.com/basic-api/endpoints/protocols)
+
+- Pricing: **Standard (free)**, **Advanced ~$29/month**, **Professional ~$799/month**, and an institutional tier, with API access tiered by metric level; only Tier‑1 metrics are available on the free plan. [analyzingalpha](https://analyzingalpha.com/glassnode-api-python-tutorial)
+  Given your capital and need for per‑exchange, per‑side futures liquidations, Glassnode is likely overkill and misaligned with your use case.
+
+### CryptoQuant
+
+- CryptoQuant has specific “Long Liquidations” metrics, such as “Ethereum: Long Liquidations – All Exchanges, All Symbol,” tracking the notional amount of liquidated long positions across derivatives exchanges like BitMEX, Binance, Bybit, Huobi, OKEx, etc. [binance](https://www.binance.com/sl/feed/post/2916244971530)
+  They also publish a **Liquidation Index / Liquidation Oscillator** used in their research to track forced liquidations as a percentage of open interest and as a market stress indicator. [weex](https://www.weex.com/de/news/detail/cryptoquant-the-bitcoin-derivatives-market-is-dominated-by-short-positions-while-long-positions-continue-to-face-liquidation-pressure-621602)
+
+- Pricing: the **Advanced** tier is around **$29/month**, with raw data API access, 800 req/min, and full history, while the free tier lacks raw API but allows web chart viewing; higher tiers add more features and data granularity. [cryptoquant](https://cryptoquant.com/pricing)
+  For your budget, CryptoQuant is viable if you treat it as a **single aggregated long/short liquidation signal per asset** (not exchange‑specific) and use the web UI and limited API to calibrate your mean‑reversion logic.
+
+### Laevitas (likely what you meant by “Laevulus”)
+
+- Laevitas markets itself as an institutional‑grade **derivatives data platform** with APIs covering OHLCVT candles, funding, open interest, trade‑by‑trade data, best bid/ask, and **“liquidation and block trade volume tracking”** for futures/perps across Binance, Deribit, OKX, Bybit, and Hyperliquid. [laevitas](https://www.laevitas.ch)
+  Their REST API v2 documentation explicitly states futures/perpetuals endpoints include liquidation and block‑trade volume statistics per candle. [apiv2.laevitas](https://apiv2.laevitas.ch/slate/)
+
+- Pricing is not publicly listed; you request an API key and custom plan, and third‑party descriptions position Laevitas as a higher‑end analytics vendor for funds and desks. [alchemy](https://www.alchemy.com/dapps/laevitas)
+  Given your €500 capital and near‑zero data budget, Laevitas is likely **too expensive**, but they are worth knowing as a future upgrade path if your AUM grows.
+
+> Note: **TrueData** (truedata.in) is a separate Indian market data vendor and does not provide crypto liquidation feeds; the name collision with “Laevitas” is easy to confuse. [t](https://t.me/s/truedata_ws_api?before=201)
+
+### Tardis.dev
+
+- Tardis.dev offers **tick‑level historical and real‑time crypto derivatives data**, including a dedicated `liquidation` data type sourced from exchange‑native feeds like Binance `forceOrder`, Bybit `allLiquidation`, and OKX `liquidation-orders`. [docs.tardis](https://docs.tardis.dev/tardis-machine/data-types)
+  For Binance USDS‑M Futures, they document coverage of all instruments since **2019‑11‑17**, including the `forceOrder` channel available since **2020‑01‑07**, giving you multi‑year liquidation history across BTCUSDT, ETHUSDT, etc. [docs.tardis](https://docs.tardis.dev/historical-data-details/binance-futures)
+
+- Pricing (per StratBase’s 2026 summary) is approximately: **Free tier** – last 30 days on one exchange; **Starter $49/month** – one exchange with ~six months of historical data; **Professional $149/month** – all supported exchanges with full historical data back to 2019 or exchange launch. [stratbase](https://stratbase.ai/en/tools/tardis-dev)
+  Tardis also ships an open‑source client (`tardis-node`) that can replay normalized or exchange‑native tick data, including liquidations, which simplifies ingest into your Python/Pandas stack. [github](https://github.com/tardis-dev/tardis-node)
+
+### Dune Analytics
+
+- Dune aggregates **on‑chain** data; for Binance, you can query on‑chain exchange inflows/outflows but **not internal CEX liquidation events**, since those don’t hit L1/L2 chains. [cow](https://cow.fi/learn/how-to-monitor-exchange-inflows-with-dune)
+  For Hyperliquid, they provide dedicated tables like `hyperliquid.market_data` (per‑interval OI, funding, prices) and community dashboards that chart Hyperliquid liquidations and other metrics over time, implying decoded liquidation events exist in Dune schemas that you can query with SQL. [docs.dune](https://docs.dune.com/data-catalog/community/hyperliquid/market-data)
+
+- Dune is free for interactive queries and dashboards with some limits; they also sell paid tiers for higher query limits and DataShare/API access, but for research you can likely stay on the free tier to **extract aggregated Hyperliquid liquidation time series** (hourly/daily) rather than per‑event ticks. [docs.dune](https://docs.dune.com/data-catalog/community/hyperliquid/market-data)
+
+### Other providers worth noting
+
+- **Amberdata** offers real‑time and historical liquidation endpoints like `/market/futures/liquidations/{instrument}/latest` and `/market/futures/liquidations/{instrument}/historical` across multiple exchanges (Binance, etc.), via REST and WebSockets. [blog.amberdata](https://blog.amberdata.io/accessing-crypto-liquidations-data-for-research-and-visualization)
+  This is an enterprise‑oriented product; pricing is not public but typically aimed at funds and institutions, likely beyond your budget. [blog.amberdata](https://blog.amberdata.io/accessing-crypto-liquidations-data-for-research-and-visualization)
+
+***
+
+## 4. Self‑archiving liquidation data
+
+### Binance: recommended capture pattern
+
+- Use the **all‑market stream** `wss://fstream.binance.com/ws/!forceOrder@arr` so you don’t need to manage per‑symbol subscriptions and symbol lists. [stackoverflow](https://stackoverflow.com/questions/67509891/how-to-view-aggregated-liquidations-for-cryptocurrencies-from-binance)
+  Parse each `forceOrder` event into a simple schema like `(timestamp E or T, symbol s, side S, qty q, price p, avgPrice ap, lastFill l, cumFill z)`, and derive `liquidation_side = "long"` when `S="SELL"` and `"short"` when `S="BUY"`. [developers.binance](https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Liquidation-Order-Streams)
+
+- Implement **robust reconnection and back‑pressure handling**: Truetech’s example client uses auto‑reconnect with exponential backoff and a normalizer callback; `binance-liquidation-tracker` shows a Python implementation that records events into a pandas DataFrame, which you can adapt to batch‑insert into SQLite hourly. [github](https://github.com/hgnx/binance-liquidation-tracker)
+  For long‑running daemons, checkpoint last received event time per symbol and log heartbeats; in outages, you can at least backfill aggregates from Coinalyze or exchange‑level snapshots (acknowledging undercounting). [github](https://github.com/sammchardy/python-binance/issues/1060)
+
+- For **historical backfill** beyond what you capture live, your realistic options are:  
+  - Download COIN‑M liquidation snapshots from Binance Vision and build a rough aggregate series (although this won’t cover USDT‑M after March 2024 and may not give clean long/short splits). [github](https://github.com/binance/binance-public-data/issues/337)
+  - Use **Tardis.dev** for a one‑off dataset export (e.g., Starter plan for 6 months, Pro for multi‑year) of Binance `forceOrder` data, then store locally; their docs show the `forceOrder` feed as a first‑class data channel. [docs.tardis](https://docs.tardis.dev/tardis-machine/data-types)
+
+### Hyperliquid: reconstructing from chain
+
+- Since there is no public global liquidation WebSocket in the core API, you need to either:  
+  - Use a **managed liquidation feed** like HypeRPC’s WebSocket “liquidations” subscription (global stream). [hyperpc](https://hyperpc.app/blog/hyperliquid-data-api-explained)
+  - Or run your own gRPC client against an RPC provider like Dwellir, using `StreamFills` to get all fills, then filter for those with liquidation flags, as in their “Hyperliquid Liquidation Tracker” example. [dwellir](https://www.dwellir.com/blog/building-real-time-hyperliquid-liquidation-tracker)
+
+- Dwellir’s architecture shows a Python gRPC client streaming Hyperliquid L1 blocks to a backend that extracts liquidation events and broadcasts them via WebSockets to dashboards; they handle reconnection, multiple clients, and high throughput (~70–80 blocks/second) with sub‑second latency. [dwellir](https://www.dwellir.com/blog/building-real-time-hyperliquid-liquidation-tracker)
+  You can simplify this to: gRPC → Python consumer (extract symbol, size, price, P&L, side, liquidation flag) → SQLite/Postgres writer, then aggregate hourly in cron or directly in SQL for your signals.
+
+- For **historical Hyperliquid data**, you could:  
+  - Use Dune: inspect public Hyperliquid dashboards to find their underlying queries, then export aggregated per‑interval liquidation statistics via SQL, at daily or hourly resolution. [dune](https://www.dune.com/sealaunch/hyperliquid)
+  - Or ask your RPC provider (HypeRPC/Dwellir) about backfilling older blocks into a one‑off export; this is more manual but avoids building your own indexer from scratch. [hyperpc](https://hyperpc.app/blog/hyperliquid-data-api-explained)
+
+### Storage footprint & gaps
+
+- If you store **tick‑level events** as compact rows (symbol, timestamps, side, price, size, notional) in SQLite or Postgres and then roll up to hourly or finer aggregates, storage will remain modest (on the order of a few GB for multiple symbols over years rather than tens of TB), since liquidation events are sparse compared to trades.  
+  Hourly aggregates (per asset, long vs short) are extremely compact and can easily be kept indefinitely on a laptop‑class machine.
+
+- To **handle data gaps** (network hiccups, restarts), combine:  
+  - Internal checks (heartbeat timestamps, reconnect logic from open‑source trackers). [github](https://github.com/hgnx/binance-liquidation-tracker)
+  - Coinalyze’s free `liquidation_history` as a sanity check and coarse backfill when your local stream missed intervals. [dlthub](https://dlthub.com/context/source/coinalyze)
+  - For Binance, if you adopt Tardis at some point, you can backfill missed ranges from their historical `forceOrder` data for exact tick reconstruction. [docs.tardis](https://docs.tardis.dev/historical-data-details/binance-futures)
+
+***
+
+## 5. Useful derived liquidation metrics
+
+### Liquidation levels and heatmaps
+
+- **Coinglass** provides the most popular liquidation heatmap, aggregating liquidation‑trigger levels across Binance, OKX, Bybit, etc., and visualizing probable liquidation clusters; the heatmap UI is free for manual inspection but programmatic heatmap data requires at least a Professional‑tier API subscription. [blog.kalena](https://blog.kalena.ai/coinglass-liquidation-heatmap-advanced-techniques-for-extracting-institutional-grade-signals-from-aggregated-liquidation-data)
+  Sites like **Bytwork** also offer BTC and altcoin liquidation heatmaps that highlight zones where stop‑loss and liquidation orders cluster, useful for seeing likely “magnet” levels, though again this is mainly a visual tool, not a free programmatic API. [bytwork](https://bytwork.com/en/trade/liquidationheatmap)
+
+- With your own stream, you can **approximate your own heatmap** by binning recent open interest and liquidation events by price, then plotting cumulative liquidation volume by price bucket; this doesn’t require any external provider beyond your existing Binance and Hyperliquid feeds.
+
+### Liquidation volume as % of OI
+
+- For each interval, compute:  
+  \(\text{liq\_pct\_oi} = \frac{\text{liquidation notional in window}}{\text{open interest at start or average of window}}\).  
+  You can get OI from the exchange (Binance has OI endpoints; Hyperliquid OI is in `hyperliquid.market_data` on Dune) or via Coinalyze’s `open_interest_history` endpoint, which returns time series open interest per symbol. [dlthub](https://dlthub.com/context/source/coinalyze)
+
+- Coinalyze’s API makes this straightforward: pull `liquidation_history` and `open_interest_history` for a symbol and interval, align on timestamps, then compute ratios; CryptoQuant’s **Liquidation Index** is conceptually similar but computed across all exchanges. [cryptoquant](https://cryptoquant.com/asset/eth/chart/derivatives/long-liquidations)
+
+### Cascade detection heuristics
+
+- There is no standardized open‑source “liquidation cascade detector,” but research pieces and analytics vendors often look for:  
+  - **Extreme spikes in liquidation volume** (e.g., many multiples of recent averages) within short windows. [tradingview](https://www.tradingview.com/news/newsbtc:4599d0521094b:0-ethereum-leverage-elevated-despite-long-squeeze-glassnode-says/)
+  - **Directionally concentrated liquidations** (e.g., long liquidations overwhelmin short ones or vice versa) combined with sharp drops in open interest. [bitbo](https://bitbo.io/news/bitcoin-liquidations-leverage-glassnode/)
+
+- A simple algorithm you can implement:  
+  - Maintain rolling means and standard deviations of liquidation volume and OI change at your chosen resolution.  
+  - Flag a “cascade” when liquidation volume exceeds a high z‑score threshold (e.g., >3σ) and OI drops sharply over the same interval, optionally requiring 2–3 consecutive elevated intervals to filter noise.  
+  This kind of event flag can act as a regime switch for your mean‑reversion signals (e.g., post‑cascade reversion vs normal pullbacks).
+
+### Long/short liquidation ratios and sentiment
+
+- Coinalyze’s `liquidation_history` and `long_short_ratio_history` endpoints give you **separate long and short liquidation volumes** plus long/short position ratios over time, ideal for building “who was just punished” sentiment features. [dlthub](https://dlthub.com/context/source/coinalyze)
+  CryptoQuant’s long vs short liquidation metrics and Liquidation Oscillator similarly track which side is being forced out, and are frequently used in their reports to argue for contrarian entries after heavy one‑sided liquidations. [binance](https://www.binance.com/sl/feed/post/2916244971530)
+
+- You can define:  
+  \(\text{L/S liq ratio} = \frac{\text{long liquidation notional}}{\text{short liquidation notional}}\), and feed this into your funding‑rate mean‑reversion model to emphasize conditions where the funding‑favored side has just been hammered.
+
+***
+
+## 6. Practical recommendations for your setup
+
+### Fastest path to usable data (given near‑zero budget)
+
+1. **Binance: start self‑archiving immediately.**  
+   - Stand up a small Python daemon that connects to `wss://fstream.binance.com/ws/!forceOrder@arr`, parses events into a table `(ts, symbol, side, qty, price, notional, liq_side_long/short)`, and writes to SQLite or Postgres. [truetech](https://truetech.dev/blockchain-development/services/blockchain-infrastructure/exchange-liquidations-data-scraping.html)
+   - Use cron or a lightweight scheduler to roll up **1‑minute and 15‑minute aggregates** per asset and side; these will directly feed your “post‑liquidation mean reversion” signals.
+
+2. **Bootstrap historical aggregates with free Coinalyze.**  
+   - Use Coinalyze’s free `liquidation_history` to fetch 1‑hour (or 15‑minute) liquidation series for BTC, ETH, SOL, AVAX, DOGE, ADA on Binance (and Hyperliquid once you add it), getting ~60 days of intraday history plus long‑term daily data. [api.coinalyze](https://api.coinalyze.net/v1/doc/)
+   - This gives you a **working backtest window almost immediately**, albeit limited, while your own archive grows forward in time.
+
+3. **Hyperliquid: use Dune + on‑chain feeds.**  
+   - Short term: pull **aggregated Hyperliquid liquidation and OI metrics** from existing Dune dashboards / tables (`hyperliquid.market_data` and related decoded liquidation tables) for research at daily or hourly resolution. [quicknode](https://www.quicknode.com/builders-guide/tools/hyperliquid-dashboard-by-dune)
+   - Medium term: implement a Dwellir‑style gRPC consumer to stream Hyperliquid fills and filter liquidation events, storing them similarly to your Binance stream. [youtube](https://www.youtube.com/watch?v=1vEt3HAyMf8)
+
+4. **Use free visualization tools (Coinglass/Bytwork) for qualitative validation.**  
+   - Coinglass liquidation heatmaps and Bytwork heatmaps provide **visual liquidation levels** you can compare against your own reconstructed distributions to sanity‑check your features, without paying for their APIs. [bytwork](https://bytwork.com/en/trade/liquidationheatmap)
+
+### Self‑archive vs paid provider
+
+- **Self‑archiving is non‑negotiable.**  
+  For live trading and research continuity, you should always run your own collectors for Binance and Hyperliquid; even if you later buy Tardis or Coinglass, those are mainly for historical backfill and cross‑validation. [truetech](https://truetech.dev/blockchain-development/services/blockchain-infrastructure/exchange-liquidations-data-scraping.html)
+
+- **Paid data makes sense only if/when you need deep backfill quickly.**  
+  - If you decide you need **6–24 months of intraday or tick‑level Binance liquidation data now**, the most cost‑efficient route is likely **Tardis Starter ($49/month; 6 months, one exchange)** or a short stint on **Professional ($149/month)** to download the full multi‑year `forceOrder` history, then cancel once you’ve archived it locally. [stratbase](https://stratbase.ai/en/tools/tardis-dev)
+  - Coinglass Pro ($699/month) and Laevitas are excellent but **economically unjustifiable** with €500 trading capital. [sites.google](https://sites.google.com/view/tea-and-thunder/coinglass-review-2026-free-liquidation-heatmaps-real-time-derivatives-dat)
+
+- Given your budget, I would **start purely free** (self‑archive + Coinalyze + Dune/CryptoQuant charts), then revisit a 1–2 month Tardis subscription once your strategy is clearly profitable in forward tests and you want robust multi‑year backtests.
+
+### Minimum viable data quality & timeline
+
+- For your **signal families** (“post‑liquidation mean reversion” and “pre‑cascade loaded spring”):  
+  - **15‑minute or 1‑hour aggregates per asset and side** are usually sufficient—these signals rely on bursts of forced liquidations, not microstructure micro‑seconds.  
+  - Tick‑level is nice for research and nuanced cascade detection, but it’s not strictly required for a first version.
+
+- If you start streaming Binance and Hyperliquid today and back‑fill ~60 days with Coinalyze, you’ll have:  
+  - A **2‑month intraday backtest window immediately**, plus growing forward history. [dlthub](https://dlthub.com/context/source/coinalyze)
+  - A **6‑month dataset** in 4 months of live streaming, or instantly if you pay for one month of Tardis Starter for Binance and pull the full 6‑month history. [stratbase](https://stratbase.ai/en/tools/tardis-dev)
+
+### Rough monthly data cost if you pay
+
+- Staying lean and focusing on one paid vendor, ballpark:  
+  - **€0/month**: Self‑archive + Coinalyze + Dune + CryptoQuant/Coinglass free web charts (no raw API). [blog.kalena](https://blog.kalena.ai/coinglass-liquidation-heatmap-advanced-techniques-for-extracting-institutional-grade-signals-from-aggregated-liquidation-data)
+  - **~$29/month**: CryptoQuant Advanced for aggregated long/short liquidation metrics and funding/OI signals (no per‑trade data, but high‑quality macro series). [cryptoquant](https://cryptoquant.com/pricing)
+  - **~$49/month**: Tardis Starter for 6 months of Binance liquidations (and optionally short bursts of Professional $149/month if you want multi‑year history, then cancel). [docs.tardis](https://docs.tardis.dev/historical-data-details/binance-futures)
+
+Given your capital and stack, my concrete recommendation is:
+
+- **Now**: implement Binance `!forceOrder@arr` + SQLite; add a simple Coinalyze importer; use Dune for Hyperliquid aggregates. [docs.dune](https://docs.dune.com/data-catalog/community/hyperliquid/market-data)
+- **In 3–6 months** (if strategies show promise): buy 1–2 months of **Tardis Starter/Professional** purely to backfill Binance liquidation history to your desired horizon, then revert to self‑archiving only. [stratbase](https://stratbase.ai/en/tools/tardis-dev)
+- **Treat Coinglass/Laevitas** as future upgrades once AUM dwarfs data costs; until then, free plus selective low‑cost providers are enough to make your liquidation‑driven mean‑reversion research very competitive. [laevitas](https://www.laevitas.ch)

@@ -236,7 +236,7 @@ class DataFeed:
 
                     # Fire callback only for CLOSED candles we haven't processed yet
                     last = self._last_processed.get(symbol, 0)
-                    if ts > last and T <= now_ms:
+                    if ts >= last and T <= now_ms:
                         self._last_processed[symbol] = ts
                         # Stale candle = older than MAX_CANDLE_AGE_MS → mark as replay
                         # Replay candles warm up indicators but MUST NOT trigger trades

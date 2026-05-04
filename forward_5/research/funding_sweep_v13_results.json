@@ -1,0 +1,113 @@
+{
+  "version": "V13",
+  "timestamp": "2026-05-03T17:42:24.373282",
+  "grid_total": 1272,
+  "grid_valid": 956,
+  "grid_profitable": 5,
+  "wf_tested": 2,
+  "wf_passed": 0,
+  "top_is": [
+    {
+      "rank": 1,
+      "signal_type": "fund_cross_down",
+      "entry": "fund_cross_down == 1 AND bull200 == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "hold_48h",
+      "net_return": 4.3239,
+      "trade_count": 5,
+      "win_rate": 60.0,
+      "max_drawdown": 0.5252,
+      "sharpe": 52.9402,
+      "score": 1067.34582,
+      "wf_robustness": 44.8,
+      "wf_passed": false,
+      "wf_avg_oos": 0.0722
+    },
+    {
+      "rank": 2,
+      "signal_type": "fund_cross_down",
+      "entry": "fund_cross_down == 1 AND bull200 == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "medium_24h",
+      "net_return": 4.0947,
+      "trade_count": 5,
+      "win_rate": 60.0,
+      "max_drawdown": 1.2127,
+      "sharpe": 45.6296,
+      "score": 920.9275500000001,
+      "wf_robustness": null,
+      "wf_passed": null,
+      "wf_avg_oos": null
+    },
+    {
+      "rank": 3,
+      "signal_type": "fund_cross_down",
+      "entry": "fund_cross_down == 1 AND bull200 == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "hold_8h",
+      "net_return": 2.3898,
+      "trade_count": 9,
+      "win_rate": 55.56,
+      "max_drawdown": 2.3157,
+      "sharpe": 16.9631,
+      "score": 346.02031,
+      "wf_robustness": null,
+      "wf_passed": null,
+      "wf_avg_oos": null
+    },
+    {
+      "rank": 4,
+      "signal_type": "fund_cross_down",
+      "entry": "fund_cross_down == 1 AND bull200 == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "tight_24h",
+      "net_return": 1.4137,
+      "trade_count": 10,
+      "win_rate": 50.0,
+      "max_drawdown": 2.2316,
+      "sharpe": 11.0821,
+      "score": 227.26706,
+      "wf_robustness": null,
+      "wf_passed": null,
+      "wf_avg_oos": null
+    },
+    {
+      "rank": 5,
+      "signal_type": "fund_cross_down_bear",
+      "entry": "fund_cross_down == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "hold_48h",
+      "net_return": 0.7284,
+      "trade_count": 18,
+      "win_rate": 61.11,
+      "max_drawdown": 8.5401,
+      "sharpe": 1.9379,
+      "score": 44.45202999999999,
+      "wf_robustness": 17.2,
+      "wf_passed": "False",
+      "wf_avg_oos": -0.1744
+    }
+  ],
+  "wf_results": [
+    {
+      "signal_type": "fund_cross_down",
+      "entry": "fund_cross_down == 1 AND bull200 == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "hold_48h",
+      "is_return": 4.3239,
+      "wf_robustness": 44.8,
+      "wf_passed": false,
+      "wf_avg_oos": 0.0722
+    },
+    {
+      "signal_type": "fund_cross_down_bear",
+      "entry": "fund_cross_down == 1",
+      "asset": "ETHUSDT",
+      "exit_config": "hold_48h",
+      "is_return": 0.7284,
+      "wf_robustness": 17.2,
+      "wf_passed": "False",
+      "wf_avg_oos": -0.1744
+    }
+  ]
+}
