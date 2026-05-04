@@ -167,7 +167,7 @@ class TestSignalGeneratorV2:
         """No funding data → FLAT signal."""
         sig = self.gen.evaluate(self.candles, funding_z=None, bull200=True)
         assert sig.type == SignalType.SIGNAL_FLAT
-        assert "No funding" in sig.reason
+        assert "No signal data" in sig.reason or "No funding" in sig.reason
 
     def test_other_assets_no_signal(self):
         """AVAX, DOGE, ADA → no V2 signal."""
@@ -272,5 +272,71 @@ class TestSignalGeneratorV2Params:
         assert sig.type == SignalType.SIGNAL_LONG  # -0.7 < -0.5
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+class TestSignalGeneratorV2V14:
+    """Test V14 extended signals (OI Surge, LS Ratio, Taker)."""
+
+    def setup_method(self):
+        self.gen = SignalGeneratorV2()
+        self.candles = []
+        for i in range(250):
+            self.candles.append({
+                "timestamp": 1700000000000 + i * 3600000,
+                "open": 25 + i * 0.01, "high": 25.5 + i * 0.01,
+                "low": 24.5 + i * 0.01, "close": 25 + i * 0.01,
+                "volume": 1000, "symbol": "SOLUSDT",
+            })
+
+    def test_oi_surge_long(self):
+        """OI surge >3% + bull200 → LONG (V14)."""
+        sig = self.gen.evaluate(self.candles, oi_pct_change=5.0, bull200=True)
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "OI surge" in sig.reason
+        assert "V14" in sig.reason
+
+    def test_oi_surge_bear_skip(self):
+        """OI surge >3% but bear → skip (not 2x threshold)."""
+        sig = self.gen.evaluate(self.candles, oi_pct_change=4.0, bull200=False)
+        assert sig.type == SignalType.SIGNAL_FLAT
+
+    def test_oi_surge_bear_2x_long(self):
+        """OI surge >6% (2x threshold) even in bear → LONG (V14)."""
+        sig = self.gen.evaluate(self.candles, oi_pct_change=7.0, bull200=False)
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "2x threshold" in sig.reason
+
+    def test_ls_ratio_short(self):
+        """LS ratio >5 → SHORT (V14)."""
+        sig = self.gen.evaluate(self.candles, ls_ratio=6.0, bull200=True)
+        assert sig.type == SignalType.SIGNAL_SHORT
+        assert "LS ratio" in sig.reason
+
+    def test_ls_ratio_below_threshold(self):
+        """LS ratio <5 → no V14 signal, falls through to funding logic."""
+        sig = self.gen.evaluate(self.candles, ls_ratio=3.0, funding_z=-0.3, bull200=True)
+        # Should fall through to SOL funding logic
+        assert sig.type != SignalType.SIGNAL_SHORT
+
+    def test_taker_buy_pressure_long(self):
+        """Taker vol ratio >2 + bull200 → LONG (V14 experimental)."""
+        sig = self.gen.evaluate(self.candles, taker_vol_ratio=2.5, bull200=True)
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "Taker buy" in sig.reason
+
+    def test_taker_buy_pressure_bear_skip(self):
+        """Taker vol ratio >2 but bear → skip."""
+        sig = self.gen.evaluate(self.candles, taker_vol_ratio=2.5, bull200=False)
+        assert sig.type == SignalType.SIGNAL_FLAT
+
+    def test_v14_priority_over_funding(self):
+        """V14 signals fire before funding logic (OI surge takes priority)."""
+        # Both OI surge and funding_z trigger → OI surge wins
+        sig = self.gen.evaluate(self.candles, oi_pct_change=5.0, funding_z=-0.3, bull200=True)
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "OI surge" in sig.reason
+
+    def test_no_v14_data_falls_to_funding(self):
+        """No V14 data → falls through to funding logic."""
+        sig = self.gen.evaluate(self.candles, funding_z=-0.3, bull200=True)
+        # SOL: z∈[-0.5, 0) + bull200 → LONG
+        assert sig.type == SignalType.SIGNAL_LONG
+        assert "V13b" in sig.reason or "V14" not in sig.reason

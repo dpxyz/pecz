@@ -1,32 +1,26 @@
 """
-Executor V2 — Regime-Adaptive Funding Signal Generator
+Executor V2 — Regime-Adaptive Funding + Extended Signal Generator
 
-Entry signals (HYP-06 + Foundry V12 validated):
-1. BTC Bear: z<-1 + FGI<40 → Long (V11: +73.9% cum, 100% WF)
-2. BTC Bull Pullback: -1.0<z<-0.2 → Long (V12 WidePullback: +70% cum, 5/6 WF)
-3. BTC 4h Bull Pullback: -1.0<z<-0.2 + bull200 → Long (V12: +94% cum, 5/6 WF)
-4. ETH Bear: z<-1 → Long (V11: +24.70% cum, 5/6 WF)
-5. ETH Bull Pullback: -1.0<z<-0.2 → Long (V12 WidePullback: +71.5% cum, 5/6 WF)
-6. SOL: z∈[-0.5, 0) + bull200 → Long (V13b: R=70, OOS=+4.83%, 239 trades)
-   Extended: z<-0.5 + bull200 → Long (broader negative funding capture)
+Entry signals:
+  FUNDING-BASED (V12/V13 validated):
+  1. BTC Bear: z<-1 + FGI<40 → Long (V11: +73.9% cum, 100% WF)
+  2. BTC Bull Pullback: -1.0<z<-0.2 → Long (V12: +70% cum, 5/6 WF)
+  3. BTC 4h Bull Pullback: -1.0<z<-0.2 + bull200 → Long (V12: +94% cum, 5/6 WF)
+  4. ETH Bear: z<-1 → Long (V11: +24.70% cum, 5/6 WF)
+  5. ETH Bull Pullback: -1.0<z<-0.2 → Long (V12: +71.5% cum, 5/6 WF)
+  6. SOL: z∈[-0.5, 0) + bull200 → Long (V13b: R=70, OOS=+4.83%, 239 trades)
+
+  EXTENDED-BASED (V14 validated, 2yr data):
+  7. OI Surge SOL: ΔOI>3% + bull200 → Long (PBO=0.33, OOS=+66.6%)
+  8. OI Surge BTC: ΔOI>3% + bull200 → Long (PBO=0.50, OOS=+68.2%)
+  9. LS Ratio Short SOL: toptrader_ls>5 + bear → Short (PBO=0.33, OOS=+57.3%)
+  10. Taker Buy Pressure: taker_vol>2.0 + bull200 → Long (PBO=0.40, experimental)
 
 Regime: bull200 (close > ema200 = bull)
 Z-Score: (funding_rate - rolling_mean) / rolling_std, 8h funding, 168h window
 
-V12 Changes:
-- Pullback range widened from [-1.0, -0.3] to [-1.0, -0.2] (WidePullback)
-  - BTC: +54% → +70%, ETH: +25% → +72%
-- BTC 4h timeframe added (V12: +94% cum, 5/6 WF)
-
-Exit: TIME-BASED 24h hold (primary) — funding signals need time to play out
-- SL 4% (emergency only — wide to avoid killing recovering trades)
-- Trailing stop: DISABLED (V1's 2% was too tight, 3% still kills recovering trades)
-- Max hold: 24 bars (24h) — primary exit, funding signal decays after 24h
-
-IMPORTANT: Dry-run proved SL/TS kills trades that recover within 24h.
-Funding edge is a mean-reversion play — it needs time. SL only for black swans.
-
-Costs: 0.1% round-trip (0.02% maker fee + 0.03% slippage × 2)
+Exit: TIME-BASED 24h hold (primary), SL 4% (emergency), Trailing DISABLED
+Costs: 0.1% round-trip
 """
 
 from typing import Optional
@@ -78,6 +72,12 @@ STRATEGY_PARAMS = {
     # Position limits
     "max_positions_per_asset": 1,
     "cooldown_bars": 24,                  # 24h cooldown (funding is 8h-cyclical)
+
+    # V14: Extended feature thresholds (CPCV-validated)
+    "oi_surge_threshold": 3.0,            # ΔOI > 3% = OI surge (PBO=0.33)
+    "ls_ratio_short_threshold": 5.0,      # TopTrader LS > 5 = contrarian short (PBO=0.33)
+    "taker_buy_threshold": 2.0,            # Taker buy ratio > 2 = buy pressure (experimental)
+    "dxy_weak_threshold": -2.0,           # DXY 10d ROC < -2% = weak dollar (confluence only)
 }
 
 
@@ -99,7 +99,11 @@ class SignalGeneratorV2:
         log.info(f"  ⚠️ SOL z<-1.5 GESTRICHEN — V13b beweist: mild negativ = robust, extrem = zu wenige Trades")
 
     def evaluate(self, candles: list[dict], funding_z: Optional[float] = None,
-                 bull200: Optional[bool] = None, fgi: Optional[int] = None) -> Optional[Signal]:
+                 bull200: Optional[bool] = None, fgi: Optional[int] = None,
+                 oi_pct_change: Optional[float] = None,
+                 ls_ratio: Optional[float] = None,
+                 taker_vol_ratio: Optional[float] = None,
+                 dxy_10d_roc: Optional[float] = None) -> Optional[Signal]:
         """
         Evaluate the latest candle against the funding-first strategy.
 
@@ -141,78 +145,103 @@ class SignalGeneratorV2:
             "ema_200": round(current_ema200, 2) if current_ema200 else None,
             "funding_z": round(funding_z, 3) if funding_z is not None else None,
             "bull200": bull200,
+            "oi_pct_change": round(oi_pct_change, 2) if oi_pct_change is not None else None,
+            "ls_ratio": round(ls_ratio, 2) if ls_ratio is not None else None,
+            "taker_vol_ratio": round(taker_vol_ratio, 2) if taker_vol_ratio is not None else None,
+            "dxy_10d_roc": round(dxy_10d_roc, 2) if dxy_10d_roc is not None else None,
         }
 
-        # ── No funding data = no signal ──
-        if funding_z is None:
-            return Signal(
-                type=SignalType.SIGNAL_FLAT,
-                symbol=symbol, timestamp=ts, price=current_close,
-                indicators=indicators,
-                reason=f"No funding data — skipping",
-            )
-
-        # ── Signal Logic (HYP-06 + V12 WidePullback) ──
-        # Bear: z < -1 (extreme negative = shorts crowded → contrarian Long)
-        # Bull Pullback: -1.0 < z < -0.2 (V12 WidePullback: wider range = more trades, +70/+72% cum)
-        # SOL: z < -1.5 (deep negative, all regimes)
-        # BTC Bear additionally requires FGI < 40
-
+        # ── Signal Logic ──
+        # Priority: V14 extended signals (OI, LS, Taker) first, then funding-based
         reason = ""
         signal_type = SignalType.SIGNAL_FLAT
+        v14_signal = False
 
-        if symbol == "BTCUSDT":
-            if not bull200:
-                # Bear + FGI<40: V11 validated, +73.9% cum, 100% WF
-                # FGI=None → allow signal (conservative: assume fear may be present)
-                if funding_z < self.p["funding_z_long_threshold"]:
-                    if fgi is None or fgi < 40:
+        # V14: OI Surge: ΔOI > threshold + bull200 → Long (PBO=0.33)
+        if oi_pct_change is not None and oi_pct_change > self.p["oi_surge_threshold"]:
+            if bull200:
+                signal_type = SignalType.SIGNAL_LONG
+                reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% > {self.p['oi_surge_threshold']}%, bull200 → LONG (V14)"
+                v14_signal = True
+            elif oi_pct_change > self.p["oi_surge_threshold"] * 2:
+                signal_type = SignalType.SIGNAL_LONG
+                reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% > {self.p['oi_surge_threshold']*2}% (2x threshold), bear → LONG (V14)"
+                v14_signal = True
+            else:
+                reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% but bear regime → skip"
+        
+        # V14: LS Ratio Short: toptrader_ls > threshold → Short (PBO=0.33)
+        elif ls_ratio is not None and ls_ratio > self.p["ls_ratio_short_threshold"]:
+            signal_type = SignalType.SIGNAL_SHORT
+            reason = f"{symbol}: LS ratio {ls_ratio:.1f} > {self.p['ls_ratio_short_threshold']}, contrarian SHORT (V14)"
+            v14_signal = True
+        
+        # V14: Taker Buy Pressure: taker_vol > threshold + bull200 → Long (experimental)
+        elif taker_vol_ratio is not None and taker_vol_ratio > self.p["taker_buy_threshold"]:
+            if bull200:
+                signal_type = SignalType.SIGNAL_LONG
+                reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} > {self.p['taker_buy_threshold']}, bull200 → LONG (V14 exp)"
+                v14_signal = True
+            else:
+                reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} but bear → skip"
+        
+        # ── Funding-based signals (V12/V13 validated) ──
+        # Only if no V14 signal fired AND we have funding data
+        if not v14_signal:
+            if funding_z is None:
+                return Signal(
+                    type=SignalType.SIGNAL_FLAT,
+                    symbol=symbol, timestamp=ts, price=current_close,
+                    indicators=indicators,
+                    reason=f"No signal data — skipping",
+                )
+
+            # BTC: Bear z<-1 + FGI<40, Bull Pullback z∈[-1,-0.2]
+            if symbol == "BTCUSDT":
+                if not bull200:
+                    if funding_z < self.p["funding_z_long_threshold"]:
+                        if fgi is None or fgi < 40:
+                            signal_type = SignalType.SIGNAL_LONG
+                            reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}→ LONG"
+                        else:
+                            reason = f"BTC: z={funding_z:.3f}, bear, but FGI={fgi}≥40 → no signal (need Fear)"
+                else:
+                    if -1.0 < funding_z < -0.2:
                         signal_type = SignalType.SIGNAL_LONG
-                        reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}→ LONG"
+                        reason = f"BTC: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
+                    elif funding_z <= -1.0:
+                        reason = f"BTC: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
                     else:
-                        reason = f"BTC: z={funding_z:.3f}, bear, but FGI={fgi}≥40 → no signal (need Fear)"
-            else:
-                # BULL PULLBACK: V12 WidePullback, range [-1.0, -0.2] (+70% cum, 5/6 WF)
-                if -1.0 < funding_z < -0.2:
-                    signal_type = SignalType.SIGNAL_LONG
-                    reason = f"BTC: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
-                elif funding_z <= -1.0:
-                    reason = f"BTC: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
+                        reason = f"BTC: z={funding_z:.3f} > -0.2 in bull → no pullback signal"
+
+            # ETH: Bear z<-1, Bull Pullback z∈[-1,-0.2]
+            elif symbol == "ETHUSDT":
+                if not bull200:
+                    if funding_z < self.p["funding_z_long_threshold"]:
+                        signal_type = SignalType.SIGNAL_LONG
+                        reason = f"ETH: funding_z={funding_z:.3f} < -1, bear regime → LONG"
                 else:
-                    reason = f"BTC: z={funding_z:.3f} > -0.2 in bull → no pullback signal"
+                    if -1.0 < funding_z < -0.2:
+                        signal_type = SignalType.SIGNAL_LONG
+                        reason = f"ETH: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
+                    elif funding_z <= -1.0:
+                        reason = f"ETH: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
+                    else:
+                        reason = f"ETH: z={funding_z:.3f} > -0.2 in bull → no pullback signal"
 
-        elif symbol == "ETHUSDT":
-            if not bull200:
-                # Bear z<-1: V11 validated, 5/6 WF PASS
-                if funding_z < self.p["funding_z_long_threshold"]:
+            # SOL: z∈[-0.5, 0) + bull200 (V13b champion)
+            elif symbol == "SOLUSDT":
+                if -0.5 <= funding_z < 0 and bull200:
                     signal_type = SignalType.SIGNAL_LONG
-                    reason = f"ETH: funding_z={funding_z:.3f} < -1, bear regime → LONG"
-            else:
-                # BULL PULLBACK: V12 WidePullback, range [-1.0, -0.2] (+72% cum, 5/6 WF)
-                if -1.0 < funding_z < -0.2:
+                    reason = f"SOL: funding_z={funding_z:.3f} ∈ [-0.5, 0), bull200={bull200} → LONG (V13b champion)"
+                elif funding_z < -0.5 and bull200:
                     signal_type = SignalType.SIGNAL_LONG
-                    reason = f"ETH: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
-                elif funding_z <= -1.0:
-                    reason = f"ETH: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
+                    reason = f"SOL: funding_z={funding_z:.3f} < -0.5, bull200={bull200} → LONG (extended)"
                 else:
-                    reason = f"ETH: z={funding_z:.3f} > -0.2 in bull → no pullback signal"
+                    reason = f"SOL: funding_z={funding_z:.3f}, bull200={bull200} → no signal"
 
-        elif symbol == "SOLUSDT":
-            # V13b Champion: z∈[-0.5, 0) Long + EMA200 bull (R=70, OOS=+4.83%, 239 trades)
-            # Deep Research: mild negatives Funding = der Edge (z<-1.5 zu streng, zu wenige Trades)
-            # V13b-Label-Bug: "bear_z<-0.5" war eigentlich z∈[-0.5, 0) = leicht negatives Funding
-            if -0.5 <= funding_z < 0 and bull200:
-                signal_type = SignalType.SIGNAL_LONG
-                reason = f"SOL: funding_z={funding_z:.3f} ∈ [-0.5, 0), bull200={bull200} → LONG (V13b champion)"
-            elif funding_z < -0.5 and bull200:
-                # Fallback: stärker negatives Funding im Bull-Regime auch erlaubt
-                signal_type = SignalType.SIGNAL_LONG
-                reason = f"SOL: funding_z={funding_z:.3f} < -0.5, bull200={bull200} → LONG (extended)"
             else:
-                reason = f"SOL: funding_z={funding_z:.3f}, bull200={bull200} → no signal"
-
-        else:
-            reason = f"{symbol}: no V2 signal (BTC/ETH/SOL only)"
+                reason = f"{symbol}: no V2 signal (BTC/ETH/SOL only)"
 
         return Signal(
             type=signal_type,

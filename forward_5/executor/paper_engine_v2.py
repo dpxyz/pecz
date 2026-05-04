@@ -321,8 +321,17 @@ class PaperTradingEngineV2:
         funding_z = self.feed.get_funding_z(symbol)
         bull200 = self.feed.get_regime(symbol)
 
-        # Evaluate signal with funding data
-        signal = self.signal.evaluate(candles, funding_z=funding_z, bull200=bull200, fgi=self.feed.get_fgi())
+        # V14: Extended metrics
+        oi_pct_change = self.feed.get_oi_pct_change(symbol)
+        ls_ratio = self.feed.get_ls_ratio(symbol)
+        taker_vol_ratio = self.feed.get_taker_vol_ratio(symbol)
+
+        # Evaluate signal with all data
+        signal = self.signal.evaluate(
+            candles, funding_z=funding_z, bull200=bull200, fgi=self.feed.get_fgi(),
+            oi_pct_change=oi_pct_change, ls_ratio=ls_ratio,
+            taker_vol_ratio=taker_vol_ratio,
+        )
 
         # ── Signal Audit: Log EVERY evaluation ──
         audit_event = {
@@ -330,6 +339,9 @@ class PaperTradingEngineV2:
             "symbol": symbol,
             "funding_z": funding_z,
             "bull200": bull200,
+            "oi_pct_change": oi_pct_change,
+            "ls_ratio": ls_ratio,
+            "taker_vol_ratio": taker_vol_ratio,
             "signal_type": signal.type.value if signal else "NONE",
             "signal_reason": signal.reason if signal else "no signal",
             "timestamp": current_candle.get("timestamp", 0),

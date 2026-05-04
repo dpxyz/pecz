@@ -58,6 +58,10 @@ class DataFeedV2(DataFeed):
         self._fgi_class: Optional[str] = None
         self._dxy: Optional[float] = None
         self._dxy_5d_chg: Optional[float] = None
+        # V14: Extended metrics
+        self._ls_ratio: dict[str, float] = {}        # TopTrader long/short ratio
+        self._taker_vol_ratio: dict[str, float] = {}  # Buy taker vol / Sell taker vol
+        self._oi_pct_change: dict[str, float] = {}    # OI % change (4h lookback)
 
         self._init_funding_db()
 
@@ -105,6 +109,23 @@ class DataFeedV2(DataFeed):
                     dxy_5d_chg REAL)
             """)
 
+            # V14: Extended metrics tables
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS ls_ratio (
+                    symbol TEXT NOT NULL, ts INTEGER NOT NULL,
+                    ls_ratio REAL NOT NULL, source TEXT DEFAULT 'binance',
+                    PRIMARY KEY (symbol, ts))
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_ls_ts ON ls_ratio(symbol, ts)")
+
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS taker_vol (
+                    symbol TEXT NOT NULL, ts INTEGER NOT NULL,
+                    taker_vol_ratio REAL NOT NULL, source TEXT DEFAULT 'binance',
+                    PRIMARY KEY (symbol, ts))
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_taker_ts ON taker_vol(symbol, ts)")
+
     async def start(self):
         """Start all polling loops."""
         self._running = True
@@ -123,6 +144,8 @@ class DataFeedV2(DataFeed):
             self._oi_poll_loop(),
             self._fgi_poll_loop(),
             self._dxy_poll_loop(),
+            self._ls_ratio_poll_loop(),
+            self._taker_poll_loop(),
         )
 
     # ── Getters ──
@@ -150,6 +173,15 @@ class DataFeedV2(DataFeed):
 
     def get_dxy_5d_chg(self) -> Optional[float]:
         return self._dxy_5d_chg
+
+    def get_ls_ratio(self, symbol: str) -> Optional[float]:
+        return self._ls_ratio.get(symbol)
+
+    def get_taker_vol_ratio(self, symbol: str) -> Optional[float]:
+        return self._taker_vol_ratio.get(symbol)
+
+    def get_oi_pct_change(self, symbol: str) -> Optional[float]:
+        return self._oi_pct_change.get(symbol)
 
     # ── Candle Polling (inherited from V1) ──
 
@@ -314,6 +346,7 @@ class DataFeedV2(DataFeed):
                 if prev_oi and prev_oi > 0:
                     drop_pct = (oi - prev_oi) / prev_oi * 100
                     self._oi_drop_pct[symbol] = round(drop_pct, 2)
+                    self._oi_pct_change[symbol] = round(drop_pct, 2)  # V14: same as drop_pct
                     if abs(drop_pct) > 3:
                         log.info(f"📊 {symbol}: OI change {drop_pct:+.1f}% ({prev_oi:,.0f} → {oi:,.0f})")
                 self._oi_data[symbol] = oi
@@ -387,6 +420,73 @@ class DataFeedV2(DataFeed):
             log.info(f"💵 DXY: {current:.2f} (5d: {chg_5d:+.2f}%)")
         except Exception as e:
             log.error(f"DXY poll failed: {e}")
+
+    # ── TopTrader LS Ratio (V14) ──
+
+    async def _ls_ratio_poll_loop(self):
+        while self._running:
+            try:
+                await self._poll_ls_ratio()
+            except Exception as e:
+                log.error(f"LS Ratio poll error: {e}")
+            if self._running:
+                await asyncio.sleep(3600)  # 1h
+
+    async def _poll_ls_ratio(self):
+        for symbol in self.assets:
+            try:
+                resp = requests.get(
+                    "https://fapi.binance.com/futures/data/topLongShortAccountRatio",
+                    params={"symbol": symbol, "period": "1h", "limit": 2},
+                    timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+                data = resp.json()
+                if not isinstance(data, list) or len(data) == 0:
+                    continue
+                latest = data[-1]
+                ls = float(latest.get("longShortRatio", 0))
+                ts = int(latest["timestamp"])
+                self._ls_ratio[symbol] = ls
+                with sqlite3.connect(self.db_path) as conn:
+                    conn.execute(
+                        "INSERT OR REPLACE INTO ls_ratio (symbol, ts, ls_ratio, source) VALUES (?, ?, ?, 'binance')",
+                        (symbol, ts, ls))
+                log.debug(f"📊 {symbol}: LS Ratio={ls:.2f}")
+            except Exception as e:
+                log.error(f"LS Ratio poll error for {symbol}: {e}")
+
+    # ── Taker Vol Ratio (V14) ──
+
+    async def _taker_poll_loop(self):
+        while self._running:
+            try:
+                await self._poll_taker()
+            except Exception as e:
+                log.error(f"Taker poll error: {e}")
+            if self._running:
+                await asyncio.sleep(3600)  # 1h
+
+    async def _poll_taker(self):
+        for symbol in self.assets:
+            try:
+                resp = requests.get(
+                    "https://fapi.binance.com/futures/data/takerlongshortRatio",
+                    params={"symbol": symbol, "period": "1h", "limit": 2},
+                    timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+                data = resp.json()
+                if not isinstance(data, list) or len(data) == 0:
+                    continue
+                latest = data[-1]
+                # buyVol / sellVol ratio (>1 = more buy taker)
+                ratio = float(latest.get("buySellRatio", 0))
+                ts = int(latest["timestamp"])
+                self._taker_vol_ratio[symbol] = ratio
+                with sqlite3.connect(self.db_path) as conn:
+                    conn.execute(
+                        "INSERT OR REPLACE INTO taker_vol (symbol, ts, taker_vol_ratio, source) VALUES (?, ?, ?, 'binance')",
+                        (symbol, ts, ratio))
+                log.debug(f"📊 {symbol}: Taker Ratio={ratio:.2f}")
+            except Exception as e:
+                log.error(f"Taker poll error for {symbol}: {e}")
 
     # ── Regime Detection ──
 
