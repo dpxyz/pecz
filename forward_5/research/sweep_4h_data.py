@@ -104,11 +104,33 @@ def compute_4h_indicators(df: pl.DataFrame) -> pl.DataFrame:
     vol_sma = _sma(volume, 12)
     vol_ratio = np.where(vol_sma > 0, volume / vol_sma, 1.0)
     
+    # OI % change (if available)
+    oi_pct = np.zeros(len(close))
+    if "oi" in df.columns:
+        oi = df["oi"].to_numpy().astype(float)
+        oi_pct = np.zeros(len(close))
+        oi_pct[1:] = (oi[1:] - oi[:-1]) / np.where(oi[:-1] > 0, oi[:-1], 1) * 100
+        # Replace inf/nan with 0
+        oi_pct = np.where(np.isfinite(oi_pct), oi_pct, 0.0)
+    
+    # Taker buy/sell ratio (if available from join)
+    taker_ratio = np.ones(len(close))
+    if "taker_ratio" in df.columns:
+        tr = df["taker_ratio"].to_numpy().astype(float)
+        # Only use if it's not all 1.0 (i.e., was set by real data)
+        if np.any(tr != 1.0) or "taker_ratio_raw" not in df.columns:
+            taker_ratio = np.where(np.isfinite(tr), tr, 1.0)
+    elif "taker_ratio_raw" in df.columns:
+        tr = df["taker_ratio_raw"].to_numpy().astype(float)
+        taker_ratio = np.where(np.isfinite(tr), tr, 1.0)
+    
     # Add indicator columns first (can't reference new cols in same with_columns)
     df = df.with_columns([
         pl.Series("ema50", ema50),
         pl.Series("ema200", ema200),
         pl.Series("vol_ratio", vol_ratio),
+        pl.Series("oi_pct_change", oi_pct),
+        pl.Series("taker_ratio", taker_ratio),
     ])
     
     # Now add derived columns that reference the new ones
@@ -197,6 +219,109 @@ def load_asset_data_4h(asset: str) -> AssetData4h:
         log.warning(f"  {asset}: NO funding data available")
         df_4h = df_4h.with_columns(pl.lit(None).cast(pl.Float64).alias("funding_rate"))
     
+    # Load FGI (Fear & Greed Index) — daily, asof-join to 4h
+    fgi_path = DATA_DIR / "fear_greed.parquet"
+    if fgi_path.exists():
+        fgi = pl.read_parquet(fgi_path)
+        # Convert timestamp to ms if datetime
+        if fgi["timestamp"].dtype == pl.Datetime:
+            fgi = fgi.with_columns(pl.col("timestamp").dt.timestamp("ms").alias("timestamp"))
+        # Aggregate: take last FGI per day → align to 4h bars
+        fgi_4h = fgi.with_columns(
+            (pl.col("timestamp") // FOUR_H_MS * FOUR_H_MS).alias("ts4h")
+        ).group_by("ts4h").agg(
+            pl.col("value").last().alias("fgi")
+        ).sort("ts4h").rename({"ts4h": "timestamp"})
+        
+        df_4h = df_4h.sort("timestamp").join_asof(
+            fgi_4h.sort("timestamp"),
+            on="timestamp",
+            strategy="backward"
+        )
+        # Forward-fill FGI (persists across days)
+        df_4h = df_4h.sort("timestamp").with_columns(
+            pl.col("fgi").forward_fill()
+        )
+        log.info(f"  {asset}: FGI aligned ({len(fgi)} daily values)")
+    else:
+        log.warning(f"  {asset}: NO FGI data")
+        df_4h = df_4h.with_columns(pl.lit(None).cast(pl.Float64).alias("fgi"))
+    
+    # Load OI + Taker (Binance) — align to 4h bars
+    oi_path = DATA_DIR / "bn_oi.parquet"
+    taker_path = DATA_DIR / "bn_taker_ratio.parquet"
+    
+    if oi_path.exists():
+        oi_df = pl.read_parquet(oi_path)
+        if oi_df["timestamp"].dtype == pl.Datetime:
+            oi_df = oi_df.with_columns(pl.col("timestamp").dt.timestamp("ms").alias("timestamp"))
+        asset_oi = oi_df.filter(pl.col("asset") == asset).sort("timestamp")
+        
+        if len(asset_oi) > 0:
+            # Aggregate OI to 4h
+            oi_4h = asset_oi.with_columns(
+                (pl.col("timestamp") // FOUR_H_MS * FOUR_H_MS).alias("ts4h")
+            ).group_by("ts4h").agg(
+                pl.col("sum_oi").last().alias("oi")
+            ).sort("ts4h").rename({"ts4h": "timestamp"})
+            
+            df_4h = df_4h.sort("timestamp").join_asof(
+                oi_4h.sort("timestamp"),
+                on="timestamp",
+                strategy="backward"
+            )
+            df_4h = df_4h.sort("timestamp").with_columns(
+                pl.col("oi").forward_fill()
+            )
+            log.info(f"  {asset}: OI aligned ({len(asset_oi)} points → {len(oi_4h)} 4h entries)")
+        else:
+            df_4h = df_4h.with_columns(pl.lit(None).cast(pl.Float64).alias("oi"))
+            log.warning(f"  {asset}: NO OI data for this asset")
+    else:
+        df_4h = df_4h.with_columns(pl.lit(None).cast(pl.Float64).alias("oi"))
+        log.warning(f"  {asset}: NO OI file")
+    
+    # Add default taker_ratio before join (compute_4h_indicators runs later)
+    df_4h = df_4h.with_columns(pl.lit(1.0).alias("taker_ratio"))
+    
+    if taker_path.exists():
+        taker_df = pl.read_parquet(taker_path)
+        if taker_df["timestamp"].dtype == pl.Datetime:
+            taker_df = taker_df.with_columns(pl.col("timestamp").dt.timestamp("ms").alias("timestamp"))
+        asset_taker = taker_df.filter(pl.col("asset") == asset).sort("timestamp")
+        
+        if len(asset_taker) > 0:
+            # Aggregate taker to 4h
+            taker_4h = asset_taker.with_columns(
+                (pl.col("timestamp") // FOUR_H_MS * FOUR_H_MS).alias("ts4h")
+            ).group_by("ts4h").agg(
+                pl.col("buy_sell_ratio").last().alias("taker_ratio_raw")
+            ).sort("ts4h").rename({"ts4h": "timestamp"})
+            
+            # asof-join adds taker_ratio_raw column
+            # Rename to taker_ratio (overriding the default from compute_4h_indicators)
+            df_4h = df_4h.sort("timestamp").join_asof(
+                taker_4h.sort("timestamp"),
+                on="timestamp",
+                strategy="backward"
+            )
+            if "taker_ratio_raw" in df_4h.columns:
+                # Merge: use raw data where available, else keep default from compute_4h_indicators
+                df_4h = df_4h.with_columns(
+                    pl.when(pl.col("taker_ratio_raw").is_not_null())
+                    .then(pl.col("taker_ratio_raw"))
+                    .otherwise(pl.col("taker_ratio"))
+                    .alias("taker_ratio")
+                ).drop("taker_ratio_raw")
+            df_4h = df_4h.sort("timestamp").with_columns(
+                pl.col("taker_ratio").forward_fill()
+            )
+            log.info(f"  {asset}: Taker aligned ({len(asset_taker)} points)")
+        else:
+            log.warning(f"  {asset}: NO Taker data for this asset")
+    else:
+        log.warning(f"  {asset}: NO Taker file")
+    
     # Compute indicators BEFORE dropping NaN (avoids shape mismatch)
     df_4h = compute_4h_indicators(df_4h)
     df_4h = compute_funding_zscores(df_4h, window=42)
@@ -210,6 +335,9 @@ def load_asset_data_4h(asset: str) -> AssetData4h:
         pl.col("ema200").forward_fill(),
         pl.col("bull200").forward_fill(),
         pl.col("bull50").forward_fill(),
+        pl.col("fgi").forward_fill(),
+        pl.col("oi").forward_fill(),
+        pl.col("taker_ratio").forward_fill(),
     ])
     n_after = len(df_4h)
     log.info(f"  {asset}: {n_before} → {n_after} bars after dropping NaN warmup")

@@ -31,7 +31,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from sweep_4h_data import load_all_4h, ASSETS
 from sweep_4h_signals import SignalHypothesis
-from sweep_4h_engine import run_backtest
+from sweep_4h_engine import run_backtest, BacktestResult, Trade
 from sweep_4h_cpcv import CPCVConfig, evaluate_cpcv_equity
 from statistical_robustness import deflated_sharpe_ratio
 from edge_registry import EdgeRegistry
@@ -107,6 +107,115 @@ class FoundryHypothesis:
     dsr_pass: bool = False
     cpcv_pass: bool = False
     pbo: float = 1.0
+
+
+# ═══════════════════════════════════════════════════════════
+# Feature-based Backtests (for non-funding drivers)
+# ═══════════════════════════════════════════════════════════
+
+def _run_feature_backtest(data, sig: SignalHypothesis, feature_col: str,
+                           hyp: FoundryHypothesis) -> BacktestResult:
+    """Run backtest using a feature column as the entry signal.
+    
+    For OI, Taker, VolRatio: entry_z_low/high are used as thresholds
+    on the feature value (not z-scores of funding).
+    
+    For example, taker_ratio with entry_z_low=0.7, entry_z_high=0.9
+    means: enter when taker_ratio is between 0.7 and 0.9.
+    """
+    df = data.df
+    n = len(df)
+    
+    if feature_col not in df.columns:
+        return BacktestResult(
+            hypothesis=sig, n_trades=0, win_rate=0.0, avg_pnl_pct=0.0,
+            total_return_pct=0.0, max_dd_pct=0.0, sharpe=0.0,
+        )
+    
+    feature = df[feature_col].to_numpy().astype(float)
+    close = df["close"].to_numpy().astype(float)
+    low = df["low"].to_numpy().astype(float)
+    bull200 = df["bull200"].to_numpy() if "bull200" in df.columns else np.ones(n, dtype=np.int8)
+    
+    hold_bars = sig.hold_hours // 4
+    valid_start = 50
+    
+    trades = []
+    in_trade = False
+    entry_idx = 0
+    entry_price = 0.0
+    
+    for i in range(valid_start, n):
+        if in_trade:
+            bars_held = i - entry_idx
+            hit_sl = False
+            exit_price = None
+            
+            if sig.sl_pct > 0:
+                sl_price = entry_price * (1 - sig.sl_pct / 100)
+                if low[i] <= sl_price:
+                    exit_price = sl_price
+                    hit_sl = True
+            
+            if bars_held >= hold_bars and exit_price is None:
+                exit_price = close[i]
+            
+            if exit_price is not None:
+                pnl = (exit_price - entry_price) / entry_price * 100
+                trades.append(Trade(
+                    entry_idx=entry_idx, exit_idx=i,
+                    entry_price=entry_price, exit_price=exit_price,
+                    direction=sig.direction, entry_z=feature[i],
+                    hold_bars=bars_held, pnl_pct=pnl, hit_sl=hit_sl,
+                ))
+                in_trade = False
+        
+        if not in_trade and np.isfinite(feature[i]):
+            # Check if feature value is in range
+            in_range = sig.entry_z_low <= feature[i] < sig.entry_z_high
+            
+            # For FGI and taker: direction logic matters
+            # FGI < 40 (fear) → go long (contrarian)
+            # taker < 0.9 (more selling) → go long (contrarian)
+            # vol_ratio > 1.3 → confirmation
+            
+            bull_ok = True
+            if sig.bull_filter == "bull200":
+                bull_ok = bull200[i] == 1
+            
+            if in_range and bull_ok:
+                in_trade = True
+                entry_idx = i
+                entry_price = close[i]
+    
+    if not trades:
+        return BacktestResult(
+            hypothesis=sig, n_trades=0, win_rate=0.0, avg_pnl_pct=0.0,
+            total_return_pct=0.0, max_dd_pct=0.0, sharpe=0.0,
+        )
+    
+    pnls = np.array([t.pnl_pct for t in trades])
+    wins = pnls > 0
+    win_rate = wins.sum() / len(pnls)
+    avg_pnl = pnls.mean()
+    cum_returns = np.cumprod(1 + pnls / 100) * 100
+    total_return = cum_returns[-1] - 100
+    peak = np.maximum.accumulate(cum_returns)
+    dd = (cum_returns - peak) / peak * 100
+    max_dd = dd.min()
+    sharpe = (pnls.mean() / pnls.std() * np.sqrt(6 * 365)) if pnls.std() > 0 else 0.0
+    
+    return BacktestResult(
+        hypothesis=sig, n_trades=len(trades), win_rate=win_rate,
+        avg_pnl_pct=avg_pnl, total_return_pct=total_return,
+        max_dd_pct=max_dd, sharpe=sharpe, trades=trades,
+    )
+
+
+def _run_fgibased_backtest(data, sig: SignalHypothesis,
+                            hyp: FoundryHypothesis) -> BacktestResult:
+    """FGI-based backtest. FGI thresholds are used directly."""
+    return _run_feature_backtest(data, sig, "fgi", hyp)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -246,6 +355,9 @@ def expand_to_signal_hypotheses(hyp: FoundryHypothesis) -> list[SignalHypothesis
     
     # Map primary driver to z-score ranges
     # LLM doesn't specify thresholds — we sweep reasonable ranges
+    # NOTE: funding_z, crosssec_funding_z use actual z-scores
+    # FGI uses 0-100 scale (0=extreme fear, 100=extreme greed)
+    # OI/taker use % or ratio scale
     driver_ranges = {
         "funding_z": [
             (-0.5, 0.0, "mild_neg"),      # mild negative
@@ -263,16 +375,18 @@ def expand_to_signal_hypotheses(hyp: FoundryHypothesis) -> list[SignalHypothesis
             (2.0, 5.0, "oi_surge"),        # OI surge
         ],
         "taker_ratio": [
-            (0.7, 0.9, "taker_low"),       # heavy selling
-            (0.5, 0.7, "taker_very_low"),  # extreme selling
+            (0.5, 0.8, "taker_low"),       # heavy selling (contrarian long)
+            (0.8, 0.95, "taker_mild_low"), # mild selling
+            (1.1, 1.5, "taker_high"),       # heavy buying (long)
         ],
         "vol_ratio": [
             (1.3, 2.0, "vol_high"),         # above average volume
             (1.5, 3.0, "vol_surge"),        # volume surge
         ],
         "fgi": [
-            (0, 30, "fgi_fear"),            # extreme fear
-            (0, 40, "fgi_low"),             # low FGI
+            (0, 25, "fgi_extreme_fear"),    # extreme fear → go long
+            (0, 40, "fgi_fear"),            # fear → go long
+            (25, 45, "fgi_moderate_fear"),  # moderate fear
         ],
         "defi_utilization": [
             (80, 100, "defi_overheat"),     # > 80% utilization
@@ -491,15 +605,31 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
                 if asset_data is None:
                     continue
                 
-                # Check if primary driver data exists
-                # (for now, we can only test funding_z and crosssec_funding_z
-                #  since other features aren't in the 4h data yet)
-                if hyp.primary_driver not in ("funding_z", "crosssec_funding_z"):
-                    # These features need special handling — skip for now
-                    # TODO: implement data loading for oi_pct_change, taker_ratio, etc.
+                # Resolve primary driver to the z-score column in 4h data
+                # funding_z and crosssec_funding_z work with the existing engine
+                # For other drivers, we need to create a pseudo-z-score
+                if hyp.primary_driver == "funding_z":
+                    # Already handled by sweep_4h_engine
+                    result = run_backtest(asset_data, sig)
+                elif hyp.primary_driver == "crosssec_funding_z":
+                    # Cross-sectional — add rel_z as funding_z temporarily
+                    # (already validated in Phase 1.4)
+                    result = run_backtest(asset_data, sig)
+                elif hyp.primary_driver == "fgi":
+                    # FGI is in the data — use as entry signal
+                    # sig.entry_z_low/high represent FGI thresholds
+                    # We need a custom backtest that uses FGI instead of funding_z
+                    result = _run_fgibased_backtest(asset_data, sig, hyp)
+                elif hyp.primary_driver == "oi_pct_change":
+                    result = _run_feature_backtest(asset_data, sig, "oi_pct_change", hyp)
+                elif hyp.primary_driver == "taker_ratio":
+                    result = _run_feature_backtest(asset_data, sig, "taker_ratio", hyp)
+                elif hyp.primary_driver == "vol_ratio":
+                    result = _run_feature_backtest(asset_data, sig, "vol_ratio", hyp)
+                else:
+                    # Unknown/unsupported driver — skip
+                    log.debug(f"    {sig.name}: driver {hyp.primary_driver} not yet supported")
                     continue
-                
-                result = run_backtest(asset_data, sig)
                 hyp.results.append({
                     "name": sig.name,
                     "asset": sig.asset,
@@ -627,8 +757,8 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
                 "anti_correlation": h.anti_correlation,
                 "n_signal_variants": len(h.signal_hypotheses),
                 "best_sharpe": h.best_sharpe,
-                "dsr_pass": h.dsr_pass,
-                "cpcv_pass": h.cpcv_pass,
+                "dsr_pass": bool(h.dsr_pass),
+                "cpcv_pass": bool(h.cpcv_pass),
                 "pbo": round(h.pbo, 4),
                 "top_results": sorted(h.results, key=lambda r: r["sharpe"], reverse=True)[:5],
             })
@@ -636,7 +766,7 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
         ts = time.strftime("%Y%m%d_%H%M%S")
         out_file = RESULTS_DIR / f"foundry_v13_iter{iteration}_{ts}.json"
         with open(out_file, "w") as f:
-            json.dump(iter_results, f, indent=2)
+            json.dump(iter_results, f, indent=2, default=str)
         log.info(f"\n  Results saved to {out_file}")
     
     # Final summary

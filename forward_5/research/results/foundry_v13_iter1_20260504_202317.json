@@ -1,0 +1,427 @@
+[
+  {
+    "name": "crosssec_funding_z_long_bull200",
+    "intuition": "When an asset's funding rate is significantly lower than the cross-sectional mean, shorts are paying a premium, indicating bearish sentiment. Combined with a long-term uptrend (EMA200), this contrarian signal suggests shorts will be squeezed, driving price higher.",
+    "primary_driver": "crosssec_funding_z",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses relative funding (cross-sectional) instead of absolute funding, capturing asset-specific deviations not exploited by existing edges.",
+    "n_signal_variants": 36,
+    "best_sharpe": 18.199181553249872,
+    "dsr_pass": true,
+    "cpcv_pass": true,
+    "pbo": 0.0,
+    "top_results": [
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h24_sl0",
+        "asset": "BTC",
+        "n_trades": 51,
+        "win_rate": 0.6275,
+        "total_return_pct": 47.23,
+        "max_dd_pct": -7.19,
+        "sharpe": 18.2
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h24_sl5",
+        "asset": "BTC",
+        "n_trades": 51,
+        "win_rate": 0.6275,
+        "total_return_pct": 44.08,
+        "max_dd_pct": -6.71,
+        "sharpe": 16.57
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 43,
+        "win_rate": 0.6512,
+        "total_return_pct": 46.93,
+        "max_dd_pct": -9.04,
+        "sharpe": 16.23
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_low_bull200_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 43,
+        "win_rate": 0.6512,
+        "total_return_pct": 40.9,
+        "max_dd_pct": -9.96,
+        "sharpe": 13.89
+      },
+      {
+        "name": "BTC_crosssec_funding_z_crosssec_deep_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 56,
+        "win_rate": 0.5714,
+        "total_return_pct": 33.47,
+        "max_dd_pct": -13.72,
+        "sharpe": 9.22
+      }
+    ]
+  },
+  {
+    "name": "oi_surge_bull200_long",
+    "intuition": "A sharp increase in open interest during an uptrend confirms strong participation and conviction from new money. Rising OI with price above EMA200 signals trend continuation as leveraged longs build.",
+    "primary_driver": "oi_pct_change",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses open interest change as primary signal rather than funding, targeting volume of participation.",
+    "n_signal_variants": 36,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": [
+      {
+        "name": "BTC_oi_pct_change_oi_surge_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 3,
+        "win_rate": 0.6667,
+        "total_return_pct": 4.76,
+        "max_dd_pct": -0.82,
+        "sharpe": 41.97
+      },
+      {
+        "name": "BTC_oi_pct_change_oi_surge_bull200_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 3,
+        "win_rate": 0.6667,
+        "total_return_pct": 4.76,
+        "max_dd_pct": -0.82,
+        "sharpe": 41.97
+      },
+      {
+        "name": "ETH_oi_pct_change_oi_mild_drop_bull200_h48_sl0",
+        "asset": "ETH",
+        "n_trades": 6,
+        "win_rate": 0.6667,
+        "total_return_pct": 13.25,
+        "max_dd_pct": -1.17,
+        "sharpe": 34.65
+      },
+      {
+        "name": "ETH_oi_pct_change_oi_mild_drop_bull200_h48_sl5",
+        "asset": "ETH",
+        "n_trades": 6,
+        "win_rate": 0.6667,
+        "total_return_pct": 13.25,
+        "max_dd_pct": -1.17,
+        "sharpe": 34.65
+      },
+      {
+        "name": "SOL_oi_pct_change_oi_drop_bull200_h48_sl0",
+        "asset": "SOL",
+        "n_trades": 2,
+        "win_rate": 0.5,
+        "total_return_pct": 1.82,
+        "max_dd_pct": -0.37,
+        "sharpe": 33.19
+      }
+    ]
+  },
+  {
+    "name": "taker_buy_pressure_bull200_long",
+    "intuition": "A taker ratio above 1 indicates aggressive buying (more buy volume than sell). When combined with a bullish EMA200 trend, it signals strong demand that is likely to push prices higher.",
+    "primary_driver": "taker_ratio",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses taker volume imbalance as primary driver, distinct from funding-based edges.",
+    "n_signal_variants": 24,
+    "best_sharpe": 12.598049444332437,
+    "dsr_pass": true,
+    "cpcv_pass": true,
+    "pbo": 0.4,
+    "top_results": [
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 7,
+        "win_rate": 0.4286,
+        "total_return_pct": 9.84,
+        "max_dd_pct": -1.29,
+        "sharpe": 25.95
+      },
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_bull200_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 7,
+        "win_rate": 0.4286,
+        "total_return_pct": 9.84,
+        "max_dd_pct": -1.29,
+        "sharpe": 25.95
+      },
+      {
+        "name": "ETH_taker_ratio_taker_low_bull200_h48_sl0",
+        "asset": "ETH",
+        "n_trades": 5,
+        "win_rate": 0.6,
+        "total_return_pct": 4.71,
+        "max_dd_pct": -1.63,
+        "sharpe": 22.61
+      },
+      {
+        "name": "ETH_taker_ratio_taker_low_bull200_h48_sl5",
+        "asset": "ETH",
+        "n_trades": 5,
+        "win_rate": 0.6,
+        "total_return_pct": 4.71,
+        "max_dd_pct": -1.63,
+        "sharpe": 22.61
+      },
+      {
+        "name": "BTC_taker_ratio_taker_low_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 6,
+        "win_rate": 0.6667,
+        "total_return_pct": 4.31,
+        "max_dd_pct": -3.5,
+        "sharpe": 14.47
+      }
+    ]
+  },
+  {
+    "name": "volume_surge_bull200_long",
+    "intuition": "Above-average volume relative to the 24h mean signals heightened interest and momentum. In a long-term uptrend, this volume surge often precedes continued upward moves as new participants enter.",
+    "primary_driver": "vol_ratio",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses volume ratio as primary, capturing momentum from activity spikes rather than funding.",
+    "n_signal_variants": 16,
+    "best_sharpe": 7.127511014944234,
+    "dsr_pass": true,
+    "cpcv_pass": true,
+    "pbo": 0.3333,
+    "top_results": [
+      {
+        "name": "BTC_vol_ratio_vol_surge_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 181,
+        "win_rate": 0.4862,
+        "total_return_pct": 136.17,
+        "max_dd_pct": -24.94,
+        "sharpe": 7.13
+      },
+      {
+        "name": "ETH_vol_ratio_vol_high_bull200_h48_sl0",
+        "asset": "ETH",
+        "n_trades": 170,
+        "win_rate": 0.5118,
+        "total_return_pct": 139.3,
+        "max_dd_pct": -41.88,
+        "sharpe": 5.84
+      },
+      {
+        "name": "ETH_vol_ratio_vol_high_bull200_h48_sl5",
+        "asset": "ETH",
+        "n_trades": 175,
+        "win_rate": 0.4971,
+        "total_return_pct": 132.95,
+        "max_dd_pct": -30.87,
+        "sharpe": 5.7
+      },
+      {
+        "name": "BTC_vol_ratio_vol_high_bull200_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 179,
+        "win_rate": 0.4804,
+        "total_return_pct": 85.84,
+        "max_dd_pct": -22.94,
+        "sharpe": 5.56
+      },
+      {
+        "name": "ETH_vol_ratio_vol_surge_bull200_h48_sl0",
+        "asset": "ETH",
+        "n_trades": 170,
+        "win_rate": 0.5059,
+        "total_return_pct": 111.42,
+        "max_dd_pct": -32.58,
+        "sharpe": 5.28
+      }
+    ]
+  },
+  {
+    "name": "fear_index_bull200_long",
+    "intuition": "Extreme fear (low FGI) in the market often marks oversold conditions. When price is still above the EMA200, the fear is likely overblown and a mean-reversion rally is probable.",
+    "primary_driver": "fgi",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses sentiment (Fear & Greed Index) as primary, orthogonal to on-chain funding signals.",
+    "n_signal_variants": 36,
+    "best_sharpe": 3.9660262923603478,
+    "dsr_pass": true,
+    "cpcv_pass": false,
+    "pbo": 0.5333,
+    "top_results": [
+      {
+        "name": "ETH_fgi_fgi_extreme_fear_bull200_h24_sl0",
+        "asset": "ETH",
+        "n_trades": 55,
+        "win_rate": 0.5273,
+        "total_return_pct": 12.4,
+        "max_dd_pct": -12.83,
+        "sharpe": 3.97
+      },
+      {
+        "name": "BTC_fgi_fgi_extreme_fear_bull200_h24_sl0",
+        "asset": "BTC",
+        "n_trades": 54,
+        "win_rate": 0.4444,
+        "total_return_pct": 5.25,
+        "max_dd_pct": -9.98,
+        "sharpe": 2.54
+      },
+      {
+        "name": "BTC_fgi_fgi_extreme_fear_bull200_h24_sl5",
+        "asset": "BTC",
+        "n_trades": 54,
+        "win_rate": 0.4444,
+        "total_return_pct": 5.25,
+        "max_dd_pct": -9.98,
+        "sharpe": 2.54
+      },
+      {
+        "name": "BTC_fgi_fgi_extreme_fear_bull200_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 34,
+        "win_rate": 0.6176,
+        "total_return_pct": 3.87,
+        "max_dd_pct": -9.66,
+        "sharpe": 2.53
+      },
+      {
+        "name": "ETH_fgi_fgi_extreme_fear_bull200_h24_sl5",
+        "asset": "ETH",
+        "n_trades": 56,
+        "win_rate": 0.5179,
+        "total_return_pct": 0.11,
+        "max_dd_pct": -14.85,
+        "sharpe": 0.78
+      }
+    ]
+  },
+  {
+    "name": "defi_utilization_bull200_long",
+    "intuition": "High DeFi lending utilization indicates strong demand for leverage. In an uptrend, this suggests bullish conviction and that leveraged longs are being funded, supporting further upside.",
+    "primary_driver": "defi_utilization",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses DeFi lending utilization, a novel on-chain signal not present in existing edges.",
+    "n_signal_variants": 24,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "liq_oi_ratio_bull200_long",
+    "intuition": "A high liquidation-to-open-interest ratio indicates that many positions have been flushed out, reducing leverage overhang. In a bullish trend, this washout creates a cleaner foundation for the trend to resume.",
+    "primary_driver": "liq_oi_ratio",
+    "secondary_driver": "bull200",
+    "assets": [
+      "BTC",
+      "ETH"
+    ],
+    "direction": "long",
+    "anti_correlation": "Uses liquidation data relative to OI, a distinct risk metric not covered by funding-based edges.",
+    "n_signal_variants": 16,
+    "best_sharpe": -999,
+    "dsr_pass": false,
+    "cpcv_pass": false,
+    "pbo": 1.0,
+    "top_results": []
+  },
+  {
+    "name": "taker_sell_pressure_greed_short",
+    "intuition": "When taker ratio is low (more selling) and the Fear & Greed Index is extremely high (greed), it suggests the market is overbought and selling pressure is mounting. This combination often precedes a correction.",
+    "primary_driver": "taker_ratio",
+    "secondary_driver": "fgi_extreme",
+    "assets": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "direction": "short",
+    "anti_correlation": "Short-side hypothesis using taker selling and extreme greed, opposite to the long-only funding edges.",
+    "n_signal_variants": 36,
+    "best_sharpe": 16.2078610095857,
+    "dsr_pass": true,
+    "cpcv_pass": false,
+    "pbo": 0.6667,
+    "top_results": [
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_none_h48_sl0",
+        "asset": "BTC",
+        "n_trades": 7,
+        "win_rate": 0.4286,
+        "total_return_pct": 9.84,
+        "max_dd_pct": -1.29,
+        "sharpe": 25.95
+      },
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_none_h48_sl5",
+        "asset": "BTC",
+        "n_trades": 7,
+        "win_rate": 0.4286,
+        "total_return_pct": 9.84,
+        "max_dd_pct": -1.29,
+        "sharpe": 25.95
+      },
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_none_h24_sl0",
+        "asset": "BTC",
+        "n_trades": 14,
+        "win_rate": 0.5714,
+        "total_return_pct": 8.69,
+        "max_dd_pct": -2.5,
+        "sharpe": 16.21
+      },
+      {
+        "name": "BTC_taker_ratio_taker_mild_low_none_h24_sl5",
+        "asset": "BTC",
+        "n_trades": 14,
+        "win_rate": 0.5714,
+        "total_return_pct": 8.69,
+        "max_dd_pct": -2.5,
+        "sharpe": 16.21
+      },
+      {
+        "name": "ETH_taker_ratio_taker_low_none_h48_sl0",
+        "asset": "ETH",
+        "n_trades": 6,
+        "win_rate": 0.5,
+        "total_return_pct": 3.84,
+        "max_dd_pct": -2.45,
+        "sharpe": 15.95
+      }
+    ]
+  }
+]
