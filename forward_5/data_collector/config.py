@@ -11,9 +11,9 @@ POLL_INTERVAL = 3600  # seconds
 BACKFILL_DAYS = {
     "hyperliquid": 90,
     "binance_funding": 90,
-    "binance_oi": 30,
+    "binance_oi": 180,
     "binance_ls_ratio": 30,
-    "binance_taker": 30,
+    "binance_taker": 180,
     "fear_greed": None,  # all available
 }
 
