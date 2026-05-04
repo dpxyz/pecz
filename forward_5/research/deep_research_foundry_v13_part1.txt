@@ -1,0 +1,147 @@
+Foundry V13 sollte als „Hypothesen-Labor“ gebaut werden: das LLM generiert nur strukturierte, testbare Strategiebeschreibungen in einer eng definierten DSL, während eine strikt getrennte, vollautomatische Pipeline (CPCV, Bootstrap, DSR, Multiple‑Testing‑Kontrolle) die statistische Validität bewertet und dem LLM nur stark verdichtetes Feedback zurückspielt. [chihche-liew.github](https://chihche-liew.github.io)
+Damit ist das LLM ein Hypothesen‑Generator und Research‑Assistent, aber **nicht** der Optimizer – Multiple Testing wird explizit in der Evaluationsschicht kontrolliert, nicht implizit im Prompt. [en.wikipedia](https://en.wikipedia.org/wiki/Deflated_Sharpe_ratio)
+
+***
+
+## Literatur‑Insights für dein Problem
+
+Die AlphaMiner‑Arbeit (Kou et al.) nutzt ein dreistufiges System: (1) „Seed Alpha Mining“ mit einem LLM, das über multimodale Daten und Paper-Summaries diversifizierte Alpha‑Kandidaten nach Kategorien (Momentum, Volatilität, Fundamentals etc.) generiert, (2) eine Multi‑Agent‑Bewertung, in der spezialisierte Agenten Alpha‑Faktoren nach Marktregime, Prognosekraft und Risiko filtern, und (3) eine dynamische Gewichtungsoptimierung der verbleibenden Alphas. [arxiv](https://arxiv.org/abs/2409.06289)
+Der Kernpunkt ist: das LLM liefert **strukturierte, kategorisierte Faktoren**, die danach durch numerische Tests und risikobewusste Agenten stark ausgedünnt werden – die eigentliche Signifikanzprüfung liegt nicht beim LLM, sondern in einer separaten Schicht. [arxiv](https://arxiv.org/html/2409.06289v4)
+
+Liu et al. („Can AI Do Financial Research?“) setzen ein LLM in eine feste „Laborumgebung“: eine symbolische Sprache für interpretierbare Accounting‑Formeln, ein unveränderliches empirisches Evaluationspipeline und standardisierte Feedback‑Metriken. [quantseeker](https://www.quantseeker.com/p/weekly-research-recap-203)
+Das System erzeugt 280 Signale, 159 bestehen einen ersten Prognosetest, 38 überleben multivariate Horse Races, und nur eine kleine Handvoll besteht zusätzliche moderne Asset‑Pricing‑Tests inkl. Multiple‑Testing‑Korrekturen und Neuheitsprüfungen gegen 209 publizierte Anomalien; die Autoren betonen, dass strenge, vordefinierte Tests entscheidend sind, um aus vielen LLM‑Ideen nur wenige robuste Signale zu destillieren. [chihche-liew.github](https://chihche-liew.github.io)
+
+LLM‑GA (Zhang et al.) kombiniert ein klassisches Genetic‑Algorithm‑Framework mit einem LLM, das sowohl die Initialpopulation als auch semantisch sinnvolle Crossover‑ und Mutationsschritte steuert, statt rein zufällige Kombinationen von Indikatoren zu erzeugen. [discovery.researcher](https://discovery.researcher.life/article/llm-guided-evolutionary-strategy-generation-for-quantitative-trading/b3ad90639ba8349d81ad107e08749514)
+Die Architektur besteht aus einem Signal‑Generator für Indikatoren, einem LLM‑verstärkten GA‑Kern und einem Ausführungsmodul; Experimente im chinesischen Aktienmarkt 2020–2024 zeigen bessere risikoadjustierte Renditen als Vanilla‑GA oder PSO, und Ablationsstudien deuten darauf hin, dass LLM‑gesteuerte Initialisierung und semantische Crossover die Qualität und Gültigkeit der Strategien deutlich erhöhen. [discovery.researcher](https://discovery.researcher.life/article/llm-guided-evolutionary-strategy-generation-for-quantitative-trading/b3ad90639ba8349d81ad107e08749514)
+
+***
+
+## Rolle des LLM als Hypothesen‑Generator
+
+Alle drei Arbeiten nutzen das LLM primär als **Struktur‑ und Ideen‑Generator**, nicht als finalen Statistiker: es erzeugt formalisierte Alpha‑Kandidaten (Formeln, DSL‑Snippets, Strategieregeln), die dann automatisch getestet werden. [arxiv](https://arxiv.org/abs/2409.06289)
+Liu et al. binden das LLM in einen generativen Loop ein (mehrere „Generationen“ von Signalen, Feedback aus der Evaluationspipeline, dann verfeinerte Vorschläge), aber das Testing bleibt fix und unabhängig; AlphaMiner und LLM‑GA verwenden Multi‑Agent‑ bzw. GA‑Strukturen, um Diversität und logische Konsistenz zu erzwingen. [themoonlight](https://www.themoonlight.io/en/review/automate-strategy-finding-with-llm-in-quant-investment)
+
+Für deine Foundry bedeutet das: das LLM sollte nur im Raum „{Features deiner Daten} → logische, beschreibbare Strategieregeln“ agieren, idealerweise über eine kleine DSL (z.B. Ausdrücke über Funding, OI, Liquidations, Regimeindikatoren), die du exakt backtesten kannst. [openreview](https://openreview.net/forum?id=aCsvglGcYl)
+„Researcher‑Style“ Formulierungen („when funding is negative and price is in an uptrend, go long“) werden unmittelbar in DSL/Formel übersetzt und danach streng evaluiert – dadurch wird das LLM zum Hypothesen‑Generator mit gut definiertem Suchraum, nicht zu einem Hidden‑Optimizer. [saillaboratory](https://www.saillaboratory.com/insights/1)
+
+***
+
+## Multiple‑Testing‑Kontrolle und DSR
+
+Bailey & López de Prado zeigen, dass DSR die Sharpe‑Ratio explizit um (a) Non‑Normalität der Renditen und (b) Selektionsbias unter Multiple Testing korrigiert und so die Wahrscheinlichkeit quantifiziert, dass ein gefundener Sharpe nach vielen Versuchen wirklich signifikant ist. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551)
+DSR nutzt die Distribution der Sharpe‑Schätzungen, die Anzahl der getesteten Strategien und ihre effektive Unabhängigkeit, um einen „deflationierten“ Sharpe zu berechnen; im Gegensatz zu simplen p‑Value‑Korrekturen modelliert DSR direkt den Overfitting‑Effekt der Faktorsuche. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2465675)
+
+CPCV generiert viele zeitkonsistente Train‑Test‑Splits mit Purging und Embargo, so dass jede Out‑of‑Sample‑Evaluation keinen Informations‑Leakage aus der Trainingsperiode enthält; man erhält eine Verteilung von Pfad‑Sharpe‑Ratios statt eines einzelnen Backtests. [quantbeckman](https://www.quantbeckman.com/p/with-code-combinatorial-purged-cross)
+Eine neuere Untersuchung in einer synthetischen Finanzumgebung berichtet, dass CPCV gegenüber Walk‑Forward ein deutlich geringeres Probability of Backtest Overfitting (PBO) und höhere DSR‑Werte erzeugt, während Walk‑Forward eine höhere zeitliche Varianz und schwächere Stationarität zeigt – d.h. CPCV ist systematisch robuster gegen False Positives und Overfitting. [scribd](https://www.scribd.com/document/725401650/SSRN-id4778909)
+
+Bonferroni kontrolliert die Family‑Wise Error Rate, ist aber bei großen N extrem konservativ, so dass viele echte Effekte als nicht signifikant durchfallen; BH‑FDR kontrolliert dagegen den erwarteten Anteil falscher Entdeckungen und wird explizit für Szenarien mit sehr vielen Tests empfohlen. [metwarebio](https://www.metwarebio.com/multiple-testing-correction-proteomics-fwer-fdr/)
+In High‑Dimensional‑Settings (z.B. Tausende Gene oder Features) wird BH als „Default“ bezeichnet, weil Bonferroni zwar praktisch keine False Positives, aber sehr viele False Negatives produziert, während BH bei akzeptabler Fehlerquote deutlich mehr echte Signale findet. [dkf.unibas](https://dkf.unibas.ch/fileadmin/user_upload/dkf/Services/Groenwold2021.pdf)
+
+Für Foundry V13 bietet sich daher an: DSR als zentrale Metrik für Multiple‑Testing‑adjustierte Signifikanz und zusätzlich BH‑FDR oder eine strengere Variante (Holm/Hochberg) als Sicherheitsnetz, abhängig davon, ob du in einem Run eher „Discovery“ (mehr Ideen, FDR‑Kontrolle) oder „Production“ (FWER‑Kontrolle) fahren willst. [clyte](https://www.clyte.tech/post/bonferroni-vs-fdr-multiple-hypothesis-testing-in-biomedical-data)
+
+***
+
+## Prompting für wirklich neue Strategien
+
+Die Literatur zu DSL‑basierten LLM‑Strategiedesigns zeigt, dass eine Domain‑Specific Language („Mini‑PineScript“) den Raum der Strategien stark strukturiert und die LLM‑Aufgabe auf das Kombinieren von bekannten Bausteinen im Rahmen klarer Semantik reduziert; so lassen sich 90%+ korrekte Abbildungen von Text auf DSL erreichen. [openreview](https://openreview.net/forum?id=aCsvglGcYl)
+Statt „erfinde eine Trading‑Strategie“ promptest du also „erfinde eine Regel im DSL, die nur diese Features benutzt und einer Liste von verbotenen Motiven (z.B. Funding+Trend) ausweicht, gib zusätzlich eine wirtschaftliche Intuition und erwarte strafe Feedback, wenn sie redundant ist“. [chihche-liew.github](https://chihche-liew.github.io)
+
+Um Anchoring zu vermeiden, kannst du (a) im Prompt explizit verbieten, zuvor verwendete Motive/Faktorklassen zu nutzen, (b) die Liste der bereits entdeckten, korrelierten Edges mitsenden und anweisen, Korrelation und thematische Überschneidung zu minimieren, und (c) mehrere unabhängige LLM‑Instanzen mit unterschiedlichen Seeds/Temperaturen parallel generieren lassen. [themoonlight](https://www.themoonlight.io/en/review/automate-strategy-finding-with-llm-in-quant-investment)
+Liu et al. nutzen thematische Paare (z.B. Profitability × Investment) und einen festen Merkmalsraum, um das LLM systematisch durch unterexplorierte Kombinationen wirtschaftlicher Themen zu führen – dieses Prinzip kannst du direkt auf deine Feature‑Themen (Funding, OI, Liquidation, DeFi‑Utilization, Regime) übertragen. [quantseeker](https://www.quantseeker.com/p/weekly-research-recap-203)
+
+Ein pragmatischer Kompromiss ist: das LLM erzeugt nur die **Hypothese‑Struktur** (z.B. „Funding differential across assets predicts next‑period relative returns, besonders nach Clustern von Liquidationsspikes“), während Parameter wie Schwellen, Lookback‑Längen und Exits komplett von deiner Sweep‑Engine über Grids oder Bayes‑Search optimiert werden. [quantbeckman](https://www.quantbeckman.com/p/with-code-combinatorial-purged-cross)
+So bleibt N sauber definierbar (Anzahl Hypothesen × Anzahl plausibler Parameter‑Konfigurationen) und du verhinderst, dass das LLM durch „interne Hyperparameter‑Suche“ nochmals verstecktes Multiple Testing betreibt. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551)
+
+***
+
+## Konkrete Prompt‑Templates
+
+### 1) Hypothese‑First, ohne Parameter
+
+> You are a quantitative researcher working on crypto futures (BTC, ETH, SOL, AVAX, DOGE, ADA) with features: funding rate, open interest, liquidations, DeFi utilization, price and volume on 1h, 4h, 8h bars.  
+> Your task: propose **one** new, interpretable trading hypothesis in the following DSL:  
+> – Signals are Boolean or real‑valued functions of rolling statistics over the past K bars.  
+> – Allowed operators: AND, OR, NOT, >, <, cross_up, cross_down, percentile_rank.  
+> – Do **not** specify numerical thresholds or window lengths. Use symbolic placeholders like K1, K2, TH1, TH2.  
+> – The hypothesis must **not** rely on funding‑rate + simple trend continuation; this pattern is already exhausted.  
+> – The strategy must be implementable on cross‑sectional crypto futures (long/short across the six assets) and must have a clear economic story (e.g. liquidity cascade, crowding, risk transfer, DeFi risk‑on/off).  
+> Output:  
+> 1. Short English name.  
+> 2. Plain‑language intuition (2–3 sentences).  
+> 3. One or two DSL rules using the placeholders.  
+
+### 2) Diversitäts‑/Anti‑Anchoring‑Prompt
+
+> You are given a list of previously tested hypotheses with their labels and short descriptions. Your task is to propose **one** new hypothesis that is as uncorrelated as possible with all previous ones.  
+> Read the list and:  
+> – Avoid any mechanism that directly reuses the same primary driver (e.g. funding + trend, pure momentum, simple mean reversion).  
+> – Focus instead on mechanisms related to [e.g. post‑liquidation microstructure, cross‑sectional DeFi utilization shifts, funding regime breaks].  
+> – Explicitly state in your explanation how your idea differs from the closest existing hypothesis in the list.  
+
+### 3) Red‑Team‑/Critic‑Prompt
+
+> You are a skeptical quant PM. You receive a candidate trading hypothesis and a summary of its backtest statistics (Sharpe, drawdown, trade count, DSR, parameter sensitivity, correlations to existing factors).  
+> Your task is to write a **critical review**:  
+> – Identify all plausible sources of overfitting or data‑snooping.  
+> – Explain whether the performance could be due to known effects (e.g. risk‑on regimes, convexity to market beta) instead of a new edge.  
+> – Suggest 3 robustness checks that could falsify the hypothesis (e.g. changing bar size, asset subset, regime filters, or excluding a time period).  
+
+***
+
+## Architektur‑Vorschläge für Foundry V13
+
+### Hypothesen‑Labor (empfohlen)
+
+In direkter Analogie zu Liu et al. baust du eine Laborumgebung: feste DSL über deine Features, feste Evaluationspipeline (CPCV, Bootstrap, DSR, Korrelation/Neuheit), und das LLM darf nur Formeln in dieser DSL vorschlagen oder überarbeiten. [fliphtml5](https://fliphtml5.com/fzqli/zwcp/Advances_in_Financial_Machine_Learning-Marcos_Lopez_de_Prado/192/)
+Jeder Foundry‑Run erzeugt z.B. 5–10 neue Hypothesen, die in einen Parameter‑Sweep (Grid oder Bayes) geschickt werden; pro Hypothese erhältst du eine Distribution von CPCV‑Sharpe‑Ratios, daraus einen DSR und einen p‑Value (ggf. BH‑adjusted), plus Korrelation zu bestehenden Produktions‑Signalen. [scribd](https://www.scribd.com/document/725401650/SSRN-id4778909)
+
+Vorteile: N ist klar definierbar, Bonferroni/BH‑FDR sind sauber anwendbar; du kannst pro Run hart limitieren, wie viel „Shotgun“ betrieben wird; das LLM ist austauschbar, während der Evaluations‑Stack stabil bleibt. [statsig](https://www.statsig.com/blog/controlling-type-i-errors-bonferroni-benjamini-hochberg)
+Nachteile: weniger „explorativ“ als GA/Evolution, da du jede Hypothese relativ teuer evaluierst; die Diversität hängt stark von Prompt‑Design und dem Themenraum ab. [discovery.researcher](https://discovery.researcher.life/article/llm-guided-evolutionary-strategy-generation-for-quantitative-trading/b3ad90639ba8349d81ad107e08749514)
+
+### LLM‑GA‑Layer oben drauf
+
+Du kannst LLM‑GA‑Ideen nutzen, aber stark eingegrenzt: verwende GA nur für das Kombinieren von bereits als signifikant eingestuften Subsignalen (die deinen DSR‑Cut überlebt haben) und für Parameter‑Tuning innerhalb eines schmalen Korridors. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551)
+Der LLM‑Teil des GA kann dann „semantische Mutationen“ vorschlagen (z.B. ersetze Funding‑Differential durch DeFi‑Utilization‑Spread in einer bestehenden Struktur), aber jeder neue Kandidat geht wieder durch deine CPCV+DSR‑Pipeline und erhöht somit explizit N; N wächst also über Generationen, wird aber von dir überwacht und in der DSR‑Berechnung reflektiert. [en.wikipedia](https://en.wikipedia.org/wiki/Deflated_Sharpe_ratio)
+
+Vorteile: bessere Exploration der Kombinationsräume, semantisch sinnvollere Mutationen als in klassischem GA; gute Ergänzung, wenn du schon ein Portfolio von Grund‑Edges hast. [kampouridis](http://kampouridis.net/papers/Ozgur_PhD.pdf)
+Nachteile: N steigt schnell, was DSR‑Schwellen verschärft; du brauchst harte Limits (z.B. max. 50–100 neue Kandidaten pro GA‑Generation) und möglicherweise strengere Filter auf Korrelation/Neuheit, um nicht in Combinatorial Explosion zu laufen. [dkf.unibas](https://dkf.unibas.ch/fileadmin/user_upload/dkf/Services/Groenwold2021.pdf)
+
+### Adversarial / Red‑Team‑Setup
+
+Analog zu Red‑Teaming‑Ansätzen kannst du zwei Rollen definieren: LLM‑A generiert Hypothesen, LLM‑B schreibt kritische Reviews und versucht, jeden Edge als Artefakt zu entlarven, ähnlich dem „Skeptical PM“-Prompt oben. [sentic](https://www.sentic.net/llm-for-automated-trading.pdf)
+Der Kritiker kann zusätzliche Tests vorschlagen (z.B. Feature‑Permutation, Zeit‑Periode‑Ausschluss), die du dann automatisiert mit deiner Statistik‑Pipeline ausführst; nur Hypothesen, die sowohl DSR/Korrelation als auch die LLM‑Kritik überstehen, dürfen in einen tieferen CPCV‑Sweep. [scribd](https://www.scribd.com/document/725401650/SSRN-id4778909)
+
+Vorteile: du externalisierst einen Teil der heuristischen Kritik (z.B. „das ist nur verkappter Beta‑Exposure“) und reduzierst die Last auf deiner numerischen Pipeline; gut kombinierbar mit dem Hypothesen‑Labor. [themoonlight](https://www.themoonlight.io/en/review/automate-strategy-finding-with-llm-in-quant-investment)
+Nachteile: kostet Tokens und ist naturgemäß heuristisch – die wirkliche Defense gegen Multiple Testing bleibt deine DSR/CPCV‑Schicht, nicht die verbale Kritik. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551)
+
+***
+
+## Look‑Ahead, Publikations‑Bias und Evaluation‑Inference‑Gap
+
+Purged Cross‑Validation ist genau dafür gebaut, zeitliche Leakage zu reduzieren; indem du alle Samples, deren Labelbildungs‑Fenster sich mit dem Testintervall überschneiden, aus dem Training entfernst, verhinderst du, dass du „in die Zukunft siehst“. [en.wikipedia](https://en.wikipedia.org/wiki/Purged_cross-validation)
+CPCV erhöht das noch, indem es viele solcher purged Splits erzeugt, so dass Overfitting auf einen spezifischen Pfad weniger wahrscheinlich ist. [fliphtml5](https://fliphtml5.com/fzqli/zwcp/Advances_in_Financial_Machine_Learning-Marcos_Lopez_de_Prado/192/)
+
+Das LLM kennt zwar Daten und Papers bis 2025, aber in deinem Backtest kannst du strikt definieren, dass nur Daten bis z.B. Ende 2022 als Training/Ideenraum benutzt werden, während 2023–2025 ausschließlich als Holdout‑Test dienen; wenn eine aus LLM‑Ideen abgeleitete Strategie erst im Holdout wirklich gut aussieht, ohne im „bekannten“ Zeitraum überoptimiert zu sein, ist das ein starkes Signal gegen Look‑Ahead‑Bias. [scribd](https://www.scribd.com/document/725401650/SSRN-id4778909)
+Liu et al. testen neue Signale explizit gegen hunderte publizierte Anomalien und verwerfen Kandidaten, die keinen echten Zusatznutzen liefern – du kannst analog jede neue Funding/OI/Liquidations‑Hypothese gegen deine bekannte Edge‑Bibliothek testen und nur Signale behalten, die in Horse Races nach Kontrolle für bekannte Faktoren noch signifikant sind. [quantseeker](https://www.quantseeker.com/p/weekly-research-recap-203)
+
+Um den Evaluation‑Inference‑Gap zu schließen, trenne strikt zwischen einem „Ideen‑LLM“ und der Evaluationslogik: das LLM sieht nur aggregiertes Feedback (z.B. „DSR=0.4, correlation to existing edges=0.75, parameter sensitivity high“), aber nie die exakten Backtest‑Trajektorien oder Zeitpunkte. [chihche-liew.github](https://chihche-liew.github.io)
+Du kannst zusätzlich verschiedene Modelle oder Seeds nutzen: z.B. ein kostengünstiges LLM für Ideengenerierung und ein anderes für Kritik/Reflektion, so dass keine einzelne Instanz ihre eigenen Ideen „schönredet“. [openreview](https://openreview.net/forum?id=w7BGq6ozOL)
+
+***
+
+## Praktische Betriebsparameter
+
+Bei 4h‑Bars und relativ schweren Evaluationsmethoden (CPCV, Bootstrap, DSR) ist ein Turnus „täglich bis wöchentlich“ sinnvoll: ein Tages‑Run mit 5–10 neuen Hypothesen, die über Nacht durch den Sweep laufen, ist näher an einem Research‑Cycle als an Intraday‑Optimierung. [papers.ssrn](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551)
+Die Literaturbeispiele (AlphaMiner, Liu, LLM‑GA) arbeiten durchweg mit Dutzenden bis einigen Hundert Kandidaten pro „Kampagne“, nicht mit hunderttausenden – Liu liegt mit 280 Signalen, 159 Basis‑Passern und 38 Survivors in dieser Größenordnung; du könntest pro Kampagne (z.B. Feature‑Thema oder Quartal) auf 100–300 Hypothesen begrenzen. [quantseeker](https://www.quantseeker.com/p/weekly-research-recap-203)
+
+Die Foundry sollte idealerweise beide liefern: (a) Hypothesen in natürlicher Sprache (für dich) plus (b) ausführbaren Code (DSL oder direkt JS/Python‑Snippet), der in deine bestehende Backtest‑Engine passt; DSL‑Paper berichten, dass eine Zwischenschicht aus DSL die Zuverlässigkeit des Code‑Mappings stark erhöht. [saillaboratory](https://www.saillaboratory.com/insights/1)
+Um zu verhindern, dass Foundry und dein manueller Sweep denselben Edge einfach mehrfach entdecken, führst du eine „Edge‑Registry“: jede neue Strategie trägt ihre wichtigsten Treiber (z.B. „primary driver: funding skew“, „secondary: liquidation clusters“) und ihren Korrelation‑Vektor zu bestehenden Produktions‑Strategien; du filterst früh nach Spearman‑ρ < 0.7 vs. deinem Katalog. [en.wikipedia](https://en.wikipedia.org/wiki/Deflated_Sharpe_ratio)
+
+***
+
+## Fazit: Rolle von Foundry V13
+
+Vor deinem Hintergrund (Forward V5, Monte‑Carlo‑Bootstrap, DSR, Bonferroni, Korrelation‑Matrix bereits implementiert) sollte Foundry V13 primär ein **Hypothesen‑Labor mit strenger Statistik‑Firewall** sein, nicht eine vollwertige Evolution‑Engine. [en.wikipedia](https://en.wikipedia.org/wiki/Deflated_Sharpe_ratio)
+Du kannst LLM‑GA‑Elemente selektiv an den Rand stellen (semantische Mutationen auf bereits bestätigten Subedges), aber der Kern bleibt: begrenzte Anzahl klar definierter Hypothesen pro Run, CPCV+DSR‑basierte Evaluationspipeline, Multiple‑Testing‑Kontrolle (DSR + BH/Bonferroni), und eine Architekturt renne, die Generierung, Kritik und numerische Prüfung sauber trennt. [quantbeckman](https://www.quantbeckman.com/p/with-code-combinatorial-purged-cross)
+
+Wenn du möchtest, kann ich im nächsten Schritt ein konkretes Sequenz‑Diagramm für Foundry V13 (inkl. API‑Schnittstellen und JSON‑Schemas für Hypothesen/Feedback) skizzieren, das direkt zu deiner bestehenden Phase‑0/Forward‑V5‑Codebasis passt.

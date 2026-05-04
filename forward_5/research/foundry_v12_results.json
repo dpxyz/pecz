@@ -1,5 +1,5 @@
 {
-  "BTCUSDT_BTC 4h Bear Signal with FGI Filter_4h": {
+  "BTCUSDT_BTC_4h_Bear_FGI_Vol_4h": {
     "passed": false,
     "n_profitable": 0,
     "n_windows": 6,
@@ -51,1187 +51,67 @@
         "oos_profitable": false
       }
     ],
-    "desc": "Long BTC on 4h when funding z-score < -1 and Fear & Greed Index < 40.",
+    "desc": "BTC 4h: extreme negative funding with fear index and volume surge",
     "timeframe": "4h",
     "iter": 1
   },
-  "BTCUSDT_BTC 1h Bull Pullback with Volume Surge_1h": {
+  "BTCUSDT_BTC_1h_BullPullback_Bull200_Vol_1h": {
     "passed": false,
     "n_profitable": 2,
     "n_windows": 6,
     "robustness": 33,
-    "total_oos_pnl": -20.43,
-    "total_trades": 172,
-    "avg_win_rate": 46.4,
+    "total_oos_pnl": -18.32,
+    "total_trades": 184,
+    "avg_win_rate": 49.8,
     "windows": [
       {
         "window": 1,
         "n_trades": 48,
-        "cum_pnl": 5.91,
+        "cum_pnl": 0.35,
+        "win_rate": 43.8,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 33,
+        "cum_pnl": -15.05,
+        "win_rate": 51.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 46,
+        "cum_pnl": 11.23,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 10,
+        "cum_pnl": -6.75,
+        "win_rate": 60.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 24,
+        "cum_pnl": -7.79,
         "win_rate": 45.8,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 32,
-        "cum_pnl": -12.89,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 42,
-        "cum_pnl": 4.75,
-        "win_rate": 47.6,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 10,
-        "cum_pnl": -5.49,
-        "win_rate": 60.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 20,
-        "cum_pnl": -11.46,
-        "win_rate": 35.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 20,
-        "cum_pnl": -1.25,
-        "win_rate": 40.0,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long BTC on 1h when funding z-score in [-1.0, -0.2] (wide pullback), volume ratio > 1.3, and price above 200h EMA.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "ETHUSDT_ETH 1h Bear Signal with Volume Confirmation_1h": {
-    "passed": true,
-    "n_profitable": 4,
-    "n_windows": 6,
-    "robustness": 67,
-    "total_oos_pnl": 37.52,
-    "total_trades": 96,
-    "avg_win_rate": 55.9,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 14,
-        "cum_pnl": -3.85,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 16,
-        "cum_pnl": 5.25,
-        "win_rate": 62.5,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 18,
-        "cum_pnl": 28.54,
-        "win_rate": 66.7,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 2,
-        "cum_pnl": -1.07,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 19,
-        "cum_pnl": 7.82,
-        "win_rate": 57.9,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 27,
-        "cum_pnl": 0.83,
-        "win_rate": 48.1,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long ETH on 1h when funding z-score < -1 and volume ratio > 1.5.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "ETHUSDT_ETH 1h Bull Pullback with Dual EMA Uptrend_1h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 46.53,
-    "total_trades": 215,
-    "avg_win_rate": 47.7,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 66,
-        "cum_pnl": 20.28,
-        "win_rate": 53.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 39,
-        "cum_pnl": -5.55,
-        "win_rate": 30.8,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 40,
-        "cum_pnl": 49.53,
-        "win_rate": 67.5,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 9,
-        "cum_pnl": -19.91,
-        "win_rate": 33.3,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 32,
-        "cum_pnl": 6.52,
-        "win_rate": 53.1,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 29,
-        "cum_pnl": -4.34,
-        "win_rate": 48.3,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long ETH on 1h when funding z-score in [-1.0, -0.2] (wide pullback), price above both 200h and 50h EMA.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "SOLUSDT_SOL 1h Extreme Bear Signal_1h": {
-    "passed": true,
-    "n_profitable": 5,
-    "n_windows": 6,
-    "robustness": 83,
-    "total_oos_pnl": 54.88,
-    "total_trades": 124,
-    "avg_win_rate": 58.6,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 8,
-        "cum_pnl": 17.23,
-        "win_rate": 62.5,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 21,
-        "cum_pnl": 20.77,
-        "win_rate": 57.1,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 17,
-        "cum_pnl": -7.89,
-        "win_rate": 41.2,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 4,
-        "n_trades": 4,
-        "cum_pnl": 5.57,
-        "win_rate": 100.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 5,
-        "n_trades": 29,
-        "cum_pnl": 6.8,
-        "win_rate": 48.3,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 45,
-        "cum_pnl": 12.4,
-        "win_rate": 42.2,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long SOL on 1h when funding z-score < -1.5 (extreme negative funding).",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "SOLUSDT_SOL 1h Bull Pullback with Fear Filter_1h": {
-    "passed": false,
-    "n_profitable": 0,
-    "n_windows": 6,
-    "robustness": 0,
-    "total_oos_pnl": -71.97,
-    "total_trades": 55,
-    "avg_win_rate": 31.2,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 4,
-        "cum_pnl": -8.23,
-        "win_rate": 25.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 12,
-        "cum_pnl": -32.26,
-        "win_rate": 25.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 39,
-        "cum_pnl": -31.48,
-        "win_rate": 43.6,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long SOL on 1h when funding z-score in [-1.0, -0.2] (wide pullback) and Fear & Greed Index < 30.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "BTCUSDT_BTC 1h Bear Signal with Bearish Regime and Volume_1h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 7.75,
-    "total_trades": 83,
-    "avg_win_rate": 54.0,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 9,
-        "cum_pnl": -12.2,
-        "win_rate": 33.3,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 16,
-        "cum_pnl": 9.78,
-        "win_rate": 75.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 9,
-        "cum_pnl": 13.09,
-        "win_rate": 66.7,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 20,
-        "cum_pnl": -13.68,
-        "win_rate": 40.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 29,
-        "cum_pnl": 10.76,
-        "win_rate": 55.2,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long BTC on 1h when funding z-score < -1, price below 200h EMA, and volume ratio > 1.2.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "ETHUSDT_ETH 1h Bear Signal with Fear and Volume_1h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 14.25,
-    "total_trades": 48,
-    "avg_win_rate": 60.2,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 6,
-        "cum_pnl": 5.16,
-        "win_rate": 66.7,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 5,
-        "cum_pnl": 1.47,
-        "win_rate": 60.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 12,
-        "cum_pnl": -0.52,
-        "win_rate": 58.3,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 25,
-        "cum_pnl": 8.14,
-        "win_rate": 56.0,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long ETH on 1h when funding z-score < -1, Fear & Greed Index < 40, and volume ratio > 1.3.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "SOLUSDT_SOL 1h Bull Pullback with Uptrend and Volume_1h": {
-    "passed": false,
-    "n_profitable": 1,
-    "n_windows": 6,
-    "robustness": 17,
-    "total_oos_pnl": -56.95,
-    "total_trades": 177,
-    "avg_win_rate": 42.1,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 49,
-        "cum_pnl": -21.84,
-        "win_rate": 38.8,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 29,
-        "cum_pnl": -4.21,
-        "win_rate": 51.7,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 40,
-        "cum_pnl": 40.04,
-        "win_rate": 57.5,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 4,
-        "cum_pnl": -10.75,
-        "win_rate": 25.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 29,
-        "cum_pnl": -41.25,
-        "win_rate": 44.8,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 26,
-        "cum_pnl": -18.94,
-        "win_rate": 34.6,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long SOL on 1h when funding z-score in [-1.0, -0.2] (wide pullback), price above 200h EMA, and volume ratio > 1.2.",
-    "timeframe": "1h",
-    "iter": 1
-  },
-  "BTCUSDT_BTC 4h Bull Pullback with Fear and Short-term Uptrend_4h": {
-    "passed": false,
-    "n_profitable": 0,
-    "n_windows": 6,
-    "robustness": 0,
-    "total_oos_pnl": 0,
-    "total_trades": 0,
-    "avg_win_rate": 0,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 3,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 6,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      }
-    ],
-    "desc": "Long BTC on 4h when funding z-score in [-1.0, -0.2] (wide pullback), Fear & Greed Index < 50, and price above 50h EMA.",
-    "timeframe": "4h",
-    "iter": 1
-  },
-  "BTCUSDT_BTC 1h Bear Signal with Volume_1h": {
-    "passed": false,
-    "n_profitable": 2,
-    "n_windows": 6,
-    "robustness": 33,
-    "total_oos_pnl": 13.45,
-    "total_trades": 69,
-    "avg_win_rate": 54.5,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 7,
-        "cum_pnl": -9.36,
-        "win_rate": 28.6,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 14,
-        "cum_pnl": -0.39,
-        "win_rate": 71.4,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 7,
-        "cum_pnl": 8.07,
-        "win_rate": 57.1,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 18,
-        "cum_pnl": -5.17,
-        "win_rate": 50.0,
         "oos_profitable": "False"
       },
       {
         "window": 6,
         "n_trades": 23,
-        "cum_pnl": 20.3,
-        "win_rate": 65.2,
-        "oos_profitable": "True"
+        "cum_pnl": -0.31,
+        "win_rate": 47.8,
+        "oos_profitable": "False"
       }
     ],
-    "desc": "Long BTC when funding is extremely negative (z<-1) and volume is above average (vol_ratio>1.5)",
+    "desc": "BTC 1h: mild negative funding in uptrend with above-average volume",
     "timeframe": "1h",
-    "iter": 2
+    "iter": 1
   },
-  "BTCUSDT_BTC 1h Bull Pullback with Dual EMA_1h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 25.24,
-    "total_trades": 197,
-    "avg_win_rate": 48.6,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 54,
-        "cum_pnl": 23.03,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 34,
-        "cum_pnl": -8.56,
-        "win_rate": 55.9,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 46,
-        "cum_pnl": 18.55,
-        "win_rate": 52.2,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 9,
-        "cum_pnl": -6.16,
-        "win_rate": 44.4,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 27,
-        "cum_pnl": -3.69,
-        "win_rate": 48.1,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 27,
-        "cum_pnl": 2.07,
-        "win_rate": 40.7,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long BTC on mild negative funding in a strong uptrend (both 200h and 50h EMAs bullish)",
-    "timeframe": "1h",
-    "iter": 2
-  },
-  "BTCUSDT_BTC 4h Bull Pullback with Dual EMA_4h": {
-    "passed": true,
-    "n_profitable": 5,
-    "n_windows": 6,
-    "robustness": 83,
-    "total_oos_pnl": 32.38,
-    "total_trades": 63,
-    "avg_win_rate": 56.5,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 17,
-        "cum_pnl": 32.75,
-        "win_rate": 58.8,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 10,
-        "cum_pnl": -8.44,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 16,
-        "cum_pnl": 0.96,
-        "win_rate": 56.2,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 4,
-        "cum_pnl": 4.65,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 5,
-        "n_trades": 9,
-        "cum_pnl": 0.96,
-        "win_rate": 66.7,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 7,
-        "cum_pnl": 1.5,
-        "win_rate": 57.1,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long BTC on 4h timeframe with mild negative funding and dual EMA uptrend",
-    "timeframe": "4h",
-    "iter": 2
-  },
-  "ETHUSDT_ETH 1h Bear Signal with Fear_1h": {
-    "passed": false,
-    "n_profitable": 1,
-    "n_windows": 6,
-    "robustness": 17,
-    "total_oos_pnl": -18.27,
-    "total_trades": 88,
-    "avg_win_rate": 48.4,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 12,
-        "cum_pnl": -10.36,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 13,
-        "cum_pnl": -4.35,
-        "win_rate": 53.8,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 15,
-        "cum_pnl": -12.96,
-        "win_rate": 40.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 48,
-        "cum_pnl": 9.4,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long ETH when funding is extremely negative and Fear & Greed Index indicates fear (<40)",
-    "timeframe": "1h",
-    "iter": 2
-  },
-  "SOLUSDT_SOL 1h Extreme Bear with Volume_1h": {
-    "passed": "False",
-    "n_profitable": 4,
-    "n_windows": 6,
-    "robustness": 67,
-    "total_oos_pnl": -6.13,
-    "total_trades": 69,
-    "avg_win_rate": 46.3,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 2,
-        "cum_pnl": 0.43,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 9,
-        "cum_pnl": -7.56,
-        "win_rate": 33.3,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 12,
-        "cum_pnl": 3.46,
-        "win_rate": 33.3,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 3,
-        "cum_pnl": 8.64,
-        "win_rate": 100.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 5,
-        "n_trades": 20,
-        "cum_pnl": -16.37,
-        "win_rate": 35.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 23,
-        "cum_pnl": 5.27,
-        "win_rate": 26.1,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long SOL when funding is extremely negative (z<-1.5) with above-average volume",
-    "timeframe": "1h",
-    "iter": 2
-  },
-  "SOLUSDT_SOL 1h Bear Signal with Bull Regime_1h": {
-    "passed": false,
-    "n_profitable": 0,
-    "n_windows": 6,
-    "robustness": 0,
-    "total_oos_pnl": 0,
-    "total_trades": 0,
-    "avg_win_rate": 0,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 3,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 6,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      }
-    ],
-    "desc": "Long SOL when funding is very negative and price is above 200h EMA (bullish regime)",
-    "timeframe": "1h",
-    "iter": 2
-  },
-  "SOLUSDT_SOL 1h Bull Pullback with Volume_1h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": -0.98,
-    "total_trades": 129,
-    "avg_win_rate": 45.8,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 31,
-        "cum_pnl": 22.71,
-        "win_rate": 48.4,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 20,
-        "cum_pnl": 3.36,
-        "win_rate": 55.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 36,
-        "cum_pnl": 30.53,
-        "win_rate": 61.1,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 3,
-        "cum_pnl": -8.01,
-        "win_rate": 33.3,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 20,
-        "cum_pnl": -35.88,
-        "win_rate": 35.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 19,
-        "cum_pnl": -13.69,
-        "win_rate": 42.1,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long SOL on mild negative funding with above-average volume confirmation",
-    "timeframe": "1h",
-    "iter": 2
-  },
-  "BTCUSDT_BTC 4h Bear Signal with Bull200 and Volume_4h": {
-    "passed": false,
-    "n_profitable": 3,
-    "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 10.74,
-    "total_trades": 21,
-    "avg_win_rate": 61.0,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 5,
-        "cum_pnl": -7.69,
-        "win_rate": 20.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 2,
-        "cum_pnl": 0.15,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 5,
-        "cum_pnl": 16.62,
-        "win_rate": 100.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 4,
-        "cum_pnl": 2.21,
-        "win_rate": 75.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 5,
-        "cum_pnl": -0.55,
-        "win_rate": 60.0,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long BTC on 4h when funding_z < -1.0, bull200=1, and vol_ratio > 1.5",
-    "timeframe": "4h",
-    "iter": 3
-  },
-  "BTCUSDT_BTC 1h Bear Signal with FGI and Bull200_1h": {
-    "passed": false,
-    "n_profitable": 1,
-    "n_windows": 6,
-    "robustness": 17,
-    "total_oos_pnl": -11.83,
-    "total_trades": 47,
-    "avg_win_rate": 36.7,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 3,
-        "cum_pnl": -4.62,
-        "win_rate": 0.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 3,
-        "n_trades": 7,
-        "cum_pnl": 4.51,
-        "win_rate": 71.4,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 8,
-        "cum_pnl": -3.59,
-        "win_rate": 37.5,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 29,
-        "cum_pnl": -8.13,
-        "win_rate": 37.9,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long BTC on 1h when funding_z < -1.0, FGI < 40, and bull200=1",
-    "timeframe": "1h",
-    "iter": 3
-  },
-  "ETHUSDT_ETH 1h Bull Pullback Wide with Bull200 and Volume_1h": {
-    "passed": true,
-    "n_profitable": 5,
-    "n_windows": 6,
-    "robustness": 83,
-    "total_oos_pnl": 43.0,
-    "total_trades": 169,
-    "avg_win_rate": 45.6,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 46,
-        "cum_pnl": 20.75,
-        "win_rate": 50.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 2,
-        "n_trades": 27,
-        "cum_pnl": 2.74,
-        "win_rate": 33.3,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 34,
-        "cum_pnl": 22.6,
-        "win_rate": 61.8,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 8,
-        "cum_pnl": -21.83,
-        "win_rate": 25.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 5,
-        "n_trades": 28,
-        "cum_pnl": 16.15,
-        "win_rate": 57.1,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 6,
-        "n_trades": 26,
-        "cum_pnl": 2.59,
-        "win_rate": 46.2,
-        "oos_profitable": "True"
-      }
-    ],
-    "desc": "Long ETH on 1h when funding_z in [-1.0, -0.2], bull200=1, and vol_ratio > 1.3",
-    "timeframe": "1h",
-    "iter": 3
-  },
-  "SOLUSDT_SOL 1h Bear Signal with Bull50 and Volume_1h": {
-    "passed": false,
-    "n_profitable": 2,
-    "n_windows": 6,
-    "robustness": 33,
-    "total_oos_pnl": -7.3,
-    "total_trades": 34,
-    "avg_win_rate": 56.5,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 8,
-        "cum_pnl": -15.06,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 2,
-        "n_trades": 7,
-        "cum_pnl": 0.01,
-        "win_rate": 28.6,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 3,
-        "n_trades": 2,
-        "cum_pnl": 15.48,
-        "win_rate": 100.0,
-        "oos_profitable": "True"
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 4,
-        "cum_pnl": -2.76,
-        "win_rate": 50.0,
-        "oos_profitable": "False"
-      },
-      {
-        "window": 6,
-        "n_trades": 13,
-        "cum_pnl": -4.97,
-        "win_rate": 53.8,
-        "oos_profitable": "False"
-      }
-    ],
-    "desc": "Long SOL on 1h when funding_z < -1.0, bull50=1, and vol_ratio > 1.5",
-    "timeframe": "1h",
-    "iter": 3
-  },
-  "BTCUSDT_BTC 4h Bear Signal with FGI and Volume_4h": {
-    "passed": false,
-    "n_profitable": 0,
-    "n_windows": 6,
-    "robustness": 0,
-    "total_oos_pnl": 0,
-    "total_trades": 0,
-    "avg_win_rate": 0,
-    "windows": [
-      {
-        "window": 1,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 2,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 3,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 4,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 5,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      },
-      {
-        "window": 6,
-        "n_trades": 0,
-        "cum_pnl": 0,
-        "win_rate": 0,
-        "oos_profitable": false
-      }
-    ],
-    "desc": "Long BTC on 4h when funding_z < -1.0, FGI < 40, and vol_ratio > 1.5",
-    "timeframe": "4h",
-    "iter": 3
-  },
-  "ETHUSDT_ETH 1h Bear Signal with Bull200 and Volume_1h": {
+  "ETHUSDT_ETH_1h_Bear_Vol_1h": {
     "passed": false,
     "n_profitable": 3,
     "n_windows": 6,
@@ -1283,18 +163,74 @@
         "oos_profitable": "False"
       }
     ],
-    "desc": "Long ETH on 1h when funding_z < -1.0, bull200=1, and vol_ratio > 1.5",
+    "desc": "ETH 1h: extreme negative funding confirmed by volume surge",
     "timeframe": "1h",
-    "iter": 3
+    "iter": 1
   },
-  "BTCUSDT_BTC 1h Bull Pullback Wide with Bull200 and FGI_1h": {
-    "passed": false,
-    "n_profitable": 3,
+  "SOLUSDT_SOL_1h_Bear_Extreme_1h": {
+    "passed": true,
+    "n_profitable": 5,
     "n_windows": 6,
-    "robustness": 50,
-    "total_oos_pnl": 11.3,
-    "total_trades": 54,
-    "avg_win_rate": 51.4,
+    "robustness": 83,
+    "total_oos_pnl": 54.88,
+    "total_trades": 124,
+    "avg_win_rate": 58.6,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 8,
+        "cum_pnl": 17.23,
+        "win_rate": 62.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 21,
+        "cum_pnl": 20.77,
+        "win_rate": 57.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 17,
+        "cum_pnl": -7.89,
+        "win_rate": 41.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 5.57,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 29,
+        "cum_pnl": 6.8,
+        "win_rate": 48.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 45,
+        "cum_pnl": 12.4,
+        "win_rate": 42.2,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "SOL 1h extreme negative funding long (z<-1.5)",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "BTCUSDT_BTC_1h_Bear_Bull200_FGI30_1h": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -6.26,
+    "total_trades": 39,
+    "avg_win_rate": 45.6,
     "windows": [
       {
         "window": 1,
@@ -1305,15 +241,351 @@
       },
       {
         "window": 2,
+        "n_trades": 2,
+        "cum_pnl": -2.28,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 2,
+        "cum_pnl": 2.34,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 7,
+        "cum_pnl": -0.01,
+        "win_rate": 42.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 28,
+        "cum_pnl": -6.31,
+        "win_rate": 39.3,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "BTC 1h: extreme negative funding in uptrend with extreme fear",
+    "timeframe": "1h",
+    "iter": 1
+  },
+  "ETHUSDT_ETH_1h_BullPullback_Bull200_FGI_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -20.35,
+    "total_trades": 51,
+    "avg_win_rate": 34.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 2,
+        "cum_pnl": -3.21,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 2,
+        "cum_pnl": 1.17,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 12,
+        "cum_pnl": -19.23,
+        "win_rate": 41.7,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 35,
+        "cum_pnl": 0.92,
+        "win_rate": 45.7,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "ETH 1h: pullback in long-term uptrend with fear filter",
+    "timeframe": "1h",
+    "iter": 1
+  },
+  "SOLUSDT_SOL_1h_BullPullback_Bull50_Vol_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -23.76,
+    "total_trades": 133,
+    "avg_win_rate": 40.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 37,
+        "cum_pnl": -12.74,
+        "win_rate": 40.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 20,
+        "cum_pnl": 9.46,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 34,
+        "cum_pnl": 26.61,
+        "win_rate": 52.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
         "n_trades": 3,
-        "cum_pnl": 3.12,
+        "cum_pnl": -4.7,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 20,
+        "cum_pnl": -29.5,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 19,
+        "cum_pnl": -12.89,
+        "win_rate": 36.8,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "SOL 1h: pullback in short-term uptrend with strong volume",
+    "timeframe": "1h",
+    "iter": 1
+  },
+  "BTCUSDT_BTC_4h_BullPullback_Bull200_FGI_4h": {
+    "passed": false,
+    "n_profitable": 0,
+    "n_windows": 6,
+    "robustness": 0,
+    "total_oos_pnl": 0,
+    "total_trades": 0,
+    "avg_win_rate": 0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 3,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 6,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      }
+    ],
+    "desc": "BTC 4h: pullback in long-term uptrend with fear confirmation",
+    "timeframe": "4h",
+    "iter": 1
+  },
+  "BTCUSDT_BTC_4h_Bear_Extreme_4h": {
+    "passed": true,
+    "n_profitable": 5,
+    "n_windows": 6,
+    "robustness": 83,
+    "total_oos_pnl": 42.64,
+    "total_trades": 47,
+    "avg_win_rate": 61.9,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 6,
+        "cum_pnl": 11.27,
+        "win_rate": 83.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 9,
+        "cum_pnl": 4.14,
+        "win_rate": 55.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 5,
+        "cum_pnl": 15.22,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 11,
+        "cum_pnl": 5.73,
+        "win_rate": 54.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 16,
+        "cum_pnl": 6.28,
+        "win_rate": 56.2,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "BTC 4h extreme negative funding long",
+    "timeframe": "4h",
+    "iter": 2
+  },
+  "BTCUSDT_BTC_1h_BullPullback_Wide_Bull200_1h": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 31.28,
+    "total_trades": 266,
+    "avg_win_rate": 50.5,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 69,
+        "cum_pnl": 23.74,
+        "win_rate": 50.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 45,
+        "cum_pnl": -6.15,
+        "win_rate": 53.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 66,
+        "cum_pnl": 12.78,
+        "win_rate": 48.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 12,
+        "cum_pnl": 0.47,
+        "win_rate": 58.3,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 35,
+        "cum_pnl": -10.02,
+        "win_rate": 48.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 39,
+        "cum_pnl": 10.46,
+        "win_rate": 43.6,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "BTC 1h wide pullback in 200h EMA uptrend",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "BTCUSDT_BTC_1h_Bear_FGI_1h": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 54.29,
+    "total_trades": 77,
+    "avg_win_rate": 56.7,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 9,
+        "cum_pnl": 12.53,
         "win_rate": 66.7,
         "oos_profitable": "True"
       },
       {
         "window": 3,
         "n_trades": 7,
-        "cum_pnl": 1.09,
+        "cum_pnl": 13.4,
         "win_rate": 57.1,
         "oos_profitable": "True"
       },
@@ -1326,20 +598,748 @@
       },
       {
         "window": 5,
-        "n_trades": 8,
-        "cum_pnl": -4.72,
-        "win_rate": 37.5,
+        "n_trades": 17,
+        "cum_pnl": 11.77,
+        "win_rate": 52.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 44,
+        "cum_pnl": 16.59,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "BTC 1h extreme negative funding with fear index",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "ETHUSDT_ETH_1h_BullPullback_Wide_Bull200_1h": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 15.17,
+    "total_trades": 258,
+    "avg_win_rate": 45.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 77,
+        "cum_pnl": 25.56,
+        "win_rate": 54.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 46,
+        "cum_pnl": -16.37,
+        "win_rate": 34.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 48,
+        "cum_pnl": 20.96,
+        "win_rate": 54.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 10,
+        "cum_pnl": -20.43,
+        "win_rate": 30.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 42,
+        "cum_pnl": 4.53,
+        "win_rate": 52.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 35,
+        "cum_pnl": 0.92,
+        "win_rate": 45.7,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "ETH 1h wide pullback in 200h EMA uptrend",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "ETHUSDT_ETH_1h_Bear_FGI_1h": {
+    "passed": false,
+    "n_profitable": 1,
+    "n_windows": 6,
+    "robustness": 17,
+    "total_oos_pnl": -18.27,
+    "total_trades": 88,
+    "avg_win_rate": 48.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 12,
+        "cum_pnl": -10.36,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 13,
+        "cum_pnl": -4.35,
+        "win_rate": 53.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 15,
+        "cum_pnl": -12.96,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 48,
+        "cum_pnl": 9.4,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "ETH 1h extreme negative funding with fear index",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "SOLUSDT_SOL_1h_BullPullback_Wide_Bull200_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -17.48,
+    "total_trades": 265,
+    "avg_win_rate": 49.3,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 75,
+        "cum_pnl": 52.96,
+        "win_rate": 50.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 44,
+        "cum_pnl": -17.73,
+        "win_rate": 54.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 57,
+        "cum_pnl": 24.03,
+        "win_rate": 52.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 9,
+        "cum_pnl": -6.4,
+        "win_rate": 55.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 35,
+        "cum_pnl": -37.5,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 45,
+        "cum_pnl": -32.84,
+        "win_rate": 42.2,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "SOL 1h wide pullback in 200h EMA uptrend",
+    "timeframe": "1h",
+    "iter": 2
+  },
+  "BTCUSDT_BTC_4h_BullPullback_Wide_Bull200_4h": {
+    "passed": true,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 42.95,
+    "total_trades": 78,
+    "avg_win_rate": 52.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 20,
+        "cum_pnl": 40.4,
+        "win_rate": 65.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 14,
+        "cum_pnl": -12.52,
+        "win_rate": 42.9,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 21,
+        "cum_pnl": 14.06,
+        "win_rate": 52.4,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 4,
+        "cum_pnl": 3.83,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 9,
+        "cum_pnl": 1.32,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 10,
+        "cum_pnl": -4.14,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "BTC 4h: long when funding z-score in [-1.0, -0.2] and price above 200h EMA",
+    "timeframe": "4h",
+    "iter": 3
+  },
+  "BTCUSDT_BTC_4h_Bear_Extreme_vol_ratio_4h": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 10.74,
+    "total_trades": 21,
+    "avg_win_rate": 61.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 5,
+        "cum_pnl": -7.69,
+        "win_rate": 20.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 2,
+        "cum_pnl": 0.15,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 3,
+        "n_trades": 5,
+        "cum_pnl": 16.62,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 4,
+        "cum_pnl": 2.21,
+        "win_rate": 75.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 5,
+        "cum_pnl": -0.55,
+        "win_rate": 60.0,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "BTC 4h: long when funding z-score < -1.0 and volume ratio > 1.5",
+    "timeframe": "4h",
+    "iter": 3
+  },
+  "BTCUSDT_BTC_4h_Bear_Extreme_FGI_4h": {
+    "passed": false,
+    "n_profitable": 0,
+    "n_windows": 6,
+    "robustness": 0,
+    "total_oos_pnl": 0,
+    "total_trades": 0,
+    "avg_win_rate": 0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 3,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 6,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      }
+    ],
+    "desc": "BTC 4h: long when funding z-score < -1.0 and Fear & Greed Index < 40",
+    "timeframe": "4h",
+    "iter": 3
+  },
+  "BTCUSDT_BTC_1h_BullPullback_Wide_Bull50_1h": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 21.48,
+    "total_trades": 222,
+    "avg_win_rate": 46.9,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 61,
+        "cum_pnl": 16.34,
+        "win_rate": 47.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 40,
+        "cum_pnl": -14.26,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 52,
+        "cum_pnl": 22.81,
+        "win_rate": 51.9,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 10,
+        "cum_pnl": -7.13,
+        "win_rate": 40.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 27,
+        "cum_pnl": -3.67,
+        "win_rate": 48.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 32,
+        "cum_pnl": 7.39,
+        "win_rate": 43.8,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "BTC 1h: long when funding z-score in [-1.0, -0.2] and price above 50h EMA",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "ETHUSDT_ETH_1h_Bear_Extreme_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -33.55,
+    "total_trades": 117,
+    "avg_win_rate": 54.0,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 24,
+        "cum_pnl": 2.36,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 18,
+        "cum_pnl": -15.8,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 27,
+        "cum_pnl": -0.91,
+        "win_rate": 48.1,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 4,
+        "n_trades": 2,
+        "cum_pnl": 0.89,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 5,
+        "n_trades": 17,
+        "cum_pnl": -13.4,
+        "win_rate": 41.2,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 29,
+        "cum_pnl": -6.69,
+        "win_rate": 51.7,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "ETH 1h: long when funding z-score < -1.0 (extreme negative funding)",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "ETHUSDT_ETH_1h_BullPullback_Wide_Bull50_1h": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 46.53,
+    "total_trades": 215,
+    "avg_win_rate": 47.7,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 66,
+        "cum_pnl": 20.28,
+        "win_rate": 53.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 39,
+        "cum_pnl": -5.55,
+        "win_rate": 30.8,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 40,
+        "cum_pnl": 49.53,
+        "win_rate": 67.5,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 9,
+        "cum_pnl": -19.91,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 32,
+        "cum_pnl": 6.52,
+        "win_rate": 53.1,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 29,
+        "cum_pnl": -4.34,
+        "win_rate": 48.3,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "ETH 1h: long when funding z-score in [-1.0, -0.2] and price above 50h EMA",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "SOLUSDT_SOL_1h_Bear_Extreme_FGI_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": 3.95,
+    "total_trades": 29,
+    "avg_win_rate": 64.1,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 2,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 3,
+        "n_trades": 1,
+        "cum_pnl": 2.91,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 6,
+        "cum_pnl": -8.71,
+        "win_rate": 33.3,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 6,
+        "n_trades": 22,
+        "cum_pnl": 9.75,
+        "win_rate": 59.1,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "SOL 1h: long when funding z-score < -1.5 and Fear & Greed Index < 40",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "SOLUSDT_SOL_1h_Bear_Extreme_vol_ratio_1h": {
+    "passed": false,
+    "n_profitable": 4,
+    "n_windows": 6,
+    "robustness": 67,
+    "total_oos_pnl": 27.31,
+    "total_trades": 26,
+    "avg_win_rate": 48.4,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 5,
+        "cum_pnl": 3.87,
+        "win_rate": 60.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 3,
+        "cum_pnl": -3.79,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 3,
+        "cum_pnl": 19.79,
+        "win_rate": 100.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 1,
+        "cum_pnl": -4.31,
+        "win_rate": 0.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 3,
+        "cum_pnl": 2.51,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 11,
+        "cum_pnl": 9.24,
+        "win_rate": 63.6,
+        "oos_profitable": "True"
+      }
+    ],
+    "desc": "SOL 1h: long when funding z-score < -1.5 and volume ratio > 1.5",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "SOLUSDT_SOL_1h_BullPullback_Wide_Bull50_1h": {
+    "passed": false,
+    "n_profitable": 2,
+    "n_windows": 6,
+    "robustness": 33,
+    "total_oos_pnl": -57.02,
+    "total_trades": 221,
+    "avg_win_rate": 43.9,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 65,
+        "cum_pnl": 14.69,
+        "win_rate": 44.6,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 2,
+        "n_trades": 33,
+        "cum_pnl": -12.57,
+        "win_rate": 54.5,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 48,
+        "cum_pnl": 27.28,
+        "win_rate": 56.2,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 7,
+        "cum_pnl": -20.6,
+        "win_rate": 28.6,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 5,
+        "n_trades": 32,
+        "cum_pnl": -38.29,
+        "win_rate": 40.6,
         "oos_profitable": "False"
       },
       {
         "window": 6,
         "n_trades": 36,
-        "cum_pnl": 11.81,
-        "win_rate": 44.4,
+        "cum_pnl": -27.53,
+        "win_rate": 38.9,
+        "oos_profitable": "False"
+      }
+    ],
+    "desc": "SOL 1h: long when funding z-score in [-1.0, -0.2] and price above 50h EMA",
+    "timeframe": "1h",
+    "iter": 3
+  },
+  "BTCUSDT_BTC_1h_Bear_Extreme_vol_ratio_1h": {
+    "passed": false,
+    "n_profitable": 3,
+    "n_windows": 6,
+    "robustness": 50,
+    "total_oos_pnl": 5.52,
+    "total_trades": 51,
+    "avg_win_rate": 48.8,
+    "windows": [
+      {
+        "window": 1,
+        "n_trades": 10,
+        "cum_pnl": -10.37,
+        "win_rate": 30.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 2,
+        "n_trades": 6,
+        "cum_pnl": -1.86,
+        "win_rate": 50.0,
+        "oos_profitable": "False"
+      },
+      {
+        "window": 3,
+        "n_trades": 12,
+        "cum_pnl": 9.59,
+        "win_rate": 66.7,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 4,
+        "n_trades": 0,
+        "cum_pnl": 0,
+        "win_rate": 0,
+        "oos_profitable": false
+      },
+      {
+        "window": 5,
+        "n_trades": 6,
+        "cum_pnl": 1.12,
+        "win_rate": 50.0,
+        "oos_profitable": "True"
+      },
+      {
+        "window": 6,
+        "n_trades": 17,
+        "cum_pnl": 7.04,
+        "win_rate": 47.1,
         "oos_profitable": "True"
       }
     ],
-    "desc": "Long BTC on 1h when funding_z in [-1.0, -0.2], bull200=1, and FGI < 40",
+    "desc": "BTC 1h: long when funding z-score < -1.0 and volume ratio > 1.5",
     "timeframe": "1h",
     "iter": 3
   }
