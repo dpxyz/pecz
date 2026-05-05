@@ -13,7 +13,7 @@
 | 1.1 | t-Stat für Edge Registry (Harvey t>3.0) | 1h | P0 | ✅ ALL PASS (32-79) |
 | 1.2 | Edge Decay Monitor + daily Cron | 2h | P0 | ✅ 10:00 Berlin daily |
 | 1.3 | Trade-Count pro CPCV-Window | 2h | P1 | ✅ Known limitation |
-| 1.4 | Foundry V13 Cron Setup (1x/Woche) | 1h | P1 | ✅ Mondays 09:00 |
+| 1.4 | Foundry V13 Cron Setup (täglich 04:30) | 1h | P1 | ✅ deepseek-v4-flash:cloud |
 
 **Deliverables:**
 - Edge Registry Einträge mit t-stat, DSR, MC p-value

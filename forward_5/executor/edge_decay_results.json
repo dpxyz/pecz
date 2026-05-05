@@ -1,0 +1,131 @@
+{
+  "alerts": [
+    {
+      "symbol": "BTCUSDT",
+      "baseline": {
+        "n": 250,
+        "mean_pct": -8.811939999999999e-05,
+        "std_pct": 0.0010575578639284188,
+        "neg_pct": 48.4,
+        "mild_neg_pct": 48.4,
+        "min_pct": -0.00291618,
+        "max_pct": 0.00125
+      },
+      "current": {
+        "n": 250,
+        "mean_pct": 0.00026654600000000005,
+        "std_pct": 0.000875477287090876,
+        "neg_pct": 32.800000000000004,
+        "mild_neg_pct": 32.800000000000004,
+        "min_pct": -0.00240413,
+        "max_pct": 0.00125
+      },
+      "neg_shift_pp": -15.6,
+      "mild_neg_shift_pp": -15.6,
+      "mean_shift_pct": 402.5,
+      "severity": "WARNING"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "baseline": {
+        "n": 250,
+        "mean_pct": -0.0009161125199999999,
+        "std_pct": 0.0014046942642931414,
+        "neg_pct": 68.4,
+        "mild_neg_pct": 68.4,
+        "min_pct": -0.00457457,
+        "max_pct": 0.00125
+      },
+      "current": {
+        "n": 250,
+        "mean_pct": -0.00116845664,
+        "std_pct": 0.0014793770031555548,
+        "neg_pct": 79.60000000000001,
+        "mild_neg_pct": 79.60000000000001,
+        "min_pct": -0.00589545,
+        "max_pct": 0.00125
+      },
+      "neg_shift_pp": 11.2,
+      "mild_neg_shift_pp": 11.2,
+      "mean_shift_pct": -27.5,
+      "severity": "WARNING"
+    }
+  ],
+  "all_results": {
+    "BTCUSDT": {
+      "symbol": "BTCUSDT",
+      "baseline": {
+        "n": 250,
+        "mean_pct": -8.811939999999999e-05,
+        "std_pct": 0.0010575578639284188,
+        "neg_pct": 48.4,
+        "mild_neg_pct": 48.4,
+        "min_pct": -0.00291618,
+        "max_pct": 0.00125
+      },
+      "current": {
+        "n": 250,
+        "mean_pct": 0.00026654600000000005,
+        "std_pct": 0.000875477287090876,
+        "neg_pct": 32.800000000000004,
+        "mild_neg_pct": 32.800000000000004,
+        "min_pct": -0.00240413,
+        "max_pct": 0.00125
+      },
+      "neg_shift_pp": -15.6,
+      "mild_neg_shift_pp": -15.6,
+      "mean_shift_pct": 402.5,
+      "severity": "WARNING"
+    },
+    "ETHUSDT": {
+      "symbol": "ETHUSDT",
+      "baseline": {
+        "n": 250,
+        "mean_pct": 7.765368e-05,
+        "std_pct": 0.0009824661191174266,
+        "neg_pct": 38.800000000000004,
+        "mild_neg_pct": 38.800000000000004,
+        "min_pct": -0.00453258,
+        "max_pct": 0.00125
+      },
+      "current": {
+        "n": 250,
+        "mean_pct": 0.00012889916,
+        "std_pct": 0.0009376763948060623,
+        "neg_pct": 40.8,
+        "mild_neg_pct": 40.8,
+        "min_pct": -0.0035707000000000004,
+        "max_pct": 0.00125
+      },
+      "neg_shift_pp": 2.0,
+      "mild_neg_shift_pp": 2.0,
+      "mean_shift_pct": 66.0,
+      "severity": "ok"
+    },
+    "SOLUSDT": {
+      "symbol": "SOLUSDT",
+      "baseline": {
+        "n": 250,
+        "mean_pct": -0.0009161125199999999,
+        "std_pct": 0.0014046942642931414,
+        "neg_pct": 68.4,
+        "mild_neg_pct": 68.4,
+        "min_pct": -0.00457457,
+        "max_pct": 0.00125
+      },
+      "current": {
+        "n": 250,
+        "mean_pct": -0.00116845664,
+        "std_pct": 0.0014793770031555548,
+        "neg_pct": 79.60000000000001,
+        "mild_neg_pct": 79.60000000000001,
+        "min_pct": -0.00589545,
+        "max_pct": 0.00125
+      },
+      "neg_shift_pp": 11.2,
+      "mild_neg_shift_pp": 11.2,
+      "mean_shift_pct": -27.5,
+      "severity": "WARNING"
+    }
+  }
+}

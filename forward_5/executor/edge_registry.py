@@ -73,7 +73,9 @@ class EdgeRegistry:
             with open(self.path) as f:
                 data = json.load(f)
             for eid, edata in data.items():
-                self.edges[eid] = EdgeRecord(**edata)
+                known = {f.name for f in EdgeRecord.__dataclass_fields__.values()}
+                filtered = {k: v for k, v in edata.items() if k in known}
+                self.edges[eid] = EdgeRecord(**filtered)
             log.info(f"Loaded {len(self.edges)} edges from registry")
         else:
             log.info("No existing registry, starting fresh")

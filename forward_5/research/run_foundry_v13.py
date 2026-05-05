@@ -221,6 +221,57 @@ def _run_fgibased_backtest(data, sig: SignalHypothesis,
 # LLM Prompt
 # ═══════════════════════════════════════════════════════════
 
+def build_critic_prompt(hypotheses_json: str) -> str:
+    """Build Red-Team/Critic prompt to stress-test each hypothesis."""
+    return f"""You are a skeptical quant PM reviewing trading hypotheses. For EACH hypothesis below, write a brief critical review:
+
+1. **Conflation risk**: Could this signal just be a proxy for trend/mean-reversion? Is the edge really from the stated mechanism or just market beta?
+2. **Overfitting risk**: Could this work by accident? How sensitive is it to the specific lookback or threshold?
+3. **Regime dependence**: Does this only work in bull markets? What happens in a crash?
+4. **Data quality**: Is the underlying data reliable? Any survivorship or selection bias?
+
+HYPOTHESES:
+{hypotheses_json}
+
+For each hypothesis, output a JSON array with:
+{{
+  "name": "hypothesis_name",
+  "verdict": "promising" | "risky" | "likely_artifact",
+  "conflation": "brief explanation",
+  "overfitting": "brief explanation", 
+  "regime": "brief explanation",
+  "suggestion": "how to make it more robust, or why to drop it"
+}}
+"""
+
+
+def call_llm_critic(hypotheses: list[dict]) -> list[dict]:
+    """Run Red-Team critic on parsed hypotheses. Returns critic verdicts."""
+    hypotheses_json = json.dumps(hypotheses, indent=2)
+    prompt = build_critic_prompt(hypotheses_json)
+    
+    log.info("Step 1b: Calling LLM for Red-Team critique...")
+    try:
+        raw_text = call_llm(prompt)
+        critiques = extract_json_array(raw_text)
+        log.info(f"  Critic returned {len(critiques)} reviews")
+        
+        # Filter out "likely_artifact" hypotheses
+        filtered = []
+        for hyp, critique in zip(hypotheses, critiques):
+            verdict = critique.get("verdict", "risky")
+            if verdict == "likely_artifact":
+                log.info(f"  ❌ {hyp.get('name', '?')}: critic verdict={verdict} — {critique.get('suggestion', '')[:80]}")
+            else:
+                log.info(f"  {'✅' if verdict == 'promising' else '⚠️'} {hyp.get('name', '?')}: verdict={verdict}")
+                filtered.append(hyp)
+        
+        return filtered
+    except Exception as e:
+        log.warning(f"  Critic call failed: {e} — keeping all hypotheses")
+        return hypotheses
+
+
 def build_prompt(existing_edges: list[dict], iteration: int = 1, n_hypotheses: int = 8) -> str:
     """Build the LLM prompt with anti-anchoring and existing edge context."""
     
@@ -228,7 +279,8 @@ def build_prompt(existing_edges: list[dict], iteration: int = 1, n_hypotheses: i
     if existing_edges:
         edges_str = "## EXISTING VALIDATED EDGES (do NOT replicate these)\n"
         for e in existing_edges:
-            edges_str += f"- {e['name']}: {e.get('primary_driver', '?')} + {e.get('secondary_driver', 'none')}, assets={e.get('assets', [])}, Sharpe={e.get('sharpe', '?')}\n"
+            # Look-ahead defense: only share driver types and assets, no exact metrics
+            edges_str += f"- {e.get('primary_driver', '?')} + {e.get('secondary_driver', 'none')} on {e.get('assets', [])}\n"
         edges_str += "\n"
     
     prompt = f"""You are a quantitative crypto researcher proposing NEW trading hypotheses.
@@ -287,11 +339,18 @@ Generate exactly {n_hypotheses} hypotheses. Make them DIVERSE — different prim
 """
     
     if iteration > 1:
+        # Look-ahead defense: only share driver types and direction, never exact metrics
+        validated_drivers = set()
+        for e in existing_edges:
+            if e.get('validated'):
+                d = e.get('primary_driver', '?')
+                validated_drivers.add(d)
+        drivers_str = ', '.join(sorted(validated_drivers)) if validated_drivers else 'none yet'
         prompt += f"""
 
 ## ITERATION {iteration}
-Previous iteration found {len([e for e in existing_edges if e.get('validated')])} validated edges.
-Focus on signal classes NOT yet explored. Avoid repeating failed hypotheses.
+Previously validated signal classes: {drivers_str}
+Focus on signal classes NOT yet explored. Avoid repeating similar primary drivers.
 """
     
     return prompt
@@ -583,6 +642,28 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
             log.warning("No valid hypotheses generated. Skipping iteration.")
             continue
         
+        # Step 2b: Red-Team Critic
+        log.info("\nStep 2b: Red-Team Critique...")
+        hyp_dicts = [{
+            "name": h.name,
+            "intuition": h.intuition,
+            "primary_driver": h.primary_driver,
+            "secondary_driver": h.secondary_driver,
+            "assets": h.assets,
+            "direction": h.direction,
+            "anti_correlation": h.anti_correlation,
+        } for h in hypotheses]
+        
+        filtered_dicts = call_llm_critic(hyp_dicts)
+        filtered_names = {d["name"] for d in filtered_dicts}
+        before_count = len(hypotheses)
+        hypotheses = [h for h in hypotheses if h.name in filtered_names]
+        log.info(f"  Red-Team: {before_count} → {len(hypotheses)} hypotheses (removed {before_count - len(hypotheses)} likely artifacts)")
+        
+        if not hypotheses:
+            log.warning("All hypotheses rejected by critic. Skipping iteration.")
+            continue
+        
         # Step 3: Expand to signal grid and backtest
         log.info(f"\nStep 3: Expanding {len(hypotheses)} hypotheses to signal grid...")
         total_signals = 0
@@ -629,6 +710,8 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
                     result = _run_feature_backtest(asset_data, sig, "taker_ratio", hyp)
                 elif hyp.primary_driver == "vol_ratio":
                     result = _run_feature_backtest(asset_data, sig, "vol_ratio", hyp)
+                elif hyp.primary_driver == "dxy_pct_change":
+                    result = _run_feature_backtest(asset_data, sig, "dxy_pct_change", hyp)
                 else:
                     # Unknown/unsupported driver — skip
                     log.debug(f"    {sig.name}: driver {hyp.primary_driver} not yet supported")

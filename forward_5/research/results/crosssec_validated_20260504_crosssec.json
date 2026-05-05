@@ -33,4 +33,10 @@
     "max_dd_pct": -23.03,
     "sharpe": 3.4,
     "dsr_threshold": 1.8543,
-    "dsr_pass": 
+    "dsr_pass": true,
+    "cpcv_pbo": 0.53,
+    "cpcv_oos_wr": 0.47,
+    "cpcv_oos_ret": -2.1,
+    "cpcv_pass": false
+  }
+]

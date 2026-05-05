@@ -122,12 +122,21 @@ def compute_4h_indicators(df: pl.DataFrame) -> pl.DataFrame:
         taker_ratio = np.where(np.isfinite(tr) & (tr != 0), tr, 1.0)
     
     # Add indicator columns first (can't reference new cols in same with_columns)
+    # DXY % change (1-bar, for signal generation)
+    dxy_pct_change = np.zeros(len(df))
+    if 'dxy_broad' in df.columns:
+        dxy_vals = df['dxy_broad'].to_numpy().astype(float)
+        dxy_prev = np.roll(dxy_vals, 1)
+        dxy_pct_change = np.where(np.isfinite(dxy_prev) & (dxy_prev > 0) & np.isfinite(dxy_vals),
+                                  (dxy_vals - dxy_prev) / dxy_prev * 100, 0.0)
+    
     df = df.with_columns([
         pl.Series("ema50", ema50),
         pl.Series("ema200", ema200),
         pl.Series("vol_ratio", vol_ratio),
         pl.Series("oi_pct_change", oi_pct),
         pl.Series("taker_ratio", taker_ratio),
+        pl.Series("dxy_pct_change", dxy_pct_change),
     ])
     
     # Now add derived columns that reference the new ones
