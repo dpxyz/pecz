@@ -1,0 +1,3318 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Trading System Status & Documentation">
+      
+      
+      
+        <link rel="canonical" href="https://pecz.pages.dev/v2-design/">
+      
+      
+        <link rel="prev" href="../test-suite/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>🔮 V2 Design - Pecz</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/dashboard.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-strategy-design-der-oktopus" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pecz" class="md-header__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pecz
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🔮 V2 Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pecz" class="md-nav__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    Pecz
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎯 Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Live Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗺️ Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blockers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚧 Blockers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Phases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏗️ Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🏗️ Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001: Target Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002: Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-003/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003: State Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004: Risk Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-005/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005: Three-Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-006/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-006: Paper Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-007/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-007: Leverage Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-008/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-008: Crash & Uptime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-009/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-009: V2 Data Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-010/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-010: V2 Strategy (Oktopus)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Strategy Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔬 Strategy Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/PHASE7_ACCEPTANCE_REPORT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 7 Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Baseline Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../economics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💰 Economics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧪 Test Suite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔮 V2 Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔮 V2 Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-engine-configuration-v2-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Current Engine Configuration (V2 Live)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ Current Engine Configuration (V2 Live)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-validated-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 Validated Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confluence-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confluence Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inhalt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inhalt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-oktopus-metapher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die Oktopus-Metapher
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-lessons-v2-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Lessons → V2 Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-stufe-1-scope-was-wir-bauen-und-beweisen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Stufe 1 Scope — Was wir bauen und beweisen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sniper-upgrade-modus-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Upgrade (Modus B)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sniper-exit-vier-regeln" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Exit: Vier Regeln
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strategy-review-bewertete-risiken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy Review: Bewertete Risiken
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strategy Review: Bewertete Risiken">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bereits-abgedeckt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Bereits abgedeckt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgenommen-und-gelost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Aufgenommen und gelöst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#die-3-herzen-des-oktopus-infrastruktur-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-validierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Validierung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Validierung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#global-equity-stop-recovery-nach-ausloesung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Equity Stop: Recovery nach Ausloesung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-level-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-Level-Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sniper-modul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Modul
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sniper-Modul">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernidee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernidee
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modus-b-sniper-als-v1-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modus B: Sniper als V1-Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entry-stack-alle-mussen-grun-sein" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry-Stack (ALLE müssen grün sein)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risiko-kontrolle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risiko-Kontrolle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-4-5x-vertretbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum 4-5x vertretbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scharfmacher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scharfmacher
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modul-1-regime-detection-stufe-1-kern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 1: Regime Detection (Stufe 1 — Kern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-2-sentiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 2: Sentiment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-3-asset-selection-stufe-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 3: Asset Selection (Stufe 3 — Advanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-4-risk-management-stufe-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 4: Risk Management (Stufe 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-5-sniper-stufe-1-kern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 5: Sniper (Stufe 1 — Kern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ki-einsatz-strategie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KI-Einsatz-Strategie
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alpha-stack-v2-prioritat-nach-stufen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpha Stack V2 (Priorität, nach Stufen)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-v2-nicht-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was V2 NICHT ist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-positionen-stufe-1-validiert-durch-1-jahr-walk-forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHORT-Positionen — STUFE 1 (validiert durch 1-Jahr Walk-Forward)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-implementierung-3-stufen-1-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Implementierung — 3 Stufen, 1 Release
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Implementierung — 3 Stufen, 1 Release">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stufe-1-kern-regime-sniper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 1: Kern (Regime + Sniper)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stufe-2-enhancement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 2: Enhancement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stufe-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 3: Advanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#current-engine-configuration-v2-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Current Engine Configuration (V2 Live)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ Current Engine Configuration (V2 Live)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-validated-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 Validated Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confluence-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confluence Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inhalt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inhalt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#die-oktopus-metapher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Die Oktopus-Metapher
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-lessons-v2-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Lessons → V2 Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-stufe-1-scope-was-wir-bauen-und-beweisen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Stufe 1 Scope — Was wir bauen und beweisen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sniper-upgrade-modus-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Upgrade (Modus B)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sniper-exit-vier-regeln" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Exit: Vier Regeln
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strategy-review-bewertete-risiken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy Review: Bewertete Risiken
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strategy Review: Bewertete Risiken">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bereits-abgedeckt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Bereits abgedeckt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aufgenommen-und-gelost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Aufgenommen und gelöst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#die-3-herzen-des-oktopus-infrastruktur-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-validierung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Validierung
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Validierung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#global-equity-stop-recovery-nach-ausloesung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Equity Stop: Recovery nach Ausloesung
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-level-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3-Level-Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sniper-modul" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sniper-Modul
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sniper-Modul">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernidee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernidee
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modus-b-sniper-als-v1-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modus B: Sniper als V1-Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entry-stack-alle-mussen-grun-sein" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry-Stack (ALLE müssen grün sein)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risiko-kontrolle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risiko-Kontrolle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warum-4-5x-vertretbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warum 4-5x vertretbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scharfmacher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scharfmacher
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modul-1-regime-detection-stufe-1-kern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 1: Regime Detection (Stufe 1 — Kern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-2-sentiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 2: Sentiment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-3-asset-selection-stufe-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 3: Asset Selection (Stufe 3 — Advanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-4-risk-management-stufe-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 4: Risk Management (Stufe 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modul-5-sniper-stufe-1-kern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modul 5: Sniper (Stufe 1 — Kern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ki-einsatz-strategie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KI-Einsatz-Strategie
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alpha-stack-v2-prioritat-nach-stufen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpha Stack V2 (Priorität, nach Stufen)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#was-v2-nicht-ist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Was V2 NICHT ist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-positionen-stufe-1-validiert-durch-1-jahr-walk-forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHORT-Positionen — STUFE 1 (validiert durch 1-Jahr Walk-Forward)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v2-implementierung-3-stufen-1-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2 Implementierung — 3 Stufen, 1 Release
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V2 Implementierung — 3 Stufen, 1 Release">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stufe-1-kern-regime-sniper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 1: Kern (Regime + Sniper)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stufe-2-enhancement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 2: Enhancement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stufe-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stufe 3: Advanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-strategy-design-der-oktopus">V2 Strategy Design — Der Oktopus 🐙</h1>
+<p><strong>Status:</strong> LIVE — Paper Trading (90-day track record in progress)
+<strong>Engine:</strong> V2 Paper Engine, 5 validated signals + DXY/FGI confluence filters
+<strong>Started:</strong> 2026-05-05 (clean restart)</p>
+<hr />
+<h2 id="current-engine-configuration-v2-live">⚡ Current Engine Configuration (V2 Live)</h2>
+<h3 id="5-validated-signals">5 Validated Signals</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Signal</th>
+<th>Asset</th>
+<th>Trigger</th>
+<th>CPCV PBO</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Mild Neg Funding + Bull200</td>
+<td>BTC</td>
+<td>z∈[-0.5,0) + close&gt;EMA200</td>
+<td>0.13</td>
+<td>✅ Production</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mild Neg Funding + Bull200</td>
+<td>ETH</td>
+<td>z∈[-1,-0.2) + close&gt;EMA200</td>
+<td>0.13</td>
+<td>✅ Production</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Cross-Sectional Funding</td>
+<td>BTC</td>
+<td>crosssec_z&lt;-1.0 + close&gt;EMA200</td>
+<td>0.20</td>
+<td>✅ Production</td>
+</tr>
+<tr>
+<td>4</td>
+<td>OI Surge</td>
+<td>SOL</td>
+<td>ΔOI&gt;3% (48h) + close&gt;EMA200</td>
+<td>0.33</td>
+<td>✅ Production</td>
+</tr>
+<tr>
+<td>5</td>
+<td>LS Ratio Short</td>
+<td>SOL</td>
+<td>TopTrader LS&gt;5.0 → SHORT</td>
+<td>0.33</td>
+<td>✅ Production</td>
+</tr>
+</tbody>
+</table>
+<h3 id="confluence-filters">Confluence Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Logic</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DXY 5d ROC</td>
+<td>&gt;+2% → skip LONGs (strong dollar headwind)</td>
+<td>Yahoo Finance</td>
+</tr>
+<tr>
+<td>DXY 5d ROC</td>
+<td>&lt;-2% → skip Shorts (weak dollar = tailwind for longs)</td>
+<td>-0.72 BTC correlation</td>
+</tr>
+<tr>
+<td>FGI</td>
+<td>&lt;40 → confluence for Long entries</td>
+<td>Alternative.me</td>
+</tr>
+<tr>
+<td>Bull200</td>
+<td>close &gt; EMA200 → required for all Longs</td>
+<td>Binance klines</td>
+</tr>
+</tbody>
+</table>
+<h3 id="risk-parameters">Risk Parameters</h3>
+<ul>
+<li><strong>Capital:</strong> 100€ total</li>
+<li><strong>Leverage:</strong> BTC 1.8x, ETH 1.5x, SOL 1.0x</li>
+<li><strong>Stop Loss:</strong> 4% (Prop-Firm compatible)</li>
+<li><strong>Exit:</strong> 24h time-based (primary)</li>
+<li><strong>Trailing Stop:</strong> DISABLED (empirically worse)</li>
+</ul>
+<hr />
+<h2 id="inhalt">Inhalt</h2>
+<ul>
+<li><a href="#die-oktopus-metapher">Die Oktopus-Metapher</a></li>
+<li><a href="#v1-lessons--v2-requirements">V1 Lessons → V2 Requirements</a></li>
+<li><a href="#v2-stufe-1-scope--was-wir-bauen-und-beweisen">V2 Stufe 1 Scope</a></li>
+<li><a href="#v2-design-principles">V2 Design Principles (1–12)</a></li>
+<li><a href="#sniper-upgrade-modus-b">Sniper-Upgrade &amp; Exit-Regeln</a></li>
+<li><a href="#strategy-review-bewertete-risiken">Strategy Review: Bewertete Risiken</a></li>
+<li><a href="#v2-validierung">V2 Validierung</a></li>
+<li><a href="#v2-module">V2 Module</a></li>
+<li><a href="#modul-1-regime-detection-stufe-1--kern">Modul 1: Regime Detection</a></li>
+<li><a href="#modul-2-sentiment">Modul 2: Sentiment</a></li>
+<li><a href="#modul-3-asset-selection-stufe-3--advanced">Modul 3: Asset Selection</a></li>
+<li><a href="#modul-4-risk-management-stufe-1-2">Modul 4: Risk Management</a></li>
+<li><a href="#modul-5-sniper-stufe-1--kern">Modul 5: Sniper</a></li>
+<li><a href="#ki-einsatz-strategie">KI-Einsatz-Strategie</a></li>
+<li><a href="#alpha-stack-v2-priorität-nach-stufen">Alpha Stack V2 (Priorität)</a></li>
+<li><a href="#short-positionen--hypothese-stufe-2-kandidat">SHORT-Positionen</a></li>
+<li><a href="#v2-implementierung--3-stufen-1-release">V2 Implementierung — 3 Stufen</a></li>
+</ul>
+<hr />
+<h2 id="die-oktopus-metapher">Die Oktopus-Metapher</h2>
+<p>Der Oktopus ist die Identität unserer Strategie — nicht nur eine Metapher, sondern ein <strong>Entscheidungsrahmen</strong>.</p>
+<ul>
+<li><strong>8 Arme</strong> = 6 Assets + Regime + Sentiment — alle Arme tasten <strong>denselben Markt</strong> ab, nur zuschlagen wenn alle Signale grün sind. Vielseitig wahrnehmend, fokussiert handelnd — nicht viele Eisen im Feuer, sondern viele Augen auf ein Ziel</li>
+<li><strong>3 Herzen</strong> = Redundanz — Fail-Safes, Kill-Switches, Circuit-Breaker</li>
+<li><strong>Knochenlos</strong> = anpassungsfähig — verhält sich in Range anders als im Trend (Regime-Erkennung)</li>
+<li><strong>Kamera-Augen</strong> = sieht was andere nicht sehen — Regime-Score als 6. Sinn</li>
+<li><strong>Tintensäcke</strong> = bei Gefahr Rückzug + Nebelwand — Kill-Switch, DD-Scaling, Circuit-Breaker</li>
+<li><strong>Solitär mit Schwarm-Prinzip</strong> = ein Körper, dezentrale Sensorik — Arme entscheiden lokal, Kopf entscheidet global</li>
+</ul>
+<p><strong>Der Oktopus-Test für neue Features:</strong>
+- Braucht der Oktopus einen 9. Arm? → Nein → Kein neuer Indikator
+- Schützt die Tinte? → Ja → Kill-Switch
+- Greift der Oktopus an? → Nein, er beobachtet und schlägt präzise zu → Sniper nur bei voller Conviction
+- Schwimmt der Oktopus mit den Walen? → Nein, er drückt sich in die Ritze und wartet</p>
+<hr />
+<h2 id="v1-lessons-v2-requirements">V1 Lessons → V2 Requirements</h2>
+<p><strong>Fundamentale Erkenntnis aus 170+ Foundry-Kandidaten:</strong>
+- 1h-Crypto mit Standard-Indikatoren (BB/RSI/EMA/MACD/ADX) hat <strong>keinen robusten Edge</strong>
+- TREND: -13% bis -79% Return | MOM: -50% | VOL: -24% | MR: -3% bis -28%
+- 4H IS=+1.09 ist overfitted | REGIME hat nur 4 Trades
+- Nur MR hat genug Trades, aber 10-Window-WF = FAIL
+- <strong>V2 braucht fundamental andere Ansätze</strong>, nicht nur Indikator-Variationen:
+  - Zeitreihen-Muster (Pattern-Erkennung, nicht nur Indikator-Schwellen)
+  - Multi-Timeframe-Korrelationen (1h Entry + 4h Trend + 15s Execution)
+  - Cross-Asset-Signale (BTC führt, Alts folgen)
+  - Regime-Score als 6. Sinn (nicht nur ADX &gt; 25)
+  - Volatility-Parity statt Equal-Weight
+  - Sentiment als Kill-Switch (nicht als Signal)</p>
+<h2 id="v2-stufe-1-scope-was-wir-bauen-und-beweisen">V2 Stufe 1 Scope — Was wir bauen und beweisen</h2>
+<p><strong>Nur 7 Features in Stufe 1.</strong> Alles andere = Stufe 2+ bis bewiesen.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Details</th>
+<th>Beweis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regime-Score</td>
+<td>ADX 45% + Slope 30% + Vol 25%, OI 0%</td>
+<td>Backtest: Sharpe &gt; V1</td>
+</tr>
+<tr>
+<td>Sniper</td>
+<td>Regime &gt; 70, 5x, starr Trail 2.5%, Max Hold 24h</td>
+<td>Backtest + Paper</td>
+</tr>
+<tr>
+<td>DD-Scaling</td>
+<td>10/15/20% Stufen + Global Equity Stop</td>
+<td>Paper DD &lt; 25%</td>
+</tr>
+<tr>
+<td>Global Equity Stop</td>
+<td>1h-DD &gt; 8%, starr 24h Cooldown</td>
+<td>Paper</td>
+</tr>
+<tr>
+<td>Sentiment = Funding Rate</td>
+<td>Entry-Signal + Kontraindikator, Long bei niedriger Funding (Alts), Short bei hoher (Majors)</td>
+<td>1-Jahr WF validiert</td>
+</tr>
+<tr>
+<td>Slippage Tax</td>
+<td>SLIPPAGE_BPS auf jeden Paper-Entry</td>
+<td>Trivial</td>
+</tr>
+<tr>
+<td>Decision Logging</td>
+<td>SKIP-Events loggen (Asset, Regime, Grund)</td>
+<td>Telemetrie</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Was NICHT in Stufe 1:</strong>
+- Kinetischer Trail → Stufe 2 (braucht Trade-Daten)
+- Dynamic Cooldown → Stufe 2 (starr 24h reicht erstmal)
+- Volatility-Parität → Stufe 2 (braucht ATR-Daten)
+- SHORT → Stufe 1 (validiert: 1-Jahr WF 5.19% annualisiert, BTC/ETH/SOL Short P90)
+- Gezeiten-Blocker → Stufe 2 (braucht Kalender-Feed)
+- News Sentiment → Stufe 3 (braucht validierten Prompt)</p>
+<hr />
+<h2 id="v2-design-principles">V2 Design Principles</h2>
+<p>Die Principles sind kurz gefasst — Details stehen in den <a href="#v2-module">V2 Modulen</a> unten.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Principle</th>
+<th>Kurz</th>
+<th>Modul</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Regime-Erkennung</strong></td>
+<td>Score 0-100, nicht binär. Range = kein Trade.</td>
+<td><a href="#modul-1-regime-detection-stufe-1--kern">Modul 1</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Volatility-Parity</strong></td>
+<td>Risiko konstant, nicht Kapital. Ersetzt Leverage-Tiers.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Sentiment = Kill-Switch</strong></td>
+<td>Nur Downsizing, nie Upsizing. Score ≤ 15 = kein Entry.</td>
+<td><a href="#modul-2-sentiment">Modul 2</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>On-Chain als Regime-Filter</strong></td>
+<td>Exchange Netflow 7-14d, keine Whale-Jagd.</td>
+<td><a href="#modul-2-sentiment">Modul 2</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Kein Indikatoren-Salat</strong></td>
+<td>Bessere Regeln, nicht mehr Indikatoren. ATR abgelehnt.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Korrelations-Filter</strong></td>
+<td>Max 2 stark korrelierte Positionen. Fallback: Global Equity Stop.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Re-Entry Logik</strong></td>
+<td>V1: 1h Cooldown. Sniper: Score muss &lt;70 fallen und wieder &gt;70.</td>
+<td><a href="#modul-5-sniper-stufe-1--kern">Modul 5</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Regime-basierter Exit</strong></td>
+<td>Strong=Trail 2.5%, Weak=1.5%. Stufe 2: Kinetischer Trail.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Partial Exits</strong></td>
+<td>50% bei Trail, 50% laufen lassen. Nur V1. Sniper = 100%.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>DD-Scaling + Global Equity Stop</strong></td>
+<td>10/15/20% Stufen. 1h-DD &gt; 8% = alles schließen.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Execution-Staffelung</strong></td>
+<td>Stufe 1=Market, Stufe 2=IOC, Stufe 3=Limit. Sniper=immer Market.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Dynamische Korrelationsmatrix</strong></td>
+<td>Rolling 20-Bar, r&gt;0.7 blockt Entry. Stufe 2.</td>
+<td><a href="#modul-4-risk-management-stufe-1-2">Modul 4</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="sniper-upgrade-modus-b">Sniper-Upgrade (Modus B)</h3>
+<blockquote>
+<p>ℹ️ Vollständige Details im <a href="#modul-5-sniper-stufe-1--kern">Sniper-Modul</a> unten.
+- Kein separater Pool — Sniper <strong>upgraded</strong> den besten V1-Trade
+- V1 entscheidet welcher Trade. Sniper-Bedingungen erfüllt → Hebel von 1.8x auf 4-5x
+- Keine doppelte Position auf demselben Asset
+- <strong>Max 30€ allocated</strong> für Sniper-Trade (statt 16.67€), × 5x = 150€ Notional
+- Restliche 70€ verteilen sich auf V1-Positionen normal
+- Kein Kapitalkonflikt</p>
+</blockquote>
+<hr />
+<h2 id="sniper-exit-vier-regeln">Sniper-Exit: Vier Regeln</h2>
+<blockquote>
+<p>ℹ️ Ergänzt das <a href="#modul-5-sniper-stufe-1--kern">Sniper-Modul</a> — Exit-Regeln im Detail.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regime-Score fällt &lt; 50</td>
+<td>Sofort raus (Trend bricht)</td>
+</tr>
+<tr>
+<td>Regime-Score fällt 50-70</td>
+<td>Downgrade auf V1-Hebel, Trail auf 2.0%</td>
+</tr>
+<tr>
+<td>Trailing Stop 2.5%</td>
+<td>Standard-Exit im Strong Trend</td>
+</tr>
+<tr>
+<td>Kinetischer Trail (Stufe 2)</td>
+<td>Trail zieht sich enger je laenger der Trade offen ist (2.5% -&gt; 1.0%). Stufe 1: starr 2.5%.</td>
+</tr>
+</tbody>
+</table>
+<p>Sniper-Trail = 2.5% (nicht 1.5%), weil Sniper im Strong Trend schießt → mehr Raum zum Atmen.
+DD-Limit: max 10% Portfolio-DD aus Sniper-Trades. Worst-case 1 Trade = 2.5% Trail × 5x = 12.5% auf 30€ = 3.75€ = 3.75% des Gesamtportfolios. Heißt: 1 Sniper-Verlust verbraucht ~38% des DD-Budgets. Max 2-3 Sniper-Verluste bevor Sniper pausiert.</p>
+<hr />
+<h2 id="strategy-review-bewertete-risiken">Strategy Review: Bewertete Risiken</h2>
+<p><em>Externe Analyse vom 2026-04-24. Jeder Punkt geprüft gegen Oktopus-Design und unsere Principles.</em></p>
+<h3 id="bereits-abgedeckt">✅ Bereits abgedeckt</h3>
+<table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Oktopus-Lösung</th>
+<th>Wo im Design</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sentiment-Lag bei Flash-Crash</td>
+<td>Funding Rate = Priority-0 (40%, direkt von Börse, kein KI-Lag). Regime-Herz (ADX+Vol) fängt Flash-Crash.</td>
+<td>Prinzip 3, Modul 2</td>
+</tr>
+<tr>
+<td>Regime-Score Hysterese</td>
+<td>5-Puffer-Zonen: Range→Trend &gt;35, Trend→Range &lt;25, Trend→Strong &gt;75, Strong→Trend &lt;65</td>
+<td>Modul 1</td>
+</tr>
+<tr>
+<td>API-Rate-Limits</td>
+<td>V1: 60s Polling. V2: OI+Funding alle 4-8h. Hyperliquid Limit 1200/min, wir nutzen &lt;5.</td>
+<td>Nicht relevant</td>
+</tr>
+</tbody>
+</table>
+<h3 id="aufgenommen-und-gelost">⚠️ Aufgenommen und gelöst</h3>
+<table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Schwere</th>
+<th>Loesung</th>
+<th>Wo im Design</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Korrelations-Kollaps im Crash</strong></td>
+<td>HOCH</td>
+<td><strong>Global Equity Stop</strong>: 1h-DD &gt; 8% -&gt; alle Positionen Market-Order schliessen. Verschrfung der DD-Scaling mit Zeitfenster. Stufe 1.</td>
+<td>Prinzip 10 (erweitert)</td>
+</tr>
+<tr>
+<td><strong>Limit-Order-Falle (Execution)</strong></td>
+<td>HOCH</td>
+<td><strong>Execution-Staffelung</strong>: Stufe 1 = Market, Stufe 2 = IOC, Stufe 3 = Limit. Sniper = IMMER Market.</td>
+<td>Prinzip 11 (qualifiziert)</td>
+</tr>
+<tr>
+<td>Korrelations-Filter-Luecke in Crashes</td>
+<td>MITTEL</td>
+<td>Crash-Einschraenkung dokumentiert: Korrelations-Filter wirkungslos bei 1.0-Korrelation -&gt; Global Equity Stop als Fallback</td>
+<td>Prinzip 12 (Ergaenzung)</td>
+</tr>
+<tr>
+<td><strong>Funding-Rate-Falle (Kontraindikator)</strong></td>
+<td>HOCH</td>
+<td>Extreme Funding invertiert: Stark negativ = Short-Squeeze-Treibstoff (Bullish), Stark positiv = Overcrowded (Bearish). Invertierung nur bei</td>
+<td>Funding</td>
+</tr>
+<tr>
+<td><strong>Oracle-Risiko (Daten-Integritaet)</strong></td>
+<td>HOCH</td>
+<td><strong>Price Sanity Check</strong>: Unphysiologische Preisbewegungen (&gt;5%/Min) -&gt; Bot pausiert statt handelt. Global Stop loest nur bei validierten Daten aus. V1 hat bereits PRICE_FLOORS.</td>
+<td>Modul 4 (neu)</td>
+</tr>
+<tr>
+<td><strong>Slippage beim Global Stop</strong></td>
+<td>MITTEL</td>
+<td><strong>TWAP-Light</strong>: Global Exit nicht als einzelne Market-Order, sondern in Tranchen ueber 30-60s verteilt. Bei 6 Positionen a ~17EUR ist Impact gering, aber principiell richtig.</td>
+<td>Prinzip 10 (Ergaenzung)</td>
+</tr>
+<tr>
+<td><strong>Dead Man's Switch</strong></td>
+<td>HOCH</td>
+<td>Exchange-seitige Stop-Loss Orders als physisches Herz. Bot zieht Trail lokal nach, aber Not-Aus liegt auf der Boerse. Hyperliquid unterstuetzt SL-on-Open.</td>
+<td>Stufe 1 Infrastruktur</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>❌ Bewusst abgelehnt (12 Vorschläge) — klicken zum Aufklappen</summary>
+
+| Vorschlag | Warum abgelehnt | Oktopus-Test |
+|-----------|-----------------|-------------|
+| Volatility-Expansion als Regime-Vorfilter | ATR-Filter im Backtest bewiesen: kein Improvement. Neuer Indikator = Indikatoren-Salat (Prinzip 5). | 9. Arm? Nein. |
+| Multi-Timeframe-Bestaerkung (1h vs 4h) | Komplexitaetslayer ohne Backtest-Beweis. EMA-Slope hat 30% Gewicht als fhrende Komponente. Heatmap = Dashboard-Feature, kein Entry-Signal. | 9. Arm? Nein. |
+| Bollinger Band Breakout | Dasselbe Kategorie wie ATR - nachlaufend, kein Backtest-Beweis. | 9. Arm? Nein. |
+| L2 Orderbook Check (Saugnapf/Gravity) | Rauschen auf 1h-Timeframe. Whale-Spoofing. 3x Bid/Ask flippt sekundaerlich. Bei 100e Position = 0 Impact. Bereits im V2 Audit abgelehnt. | 9. Arm? Nein. |
+| Shadow-Bot / Parameter-Optimierung | Hyper-Optimization explizit verboten (PRINCIPLES.md). Kontinuierliche Parameter-Variation = Curve-Fitting in Echtzeit. | 9. Arm? Nein. |
+| Leader-Laggard Veto (BTC-Slope) | Korrelationsfilter (Prinzip 12) deckt denselben Fall ab. BTC-Slope Veto = redundanter Filter + False-Positives bei legitimen ALT-Breakouts. | 9. Arm? Nein. |
+| Micro-Probing (2e Test-Order) | Falscher Timeframe (3 Min Noise auf 1h). Hyperliquid Mindestgroesse ~10$. Doppelte Gebuehren. Gefuehl, nicht Strategie. | 9. Arm? Nein. |
+| Digital Twin Visualisierung | Monitor V1 reicht. JSON-Stream + PowerBI = schoen, aber kein Trading-Signal. | Kein Arm, kein Signal. |
+| Ghost-Mode Recovery (Schatten-Trades) | Dynamic Cooldown (12h + Regime > 60 x 3) loest dasselbe Problem einfacher. 2 Paper-Trades auf 1h = statistisch irrelevant. | Dynamic Cooldown bereits implementiert. |
+| Tiefsee-Vakuum (Crash-Limit-Buys) | Widerspricht Oktopus-Identitaet: Bei Gefahr RUECKZUG, nicht Angriff. Auf Perps: Long bei -20% im Crash = Liquidationsrisiko. Global Equity Stop schliesst ALLES, nicht nur schlechte Positionen. | Oktopus-Test: Ja, aber falsche Richtung. |
+| Actor Model Architecture | 6 Assets / 1h Candles / 60s Polling = zero Contention. Over-Engineering. 326 Tests muessen komplett neu geschrieben werden. | Falsche Skala. |
+| Event Sourcing | Bereits geloest: trades.jsonl + state.db (SQLite) + equity_history. Unsere Crash-Probleme waren nie State-Korruption. | Bereits implementiert. |
+
+**Stufe-3 Hypothesen** (nicht abgelehnt, aber nicht jetzt):
+- Session-Timing (Gezeiten-Filter): 0.9x/1.05x Regime-Multiplikator nach Trading-Session. Vol-Score (25%) filtert Low-Liquidity bereits. Needs Backtest.
+- Sector Tags (Sektor-Topografie): Bei 6 Assets mit 3 Sektoren = statistisch irrelevant. Korrelationsmatrix (Stufe 2) ist die bessere Loesung.
+- House-Money Sniper (Core/Prey Wallets): Sniper nutzt nur Profit-Kapital, nie Start-Kapital. Elegant bei 1000e+, aber bei 100e keine "Beute" vorhanden. Stufe-3 wenn Kapital signifikant waechst.
+- Schmerzgedaechtnis (Per-Asset Cooldown): 3 consecutive SLs auf einem Asset = 48h Bann. Granularer als globaler Circuit Breaker. Bei 6 Assets + niedriger Trade-Frequenz selten triggert. Regime-Score + Korrelations-Filter decken denselben Fall ab.
+
+**Der Oktopus-Test zieht:** Jeder abgelehnte Vorschlag waere ein 9. Arm. Der Oktopus braucht keine weitere Sensorik - er braucht bessere Reflexe (Global Equity Stop, Kinetischer Trail) und praesizere Execution (Market -> IOC -> Limit).
+
+</details>
+
+<h3 id="die-3-herzen-des-oktopus-infrastruktur-layer">🏗️ Die 3 Herzen des Oktopus (Infrastruktur-Layer)</h3>
+<p>Das Review identifizierte 3 infrastrukturelle Schichten, die das Strategie-Design ergaenzen:</p>
+<table>
+<thead>
+<tr>
+<th>Herz</th>
+<th>Funktion</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Strategisches Herz</strong></td>
+<td>Regime-Filter + Sniper-Logic</td>
+<td>Ready (V2 Design)</td>
+</tr>
+<tr>
+<td><strong>Operatives Herz</strong></td>
+<td>Global Equity Stop (1h-Window) + TWAP-Light + Gezeiten-Blocker (Stufe 2)</td>
+<td>Stufe 1 Kern (neu)</td>
+</tr>
+<tr>
+<td><strong>Physisches Herz</strong></td>
+<td>Exchange-seitige Stops + Heartbeat-Monitoring</td>
+<td>Stufe 1 Infrastruktur (neu)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Das physische Herz ist der wichtigste neue Punkt:</strong> Ohne exchange-seitige Stop-Loss Orders ist der Bot bei einem Infrastruktur-Ausfall "blind" im Markt. Hyperliquid erlaubt das Hinterlegen von SL bei Positionseroeffnung. Das muss in Stufe 1 implementiert werden.</p>
+<hr />
+<h2 id="v2-validierung">V2 Validierung</h2>
+<h3 id="global-equity-stop-recovery-nach-ausloesung">Global Equity Stop: Recovery nach Ausloesung</h3>
+<p>Wenn der Global Equity Stop ausloest (1h-DD &gt; 8%), bleibt der Bot <strong>SOFT_PAUSE</strong>:</p>
+<p><strong>Stufe 1: Starrer 24h Cooldown</strong> (simpel, konservativ)
+- 24h Ruhepause — kein automatischer Re-Entry
+- Nach 24h: Resume wenn Regime-Score &gt; 50 + Equity stabil
+- Manuell jederzeit durch <code>!resume</code> Command
+- Warum starr: Einfach zu implementieren, einfach zu testen, kein Tuning noetig</p>
+<p><strong>Stufe 2: Dynamischer Cooldown (Parametrische Tinte)</strong> — braucht Regime-Daten aus Stufe 1
+- <strong>Minimum 12h</strong> Ruhepause — nach 8% DD in 1h ist 4h zu frueh, 24h zu starr
+- <strong>Early Resume</strong> nach 12h wenn: Regime-Score &gt; 60 fuer 3 aufeinanderfolgende Kerzen + Equity stabil
+- <strong>Full Resume</strong> nach 24h wenn: Regime-Score &gt; 50 + Equity stabil
+- Warum 12h statt 4h: Nach einem echten Crash ist 4h zu frueh
+- Warum Regime &gt; 60 (nicht 80): Regime &gt; 80 nach Crash ist selten. &gt; 60 fuer 3 Candles = echte Stabilitaet
+- Warum Stufe 2: 2 Pfade + 2 Schwellenwerte = mehr Komplexitaet. Erst bauen wenn Stufe 1 Daten zeigen dass 24h zu starr ist.</p>
+<p>Der Oktopus zieht sich zurueck und beobachtet — Stufe 1 starr, Stufe 2 parametrisch.</p>
+<h3 id="3-level-test">3-Level-Test</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Kriterium</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backtest</td>
+<td>Sniper Sharpe</td>
+<td>&gt; V1 Baseline Sharpe</td>
+</tr>
+<tr>
+<td>Backtest</td>
+<td>Sniper DD</td>
+<td>&lt; V1 Baseline DD</td>
+</tr>
+<tr>
+<td>Paper</td>
+<td>≥5 Sniper-Trades</td>
+<td>in 14 Tagen</td>
+</tr>
+<tr>
+<td>Paper</td>
+<td>Sniper-PnL</td>
+<td>positiv oder &lt; 3% Portfolio-DD</td>
+</tr>
+</tbody>
+</table>
+<p>Sniper schießt selten — fair. Wenn in 14 Tagen &lt;3 Signale, Verlängerung auf 21 Tage.</p>
+<hr />
+<h2 id="sniper-modul">Sniper-Modul</h2>
+<h3 id="kernidee">Kernidee</h3>
+<p>Kein separates Modul — <strong>Upgrade</strong> für den besten V1-Trade. Wenn alle Signale aligned sind, wird das Top-Asset von 1.8x auf 4-5x gehoben. Die anderen 5 Assets laufen normal.</p>
+<h3 id="modus-b-sniper-als-v1-upgrade">Modus B: Sniper als V1-Upgrade</h3>
+<ul>
+<li>V1 scannt alle 6 Assets normal</li>
+<li>Sniper-Bedingungen erfüllt → Top-Asset wird NICHT mit V1-Hebel tradet, sondern mit 4-5x</li>
+<li>Die anderen 5 Assets: normale V1-Regeln</li>
+<li>Kein Kapitalkonflikt — das Top-Asset wird nur "aufgewertet"</li>
+</ul>
+<h3 id="entry-stack-alle-mussen-grun-sein">Entry-Stack (ALLE müssen grün sein)</h3>
+<ol>
+<li>Regime-Score &gt; 70 (Strong Trend, nicht nur „irgendein Trend“)</li>
+<li>Asset-Ranking: nur #1 oder #2</li>
+<li>Sentiment &gt; 50 (kein Panic)</li>
+<li>MACD-Entry (Trigger bleibt gleich)</li>
+<li>EMA-Slope &gt; 0.5 (Trend hat Geschwindigkeit)</li>
+</ol>
+<h3 id="leverage">Leverage</h3>
+<ul>
+<li>V1: 1.0-1.8x (gestreut, defensive)</li>
+<li>Sniper: <strong>4-5x</strong> (1 Position, maximale Conviction)</li>
+<li>Nicht 2-3x — das wäre V1 mit Filter</li>
+</ul>
+<h3 id="risiko-kontrolle">Risiko-Kontrolle</h3>
+<ul>
+<li>Nur 1 Position gleichzeitig (Konzentration)</li>
+<li>Trailing Stop: 2.5% (Strong Trend = mehr Raum, nicht enger)</li>
+<li>Max Hold: 24h statt 48h (Conviction hat Zeitlimit)</li>
+<li>Capital: max 30€ allocated × 5x = 150€ Notional</li>
+<li>Regime-Score fällt auf 50-70 → Downgrade auf V1-Hebel</li>
+<li>Volatility-Parität gilt für V1, Sniper ist fix 5x</li>
+<li><strong>Sniper-Circuit-Breaker</strong>: 3 aufeinanderfolgende Sniper-Verluste → Sniper pausiert für 48h, dann Resume</li>
+</ul>
+<h3 id="warum-4-5x-vertretbar">Warum 4-5x vertretbar</h3>
+<ul>
+<li>Regime-Score &gt; 70 filtert ~70% aller Bars raus (nur Strong Trend)</li>
+<li>Asset-Ranking Top-2 = stärkster Momentum in stärkstem Trend</li>
+<li>DD pro Trade: max 3.75% des Portfolios (2.5% Trail × 5x auf 30€ allocated)</li>
+<li>V1-DD von 14% kommt aus Range-Trades — die fallen komplett weg</li>
+</ul>
+<h3 id="scharfmacher">Scharfmacher</h3>
+<p>Sniper ist standardmäßig AUS. Erst aktivieren wenn Regime-Score + Asset-Ranking im Backtest bewiesen sind.</p>
+<hr />
+<h2 id="v2-module">V2 Module</h2>
+<h3 id="modul-1-regime-detection-stufe-1-kern">Modul 1: Regime Detection (Stufe 1 — Kern)</h3>
+<p><strong>Ziel</strong>: Jedes Candle einen Regime-Score 0-100 berechnen</p>
+<p><strong>Score-Formel</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>regime_score = (
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  adx_score * 0.45 +     # Trendstärke
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  vol_score * 0.25 +     # Volatilitäts-Regime
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  slope_score * 0.30 +   # Trend-Geschwindigkeit
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  oi_score * 0.00        # Open Interest Change — ZU VALIDIEREN (aktuell 0%)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>)
+</code></pre></div></p>
+<blockquote>
+<p><strong>⚠️ OI Change = Hypothese, nicht bewiesen.</strong> Weight steht auf 0% bis Backtest beweist dass es hilft. Wenn validiert: 10% (ADX→40%, Slope→25%). Siehe V2 Principle 5: Kein Indikatoren-Salat — jeder neue Input muss Pass-Rate verbessern.</p>
+</blockquote>
+<p><strong>Komponenten im Detail</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Komponente</th>
+<th>Quelle</th>
+<th>Berechnung</th>
+<th>Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adx_score</td>
+<td>ADX-14</td>
+<td><code>min(adx / 50 * 100, 100)</code></td>
+<td>0-100</td>
+</tr>
+<tr>
+<td>vol_score</td>
+<td>ATR-14 / ATR_SMA20</td>
+<td>Invertiert: stabil=100, crash=0</td>
+<td>0-100</td>
+</tr>
+<tr>
+<td>slope_score</td>
+<td>EMA-50 Steigung</td>
+<td><code>(slope / max_slope) * 100</code>, gekappt</td>
+<td>0-100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ADX-Normalisierung</strong>:
+- ADX &lt; 20 → Score 0-40 (Range)
+- ADX 20-40 → Score 40-80 (Trend)
+- ADX &gt; 40 → Score 80-100 (Strong Trend)
+- Kappung bei 100 → kein ADX-Wert kann Score dominieren</p>
+<p><strong>Vol-Score Invertierung</strong>:
+- ATR-Ratio nahe 1.0 → volatil stabil → Score 80-100
+- ATR-Ratio &gt; 1.5 → Vol-Explosion (Crash) → Score 0-20
+- ATR-Ratio &lt; 0.7 → erstarrter Markt → Score 40-60
+- Formel: <code>vol_score = max(0, min(100, 100 - abs(ratio - 1.0) * 80))</code></p>
+<p><strong>Slope-Normalisierung</strong>:
+- <code>slope = (ema_50[t] - ema_50[t-1]) / ema_50[t-1]</code>
+- Normalisiert auf letzten 20 Bars: <code>slope_pct = slope / max(abs(slope_20)) * 100</code>
+- Kappung: <code>min(max(slope_pct, 0), 100)</code> → negativer Slope = 0</p>
+<p><strong>OI-Score (Open Interest Change)</strong>:
+- <code>oi_change = (oi_now - oi_24h_ago) / oi_24h_ago * 100</code>
+- OI steigt + Preis steigt = echtes Kapital → Score 80-100
+- OI steigt + Preis fällt = Short-Aufbau → Score 40-60 (Vorsicht)
+- OI fällt + Preis steigt = Fake-Rally (Short-Covering) → Score 0-30
+- OI fällt + Preis fällt = Kapital verlässt → Score 0-20
+- Normalisierung: <code>oi_score = max(0, min(100, base_score + oi_change * weight))</code>
+- Datenquelle: Hyperliquid <code>/info</code> API, <code>openInterest</code> pro Asset
+- Aggregation: 24h Change, aktualisiert alle 4h
+- Kein externer Dienst nötig — kommt direkt von der Börse</p>
+<p><strong>Gewichtung 45/25/30/0 — Warum</strong>:
+- ADX 45% → Trendstärke ist der wichtigste Indikator (V1 bewiesen)
+- Slope 30% → Steigung unterscheidet echten Trend von flacher EMA-Bewegung
+- Vol 25% → Crash-Erkennung wichtig, aber soll Score nicht dominieren
+- OI 0% → <strong>Zu validieren</strong> — wenn Backtest beweist dass Fake-Rally-Erkennung hilft, Upgrade auf 10%</p>
+<p><strong>Regime-Mapping</strong>:
+| Score | Regime | Entry-Regel | Exit-Regel |
+|-------|--------|-------------|------------|
+| 0-30 | Range | Kein Entry | Bestehende: Trail auf 1.5% tighten |
+| 30-70 | Trend | V1 normal | V1 normal (Trail 2%) |
+| 70-100 | Strong Trend | Sniper möglich | Trail 2.5%, Position atmen |</p>
+<p><strong>Regime-Übergänge (Hysterese)</strong>:
+- Range→Trend: Score muss &gt;35 erreichen (nicht &gt;30)
+- Trend→Range: Score muss &lt;25 fallen (nicht &lt;30)
+- Trend→Strong: Score muss &gt;75 erreichen (nicht &gt;70)
+- Strong→Trend: Score muss &lt;65 fallen (nicht &lt;70)
+- Verhindert Flip-Flopping an den Grenzen</p>
+<p><strong>Berechnung pro Candle</strong>:
+- Kein API-Call — rein aus OHLCV-Daten berechnet
+- Alle 3 Komponenten auf demselben Bar
+- Kein Lookahead — nur abgeschlossene Candles
+- Speichert letzten Score für Hysterese-Vergleich</p>
+<p><strong>Backtest-Validierung</strong>:
+- Gleicher Gate wie V1: ≥75% Pass-Rate, CL≤12, DD≤20%
+- Vergleich: Regime-gefiltert vs ungefiltert
+- Erwartung: ~70% weniger Trades, ~50% weniger DD
+- <strong>A/B-Test</strong>: V1-Strategie mit Regime-Score vs ohne</p>
+<p><strong>Implementierung</strong>:
+- Neues Modul: <code>regime_detector.py</code>
+- Input: Candle-Daten (close, high, low, volume)
+- Output: <code>regime_score</code> (0-100) + <code>regime_label</code> (range/trend/strong)
+- Integration: <code>paper_engine.py</code> fragt <code>regime_detector</code> vor jedem Entry
+- Sniper-Modul nutzt <code>regime_score &gt; 70</code> als Entry-Bedingung</p>
+<hr />
+<h3 id="modul-2-sentiment">Modul 2: Sentiment</h3>
+<p><strong>Ziel</strong>: KI-basierter Kill-Switch bei Crash-Szenarien die Indikatoren verpassen</p>
+<p><strong>Stufen-Plan (Operative Realitaet)</strong>:
+| Stufe | Sentiment-Bestandteile | Aufwand | Kapital-Voraussetzung |
+|-------|----------------------|--------|----------------------|
+| <strong>Stufe 1</strong> | <strong>100% Funding Rate</strong> (gratis von Hyperliquid) | Minimal | 100e (jetzt) |
+| <strong>Stufe 2</strong> | Funding Rate + News (Gemma4 JSON-Mode) | Mittel | 200e+ |
+| <strong>Stufe 3</strong> | + On-Chain (falls kostenlose Quelle bewiesen) | Hoch | 500e+ |</p>
+<p><strong>Warum Stufe 1 = nur Funding Rate:</strong>
+- On-Chain (Glassnode 80$/Mo bei 100e = oekonomischer Selbstmord) → 0% bis kostenlose Quelle bewiesen (CryptoQuant/Coinglass pruefen)
+- Macro (10%) → kein Score 0-100, sondern <strong>Gezeiten-Blocker</strong>: Fed-Meeting in 2h = SOFT_PAUSE. Gehoert ins operative Herz, nicht ins Sentiment-Modul.
+- News (30%) → braucht validierten Prompt + Fail-Safe. Aufwand steht bei 100e in keinem Verhaeltnis.
+- Die restlichen 60% bleiben als leere Interfaces (Mocks) im Code, bis Datenquellen leistbar und bewiesen sind.
+- Funding Rate 40% → <strong>60%</strong> in Stufe 1 (oder 100% wenn rest neutral=50). Direkt von Hyperliquid, kostenlos, kein KI-Call.</p>
+<p><strong>AIXBT Evaluation (2026-04-28):</strong></p>
+<p>AIXBT wurde als potenzielle Datenquelle evaluiert. Ergebnis: DIY reicht für V2.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>AIXBT</th>
+<th>DIY</th>
+<th>Entscheidung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regime-Feed (Macro/Crypto)</td>
+<td>Grounding API (kostenlos, 10/min, 300/Tag)</td>
+<td>Eigene Aggregation</td>
+<td><strong>AIXBT Grounding nutzen</strong> — kostenlos, 1h-Polling reicht</td>
+</tr>
+<tr>
+<td>Sentiment-Kill-Switch</td>
+<td>Data-Plan $100/Mo</td>
+<td>Funding Rate (Hyperliquid, gratis) + Fear&amp;Greed Index (gratis)</td>
+<td><strong>DIY</strong> — Funding Rate ist bereits Priority-0, FGI ergänzt</td>
+</tr>
+<tr>
+<td>Momentum-Clustering</td>
+<td>Data-Plan $100/Mo</td>
+<td>Eigener Twitter/Reddit Scraper</td>
+<td><strong>Skip für V2</strong> — erst evaluieren wenn V2 profitabel</td>
+</tr>
+<tr>
+<td>Intel-Events</td>
+<td>Data-Plan</td>
+<td>CoinGecko/CoinMarketCap API (teils gratis) + Hyperliquid Funding</td>
+<td><strong>DIY</strong> — 3-5 Tage Aufwand</td>
+</tr>
+<tr>
+<td>Historisches Backtesting</td>
+<td><code>?at=ISO8601</code></td>
+<td>Eigene Datensammlung (Wochen)</td>
+<td><strong>Später</strong> — braucht erst Datensammlung</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fazit:</strong> AIXBT Grounding API (kostenlos) als Regime-Layer nutzen. Bezahlte Features ($100/Mo) durch DIY ersetzen. Momentum-Clustering erst nach V2-Profitabilität evaluieren.</p>
+<p><strong>Gezeiten-Blocker (Macro = Risk Management, nicht Sentiment)</strong>:
+- Fed-Meeting, CPI-Release, FOMC → 2h vorher SOFT_PAUSE, 1h nachher
+- Wirtschaftskalender-Feed = trivial (z.B. finnhub.io gratis)
+- Das ist kein Sentiment-Score, sondern operatives Herz: "Handel nicht wenn der Markt gleich explodieren koennte"
+- Gehoert zu <strong>Operatives Herz</strong> (Global Equity Stop + Gezeiten-Blocker)</p>
+<p><strong>News Prompt = JSON-Mode + Fail-Safe 50</strong>:
+- Prompt MUSS deterministisch sein: nur <code>{"score": 35, "confidence": 0.8, "regime": "fear"}</code>
+- Keine Interpretationen, keine Prosa, keine Halluzinationen
+- Fail-Safe: KI halluziniert oder liefert Text → Score = 50 (neutral)
+- Confidence &lt; 0.3 → Score = 50
+- Timeout → letzter Score (decay nach 4h → 50)
+- <strong>Niemals Upsizing</strong> → Sentiment kann nur verkleinern, nie vergroessern</p>
+<p><strong>Pipeline im Detail</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>News Sources → Aggregator → Gemma4 Cloud JSON-Mode → Sentiment Score (0-100)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                                                                    ↓
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                                                            Position Sizing Filter
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                                                            Score ≤ 15 → No Entry (Kill)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                                                            Score 15-30 → Half Position
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                                                            Score 30-50 → Cautious (V1 only, kein Sniper)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                                                            Score &gt; 50 → Full Position (Sniper möglich)
+</code></pre></div></p>
+<p><strong>News Sources (Priorität)</strong>:
+| Priority | Source | Format | Update-Frequenz |
+|----------|--------|--------|-----------------|
+| 0 | Funding Rate (Hyperliquid API) | Score 0-100, direkt | 8h |
+| 1 | Crypto News (CoinDesk, CryptoSlate) | KI-Score 0-100 | Echtzeit |
+| 2 | Macro (Fed, CPI, DXY) | Regime-Flag | Täglich |
+| 3 | On-Chain (Exchange Netflow) | Flow-Rate | Täglich |</p>
+<p><strong>Funding Rate als Priority-0</strong>:
+- Kommt direkt von Hyperliquid API (<code>/info</code>, <code>fundingHistory</code>) — kein externer Dienst, kein KI-Call
+- <strong>Kontraindikator-Logik bei Extremen:</strong> Funding Rate ist nicht linear!
+  - Normale positive Funding (~0.01%) = Longs zahlen Shorts = leicht überfüllt = Score 55-65 (leicht bullish, aber Vorsicht)
+  - Normale negative Funding (~-0.01%) = Shorts zahlen Longs = leicht überlevert = Score 35-45 (leicht bearish)
+  - <strong>Extreme positive Funding (&gt;0.05%)</strong> = Long-Überhang, Overcrowded = Score 20-30 (Crash-Risiko, nicht Euphorie!)
+  - <strong>Extreme negative Funding (&lt;-0.05%)</strong> = Short-Überhang, Short-Squeeze-Treibstoff = Score 70-80 (Bullish-Signal, nicht Fear!)
+- <strong>Warum invertiert:</strong> Bei Extremen ist die Funding Rate ein Kontraindikator. Stark negative Funding = Short Squeeze möglich. Stark positive Funding = Long Liquidation Cascade möglich.
+- Die Invertierung gilt nur bei |Funding| &gt; 0.05% (5x Normal) — im Normalbereich bleibt die Logik intuitiv
+- Mapping (nicht-linear, invertiert bei Extremen): 
+  - <code>funding_abs = abs(funding_rate)</code>
+  - <code>if funding_abs &lt; 0.03: score = 50 + funding_rate * 500</code> (linear, ~35-65 Bereich)
+  - <code>if funding_abs &gt;= 0.03: score = invertiert</code> → positive = bearish, negative = bullish
+  - Gekappt 0-100
+- 8h Aggregation = stabil genug für 1h-Candles, filtert Noise
+- <strong>Warum besser als Fear&amp;Greed Index</strong>: Echtzeit von unserer Börse, nicht aggregiert von 5 Quellen
+- <strong>⚠️ Backtest-Pflicht:</strong> Die Invertierungs-Logik bei Extremen muss historisch validiert werden. Vor Validierung: extreme Funding → Score = 50 (neutral), keine Invertierung.</p>
+<p><strong>Gemma4 Cloud Prompt (JSON-Mode)</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Analyze the following crypto market news and return a JSON score.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Rules:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Score 0-100 (0=extreme fear/crash, 50=neutral, 100=extreme greed/euphoria)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Only consider the last 24h of news
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- Major exchange hacks → Score 0-10
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>- Regulatory crackdowns → Score 10-25
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>- Minor FUD → Score 25-40
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>- Neutral/boring → Score 40-60
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>- Positive developments → Score 60-75
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>- Major adoption news → Score 75-90
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>- Extreme euphoria → Score 90-100
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>Return ONLY: {&quot;score&quot;: &lt;int&gt;, &quot;confidence&quot;: &lt;0.0-1.0&gt;, &quot;regime&quot;: &quot;crash|fear|neutral|greed|euphoria&quot;}
+</code></pre></div></p>
+<p><strong>Aggregation</strong>:
+- Funding Rate hat 40% Gewicht (kostenlos, direkt von Börse, kein KI nötig)
+- News-Sentiment hat 30% Gewicht
+- On-Chain Netflow hat 20% Gewicht
+- Macro hat 10% Gewicht
+- Widersprüchliche Signale → konservativster Score gewinnt
+- Confidence &lt; 0.3 → Score verwerfen, auf 50 (neutral) fallen</p>
+<p><strong>Fail-Safe-Kaskade</strong>:
+1. <strong>Gemma4 fail</strong> → Score = 50 (neutral, kein Einfluss)
+2. <strong>API timeout</strong> → letzter Score beibehalten (decay nach 4h → 50)
+3. <strong>Confidence &lt; 0.3</strong> → Score = 50
+4. <strong>Keine News in 24h</strong> → Score = 50
+5. <strong>Niemals Upsizing</strong> → Sentiment kann nur verkleinern, nie vergrößern</p>
+<p><strong>Sizing-Regeln im Detail</strong>:
+| Score | V1 Position | Sniper | Begründung |
+|-------|-------------|--------|------------|
+| 0-15 | Kein Entry | Kein Entry | Crash oder extremes Risiko |
+| 15-30 | 50% Size | Kein Entry | Erhebliche Unsicherheit |
+| 30-50 | 100% Size | Kein Entry | Vorsichtig, keine Conviction |
+| 50-75 | 100% Size | Erlaubt | Normale Bedingungen |
+| 75-100 | 100% Size | Erlaubt | Starke Conviction (kein Upsizing!) |</p>
+<p><strong>Warum Gemma4 Cloud</strong>:
+- Cloud-Infrastruktur, kein lokaler GPU-Bedarf
+- JSON-Mode stabil für strukturierte Extraktion
+- Sentiment-Parsing braucht kein Flagship-Modell
+- Zukunft: Migration auf lokal möglich wenn Hardware reicht
+- GLM-5.1 = Reserve für komplexe Tasks</p>
+<p><strong>Warum erst Stufe 3</strong>:
+- Sentiment ist ein Filter, kein Motor
+- Regime-Score (Stufe 1) filtert bereits Range-Trades raus
+- Sentiment fängt Black-Swans die Indikatoren verpassen
+- Aber: Black-Swans sind selten → schwer zu backtesten → braucht Live-Validierung
+- Stufe 3 = Sniper + Regime bewiesen → Sentiment als Krönung</p>
+<p><strong>Backtest-Validierung</strong>:
+- Historische Events manuell bewerten (FTX, Terra, SEC, ETF-Approvals)
+- Simulierter Sentiment-Score auf historischen Daten → DD-Verbesserung messen
+- Gate: DD-Reduktion &gt; 5% bei Crash-Events ODER keine Verschlechterung im Normalbetrieb</p>
+<hr />
+<h3 id="modul-3-asset-selection-stufe-3-advanced">Modul 3: Asset Selection (Stufe 3 — Advanced)</h3>
+<p><strong>Ziel</strong>: Stärkstes Asset bevorzugen statt Equal-Weight über 6 Assets</p>
+<p><strong>ROC-Ranking (Basis, Stufe 3)</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>roc_score = (
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  ROC_5 * 0.20 +    # Kurzfristiger Momentum
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  ROC_10 * 0.30 +   # Mittelfristiger Momentum
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  ROC_20 * 0.50     # Trend-Momentum (gewichtigster)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>)
+</code></pre></div></p>
+<p><strong>Berechnung</strong>:
+| Metrik | Formel | Gewichtung |
+|--------|--------|------------|
+| ROC_5 | <code>(close - close[5]) / close[5] * 100</code> | 20% |
+| ROC_10 | <code>(close - close[10]) / close[10] * 100</code> | 30% |
+| ROC_20 | <code>(close - close[20]) / close[20] * 100</code> | 50% |</p>
+<p><strong>Warum ROC_20 am wichtigsten</strong>:
+- Kurzfristiger Momentum (5 Bars) ist Noise
+- 20-Bar-Trend korreliert mit V1-EMA-50 Zeitrahmen
+- Momentum-Anomalien verschwinden über 20 Bars</p>
+<p><strong>Ranking-Regeln</strong>:
+| Rank | Behandlung |
+|------|------------|
+| #1 | Sniper-Kandidat (wenn Regime &gt; 70) |
+| #2 | Normaler Entry |
+| #3-4 | Reduzierte Position (50% Size) |
+| #5-6 | Kein Entry (schwacher Momentum) |</p>
+<p><strong>Kombination mit Regime-Score</strong>:
+| Regime | Rank #1 | Rank #2 | Rank #3-6 |
+|--------|---------|---------|------------|
+| Strong (&gt;70) | Sniper 5x | V1 normal | Kein Entry |
+| Trend (30-70) | V1 normal | V1 normal | Kein Entry |
+| Range (&lt;30) | Kein Entry | Kein Entry | Kein Entry |</p>
+<p><strong>Gemma4 Cloud-Erweiterung (Stufe 3)</strong>:
+- News-Attribution: "BTC rallyt wegen ETF-News" vs. "BTC rallyt technisch"
+- Korrelations-News: "ETH folgt BTC" vs. "ETH hat eigenes Narrativ"
+- Nur wenn ROC-Baseline bewiesen → Gemma4 ergänzt, nicht ersetzt</p>
+<p><strong>Implementierung</strong>:
+- Neues Modul: <code>asset_selector.py</code>
+- Input: close-Preise aller 6 Assets, letzter Regime-Score
+- Output: <code>ranking</code> (Liste der Assets sortiert nach roc_score)
+- Integration: <code>paper_engine.py</code> fragt Ranking vor Entry → Top-2 bekommen Priority
+- Sniper nutzt <code>ranking[0]</code> als Kandidat</p>
+<p><strong>Backtest-Validierung</strong>:
+- Vergleich: ROC-gefiltert vs Equal-Weight
+- Gate: Sharpe &gt; V1 Equal-Weight, DD ≤ V1 Equal-Weight
+- Fairness: Gleiche Anzahl Trades (ROC schneidet nur schwache ab)</p>
+<hr />
+<h3 id="modul-4-risk-management-stufe-1-2">Modul 4: Risk Management (Stufe 1-2)</h3>
+<p><strong>Ziel</strong>: Portfolio-DD kontrollieren, Korrelation begrenzen, Sniper bremsen</p>
+<p><strong>Kein KI-Einsatz</strong> — reine Mathematik</p>
+<p><strong>DD-Scaling (Stufe 1)</strong>:
+| Schwelle | Aktion | Begründung |
+|----------|--------|------------|
+| DD &gt; 10% | Alle Positionen halbieren | Early Warning, Risiko reduzieren |
+| DD &gt; 15% | Keine neuen Entries (SOFT_PAUSE) | Defensive, nur noch Exits |
+| DD &gt; 20% | KILL (alles schließen) | Kapitalerhalt, kein Ermessen |</p>
+<p><strong>DD-Berechnung (Stufe 1)</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>drawdown_pct = (peak_equity - current_equity) / peak_equity * 100
+</code></pre></div>
+- <code>peak_equity</code> = höchster je erreichter Equity-Stand
+- <code>current_equity</code> = mark-to-market (realized + unrealized)
+- Wird jeden Candle neu berechnet
+- Kein Smoothing, keine Ausnahme</p>
+<p><strong>Korrelations-Filter (Stufe 2)</strong>:
+- Max 2 stark korrelierte Positionen gleichzeitig
+- Korrelationsschwelle: Pearson r &gt; 0.7 über letzten 20 Bars
+- Wenn 2 Positionen offen und 3. korreliert → Entry blockiert
+- BTC und ETH gelten IMMER als korreliert (r &gt; 0.8 historisch)</p>
+<p><strong>Korrelations-Kaskade</strong>:
+| Situation | Aktion |
+|-----------|--------|
+| 0 Positionen offen | Entry frei (max 2 korreliert) |
+| 1 Position offen | Entry frei wenn nicht r&gt;0.7 mit bestehend |
+| 2 korrelierte Positionen | Kein weiterer Entry wenn r&gt;0.7 |
+| KILL ausgelöst | Alle Positionen schließen, COOLDOWN 24h |</p>
+<p><strong>Circuit-Breaker (Stufe 1)</strong>:
+| Event | Aktion | Dauer |
+|-------|--------|-------|
+| 3 aufeinanderfolgende Sniper-Verluste | Sniper pausiert | 48h |
+| 5 aufeinanderfolgende V1-Verluste | SOFT_PAUSE | 24h |
+| DD &gt; 20% (KILL) | Alle schließen | COOLDOWN 24h |
+| Circuit-Breaker Reset | Resume | Nach Ablauf |</p>
+<p><strong>Volatility-Parität (Stufe 2)</strong>:
+- Ersetzt starre Leverage-Tiers (ADR-007)
+- Position Size = <code>target_risk / (ATR_14 * point_value)</code>
+- <code>target_risk</code> = konstanter Risiko-Betrag pro Trade (z.B. 1% des Kapitals)
+- High-Vol (AVAX) → kleinere Position, Low-Vol (BTC) → größere
+- Sniper: Ausnahme — fix 5x unabhängig von Vol-Parität</p>
+<p><strong>Regime-basierter Exit (Stufe 2)</strong>:
+| Regime-Score | Trail | Begründung |
+|--------------|-------|------------|
+| &gt;70 (Strong) | 2.5% | Position atmen, Conviction hoch |
+| 50-70 (Trend) | 2.0% | Normaler V1-Trail |
+| 30-50 (Weak) | 1.5% | Trend schwächt, schneller raus |
+| &lt;30 (Range) | 1.5% + Exit-Check | Eng führen, ggf. manuell schließen |</p>
+<p><strong>Partial Exits (Stufe 2)</strong>:
+- V1 only: 50% bei Trail nehmen, 50% laufen lassen
+- Sniper: 100% Entry/Exit, kein Halbschritt
+- Implementierung: Position wird in 2 Sub-Positionen aufgeteilt
+- Trail-Trigger schließt erste 50%, zweite 50% läuft mit neuem Trail</p>
+<p><strong>Re-Entry Logik (Stufe 2)</strong>:
+- V1: Nach Exit → 1h Cooldown → wenn MACD+EMA noch aligned → Re-Entry
+- Sniper: Kein Re-Entry. Score muss &lt;70 fallen und wieder &gt;70 steigen.
+- Max 1 Re-Entry pro Asset pro Trend-Phase (verhindert Ping-Pong)</p>
+<p><strong>Implementierung</strong>:
+- Erweitertes Modul: <code>risk_guard.py</code> (V1 Baseline existiert)
+- Neue Methoden: <code>check_correlation()</code>, <code>check_circuit_breaker()</code>, <code>calc_vol_parity_size()</code>
+- Integration: <code>paper_engine.py</code> fragt Risk Guard vor jedem Entry + jede DD-Check-Periode
+- State: Circuit-Breaker-Zähler in <code>state.db</code> persistiert (survived Restart)</p>
+<p><strong>Backtest-Validierung</strong>:
+- DD-Scaling: Vergleich V1 Risk Guard vs V2 DD-Scaling → DD-Reduktion messbar
+- Korrelations-Filter: Vergleich mit/ohne → DD-Reduktion bei correlated-Moves
+- Circuit-Breaker: Simulation auf historischen Crash-Phasen
+- Gate: Jede Komponente einzeln bewiesen, dann kombiniert</p>
+<hr />
+<h3 id="modul-5-sniper-stufe-1-kern">Modul 5: Sniper (Stufe 1 — Kern)</h3>
+<p><strong>Siehe oben</strong> — detailliert ausgearbeitet im Sniper-Modul Abschnitt</p>
+<p>Entry-Stack: Regime &gt; 70, Asset-Ranking #1-2, Sentiment &gt; 50, MACD, EMA-Slope &gt; 0.5
+Exit: Stufe 1 = starr Trail 2.5% + Max Hold 24h. Stufe 2 = Kinetischer Trail (2.5% -&gt; 1.0%). Regime &lt; 50 = raus, Regime 50-70 = Downgrade
+Capital: max 30€ × 5x = 150€ Notional
+Circuit-Breaker: 3 Verluste → 48h Pause</p>
+<hr />
+<h3 id="ki-einsatz-strategie">KI-Einsatz-Strategie</h3>
+<table>
+<thead>
+<tr>
+<th>Modul</th>
+<th>Stufe</th>
+<th>KI</th>
+<th>Warum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regime Detection</td>
+<td>1</td>
+<td>Nein</td>
+<td>Deterministisch reicht, reproduzierbar</td>
+</tr>
+<tr>
+<td>Risk Management</td>
+<td>1-2</td>
+<td>Nein</td>
+<td>Mathematik, keine Meinung</td>
+</tr>
+<tr>
+<td>Sniper</td>
+<td>1</td>
+<td>Nein</td>
+<td>Regelbasiert, Regime-Score als Input</td>
+</tr>
+<tr>
+<td>Sentiment</td>
+<td>3</td>
+<td><strong>Gemma4</strong></td>
+<td>News-Parsing, JSON-Mode, lokal</td>
+</tr>
+<tr>
+<td>Asset Selection</td>
+<td>3</td>
+<td><strong>Gemma4</strong></td>
+<td>Momentum-Kontext, erst nach ROC-Baseline</td>
+</tr>
+<tr>
+<td>Korrelationsmatrix</td>
+<td>3</td>
+<td>Nein</td>
+<td>Statistik, Rolling-Correlation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Warum Gemma4 Cloud statt GLM-5.1</strong>:
+- Cloud-Infrastruktur, kein lokaler GPU-Bedarf
+- JSON-Mode stabil für strukturierte Extraktion
+- Ausreichend → Sentiment-Parsing braucht kein Flagship-Modell
+- Zukunft: Migration auf lokal möglich wenn Hardware reicht
+- GLM-5.1 cloud = Reserve für komplexe Aufgaben</p>
+<hr />
+<h2 id="alpha-stack-v2-prioritat-nach-stufen">Alpha Stack V2 (Priorität, nach Stufen)</h2>
+<p><strong>Stufe 1 — Kern</strong> (bauen + beweisen)
+| # | Feature | Warum |
+|---|---------|-------|
+| 1 | Regime-Score (ADX+ATR+Slope, OI 0%) | Filtert ~70% Range-Trades raus |
+| 2 | Sniper-Modul (4-5x, starr Trail 2.5%) | Conviction-Upgrade auf Top-Asset |
+| 3 | DD-basierte Positionsreduktion | 10/15/20% Stufen |
+| 4 | Global Equity Stop (1h-DD &gt; 8%, starr 24h Cooldown) | Crash-Antwort |
+| 5 | Sentiment = Funding Rate only | Gratis von Hyperliquid, Kontraindikator |
+| 6 | Slippage Tax (SLIPPAGE_BPS) | Pessimistisches Paper Trading |
+| 7 | Decision Logging | Warum kein Trade? Telemetrie |</p>
+<p><strong>Stufe 2 — Enhancement</strong> (nach Stufe 1 bewiesen)
+| # | Feature | Warum |
+|---|---------|-------|
+| 8 | Kinetischer Trail (Zeit-Ermuedung) | Loest V1 Trailing-Problem, braucht Trade-Daten |
+| 9 | Dynamic Cooldown (12h + Regime &gt; 60) | Flexibler als starr 24h, braucht Stufe 1 Daten |
+| 10 | Volatility-Parität | Riskoparität statt Equal-Weight |
+| 11 | Partial Exits (V1 only) | Gewinn sichern, Upside offen |
+| 12 | Re-Entry Logik | 1h Cooldown, dann wieder möglich |
+| 13 | Korrelations-Filter | max 2 korrelierte Positionen |
+| 14 | Regime-basierter Exit (dynamischer Trail) | Trail dynamisch nach Regime-Score |
+| 15 | SHORT-Positionen | Bidirektional, braucht separaten Backtest |
+| 16 | Gezeiten-Blocker (Fed/CPI Pause) | Risk Management, braucht Kalender-Feed |
+| 17 | Exchange-seitige Stop-Loss | Physisches Herz, Stufe 1 Infra vor Live |</p>
+<p><strong>Stufe 3 — Advanced</strong> (Hypothesen, brauchen Daten)
+| # | Feature | Warum |
+|---|---------|-------|
+| 18 | News Sentiment (Gemma4 JSON-Mode) | Crash-Schutz, braucht validierten Prompt |
+| 19 | On-Chain Regime-Filter | Exchange Netflow, braucht kostenlose Quelle |
+| 20 | Limit-Orders | Fee-Reduktion |
+| 21 | Asset-Ranking (ROC) | Stärkster Momentum bevorzugen |
+| 22 | Dynamische Korrelationsmatrix | Statt max 2-Regel |
+| 23 | Session-Timing (Gezeiten-Filter) | 0.9x/1.05x Regime-Multiplikator, needs Backtest |
+| 24 | House-Money Sniper | Core/Prey Wallets, braucht &gt;1000e |
+| 25 | Schmerzgedaechtnis | Per-Asset Cooldown, needs Validation |</p>
+<p><strong>Abgelehnt</strong>
+| Feature | Warum |
+|---------|-------|
+| ATR-Stops | Kein Improvement bewiesen |
+| Kelly Criterion | Win-Rate zu instabil |
+| L2 Orderbuch-Imbalance | Ändert sich in Sekunden, 1h-Chart glättet das weg |
+| Volume Profile | Bereits in Candle-Daten enthalten |
+| Liquidation Levels | Zu unzuverlässig, Preis zeigt es bereits |
+| Whale-Tracking (einzelne Adressen) | Noise auf 1h, nicht relevant bei 100€ Kapital |
+| On-Chain Microstruktur | Für 1h-Candles und 100€ Kapital Over-Engineering |</p>
+<hr />
+<h2 id="was-v2-nicht-ist">Was V2 NICHT ist</h2>
+<ul>
+<li>Kein Indikator-Salat (mehr Indikatoren ≠ bessere Ergebnisse)</li>
+<li>Keine KI-Entscheidung über Trade-Richtung (nur Filter)</li>
+<li>Kein Hyper-Optimization der Backtest-Parameter</li>
+<li>Kein automatisches Upsizing bei "gutem Sentiment"</li>
+</ul>
+<h2 id="short-positionen-stufe-1-validiert-durch-1-jahr-walk-forward">SHORT-Positionen — STUFE 1 (validiert durch 1-Jahr Walk-Forward)</h2>
+<p><strong>Status: VALIDIERT — 1-Jahr WF zeigt Short P90 als stärkster Edge (5.19% annualisiert)</strong></p>
+<p><strong>Warum SHORT JETZT Stufe 1 ist:</strong>
+- 1-Jahr Walk-Forward: Short P90 24h = stärkste Konfiguration (5.19% annualisiert)
+- BTC Short: +0.65%, ETH Short: +0.78%, SOL Short: +1.99% — alle profitabel
+- Q4 2025 (Bear): Long P10 = -0.98%, Short P90 = +0.57% → Short schützt im Bärenmarkt
+- Short bei hoher Funding = natürlicher Hedge gegen Long-Positionen</p>
+<p><strong>Asset-spezifische Direction (aus Daten):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Long P10</th>
+<th>Short P90</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td>+0.15%</td>
+<td><strong>+0.65%</strong></td>
+<td>SHORT</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>-0.47%</td>
+<td><strong>+0.78%</strong></td>
+<td>SHORT</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>-1.55%</td>
+<td><strong>+1.99%</strong></td>
+<td>SHORT</td>
+</tr>
+<tr>
+<td>AVAX</td>
+<td><strong>+0.75%</strong></td>
+<td>No data</td>
+<td>LONG</td>
+</tr>
+<tr>
+<td>DOGE</td>
+<td><strong>+0.63%</strong></td>
+<td>-0.46%</td>
+<td>LONG</td>
+</tr>
+<tr>
+<td>ADA</td>
+<td><strong>+0.75%</strong></td>
+<td>-1.24%</td>
+<td>LONG</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Regime-Logik (validiert):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Funding</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bull (Q2/Q1)</td>
+<td>Low</td>
+<td>LONG auf Alts (AVAX/DOGE/ADA)</td>
+</tr>
+<tr>
+<td>Bear (Q4)</td>
+<td>High</td>
+<td>SHORT auf Majors (BTC/ETH/SOL)</td>
+</tr>
+<tr>
+<td>Sideways (Q3)</td>
+<td>Neutral</td>
+<td>Vorsicht, Edge gering</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SL Anpassung (aus Daten):</strong>
+- Fixed 3% SL = 30-47% SL-Rate auf Alts = zu hoch
+- V2 Design: Regime-basiert — 3% Weak, 5% Strong (wie geplant)
+- Phase 1d muss bestätigen: 5% SL reduziert SL-Rate auf &lt;25%</p>
+<p><strong>Gate (aktualisiert):</strong>
+- ✅ 1-Jahr WF: Short P90 annualisiert &gt; 0.3% (5.19% erreicht)
+- ✅ Short Sharpe &gt; Long Sharpe auf BTC/ETH/SOL
+- 🔲 Paper Trading: ≥5 SHORT-Trades in 14 Tagen
+- 🔲 Regime-basierte SL bestätigen (3% Weak, 5% Strong)</p>
+<p><strong>Reihenfolge (aktualisiert):</strong>
+1. ~~V2 Stufe 1 bauen + validieren (LONG-only)~~ → GEÄNDERT: LONG+SHORT parallel
+2. Regime-Score um Trendrichtung erweitern
+3. Asset-spezifische Direction-Logik implementieren
+4. Paper Trading mit Long+Short</p>
+<h2 id="v2-implementierung-3-stufen-1-release">V2 Implementierung — 3 Stufen, 1 Release</h2>
+<h3 id="stufe-1-kern-regime-sniper">Stufe 1: Kern (Regime + Sniper)</h3>
+<ul>
+<li>Regime-Score (ADX + ATR-Ratio + EMA-Slope, OI zu validieren)</li>
+<li>Sniper-Modul (4-5x Upgrade auf Top-Asset)</li>
+<li>DD-basierte Positionsreduktion</li>
+<li><strong>Gate</strong>: Regime+Sniper Sharpe &gt; V1, DD &lt; V1</li>
+</ul>
+<h3 id="stufe-2-enhancement">Stufe 2: Enhancement</h3>
+<ul>
+<li>Volatility-Parität (statt Leverage-Tiers)</li>
+<li>Partial Exits (V1 only)</li>
+<li>Re-Entry Logik</li>
+<li>Korrelations-Filter (max 2)</li>
+<li>Regime-basierter Exit (Trail dynamisch)</li>
+<li><strong>Gate</strong>: Gesamt-DD verbessert, Sharpe ≥ Stufe 1</li>
+</ul>
+<h3 id="stufe-3-advanced">Stufe 3: Advanced</h3>
+<ul>
+<li>Sentiment Kill-Switch (Funding Rate Priority-0 + News)</li>
+<li>On-Chain Regime-Filter</li>
+<li>Limit-Orders</li>
+<li>Dynamische Korrelationsmatrix</li>
+<li>Asset-Ranking (ROC)</li>
+<li><strong>Gate</strong>: Vollständiges V2 durchs Tor, dann LIVE</li>
+</ul>
+<p>Alle 3 Stufen = V2. Kein V3. Nach Stufe 3 → Live gehen.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

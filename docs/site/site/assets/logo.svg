@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <g fill="none" stroke="#F2EFE9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Head dome -->
+    <path d="M16 3C10 3 6 7.5 6 12C6 15 8 17 10 17.5"/>
+    <path d="M16 3C22 3 26 7.5 26 12C26 15 24 17 22 17.5"/>
+    <!-- Lower head -->
+    <path d="M10 17.5C10 18 9 19 8 20"/>
+    <path d="M22 17.5C22 18 23 19 24 20"/>
+    <!-- Body -->
+    <path d="M10 17.5C8 17 6 15 6 12"/>
+    <path d="M22 17.5C24 17 26 15 26 12"/>
+    <!-- Left tentacles -->
+    <path d="M10 18C8 21 6 24 5 27"/>
+    <path d="M12 18.5C10 22 8 25 7 28"/>
+    <path d="M14 18C13 22 11 25 10 28"/>
+    <!-- Right tentacles -->
+    <path d="M22 18C24 21 26 24 27 27"/>
+    <path d="M20 18.5C22 22 24 25 25 28"/>
+    <path d="M18 18C19 22 21 25 22 28"/>
+  </g>
+  <!-- Eyes -->
+  <circle cx="13" cy="11" r="1.5" fill="#F2EFE9"/>
+  <circle cx="19" cy="11" r="1.5" fill="#F2EFE9"/>
+</svg>

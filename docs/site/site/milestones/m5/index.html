@@ -1,0 +1,1996 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Trading System Status & Documentation">
+      
+      
+      
+        <link rel="canonical" href="https://pecz.pages.dev/milestones/m5/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>M5 — Pre-Live-Hardening Summary - Pecz</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/dashboard.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#m5-pre-live-hardening-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pecz" class="md-header__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pecz
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              M5 — Pre-Live-Hardening Summary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pecz" class="md-nav__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    Pecz
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎯 Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Live Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗺️ Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blockers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚧 Blockers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Phases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏗️ Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🏗️ Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001: Target Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002: Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-003/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003: State Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004: Risk Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-005/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005: Three-Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-006/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-006: Paper Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-007/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-007: Leverage Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-008/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-008: Crash & Uptime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-009/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-009: V2 Data Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-010/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-010: V2 Strategy (Oktopus)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Strategy Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔬 Strategy Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../strategy-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../strategy-lab/PHASE7_ACCEPTANCE_REPORT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 7 Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../strategy-lab/baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Baseline Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../economics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💰 Economics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../test-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧪 Test Suite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../v2-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔮 V2 Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deliverables-complete-2222-tests-passed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Deliverables Complete | 22/22 Tests PASSED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deliverables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Deliverables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📁 Deliverables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-m5a-architektur-skizze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) M5a Architektur-Skizze
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-secret-handling-konzept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Secret Handling Konzept
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2) Secret Handling Konzept">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grundprinzipien" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grundprinzipien
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-key-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Key Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Masking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-liste-aller-pre-trade-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Liste aller Pre-Trade-Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Liste aller Pre-Trade-Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-market-data-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Market Data Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-order-parameter-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Order Parameter Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-risk-portfolio-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Risk &amp; Portfolio Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-system-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 System Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-resume-checkliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) Resume-Checkliste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4) Resume-Checkliste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resume-phasen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume-Phasen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preflight-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preflight Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dry-run-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dry-Run Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m5-entscheidung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M5 Entscheidung
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementierte-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Implementierte Module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Implementierte Module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srcsecretssecret_providerjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/secrets/secret_provider.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcpre_trade_guardjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/pre_trade_guard.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcposition_syncjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/position_sync.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcexchangeexchange_clientjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/exchange/exchange_client.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcresume_protocoljs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/resume_protocol.js
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Test Suite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Test Suite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-results-2222-passed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Results: ✅ 22/22 PASSED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getestete-szenarien" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getestete Szenarien
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#m5-checkliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 M5 Checkliste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 M5 Checkliste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architektur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architektur
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Position Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nachste-schritte-m6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Nächste Schritte (M6)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="m5-pre-live-hardening-summary">M5 — Pre-Live-Hardening Summary</h1>
+<h2 id="deliverables-complete-2222-tests-passed">✅ Deliverables Complete | 22/22 Tests PASSED</h2>
+<p><strong>Status:</strong> SECURITY-ONLY / PRE-LIVE<br />
+<strong>Execution:</strong> ENABLE_EXECUTION=false (hardcoded safety)<br />
+<strong>Ziel:</strong> Exchange-Integration hinter Feature-Flags, keine echten Orders</p>
+<hr />
+<h2 id="deliverables">📁 Deliverables</h2>
+<h3 id="1-m5a-architektur-skizze">1) M5a Architektur-Skizze</h3>
+<p><strong>File:</strong> <code>docs/M5a_architecture.md</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                      M5a Architektur                            │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Secret Store  ──▶  Exchange Client  ◀──  FEATURE FLAGS       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  (ENV/Vault)         (Testnet only)       ENABLE_EXECUTION    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                        │                     = false            │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                        ▼                                      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│              ┌──────────────────┐                             │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│              │  PreTradeGuard   │                             │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│              │  (M5b Validation)│                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│              └──────────────────┘                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                        │                                      │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│         ┌──────────────┼──────────────┐                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│         ▼              ▼              ▼                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│    Position Sync   Resume Protocol  Event Log                 │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│       (M5c)           (M5d)         (Audit)                   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Key Points:</strong>
+- Testnet-only in M5 (Mainnet explizit blockiert)
+- Secrets ausschließlich aus ENV/Secret-Store
+- Key-Masking in Logs (1234...5678)
+- Hash für Audit-Trail (SHA256)</p>
+<hr />
+<h3 id="2-secret-handling-konzept">2) Secret Handling Konzept</h3>
+<p><strong>File:</strong> <code>docs/M5_secrets_concept.md</code></p>
+<h4 id="grundprinzipien">Grundprinzipien</h4>
+<table>
+<thead>
+<tr>
+<th>Prinzip</th>
+<th>Umsetzung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Never in Repo</td>
+<td>Keine Keys in Git</td>
+</tr>
+<tr>
+<td>Never in Logs</td>
+<td>Maskierte Ausgabe</td>
+</tr>
+<tr>
+<td>Never in Files</td>
+<td>Nur ENV/Secret Store</td>
+</tr>
+<tr>
+<td>Least Privilege</td>
+<td>Testnet-only Keys</td>
+</tr>
+<tr>
+<td>Rotation Ready</td>
+<td>90-Tage Zyklus</td>
+</tr>
+<tr>
+<td>Audit Trail</td>
+<td>Jeder Zugriff geloggt</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-key-matrix">API Key Matrix</h4>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Quelle</th>
+<th>Rechte</th>
+<th>M5-Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BINANCE_API_KEY</td>
+<td>ENV</td>
+<td>SPOT_TRADE (Testnet)</td>
+<td>✅ Required</td>
+</tr>
+<tr>
+<td>BINANCE_API_SECRET</td>
+<td>ENV</td>
+<td>Signatur</td>
+<td>✅ Required</td>
+</tr>
+<tr>
+<td>VAULT_ADDR</td>
+<td>ENV (opt)</td>
+<td>Config</td>
+<td>⚪ Optional</td>
+</tr>
+</tbody>
+</table>
+<h4 id="key-masking">Key Masking</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">SecretProvider</span><span class="p">.</span><span class="nx">mask</span><span class="p">(</span><span class="s1">&#39;abcdefghijklmnop&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// → &quot;abcd...mnop&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">SecretProvider</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s1">&#39;api_key_123456&#39;</span><span class="p">)</span><span class="w">   </span><span class="c1">// → &quot;a1b2c3d4...&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="3-liste-aller-pre-trade-checks">3) Liste aller Pre-Trade-Checks</h3>
+<p><strong>File:</strong> <code>docs/M5b_pretrade_checks.md</code></p>
+<h4 id="11-market-data-checks">1.1 Market Data Checks</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>FAIL →</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1.1</td>
+<td>Symbol tradable</td>
+<td>REJECT</td>
+<td><code>MARKET_SYMBOL_INVALID</code></td>
+</tr>
+<tr>
+<td>1.1.2</td>
+<td>Market data vorhanden</td>
+<td>REJECT</td>
+<td><code>MARKET_DATA_MISSING</code></td>
+</tr>
+<tr>
+<td>1.1.3</td>
+<td>Last price != 0</td>
+<td>REJECT</td>
+<td><code>MARKET_PRICE_ZERO</code></td>
+</tr>
+<tr>
+<td>1.1.4</td>
+<td>Price nicht stale</td>
+<td>REJECT</td>
+<td><code>MARKET_PRICE_STALE</code></td>
+</tr>
+<tr>
+<td>1.1.5</td>
+<td>Spread &lt; max</td>
+<td>REJECT</td>
+<td><code>MARKET_SPREAD_TOO_WIDE</code></td>
+</tr>
+<tr>
+<td>1.1.7</td>
+<td>Kein trading halt</td>
+<td>BLOCK</td>
+<td><code>MARKET_TRADING_HALT</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="12-order-parameter-checks">1.2 Order Parameter Checks</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>FAIL →</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1.1</td>
+<td>Order size &gt; 0</td>
+<td>REJECT</td>
+<td><code>ORDER_SIZE_ZERO</code></td>
+</tr>
+<tr>
+<td>2.1.4</td>
+<td>Notional &gt;= min</td>
+<td>REJECT</td>
+<td><code>ORDER_NOTIONAL_TOO_SMALL</code></td>
+</tr>
+<tr>
+<td>2.1.5</td>
+<td>Notional &lt;= max</td>
+<td><strong>BLOCK</strong></td>
+<td><code>ORDER_NOTIONAL_TOO_LARGE</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="13-risk-portfolio-checks">1.3 Risk &amp; Portfolio Checks</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>FAIL →</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1.1</td>
+<td>Max Positions</td>
+<td><strong>BLOCK</strong></td>
+<td><code>RISK_MAX_POSITIONS</code></td>
+</tr>
+<tr>
+<td>3.1.2</td>
+<td>Max per Asset</td>
+<td><strong>BLOCK</strong></td>
+<td><code>RISK_MAX_ASSET_POSITIONS</code></td>
+</tr>
+<tr>
+<td>3.1.6</td>
+<td>Circuit Breaker</td>
+<td><strong>BLOCK</strong></td>
+<td><code>CIRCUIT_BREAKER_ACTIVE</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="14-system-health-checks">1.4 System Health Checks</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>FAIL →</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1.1</td>
+<td>ENABLE_EXECUTION</td>
+<td><strong>BLOCK</strong></td>
+<td><code>EXECUTION_DISABLED</code></td>
+</tr>
+<tr>
+<td>4.1.2</td>
+<td>Watchdog fresh</td>
+<td><strong>BLOCK</strong></td>
+<td><code>WATCHDOG_STALE</code></td>
+</tr>
+<tr>
+<td>4.1.3</td>
+<td>Reconcile OK</td>
+<td><strong>BLOCK</strong></td>
+<td><code>RECONCILE_FAILED</code></td>
+</tr>
+<tr>
+<td>4.1.4</td>
+<td>Keine unmanaged</td>
+<td><strong>BLOCK</strong></td>
+<td><code>UNMANAGED_POSITIONS</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="4-resume-checkliste">4) Resume-Checkliste</h3>
+<p><strong>File:</strong> <code>docs/M5d_resume_protocol.md</code></p>
+<h4 id="resume-phasen">Resume-Phasen</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PREFLIGHT ──▶ DRY-RUN ──▶ [M5 STOPS HERE] ──▶ CANARY ──▶ SMALL-SIZE
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │            │                                        │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ▼            ▼                                        ▼
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> GO/NO-GO    GO/NO-GO                               GO/NO-GO
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                                   ▲
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                                   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                              MANUAL ENABLE
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                              (separater Release!)
+</code></pre></div>
+<h4 id="preflight-checklist">Preflight Checklist</h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Version Check</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Config Validation</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>ENABLE_EXECUTION=false</strong> ← M5!</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> API Keys (Testnet)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Key Masking verified</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Market Data OK</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Risk Engine ready</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Observability ready</li>
+</ul>
+<h4 id="dry-run-phase">Dry-Run Phase</h4>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> 5+ Simulated Orders</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All Validations Pass</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No Errors</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Events Logged</li>
+</ul>
+<h4 id="m5-entscheidung">M5 Entscheidung</h4>
+<table>
+<thead>
+<tr>
+<th>Ergebnis</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Preflight + Dry-Run = PASS</td>
+<td>✅ <strong>M5 COMPLETE</strong></td>
+</tr>
+<tr>
+<td>Pre-Live-Hardening OK</td>
+<td>Stoppe hier, kein Live-Trading</td>
+</tr>
+<tr>
+<td>Canary/Small-Size</td>
+<td>ERST in M6 (separates GO/NO-GO)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="implementierte-module">🔧 Implementierte Module</h2>
+<h3 id="srcsecretssecret_providerjs"><code>src/secrets/secret_provider.js</code></h3>
+<ul>
+<li>Credentials aus ENV laden</li>
+<li>Key-Masking (<code>1234...5678</code>)</li>
+<li>SHA256 Hash für Audit</li>
+<li>Validierung (Länge, Patterns)</li>
+</ul>
+<h3 id="srcpre_trade_guardjs"><code>src/pre_trade_guard.js</code></h3>
+<ul>
+<li>15+ Pre-Trade Checks</li>
+<li>Events für alle Validierungen</li>
+<li>CLEAR Error Messages</li>
+<li>Keine stillen Fails</li>
+</ul>
+<h3 id="srcposition_syncjs"><code>src/position_sync.js</code></h3>
+<ul>
+<li>Real-time sync gegen Exchange</li>
+<li><strong>Safety Block bei unmanaged Positions</strong></li>
+<li>Reconcile mit diff-Tracking</li>
+<li>Event-driven updates</li>
+</ul>
+<h3 id="srcexchangeexchange_clientjs"><code>src/exchange/exchange_client.js</code></h3>
+<ul>
+<li>Testnet-only (M5)</li>
+<li>Mainnet explizit blockiert</li>
+<li>Retry-Logik mit Exponential Backoff</li>
+<li>NO-OP Mode ohne Credentials</li>
+</ul>
+<h3 id="srcresume_protocoljs"><code>src/resume_protocol.js</code></h3>
+<ul>
+<li>Phasen-basiertes Resume</li>
+<li>GO/NO-GO Checkpoints</li>
+<li>M5: Stop nach Dry-Run</li>
+</ul>
+<hr />
+<h2 id="test-suite">🧪 Test Suite</h2>
+<p><strong>File:</strong> <code>tests/M5e_security_tests.test.js</code></p>
+<h3 id="test-results-2222-passed">Test Results: ✅ 22/22 PASSED</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>📦 Secret Handling Tests     6/6  ✅
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>🚩 Feature Flag Tests        2/2  ✅
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>🛡️ Pre-Trade Validation       9/9  ✅
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>🔄 Position Sync Tests        3/3  ✅
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>🌐 Exchange Client Tests      2/2  ✅
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                              ───
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>TOTAL                       22/22 ✅
+</code></pre></div>
+<h3 id="getestete-szenarien">Getestete Szenarien</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SH-01</td>
+<td>Keys aus ENV laden</td>
+</tr>
+<tr>
+<td>SH-04</td>
+<td>Credential Validierung</td>
+</tr>
+<tr>
+<td>PT-01</td>
+<td>Execution disabled blockiert Orders</td>
+</tr>
+<tr>
+<td>PT-03</td>
+<td>Zero-Price Rejection</td>
+</tr>
+<tr>
+<td>PT-08</td>
+<td>Unmanaged Position = Safety Block</td>
+</tr>
+<tr>
+<td>PS-01</td>
+<td>Safety Block bei Exchange-Mismatch</td>
+</tr>
+<tr>
+<td>EC-01</td>
+<td>NO-OP ohne Credentials</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="m5-checkliste">📋 M5 Checkliste</h2>
+<h3 id="architektur">Architektur</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> M5a Architektur-Skizze</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Secret Provider Interface</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Exchange Client Skeleton</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Feature Flag System</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> ENV-only Credentials</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Key Masking in Logs</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Hash für Audit</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Testnet-only (Mainnet blockiert)</li>
+</ul>
+<h3 id="validation">Validation</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Pre-Trade Guard implementiert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Alle 15+ Checks</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Event Logging</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Keine stillen Fails</li>
+</ul>
+<h3 id="position-sync">Position Sync</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Real-time Sync</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Managed vs Unmanaged</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Safety Block</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Reconcile Logic</li>
+</ul>
+<h3 id="resume-protocol">Resume Protocol</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Preflight Checklist</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Dry-Run Phase</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> M5 Stop nach Dry-Run</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> GO/NO-GO Logik</li>
+</ul>
+<h3 id="tests">Tests</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> 22/22 Tests passing</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Security Tests</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Execution Blocking</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Position Sync Safety</li>
+</ul>
+<hr />
+<h2 id="nachste-schritte-m6">🚀 Nächste Schritte (M6)</h2>
+<p>M5 ist COMPLETE. Für Live-Trading:</p>
+<ol>
+<li><strong>Separate M6 Planung</strong></li>
+<li>Canary Phase ($10 Trade)</li>
+<li>Small-Size Phase ($25/Trade)</li>
+<li>
+<p>Full Trading Resume</p>
+</li>
+<li>
+<p><strong>GO/NO-GO für M6</strong></p>
+</li>
+<li>Manuelle Bestätigung erforderlich</li>
+<li>ENABLE_EXECUTION=true setzen</li>
+<li>
+<p>24h Monitoring nach Canary</p>
+</li>
+<li>
+<p><strong>Erst nach M5 Release</strong></p>
+</li>
+<li>M5 Dokumentation reviewed</li>
+<li>Security Audit complete</li>
+<li>Alle Tests passing</li>
+</ol>
+<hr />
+<p><strong>🎯 M5 STATUS: PRE-LIVE-HARDENING COMPLETE ✅</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

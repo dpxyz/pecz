@@ -1,0 +1,2723 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Trading System Status & Documentation">
+      
+      
+      
+        <link rel="canonical" href="https://pecz.pages.dev/masterplan/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>MASTERPLAN: Forward V5 Phasen 0-9 - Pecz</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/dashboard.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#masterplan-forward-v5-phasen-0-9" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pecz" class="md-header__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pecz
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MASTERPLAN: Forward V5 Phasen 0-9
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pecz" class="md-nav__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    Pecz
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎯 Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Live Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗺️ Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blockers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚧 Blockers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Phases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏗️ Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🏗️ Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001: Target Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002: Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-003/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003: State Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004: Risk Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-005/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005: Three-Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-006/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-006: Paper Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-007/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-007: Leverage Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-008/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-008: Crash & Uptime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-009/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-009: V2 Data Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/adr-010/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-010: V2 Strategy (Oktopus)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Strategy Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔬 Strategy Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/PHASE7_ACCEPTANCE_REPORT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 7 Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategy-lab/baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Baseline Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../economics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💰 Economics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧪 Test Suite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v2-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔮 V2 Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#professional-trading-system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Professional Trading System Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-0-freeze-archive-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0: Freeze &amp; Archive ✅ COMPLETE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 0: Freeze &amp; Archive ✅ COMPLETE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ✅ DONE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-skeleton-architecture-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Skeleton + Architecture ✅ IN PROGRESS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1: Skeleton + Architecture ✅ IN PROGRESS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: 🔄 IN PROGRESS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-core-reliability-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Core Reliability ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2: Core Reliability ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-observability-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Observability ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3: Observability ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-system-boundaries-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: System Boundaries ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4: System Boundaries ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-operations-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5: Operations ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5: Operations ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-code-complete-5152-ops-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ✅ CODE COMPLETE (5.1/5.2 ops pending)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-test-strategy-in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6: Test Strategy 🔄 IN PROGRESS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6: Test Strategy 🔄 IN PROGRESS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aktueller-stand-april-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aktueller Stand (April 2026)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceptance-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceptance-gates_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-strategy-lab-mandatory-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7: STRATEGY LAB ⭐ MANDATORY ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 7: STRATEGY LAB ⭐ MANDATORY ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wichtig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ WICHTIG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ziele_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-scorecard-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy Scorecard (Template)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending-blocker-fur-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING (BLOCKER für Live)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-8-economics-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 8: Economics ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 8: Economics ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#economic-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Economic Warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-9-review-gate-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 9: Review &amp; Gate ⬜ PENDING
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 9: Review &amp; Gate ⬜ PENDING">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ziele_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ziele
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliverables_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gono-go-form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go/No-Go Form
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-of-done_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-pending_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status: ⬜ PENDING
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-status-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Status Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="masterplan-forward-v5-phasen-0-9">MASTERPLAN: Forward V5 Phasen 0-9</h1>
+<h2 id="professional-trading-system-architecture">Professional Trading System Architecture</h2>
+<p><strong>Status:</strong> Phase 0 Complete | Phase 1-4 CODE Complete | Phase 5 CODE Complete | Phase 6 <strong>ACCEPTANCE GATES G1-G5 COMPLETE</strong> | <strong>NEXT: Simulation</strong><br />
+<strong>Platform:</strong> Hyperliquid<br />
+<strong>Mode:</strong> Paper/Mock only (Live BLOCKED until Phase 9)<br />
+<strong>Strategy Lab:</strong> MANDATORY before any Live discussion</p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Name</th>
+<th>Deliverable</th>
+<th>Live?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Freeze &amp; Archive</td>
+<td>Legacy system archived</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Skeleton + ADRs</td>
+<td>Directory structure, decisions</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Core Reliability</td>
+<td>Event store, state projection, tests</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Observability</td>
+<td>Reports, health, logs</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>System Boundaries</td>
+<td>Safety/Observability separation</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Operations</td>
+<td>systemd, CLI, incident response</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Test Strategy</td>
+<td>Unit, integration, simulation</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Strategy Lab</strong> ⭐</td>
+<td>Backtests, Walk-forward, Scorecards</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Economics</td>
+<td>PnL projections, cost analysis</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Review &amp; Gate</td>
+<td>Final validation, sign-off required</td>
+<td><strong>BLOCKED</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>→ ERST DANN:</strong> Manuelle Live-Freigabe durch Nutzer</p>
+<hr />
+<h2 id="phase-0-freeze-archive-complete">Phase 0: Freeze &amp; Archive ✅ COMPLETE</h2>
+<h3 id="ziele">Ziele</h3>
+<ul>
+<li>Altes System (R4c) einfrieren</li>
+<li>Archiv für spätere Analyse</li>
+<li>Clean slate für V5</li>
+</ul>
+<h3 id="deliverables">Deliverables</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Old services stopped</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>incident_bundles/</code> archived</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <code>runtime/</code> backed up</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Read-only mode enforced</li>
+</ul>
+<h3 id="status-done">Status: ✅ DONE</h3>
+<hr />
+<h2 id="phase-1-skeleton-architecture-in-progress">Phase 1: Skeleton + Architecture ✅ IN PROGRESS</h2>
+<h3 id="ziele_1">Ziele</h3>
+<ul>
+<li>Directory structure</li>
+<li>Architecture Decision Records</li>
+<li>systemd units</li>
+<li>Control CLI skeleton</li>
+</ul>
+<h3 id="deliverables_1">Deliverables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>forward_v5/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── docs/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── ADR-001-target-architecture.md     ✅
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── ADR-002-hyperliquid-integration.md  ✅
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── ADR-003-state-model.md             📋
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── ADR-004-risk-controls.md           📋
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── MASTERPLAN_PHASES_1-9.md           ✅
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── HYPERLIQUID_MIGRATION_FIXES.md     ✅
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── src/
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── core_engine.js (skeleton)          📋
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── state_projection.js (skeleton)   📋
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ├── event_store.js (skeleton)          📋
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └── index.js                           📋
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>├── config/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── systemd/forward-v5.service         📋
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └── m6_paper_canary.env                📋
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└── tests/
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    └── skeleton.test.js                   📋
+</code></pre></div>
+<h3 id="definition-of-done">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Alle ADRs geschrieben + approved</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Directory structure angelegt</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> systemd units definiert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Skeleton tests passing</li>
+</ul>
+<h3 id="status-in-progress">Status: 🔄 IN PROGRESS</h3>
+<hr />
+<h2 id="phase-2-core-reliability-pending">Phase 2: Core Reliability ⬜ PENDING</h2>
+<h3 id="ziele_2">Ziele</h3>
+<ul>
+<li>Deterministischer Event Store</li>
+<li>State Projection</li>
+<li>Risk Engine</li>
+<li>Reconcile Logic</li>
+</ul>
+<h3 id="deliverables_2">Deliverables</h3>
+<table>
+<thead>
+<tr>
+<th>Modul</th>
+<th>Zweck</th>
+<th>Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/event_store.js</code></td>
+<td>Append-only events</td>
+<td>✅ Unit</td>
+</tr>
+<tr>
+<td><code>src/state_projection.js</code></td>
+<td>Rebuild state from events</td>
+<td>✅ Unit</td>
+</tr>
+<tr>
+<td><code>src/risk_engine.js</code></td>
+<td>Pre-trade validation</td>
+<td>✅ Unit</td>
+</tr>
+<tr>
+<td><code>src/reconcile.js</code></td>
+<td>Position sync (mock)</td>
+<td>✅ Unit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Single Writer:</strong> Nur core_engine schreibt</li>
+<li><strong>Replay:</strong> State rebuild from events</li>
+<li><strong>Idempotency:</strong> UUIDs für alles</li>
+<li><strong>Timeouts:</strong> Überall</li>
+</ul>
+<h3 id="definition-of-done_1">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Event Store: append-only, queryable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> State Projection: rebuild from zero</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Risk Engine: alle Pre-Trade checks</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Unit Tests: &gt; 80% coverage</li>
+</ul>
+<h3 id="status-pending">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="phase-3-observability-pending">Phase 3: Observability ⬜ PENDING</h2>
+<h3 id="ziele_3">Ziele</h3>
+<ul>
+<li>Discord reports</li>
+<li>Health heartbeats</li>
+<li>Structured logs</li>
+<li>Rebuild-state command</li>
+</ul>
+<h3 id="deliverables_3">Deliverables</h3>
+<table>
+<thead>
+<tr>
+<th>Modul</th>
+<th>Zweck</th>
+<th>Blocking?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/report_service.js</code></td>
+<td>Discord/status</td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>src/health.js</code></td>
+<td>Heartbeats, checks</td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>src/logger.js</code></td>
+<td>Structured logging</td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>commands/rebuild_state.js</code></td>
+<td>Rebuild projection</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-features_1">Key Features</h3>
+<ul>
+<li>Non-blocking: Discord down = WARN, nicht BLOCK</li>
+<li>Heartbeats mit Timestamp</li>
+<li>Structured logs (JSON)</li>
+</ul>
+<h3 id="definition-of-done_2">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Reports funktionieren (auch wenn Discord down)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Health checks mit Freshness</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Rebuild command getestet</li>
+</ul>
+<h3 id="status-pending_1">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="phase-4-system-boundaries-pending">Phase 4: System Boundaries ⬜ PENDING</h2>
+<h3 id="ziele_4">Ziele</h3>
+<ul>
+<li>Safety vs Observability Trennung</li>
+<li>Klare Fail-Modes</li>
+<li>Incident Response Plan</li>
+</ul>
+<h3 id="deliverables_4">Deliverables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docs/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── safety_boundary.md
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── observability_boundary.md
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>└── incident_response.md
+</code></pre></div>
+<h3 id="boundaries">Boundaries</h3>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Examples</th>
+<th>Fail Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SAFETY</strong></td>
+<td>sizing, reconcile, watchdog</td>
+<td><strong>BLOCK</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>leverage, unmanaged position</td>
+<td><strong>BLOCK</strong></td>
+</tr>
+<tr>
+<td><strong>OBSERVABILITY</strong></td>
+<td>discord, reports</td>
+<td><strong>WARN</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>scheduler, health</td>
+<td><strong>RETRY</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="definition-of-done_3">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Safety checks identifiziert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Observability checks identifiziert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Incident Response documented</li>
+</ul>
+<h3 id="status-pending_2">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="phase-5-operations-pending">Phase 5: Operations ⬜ PENDING</h2>
+<h3 id="ziele_5">Ziele</h3>
+<ul>
+<li>systemd services</li>
+<li>Control API/CLI</li>
+<li>Logging, Rotation</li>
+<li>Keine manuellen Edits</li>
+</ul>
+<h3 id="deliverables_5">Deliverables</h3>
+<table>
+<thead>
+<tr>
+<th>Komponente</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>systemd/forward-v5.service</code></td>
+<td>Main service</td>
+</tr>
+<tr>
+<td><code>systemd/forward-v5-report.service</code></td>
+<td>Report worker</td>
+</tr>
+<tr>
+<td><code>commands/start.js</code></td>
+<td>Start service</td>
+</tr>
+<tr>
+<td><code>commands/stop.js</code></td>
+<td>Stop service</td>
+</tr>
+<tr>
+<td><code>commands/pause.js</code></td>
+<td>Pause execution</td>
+</tr>
+<tr>
+<td><code>commands/resume.js</code></td>
+<td>Resume after review</td>
+</tr>
+<tr>
+<td><code>commands/status.js</code></td>
+<td>Current status</td>
+</tr>
+<tr>
+<td><code>commands/reconcile.js</code></td>
+<td>Force reconcile</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuration">Configuration</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">[Service]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="na">StartLimitBurst</span><span class="o">=</span><span class="s">3</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="na">StartLimitIntervalSec</span><span class="o">=</span><span class="s">60</span>
+</code></pre></div>
+<h3 id="definition-of-done_4">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Code Complete: Systemd units definiert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Code Complete: Alle Commands funktionieren</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Code Complete: Health Dashboard + Alert Engine</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Ops Pending: Systemd units getestet auf VPS (5.1 - benötigt SSH)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Ops Pending: Systemd Actions (5.2 - wartet auf 5.1)</li>
+</ul>
+<h3 id="status-code-complete-5152-ops-pending">Status: ✅ CODE COMPLETE (5.1/5.2 ops pending)</h3>
+<hr />
+<h2 id="phase-6-test-strategy-in-progress">Phase 6: Test Strategy 🔄 IN PROGRESS</h2>
+<h3 id="aktueller-stand-april-2026">Aktueller Stand (April 2026)</h3>
+<table>
+<thead>
+<tr>
+<th>Bereich</th>
+<th>Status</th>
+<th>Notizen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit Tests</td>
+<td>✅ Complete</td>
+<td>event_store, risk_engine, state_projection, reconcile</td>
+</tr>
+<tr>
+<td>Integration Tests</td>
+<td>✅ Complete</td>
+<td>Alert Engine Tests, Circuit Breaker Tests</td>
+</tr>
+<tr>
+<td><strong>Acceptance Gates G1-G5</strong></td>
+<td><strong>✅ ALL COMPLETE</strong></td>
+<td>Alle 5 Gates implementiert und gepusht</td>
+</tr>
+<tr>
+<td>Simulation</td>
+<td>➡️ <strong>NEXT</strong></td>
+<td>1h Smoke, 24h Stability (nächster Phase-6-Schritt)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-gates">Acceptance Gates</h3>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Kriterium</th>
+<th>Status</th>
+<th>Datei</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td>Zero unmanaged positions</td>
+<td>✅ Complete</td>
+<td><code>acceptance_g1_zero_unmanaged.test.js</code></td>
+</tr>
+<tr>
+<td>G2</td>
+<td>Projection parity (rebuild == live)</td>
+<td>✅ Complete</td>
+<td><code>acceptance_g2_projection_parity.test.js</code></td>
+</tr>
+<tr>
+<td>G3</td>
+<td>Recovery from restart</td>
+<td>✅ Complete</td>
+<td><code>acceptance_g3_recovery_scenarios.test.js</code></td>
+</tr>
+<tr>
+<td>G4</td>
+<td>No duplicated trade IDs</td>
+<td>✅ Complete</td>
+<td><code>acceptance_g4_no_duplicate_trade_ids.test.js</code></td>
+</tr>
+<tr>
+<td>G5</td>
+<td>Report failures don't affect trading</td>
+<td>✅ Complete</td>
+<td><code>acceptance_g5_discord_failover.test.js</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nächster Schritt:</strong> Simulation (<code>1h_smoke.test.js</code>)</p>
+<h3 id="deliverables_6">Deliverables</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tests/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── unit/                          # ✅ Complete
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ├── event_store.test.js       # ✅
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── state_projection.test.js  # ✅
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── risk_engine.test.js       # ✅
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   └── reconcile.test.js         # ✅
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>├── integration/                   # ✅ Complete
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   ├── alert_engine.integration.test.js     # ✅
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   └── system_boundaries_integration.test.js  # ✅
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>├── acceptance/                    # ✅ ALL COMPLETE
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   ├── acceptance_g1_zero_unmanaged.test.js          # ✅
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   ├── acceptance_g2_projection_parity.test.js       # ✅
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│   ├── acceptance_g3_recovery_scenarios.test.js    # ✅
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│   ├── acceptance_g4_no_duplicate_trade_ids.test.js  # ✅
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│   └── acceptance_g5_discord_failover.test.js        # ✅
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>└── simulation/                    # ➡️ NEXT
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    ├── 1h_smoke.test.js          # ⬜
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    └── 24h_stability.test.js     # ⬜
+</code></pre></div>
+- Simulation
+- Acceptance gates</p>
+<h3 id="deliverables_7">Deliverables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tests/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── unit/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│   ├── event_store.test.js
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│   ├── state_projection.test.js
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ├── risk_engine.test.js
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   └── reconcile.test.js
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── integration/
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   ├── tick_to_fill.test.js
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   ├── discord_down_no_stop.test.js
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   └── watchdog_stale_pause.test.js
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>├── simulation/
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   ├── 1h_smoke.test.js
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   └── 24h_stability.test.js
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>└── acceptance/
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    ├── zero_unmanaged.test.js
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    ├── projection_parity.test.js
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    └── recovery.test.js
+</code></pre></div>
+<h3 id="acceptance-gates_1">Acceptance Gates</h3>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Kriterium</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td>Zero unmanaged positions</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>Projection parity (rebuild == live)</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>Recovery from restart</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>No duplicated trade IDs</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>Report failures don't affect trading</td>
+</tr>
+</tbody>
+</table>
+<h3 id="definition-of-done_5">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Unit Tests: &gt; 80% coverage</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Integration Tests: all passing</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Simulation: 24h stable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Acceptance Gates: all PASS</li>
+</ul>
+<h3 id="status-pending_3">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="phase-7-strategy-lab-mandatory-pending">Phase 7: STRATEGY LAB ⭐ MANDATORY ⬜ PENDING</h2>
+<h3 id="wichtig">⚠️ WICHTIG</h3>
+<p><strong>Phase 7 ist MANDATORY vor jeder Live-Diskussion.</strong><br />
+Keine Ausnahmen. Keine Abkürzungen.</p>
+<h3 id="ziele_6">Ziele</h3>
+<ul>
+<li><strong>KEINE</strong> KI direkt über Orders entscheiden lassen</li>
+<li>KI nutzen für:</li>
+<li>Hypothesengenerierung</li>
+<li>Backtest-Automatisierung</li>
+<li>Marktregime-Klassifikation</li>
+<li>Anomalie-Erkennung</li>
+<li>Postmortem-Zusammenfassungen</li>
+</ul>
+<h3 id="deliverables_8">Deliverables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>research/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── backtest/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── backtest_engine.py
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   ├── parameter_sweep.py
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   └── walk_forward.py
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>├── strategy_lab/
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│   ├── rsi_regime_filter.py
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│   ├── volatility_filter.py
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│   ├── multi_asset_selector.py
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│   ├── mean_reversion_panic.py
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   └── trend_pullback.py
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>└── scorecards/
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    ├── template.json
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    └── btc_trend_001.json
+</code></pre></div>
+<h3 id="strategy-scorecard-template">Strategy Scorecard (Template)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;strategy_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;btc_trend_001&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BTC Trend Pullback&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trend_following&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;hypothesis&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BTC trends tend to continue after shallow pullbacks&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">&quot;assets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;BTC-USD&quot;</span><span class="p">],</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">&quot;timeframe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">&quot;indicators&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="nt">&quot;primary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EMA_20_50&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;volatility_regime&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="nt">&quot;entry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;price &lt; EMA20 &amp;&amp; trend == UP&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="nt">&quot;max_positions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span><span class="nt">&quot;exit&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="nt">&quot;stop_loss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.88%&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">    </span><span class="nt">&quot;take_profit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.76%&quot;</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span><span class="nt">&quot;walk_forward&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="nt">&quot;train_period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6M&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="nt">&quot;validation_period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2M&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">    </span><span class="nt">&quot;test_period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2M&quot;</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span><span class="nt">&quot;total_return&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;+22.3%&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="nt">&quot;max_drawdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;-8.1%&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">    </span><span class="nt">&quot;sharpe&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.85</span><span class="p">,</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">    </span><span class="nt">&quot;win_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;58%&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">    </span><span class="nt">&quot;profit_factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.1</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validated&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">  </span><span class="nt">&quot;live_ready&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="definition-of-done_6">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Mindestens 3 Strategien mit Scorecards</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Jede Strategie: Walk-forward validated</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Multi-Asset-Selektor implementiert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Regime-Filter getestet</li>
+</ul>
+<h3 id="status-pending-blocker-fur-live">Status: ⬜ PENDING (BLOCKER für Live)</h3>
+<hr />
+<h2 id="phase-8-economics-pending">Phase 8: Economics ⬜ PENDING</h2>
+<h3 id="ziele_7">Ziele</h3>
+<ul>
+<li>Profitabilität prüfen</li>
+<li>Infrastructure costs</li>
+<li>Break-even analysis</li>
+</ul>
+<h3 id="deliverables_9">Deliverables</h3>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monthly PnL Projection</td>
+<td>Expected return</td>
+</tr>
+<tr>
+<td>Infra Cost Estimate</td>
+<td>Server, API, etc.</td>
+</tr>
+<tr>
+<td>Break-even Gap</td>
+<td>Trades/day needed</td>
+</tr>
+<tr>
+<td>Risk-adjusted Returns</td>
+<td>Sharpe, Sortino</td>
+</tr>
+</tbody>
+</table>
+<h3 id="economic-warning">Economic Warning</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Wenn: projected_monthly_pnl &lt; infra_cost
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Dann: ECONOMIC_WARNING in Reports
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Aber: KEIN Trading-Stop (nur Info)
+</code></pre></div>
+<h3 id="definition-of-done_7">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Alle Reports implementiert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Break-even berechnet</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Warnings funktionieren</li>
+</ul>
+<h3 id="status-pending_4">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="phase-9-review-gate-pending">Phase 9: Review &amp; Gate ⬜ PENDING</h2>
+<h3 id="ziele_8">Ziele</h3>
+<ul>
+<li>Final validation</li>
+<li>Manuelle Freigabe</li>
+<li>Go/No-Go Entscheidung</li>
+</ul>
+<h3 id="deliverables_10">Deliverables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docs/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── phase_9_review_checklist.md
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── go_no_go_decision.md
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>└── sign_off_form.md
+</code></pre></div>
+<h3 id="review-checklist">Review Checklist</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Item</th>
+<th>Owner</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>All Phases 0-8 Complete</td>
+<td>System</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>All Tests Passing</td>
+<td>QA</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Strategy Lab Complete</td>
+<td>Research</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Economics Positive</td>
+<td>Analyst</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Security Audit Passed</td>
+<td>Security</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>6</td>
+<td>On-Call Schedule Ready</td>
+<td>Ops</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Rollback Tested</td>
+<td>Dev</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Manual Sign-off</td>
+<td>User</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gono-go-form">Go/No-Go Form</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>╔══════════════════════════════════════════════════════════════╗
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>║  LIVE TRADING GO/NO-GO DECISION                              ║
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>╠══════════════════════════════════════════════════════════════╣
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>║                                                                ║
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>║  Date: _______________                                        ║
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>║                                                                ║
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>║  I confirm that:                                              ║
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>║  [ ] All Phases 0-9 are complete                              ║
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>║  [ ] All tests passing                                        ║
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>║  [ ] Strategy Lab validated                                   ║
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>║  [ ] Economics checked                                        ║
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>║  [ ] Security reviewed                                        ║
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>║                                                                ║
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>║  Decision:  [ ] GO    [ ] NO-GO                               ║
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>║                                                                ║
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>║  If GO, I enable:                                             ║
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>║  [ ] ENABLE_EXECUTION_LIVE=true                               ║
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>║  [ ] MAINNET_TRADING_ALLOWED=true                             ║
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>║                                                                ║
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>║  Signature: _________________                                   ║
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>║                                                                ║
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>╚══════════════════════════════════════════════════════════════╝
+</code></pre></div>
+<h3 id="definition-of-done_8">Definition of Done</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Checklist complete</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Sign-off obtained</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Live mode enabled (manual only)</li>
+</ul>
+<h3 id="status-pending_5">Status: ⬜ PENDING</h3>
+<hr />
+<h2 id="current-status-summary">Current Status Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Status</th>
+<th>Blocking?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>✅ Complete</td>
+<td>No</td>
+</tr>
+<tr>
+<td>1</td>
+<td>🔄 In Progress</td>
+<td>No</td>
+</tr>
+<tr>
+<td>2</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>3</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>5</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>6</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>7</td>
+<td>⬜ Pending</td>
+<td><strong>BLOCKS LIVE</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>⬜ Pending</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>9</td>
+<td>⬜ Pending</td>
+<td><strong>BLOCKS LIVE</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-actions">Next Actions</h2>
+<ol>
+<li><strong>Phase 1</strong>: Complete ADRs + Skeleton</li>
+<li><strong>Phase 2</strong>: Build Core Reliability</li>
+<li><strong>Phase 3-6</strong>: Observability, Boundaries, Operations, Tests</li>
+<li><strong>Phase 7</strong>: Strategy Lab (MANDATORY)</li>
+<li><strong>Phase 8-9</strong>: Economics + Gate</li>
+</ol>
+<p><strong>→ ERST DANN</strong>: Manuelle Live-Freigabe</p>
+<hr />
+<p><strong>Document Version:</strong> 1.0<br />
+<strong>Last Updated:</strong> 2026-03-06<br />
+<strong>Status:</strong> Phase 1 in Progress</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

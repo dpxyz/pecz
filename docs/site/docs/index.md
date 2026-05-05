@@ -308,13 +308,13 @@ title: Mission Control
       }
     } catch(e) {}
   }
-  // Dynamic day counter (V2 paper trading start: 2026-05-03)
+  // Dynamic day counter (V2 paper trading clean restart: 2026-05-05)
   (function() {
-    const start = new Date('2026-05-03T00:00:00+02:00');
+    const start = new Date('2026-05-05T12:54:00+02:00');
     const now = new Date();
     const day = Math.floor((now - start) / 86400000) + 1;
     const el = document.getElementById('dash-day');
-    if (el) el.textContent = 'DAY ' + Math.max(day,1) + '/14';
+    if (el) el.textContent = 'DAY ' + Math.max(day,1) + '/90';
   })();
 
   load();

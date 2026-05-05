@@ -1,0 +1,27 @@
+{
+  "summary": {
+    "equity": 100.0,
+    "start_equity": 100.0,
+    "peak_equity": 100.0,
+    "pnl": 0.0,
+    "pnl_pct": 0.0,
+    "unrealized_pnl": 0.0,
+    "mtm_equity": 100.0,
+    "drawdown_pct": 0.0,
+    "guard_state": "RUNNING",
+    "consecutive_losses": 0,
+    "total_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0.0,
+    "total_pnl": 0,
+    "n_open_positions": 0,
+    "uptime_hours": 0.4,
+    "last_candle": "2026-05-05T11:00:00+00:00",
+    "timestamp": "2026-05-05T11:20:33.055802+00:00"
+  },
+  "equity_curve": [],
+  "positions": [],
+  "recent_trades": [],
+  "generated_at": "2026-05-05T11:20:33.056421+00:00"
+}

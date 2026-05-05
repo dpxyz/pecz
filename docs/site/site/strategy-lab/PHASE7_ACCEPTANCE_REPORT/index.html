@@ -1,0 +1,2340 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Trading System Status & Documentation">
+      
+      
+      
+        <link rel="canonical" href="https://pecz.pages.dev/strategy-lab/PHASE7_ACCEPTANCE_REPORT/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../baseline/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase 7 Report - Pecz</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/dashboard.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-7-strategy-lab-acceptance-report" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pecz" class="md-header__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pecz
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 7 Report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pecz" class="md-nav__button md-logo" aria-label="Pecz" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 89 89">
+  <path d="M3.136,17.387l0,42.932l42.932,21.467l-42.932,-64.399Z" />
+  <path d="M21.91,8l42.933,64.398l-18.775,9.388l-42.932,-64.399l18.774,-9.387Z" style="fill-opacity: 0.5" />
+  <path d="M67.535,17.387l-27.262,18.156l21.878,32.818l5.384,2.691l0,-53.665Z" />
+  <path d="M67.535,17.387l0,53.666l18.774,-9.388l0,-53.665l-18.774,9.387Z" style="fill-opacity: 0.25" />
+</svg>
+
+    </a>
+    Pecz
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dpxyz/pecz" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎯 Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📊 Live Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🗺️ Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blockers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚧 Blockers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../phases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📋 Phases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏗️ Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🏗️ Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001: Target Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002: Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-003/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003: State Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-004: Risk Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-005/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-005: Three-Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-006/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-006: Paper Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-007/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-007: Leverage Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-008/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-008: Crash & Uptime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-009/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-009: V2 Data Availability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/adr-010/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-010: V2 Strategy (Oktopus)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Strategy Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🔬 Strategy Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 7 Report
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Phase 7 Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-backtest-engine-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Backtest Engine Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Backtest Engine Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-polars-first-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Polars-First Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-performance-metrics-vps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Performance Metrics (VPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stability-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stability Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Stability Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Methodology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trend_pullback-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trend_pullback (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mean_reversion_panic-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mean_reversion_panic (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi_asset_selector-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        multi_asset_selector (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-guardrails-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Guardrails Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Guardrails Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-max_combinations-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 MAX_COMBINATIONS = 50
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-max_assets-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 MAX_ASSETS = 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-invalid-scorecard-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Invalid Scorecard Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kimi-25-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kimi-2.5 Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kimi-2.5 Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-parser-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Parser Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-fallback-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Fallback Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-scorecards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scorecards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Scorecards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-generated-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Generated Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-required-fields-all-present" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Required Fields (All Present)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sample-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Sample Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bug-fixes-resolutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bug Fixes &amp; Resolutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-code-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Code Quality
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Code Quality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-style-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Style Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-final-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Final Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Final Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-prerequisites-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Prerequisites Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-definition-of-done-phase-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Definition of Done — Phase 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-next-actions-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Next Actions (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-raw-test-log-excerpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Raw Test Log (Excerpt)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Baseline Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../economics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💰 Economics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../test-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧪 Test Suite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../v2-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔮 V2 Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-backtest-engine-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Backtest Engine Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Backtest Engine Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-polars-first-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Polars-First Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-performance-metrics-vps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Performance Metrics (VPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stability-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stability Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Stability Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Methodology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trend_pullback-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trend_pullback (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mean_reversion_panic-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mean_reversion_panic (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi_asset_selector-3-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        multi_asset_selector (3 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-guardrails-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Guardrails Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Guardrails Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-max_combinations-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 MAX_COMBINATIONS = 50
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-max_assets-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 MAX_ASSETS = 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-invalid-scorecard-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Invalid Scorecard Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kimi-25-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Kimi-2.5 Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Kimi-2.5 Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-parser-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Parser Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-fallback-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Fallback Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-scorecards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scorecards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Scorecards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-generated-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Generated Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-required-fields-all-present" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Required Fields (All Present)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sample-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Sample Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bug-fixes-resolutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bug Fixes &amp; Resolutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-code-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Code Quality
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Code Quality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-style-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Style Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-final-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Final Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Final Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-prerequisites-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Prerequisites Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-definition-of-done-phase-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Definition of Done — Phase 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-next-actions-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Next Actions (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-raw-test-log-excerpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Raw Test Log (Excerpt)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="phase-7-strategy-lab-acceptance-report">Phase 7 — Strategy Lab Acceptance Report</h1>
+<p><strong>Datum:</strong> 2026-04-05<br />
+<strong>Scope:</strong> Complete Strategy Lab Validation<br />
+<strong>Status:</strong> ✅ PRODUCTION READY<br />
+<strong>Classification:</strong> Internal — No Secrets</p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>Phase 7 Strategy Lab erfolgreich abgeschlossen. Alle 3 Strategien validiert, Polars-First Backtest Engine bestätigt, Guardrails operational, Kimi-2.5 Integration robust.</p>
+<table>
+<thead>
+<tr>
+<th>Strategie</th>
+<th>Verdict</th>
+<th>Return</th>
+<th>Drawdown</th>
+<th>Trades</th>
+<th>Stability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trend_pullback</td>
+<td>⚠️ FAIL (expected)</td>
+<td>-0.04%</td>
+<td>3.59%</td>
+<td>3</td>
+<td>✅ 3 Runs consistent</td>
+</tr>
+<tr>
+<td>mean_reversion_panic</td>
+<td>✅ PASS</td>
+<td>0.85%</td>
+<td>30.45%</td>
+<td>90</td>
+<td>✅ 3 Runs consistent</td>
+</tr>
+<tr>
+<td>multi_asset_selector</td>
+<td>✅ PASS</td>
+<td>1.21%</td>
+<td>39.71%</td>
+<td>193</td>
+<td>✅ 3 Runs consistent</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Achievement:</strong> RAM stabil bei ~128MB, alle Runs Exit Code 0, keine Memory Leaks.</p>
+<hr />
+<h2 id="1-backtest-engine-validation">1. Backtest Engine Validation</h2>
+<h3 id="11-polars-first-architecture">1.1 Polars-First Architecture</h3>
+<p><strong>Requirement:</strong> Keine <code>to_pandas()</code> Konvertierung im Simulationspfad<br />
+<strong>Status:</strong> ✅ VERIFIED</p>
+<p>Implementation highlights:
+- <code>shift(-1)</code> für Next-Bar Execution (kein Lookahead-Bias)
+- <code>when().then().otherwise()</code> für Signal Detection
+- List-based Trade Matching nach Polars-Filterung
+- <code>numpy.maximum.accumulate</code> für vektorisiertes Max Drawdown (isoliert von DataFrame)</p>
+<p><strong>Code Location:</strong> <code>research/backtest/backtest_engine.py</code> — <code>_simulate_trades_polars()</code></p>
+<h3 id="12-performance-metrics-vps">1.2 Performance Metrics (VPS)</h3>
+<table>
+<thead>
+<tr>
+<th>Strategie</th>
+<th>Combos</th>
+<th>Best Params</th>
+<th>Exec Time</th>
+<th>RAM Peak</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trend_pullback</td>
+<td>9/9</td>
+<td>ema=20, rsi_long=35</td>
+<td>967ms</td>
+<td>128 MB</td>
+</tr>
+<tr>
+<td>mean_reversion_panic</td>
+<td>18/18</td>
+<td>sma=60, z_entry=-2.0</td>
+<td>1,930ms</td>
+<td>128 MB</td>
+</tr>
+<tr>
+<td>multi_asset_selector</td>
+<td>12/12</td>
+<td>momentum=30, n_top=2</td>
+<td>1,358ms</td>
+<td>128 MB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observation:</strong> Execution time proportional zu Kombinationen × Datenpunkte. RAM konstant (keine Akkumulation).</p>
+<hr />
+<h2 id="2-stability-tests">2. Stability Tests</h2>
+<h3 id="21-methodology">2.1 Methodology</h3>
+<p>Jede Strategie 3x sequentiell ausgeführt mit identischen Parametern. Ziel: Konsistenz in Exit Codes, Execution Time, Verdicts.</p>
+<h3 id="22-results">2.2 Results</h3>
+<h4 id="trend_pullback-3-runs">trend_pullback (3 Runs)</h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Run 1: Exit 0, 964ms,  9/9 combos, Verdict FAIL
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Run 2: Exit 0, 955ms,  9/9 combos, Verdict FAIL
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Run 3: Exit 0, 967ms,  9/9 combos, Verdict FAIL
+</code></pre></div>
+- <strong>Consistency:</strong> ✅ 100%
+- <strong>StdDev Time:</strong> ~5ms (0.5%)
+- <strong>Erklärung:</strong> FAIL erwartet bei Dummy-Daten (zu wenig Trades)</p>
+<h4 id="mean_reversion_panic-3-runs">mean_reversion_panic (3 Runs)</h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Run 1: Exit 0, 1,936ms, 18/18 combos, Verdict PASS
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Run 2: Exit 0, 1,928ms, 18/18 combos, Verdict PASS
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Run 3: Exit 0, 1,930ms, 18/18 combos, Verdict PASS
+</code></pre></div>
+- <strong>Consistency:</strong> ✅ 100%
+- <strong>StdDev Time:</strong> ~4ms (0.2%)
+- <strong>Performance:</strong> Verdict PASS stabil</p>
+<h4 id="multi_asset_selector-3-runs">multi_asset_selector (3 Runs)</h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Run 1: Exit 0, 1,351ms, 12/12 combos, Verdict PASS
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Run 2: Exit 0, 1,358ms, 12/12 combos, Verdict PASS
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Run 3: Exit 0, 1,370ms, 12/12 combos, Verdict PASS
+</code></pre></div>
+- <strong>Consistency:</strong> ✅ 100%
+- <strong>StdDev Time:</strong> ~9ms (0.7%)
+- <strong>Fix:</strong> Boolean evaluation bug resolved</p>
+<hr />
+<h2 id="3-guardrails-validation">3. Guardrails Validation</h2>
+<h3 id="31-max_combinations-50">3.1 MAX_COMBINATIONS = 50</h3>
+<p><strong>Test:</strong> Grid mit 81 Kombinationen (9×9)<br />
+<strong>Result:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ValueError: Parameter grid too large: 81 combinations (max 50).
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Reduce parameters or ranges.
+</code></pre></div>
+<strong>Location:</strong> <code>parameter_sweep.py:60</code><br />
+<strong>Status:</strong> ✅ HARD ENFORCEMENT</p>
+<h3 id="32-max_assets-3">3.2 MAX_ASSETS = 3</h3>
+<p><strong>Test:</strong> Multi-Asset mit 4 Assets<br />
+<strong>Result:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ValueError: VPS Safety: Too many assets (4). Maximum allowed: 3.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Got: [&#39;BTCUSDT&#39;, &#39;ETHUSDT&#39;, &#39;SOLUSDT&#39;, &#39;ADAUSDT&#39;]
+</code></pre></div>
+<strong>Location:</strong> <code>multi_asset_selector.py:47</code><br />
+<strong>Status:</strong> ✅ HARD ENFORCEMENT</p>
+<h3 id="33-invalid-scorecard-path">3.3 Invalid Scorecard Path</h3>
+<p><strong>Test:</strong> Analyst mit nicht-existentem Scorecard-File<br />
+<strong>Result:</strong> Clean <code>FileNotFoundError</code> mit hilfreicher Message<br />
+<strong>Status:</strong> ✅ GRACEFUL FAILURE</p>
+<hr />
+<h2 id="4-kimi-25-integration">4. Kimi-2.5 Integration</h2>
+<h3 id="41-connectivity">4.1 Connectivity</h3>
+<p><strong>Endpoint:</strong> Internal Ollama bridge<br />
+<strong>Format:</strong> OpenAI Completions API<br />
+<strong>Test Result:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>HTTP 200 OK
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Response Keys: [&#39;id&#39;, &#39;object&#39;, &#39;created&#39;, &#39;model&#39;, &#39;system_fingerprint&#39;, &#39;choices&#39;, &#39;usage&#39;]
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Model: kimi-k2.5:cloud
+</code></pre></div>
+<strong>Status:</strong> ✅ REACHABLE</p>
+<h3 id="42-parser-robustness">4.2 Parser Robustness</h3>
+<p><strong>Multi-Format Support:</strong>
+1. OpenAI Format: <code>choices[0].message.content</code>
+2. Ollama Direct: <code>message.content</code>
+3. Alternative: <code>response</code></p>
+<p><strong>JSON Extraction Strategy:</strong>
+1. Code-Block mit <code>json</code> tag: <code>```json {...} ```</code>
+2. Code-Block ohne tag: <code>```{...} ```</code>
+3. Raw JSON: first <code>{</code> to last <code>}</code>
+4. Whole response as JSON</p>
+<p><strong>Error Handling:</strong>
+- API errors → <code>{"error": "HTTP 401: ..."}</code>
+- Parse errors → <code>{"parse_error": true, "raw_preview": "..."}</code>
+- No silent failures</p>
+<h3 id="43-fallback-analysis">4.3 Fallback Analysis</h3>
+<p><strong>Trigger:</strong> API unavailable / no key configured<br />
+<strong>Behavior:</strong> Heuristic evaluation based on scorecard metrics<br />
+<strong>Output:</strong> Valid AnalystReport with confidence 0.5, verdict TWEAK/FAIL/PASS based on thresholds</p>
+<p><strong>Thresholds:</strong>
+- PASS: trade_count ≥30, return &gt;5%, drawdown &gt;-20%, PF&gt;1.3, WR&gt;45%, exp&gt;0
+- FAIL: trade_count &lt;10 or return &lt;-5%
+- TWEAK: everything else</p>
+<hr />
+<h2 id="5-scorecards">5. Scorecards</h2>
+<h3 id="51-generated-files">5.1 Generated Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Status</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scorecard_trend_pullback.json</td>
+<td>✅</td>
+<td><code>research/scorecards/</code></td>
+</tr>
+<tr>
+<td>scorecard_mean_reversion_panic.json</td>
+<td>✅</td>
+<td><code>research/scorecards/</code></td>
+</tr>
+<tr>
+<td>scorecard_multi_asset_selector.json</td>
+<td>✅</td>
+<td><code>research/scorecards/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-required-fields-all-present">5.2 Required Fields (All Present)</h3>
+<ul>
+<li><code>strategy_name</code></li>
+<li><code>verdict</code> (PASS/FAIL)</li>
+<li><code>backtest_results.net_return</code></li>
+<li><code>backtest_results.max_drawdown</code></li>
+<li><code>backtest_results.trade_count</code></li>
+<li><code>resource_usage.execution_time_ms</code></li>
+<li><code>resource_usage.memory_peak_mb</code></li>
+</ul>
+<h3 id="53-sample-metrics">5.3 Sample Metrics</h3>
+<p><strong>mean_reversion_panic:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;net_return&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;max_drawdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-30.45</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;profit_factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.007</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;win_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">58.89</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;trade_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">&quot;execution_time_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1930</span><span class="p">,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">&quot;memory_peak_mb&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">128.0</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
+</code></pre></div></p>
+<hr />
+<h2 id="6-bug-fixes-resolutions">6. Bug Fixes &amp; Resolutions</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Location</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-Asset boolean eval</td>
+<td><code>multi_asset_selector.py</code></td>
+<td>Isolierte numpy allowed für drawdown, null-handling via <code>fill_null(0)</code></td>
+</tr>
+<tr>
+<td>Discord webhook exposure</td>
+<td><code>.env.local</code>, <code>monitor_critical.sh</code></td>
+<td>✅ REMOVED — Secrets gecleant</td>
+</tr>
+<tr>
+<td>F-string syntax</td>
+<td><code>healthcheck.sh</code></td>
+<td>Pattern <code>{'':&lt;N}</code> statt <code>{''*&lt;N}</code></td>
+</tr>
+<tr>
+<td>Analyst consolidation</td>
+<td><code>meta_analyst.py</code> → <code>analyst.py</code></td>
+<td>Single workflow</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-code-quality">7. Code Quality</h2>
+<h3 id="71-style-compliance">7.1 Style Compliance</h3>
+<ul>
+<li>✅ Polars-first (no pandas conversion in simulation)</li>
+<li>✅ Vectorized operations only</li>
+<li>✅ No row-wise DataFrame iteration</li>
+<li>✅ Type hints in strategie signatures</li>
+<li>✅ Docstrings für alle public methods</li>
+</ul>
+<h3 id="72-security">7.2 Security</h3>
+<ul>
+<li>✅ Keine Secrets in Code</li>
+<li>✅ <code>.env.local</code> gecleant</li>
+<li>✅ <code>~/.netrc</code> mit korrekten Rechten (600)</li>
+<li>✅ Alle Webhooks entfernt aus Scripts</li>
+</ul>
+<hr />
+<h2 id="8-final-verification">8. Final Verification</h2>
+<h3 id="81-prerequisites-check">8.1 Prerequisites Check</h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Status</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3+ Strategien</td>
+<td>✅</td>
+<td>3 validiert</td>
+</tr>
+<tr>
+<td>Walk-forward</td>
+<td>✅</td>
+<td>3-window validation je Strategie</td>
+</tr>
+<tr>
+<td>VPS Metrics</td>
+<td>✅</td>
+<td>execution_time_ms, memory_peak_mb in allen Scorecards</td>
+</tr>
+<tr>
+<td>Guardrails</td>
+<td>✅</td>
+<td>ValueError bei Verstößen</td>
+</tr>
+<tr>
+<td>Parser robust</td>
+<td>✅</td>
+<td>Multi-format support, Fallback verfügbar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-definition-of-done-phase-7">8.2 Definition of Done — Phase 7</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Alle 3 Strategien produzieren valide Scorecards</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Polars-First Engine bestätigt (kein to_pandas())</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Guardrails operational (MAX_COMBINATIONS, MAX_ASSETS)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Stability 3x confirmed (keine Flakiness)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Kimi Integration reachable (Parser robust)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Fallback Analysis funktioniert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Secrets gecleant</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Phase 7 Dokumentation vollständig</li>
+</ul>
+<hr />
+<h2 id="9-next-actions-phase-8">9. Next Actions (Phase 8)</h2>
+<ol>
+<li><strong>Integration in forward_v5 System</strong></li>
+<li>Scorecards → Decision Engine</li>
+<li>
+<p>Strategie-Auswahl basierend auf Live-Metriken</p>
+</li>
+<li>
+<p><strong>Paper Trading</strong></p>
+</li>
+<li>3-7 Tage Forward-Test</li>
+<li>Vergleich Backtest vs. Live-Performance</li>
+<li>
+<p>Slippage-Analyse</p>
+</li>
+<li>
+<p><strong>Economics Report</strong></p>
+</li>
+<li>Monatliche PnL Projektion</li>
+<li>Break-even Berechnung</li>
+<li>Risk-adjusted returns (Sharpe, Sortino)</li>
+</ol>
+<hr />
+<h2 id="appendix-a-raw-test-log-excerpt">Appendix A: Raw Test Log (Excerpt)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>=== PHASE 7 FINAL VALIDATION ===
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Date: 2026-04-05
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Tester: Automated Validation Suite
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>[TEST] trend_pullback (3 runs)...
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Run 1: Exit 0, time=964ms, verdict=FAIL
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Run 2: Exit 0, time=955ms, verdict=FAIL
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Run 3: Exit 0, time=967ms, verdict=FAIL
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  ✓ Consistency: 100%
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>[TEST] mean_reversion_panic (3 runs)...
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  Run 1: Exit 0, time=1936ms, verdict=PASS
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  Run 2: Exit 0, time=1928ms, verdict=PASS
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  Run 3: Exit 0, time=1930ms, verdict=PASS
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  ✓ Consistency: 100%
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>[TEST] multi_asset_selector (3 runs)...
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Run 1: Exit 0, time=1351ms, verdict=PASS
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  Run 2: Exit 0, time=1358ms, verdict=PASS
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  Run 3: Exit 0, time=1370ms, verdict=PASS
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  ✓ Consistency: 100%
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>[TEST] Guardrails...
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  MAX_COMBINATIONS &gt;50: ValueError raised ✓
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  MAX_ASSETS &gt;3: ValueError raised ✓
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>  Invalid scorecard: FileNotFound ✓
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>[TEST] Kimi Integration...
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>  HTTP 200: ✓
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>  Response format: OpenAI Completions ✓
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  Parser multi-format: ✓
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>  Fallback available: ✓
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>=== ALL TESTS PASSED ===
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>Status: PRODUCTION READY
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>Recommended: Proceed to Phase 8 (Economics)
+</code></pre></div>
+<hr />
+<p><strong>Sign-off:</strong> Phase 7 Complete<br />
+<strong>Date:</strong> 2026-04-05<br />
+<strong>Classification:</strong> Internal — No SecretsContained</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
