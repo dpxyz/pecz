@@ -25,12 +25,17 @@ from data_feed import DataFeed, SYMBOL_MAP, PAPER_MODE, API_URL, API_URL_TESTNET
 log = logging.getLogger("data_feed_v2")
 
 # Funding rate polling interval
-FUNDING_POLL_INTERVAL = 300  # 5 minutes
+FUNDING_POLL_INTERVAL = 300  # 5 minutes (Binance)
+HL_FUNDING_POLL_INTERVAL = 3600  # 1 hour (HyperLiquid)
 FUNDING_WINDOW = 168  # 168 hours = 7 days, for z-score calculation
 OI_POLL_INTERVAL = 3600  # 1 hour
 FGI_POLL_INTERVAL = 3600  # 1 hour (API updates daily)
 FGI_API_URL = "https://api.alternative.me/fng/"
 DXY_POLL_INTERVAL = 3600  # 1 hour
+
+# HyperLiquid API
+HL_API_URL = "https://api.hyperliquid.xyz/info"
+HL_SYMBOL_MAP = {"BTCUSDT": "BTC", "ETHUSDT": "ETH", "SOLUSDT": "SOL"}
 
 # Active V2 assets (only these get funding signals)
 V2_ACTIVE_ASSETS = ["BTCUSDT", "ETHUSDT", "SOLUSDT"]  # V11 WF Gate passed; AVAX/DOGE failed gate (bear-only, 0 trades in bull)
@@ -49,6 +54,7 @@ class DataFeedV2(DataFeed):
 
         self._funding_data: dict[str, list[dict]] = {}
         self._funding_z: dict[str, Optional[float]] = {}
+        self._funding_z_1h: dict[str, Optional[float]] = {}  # HL 1h z-score (finer resolution)
         self._bull200: dict[str, bool] = {}
         # Store engine's original callback before replacing with V2 wrapper
         self.on_candle = self._on_candle_v2  # V2: compute regime BEFORE engine callback
@@ -136,7 +142,7 @@ class DataFeedV2(DataFeed):
         mode_str = "⛔ TESTNET (Paper)" if PAPER_MODE else "🔴 MAINNET (REAL MONEY)"
         log.info(f"DataFeedV2 starting - {mode_str} - assets: {self.assets}")
         log.info(f"  Candle source: REST API polling every 60s")
-        log.info(f"  Funding source: Binance API polling every {FUNDING_POLL_INTERVAL}s")
+        log.info(f"  Funding source: Binance (8h) + HyperLiquid (1h) polling")
 
         await self._backfill()
         await self._backfill_funding()
@@ -145,6 +151,7 @@ class DataFeedV2(DataFeed):
         await asyncio.gather(
             self._poll_loop(),
             self._funding_poll_loop(),
+            self._hl_funding_poll_loop(),
             self._oi_poll_loop(),
             self._fgi_poll_loop(),
             self._dxy_poll_loop(),
@@ -156,6 +163,14 @@ class DataFeedV2(DataFeed):
 
     def get_funding_z(self, symbol: str) -> Optional[float]:
         return self._funding_z.get(symbol)
+
+    def get_funding_z_1h(self, symbol: str) -> Optional[float]:
+        """Get HL 1h funding z-score (finer resolution than Binance 8h).
+        
+        NOTE: Thresholds for this metric are NOT yet calibrated.
+        Use funding_z (Binance 8h) for signal decisions until calibration is done.
+        """
+        return self._funding_z_1h.get(symbol)
 
     def get_regime(self, symbol: str) -> Optional[bool]:
         return self._bull200.get(symbol)
@@ -332,24 +347,123 @@ class DataFeedV2(DataFeed):
         now_ms = int(time.time() * 1000)
         cutoff = now_ms - window_ms
         for symbol in self.assets:
+            # Binance 8h z-score (used by calibrated signals)
             with sqlite3.connect(self.db_path) as conn:
                 rows = conn.execute(
-                    "SELECT ts, funding_rate FROM funding_rates WHERE symbol = ? AND ts >= ? ORDER BY ts ASC",
+                    "SELECT ts, funding_rate FROM funding_rates WHERE symbol = ? AND ts >= ? AND source = 'binance' ORDER BY ts ASC",
                     (symbol, cutoff)).fetchall()
             if len(rows) < 10:
-                log.warning(f"⚠️ {symbol}: Only {len(rows)} funding rates for z-score")
+                log.warning(f"\u26a0\ufe0f {symbol}: Only {len(rows)} Binance funding rates for z-score")
                 self._funding_z[symbol] = None
-                continue
-            rates = [r[1] for r in rows]
-            mean_rate = sum(rates) / len(rates)
-            std_rate = (sum((r - mean_rate) ** 2 for r in rates) / len(rates)) ** 0.5
-            if std_rate < 1e-10:
-                self._funding_z[symbol] = 0.0
             else:
-                z = (rates[-1] - mean_rate) / std_rate
-                self._funding_z[symbol] = round(z, 4)
-            log.info(f"  {symbol}: z={self._funding_z[symbol]:.4f} (rate={rates[-1]:.6f}, mean={mean_rate:.6f}, std={std_rate:.6f}, n={len(rows)})")
+                rates = [r[1] for r in rows]
+                mean_rate = sum(rates) / len(rates)
+                std_rate = (sum((r - mean_rate) ** 2 for r in rates) / len(rates)) ** 0.5
+                if std_rate < 1e-10:
+                    self._funding_z[symbol] = 0.0
+                else:
+                    z = (rates[-1] - mean_rate) / std_rate
+                    self._funding_z[symbol] = round(z, 4)
+                log.info(f"  {symbol}: z={self._funding_z[symbol]:.4f} (rate={rates[-1]:.6f}, mean={mean_rate:.6f}, std={std_rate:.6f}, n={len(rows)}, src=binance)")
+
+            # HL 1h z-score (finer resolution, separate metric for future calibration)
+            with sqlite3.connect(self.db_path) as conn:
+                rows_hl = conn.execute(
+                    "SELECT ts, funding_rate FROM funding_rates WHERE symbol = ? AND ts >= ? AND source = 'hyperliquid' ORDER BY ts ASC",
+                    (symbol, cutoff)).fetchall()
+            if len(rows_hl) < 20:
+                self._funding_z_1h[symbol] = None
+            else:
+                rates_hl = [r[1] for r in rows_hl]
+                mean_hl = sum(rates_hl) / len(rates_hl)
+                std_hl = (sum((r - mean_hl) ** 2 for r in rates_hl) / len(rates_hl)) ** 0.5
+                if std_hl < 1e-10:
+                    self._funding_z_1h[symbol] = 0.0
+                else:
+                    z_hl = (rates_hl[-1] - mean_hl) / std_hl
+                    self._funding_z_1h[symbol] = round(z_hl, 4)
+                log.info(f"  {symbol}: z_1h={self._funding_z_1h[symbol]:.4f} (n={len(rows_hl)}, src=hyperliquid)")
+
         self._update_crosssec_z()
+
+    # ── HyperLiquid 1h Funding ──
+
+    async def _hl_funding_poll_loop(self):
+        """Poll HyperLiquid 1h funding rates.
+        
+        HL provides hourly funding rates which give a much finer z-score picture
+        than Binance's 8h snapshots. We store them with source='hyperliquid' so
+        the z-score calculation can use both.
+        """
+        await self._hl_backfill_funding()
+        while self._running:
+            try:
+                await asyncio.sleep(HL_FUNDING_POLL_INTERVAL)
+                await self._hl_poll_funding()
+            except Exception as e:
+                log.error(f"HL funding poll error: {e}")
+
+    async def _hl_backfill_funding(self):
+        """Backfill HL 1h funding for the last FUNDING_WINDOW hours."""
+        log.info("Backfilling HL 1h funding rates...")
+        start_ms = int((time.time() - FUNDING_WINDOW * 3600) * 1000)
+        total = 0
+        for symbol in self.assets:
+            coin = HL_SYMBOL_MAP.get(symbol)
+            if not coin:
+                continue
+            try:
+                payload = {"type": "fundingHistory", "coin": coin, "startTime": start_ms}
+                resp = requests.post(HL_API_URL, json=payload, timeout=15)
+                resp.raise_for_status()
+                data = resp.json()
+                if not isinstance(data, list):
+                    log.warning(f"  HL {symbol}: no data")
+                    continue
+                count = 0
+                with sqlite3.connect(self.db_path) as conn:
+                    for item in data:
+                        ts = int(item["time"])
+                        rate = float(item["fundingRate"])
+                        conn.execute(
+                            "INSERT OR REPLACE INTO funding_rates (symbol, ts, funding_rate, source) VALUES (?, ?, ?, 'hyperliquid')",
+                            (symbol, ts, rate))
+                        count += 1
+                total += count
+                log.info(f"  \u2705 HL {symbol}: {count} 1h funding rates backfilled")
+            except Exception as e:
+                log.error(f"  \u274c HL {symbol}: funding backfill failed: {e}")
+        log.info(f"HL funding backfill complete: {total} rates total")
+        self._update_funding_zscores()
+
+    async def _hl_poll_funding(self):
+        """Poll latest HL 1h funding rates."""
+        for symbol in self.assets:
+            coin = HL_SYMBOL_MAP.get(symbol)
+            if not coin:
+                continue
+            try:
+                start_ms = int((time.time() - 7200) * 1000)
+                payload = {"type": "fundingHistory", "coin": coin, "startTime": start_ms}
+                resp = requests.post(HL_API_URL, json=payload, timeout=15)
+                resp.raise_for_status()
+                data = resp.json()
+                if not isinstance(data, list):
+                    continue
+                count = 0
+                with sqlite3.connect(self.db_path) as conn:
+                    for item in data:
+                        ts = int(item["time"])
+                        rate = float(item["fundingRate"])
+                        conn.execute(
+                            "INSERT OR REPLACE INTO funding_rates (symbol, ts, funding_rate, source) VALUES (?, ?, ?, 'hyperliquid')",
+                            (symbol, ts, rate))
+                        count += 1
+                if count > 0:
+                    log.info(f"\U0001f4b0 HL {symbol}: {count} new 1h funding rates")
+            except Exception as e:
+                log.error(f"HL funding poll error for {symbol}: {e}")
+        self._update_funding_zscores()
 
     # ── Open Interest ──
 
