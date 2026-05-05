@@ -18,7 +18,7 @@ log = logging.getLogger("monitor")
 
 DB_PATH = Path(__file__).parent / "state_v2.db"
 OUTPUT_PATH = Path(__file__).parent / "monitor_data.json"
-SITE_PATH = Path(__file__).parent.parent.parent / "docs" / "site" / "site" / "monitor_data.json"  # Cloudflare deploy
+SITE_PATH = Path(__file__).parent.parent.parent / "docs" / "site" / "docs" / "monitor_data.json"  # Cloudflare deploy
 
 # Alert thresholds
 DD_WARNING_PCT = 15.0   # Warning when DD > 15%

@@ -1,7 +1,41 @@
 # V2 Strategy Design — Der Oktopus 🐙
 
-**Status:** PLANNED (post Paper Trading)
-**ADR:** Will be formalized as ADR-008 after Phase 8
+**Status:** LIVE — Paper Trading (90-day track record in progress)
+**Engine:** V2 Paper Engine, 5 validated signals + DXY/FGI confluence filters
+**Started:** 2026-05-05 (clean restart)
+
+---
+
+## ⚡ Current Engine Configuration (V2 Live)
+
+### 5 Validated Signals
+
+| # | Signal | Asset | Trigger | CPCV PBO | Status |
+|---|--------|-------|---------|----------|--------|
+| 1 | Mild Neg Funding + Bull200 | BTC | z∈[-0.5,0) + close>EMA200 | 0.13 | ✅ Production |
+| 2 | Mild Neg Funding + Bull200 | ETH | z∈[-1,-0.2) + close>EMA200 | 0.13 | ✅ Production |
+| 3 | Cross-Sectional Funding | BTC | crosssec_z<-1.0 + close>EMA200 | 0.20 | ✅ Production |
+| 4 | OI Surge | SOL | ΔOI>3% (48h) + close>EMA200 | 0.33 | ✅ Production |
+| 5 | LS Ratio Short | SOL | TopTrader LS>5.0 → SHORT | 0.33 | ✅ Production |
+
+### Confluence Filters
+
+| Filter | Logic | Source |
+|--------|-------|--------|
+| DXY 5d ROC | >+2% → skip LONGs (strong dollar headwind) | Yahoo Finance |
+| DXY 5d ROC | <-2% → skip Shorts (weak dollar = tailwind for longs) | -0.72 BTC correlation |
+| FGI | <40 → confluence for Long entries | Alternative.me |
+| Bull200 | close > EMA200 → required for all Longs | Binance klines |
+
+### Risk Parameters
+
+- **Capital:** 100€ total
+- **Leverage:** BTC 1.8x, ETH 1.5x, SOL 1.0x
+- **Stop Loss:** 4% (Prop-Firm compatible)
+- **Exit:** 24h time-based (primary)
+- **Trailing Stop:** DISABLED (empirically worse)
+
+---
 
 ## Inhalt
 
