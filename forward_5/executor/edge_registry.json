@@ -116,5 +116,92 @@
     "created_at": "",
     "validated_at": "",
     "notes": "CPCV PBO=0.13, OOS WR=86.7%"
+  },
+  "btc_crosssec_z-1_bull200_4h": {
+    "edge_id": "btc_crosssec_z-1_bull200_4h",
+    "name": "BTC Cross-Sectional Funding z<-1.0 + Bull200 (4h)",
+    "primary_driver": "cross_sectional_funding_z",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "BTC"
+    ],
+    "timeframe": "4h",
+    "entry_logic": "long when cross-sectional funding z in [-2.0, -1.0) AND close > EMA200",
+    "exit_logic": "24h time-based, 5% SL, no trailing",
+    "parameters": {
+      "z_low": -2.0,
+      "z_high": -1.0,
+      "bull_filter": "bull200",
+      "hold_hours": 24,
+      "sl_pct": 5.0
+    },
+    "is_annualized_sharpe": 7.15,
+    "oos_return": 15.1,
+    "dsr": 0.0,
+    "dsr_p_value": 1.0,
+    "walk_forward_ratio": 0.0,
+    "n_trades": 121,
+    "correlation_vector": {},
+    "status": "validated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "CPCV PBO=0.20, OOS +15.1%, \u03c1=0.02 vs abs funding (uncorrelated!)"
+  },
+  "oi_surge_sol_h48_4h": {
+    "edge_id": "oi_surge_sol_h48_4h",
+    "name": "SOL OI Surge h48 (\u0394OI>3%) + Bull200 (4h)",
+    "primary_driver": "oi_pct_change_surge",
+    "secondary_driver": "bull_trend_ema200",
+    "assets": [
+      "SOL"
+    ],
+    "timeframe": "4h",
+    "entry_logic": "long when oi_pct_change > 3% AND close > EMA200",
+    "exit_logic": "48h time-based, 5% SL, no trailing",
+    "parameters": {
+      "oi_threshold": 3.0,
+      "bull_filter": "bull200",
+      "hold_hours": 48,
+      "sl_pct": 5.0
+    },
+    "is_annualized_sharpe": 13.86,
+    "oos_return": 66.6,
+    "dsr": 0.0,
+    "dsr_p_value": 1.0,
+    "walk_forward_ratio": 0.0,
+    "n_trades": 32,
+    "correlation_vector": {},
+    "status": "validated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "CPCV PBO=0.33, \u03c1=0.06 vs BTC mild_neg (uncorrelated)"
+  },
+  "ls_ratio_sol_short_4h": {
+    "edge_id": "ls_ratio_sol_short_4h",
+    "name": "SOL TopTrader LS Ratio >5 Contrarian Short (4h)",
+    "primary_driver": "toptrader_ls_ratio",
+    "secondary_driver": "none",
+    "assets": [
+      "SOL"
+    ],
+    "timeframe": "4h",
+    "entry_logic": "short when toptrader_ls_ratio > 5.0",
+    "exit_logic": "24h time-based, 5% SL, no trailing",
+    "parameters": {
+      "ls_threshold": 5.0,
+      "hold_hours": 24,
+      "sl_pct": 5.0
+    },
+    "is_annualized_sharpe": 10.12,
+    "oos_return": 57.3,
+    "dsr": 0.0,
+    "dsr_p_value": 1.0,
+    "walk_forward_ratio": 0.0,
+    "n_trades": 30,
+    "correlation_vector": {},
+    "status": "validated",
+    "created_at": "",
+    "validated_at": "",
+    "notes": "CPCV PBO=0.33, \u03c1=-0.04 vs BTC mild_neg (negatively correlated = diversifier!)"
   }
 }

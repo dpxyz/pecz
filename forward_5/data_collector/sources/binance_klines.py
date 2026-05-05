@@ -129,6 +129,8 @@ async def fetch_historical(
     df = pl.DataFrame(all_rows)
     # Deduplicate and sort
     df = df.unique(subset=["timestamp", "asset"]).sort(["asset", "timestamp"])
+    # Compute taker ratio for consistency with fetch_new
+    df = compute_taker_ratio(df)
     logger.info("BN klines: %d rows total across %d assets", len(df), df["asset"].n_unique())
     return df
 
@@ -170,7 +172,8 @@ async def fetch_new(
     if not all_rows:
         return pl.DataFrame()
 
-    return pl.DataFrame(all_rows).unique(subset=["timestamp", "asset"]).sort(["asset", "timestamp"])
+    df = pl.DataFrame(all_rows).unique(subset=["timestamp", "asset"]).sort(["asset", "timestamp"])
+    return compute_taker_ratio(df)
 
 
 def compute_taker_ratio(df: pl.DataFrame) -> pl.DataFrame:

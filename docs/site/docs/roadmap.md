@@ -6,19 +6,19 @@ title: Roadmap
 
 <div class="dash-header">
 <h1><span class="logo"><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><polygon points="5,0.5 9.5,9.5 0.5,9.5"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.2"/></svg><svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0.8" y="0.8" width="8.4" height="8.4"/></svg></span>PECZ<span class="accent">_</span>ROADMAP</h1>
-<div class="dash-meta"><span><span class="live-dot"></span>PHASE 0 — FOUNDATION</span></div>
+<div class="dash-meta"><span><span class="live-dot"></span>PHASE 1 — SIGNAL DISCOVERY</span></div>
 </div>
 
 <!-- ── Timeline ── -->
 <div class="phase-timeline">
 
-<div class="phase-step phase-step--active">
+<div class="phase-step phase-step--done">
   <div class="step-dot"></div>
   <div class="step-label">0</div>
   <div class="step-sublabel">foundation</div>
 </div>
 
-<div class="phase-step phase-step--pending">
+<div class="phase-step phase-step--active">
   <div class="step-dot"></div>
   <div class="step-label">1</div>
   <div class="step-sublabel">discovery</div>

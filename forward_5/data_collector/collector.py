@@ -40,6 +40,16 @@ def _save(df: pl.DataFrame, name: str):
     path = DATA_DIR / SOURCES[name][1]
     existing = _load_existing(name)
     if not existing.is_empty():
+        # Align schemas: ensure new data has same columns as existing
+        if set(df.columns) != set(existing.columns):
+            # Add missing columns with nulls, select in same order
+            for col in existing.columns:
+                if col not in df.columns:
+                    df = df.with_columns(pl.lit(None).alias(col))
+            for col in df.columns:
+                if col not in existing.columns:
+                    existing = existing.with_columns(pl.lit(None).alias(col))
+            df = df.select(existing.columns)
         # Deduplicate on timestamp + asset
         if "asset" in df.columns:
             df = existing.vstack(df).unique(subset=["timestamp", "asset"])

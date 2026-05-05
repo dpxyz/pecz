@@ -1,6 +1,15 @@
 executor/state.db
 executor/trades.jsonl
+executor/trades_v2.jsonl
+executor/state_v2.db
+executor/signal_audit_v2.jsonl
+executor/watchdog_state.json
 __pycache__/
 .env
 state.db
 state_v2.db
+*.parquet
+research/data/*.parquet
+data/*.parquet
+data_collector/data/*.parquet
+research/results/*.json
