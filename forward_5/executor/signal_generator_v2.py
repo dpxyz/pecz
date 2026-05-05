@@ -157,13 +157,37 @@ class SignalGeneratorV2:
         signal_type = SignalType.SIGNAL_FLAT
         v14_signal = False
 
+        # ── DXY Confluence Filter ──
+        # DXY 10d ROC < -2% = weak dollar → boosts LONG confidence (DR: 94% BTC win rate)
+        # Not a standalone signal, but a gate: if DXY is STRONG (+2%), skip LONGs
+        dxy_confluence = None
+        if dxy_10d_roc is not None:
+            if dxy_10d_roc < self.p["dxy_weak_threshold"]:
+                dxy_confluence = "boost"   # weak dollar → better for longs
+            elif dxy_10d_roc > abs(self.p["dxy_weak_threshold"]):
+                dxy_confluence = "headwind"  # strong dollar → worse for longs
+            else:
+                dxy_confluence = "neutral"
+
+        # ── FGI Confluence Filter ──
+        # FGI < 40 = extreme fear → confluence for LONGs (DR: use as filter, not entry)
+        fgi_fear = fgi is not None and fgi < 40
+        fgi_greed = fgi is not None and fgi >= 75  # extreme greed → caution
+
+
         # V14: OI Surge: ΔOI > threshold + bull200 → Long (PBO=0.33)
         if oi_pct_change is not None and oi_pct_change > self.p["oi_surge_threshold"]:
             if bull200:
-                signal_type = SignalType.SIGNAL_LONG
-                reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% > {self.p['oi_surge_threshold']}%, bull200 → LONG (V14)"
-                v14_signal = True
+                # DXY headwind → skip OI surge longs (strong dollar = macro headwind)
+                if dxy_confluence == "headwind":
+                    reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                else:
+                    signal_type = SignalType.SIGNAL_LONG
+                    dxy_tag = " 📉weakDXY" if dxy_confluence == "boost" else ""
+                    reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% > {self.p['oi_surge_threshold']}%, bull200{dxy_tag} → LONG (V14)"
+                    v14_signal = True
             elif oi_pct_change > self.p["oi_surge_threshold"] * 2:
+                # 2x threshold overrides DXY headwind
                 signal_type = SignalType.SIGNAL_LONG
                 reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% > {self.p['oi_surge_threshold']*2}% (2x threshold), bear → LONG (V14)"
                 v14_signal = True
@@ -171,24 +195,40 @@ class SignalGeneratorV2:
                 reason = f"{symbol}: OI surge {oi_pct_change:+.1f}% but bear regime → skip"
         
         # V14: LS Ratio Short: toptrader_ls > threshold → Short (PBO=0.33)
+        # DXY boost/headwind applies inversely for shorts
         elif ls_ratio is not None and ls_ratio > self.p["ls_ratio_short_threshold"]:
-            signal_type = SignalType.SIGNAL_SHORT
-            reason = f"{symbol}: LS ratio {ls_ratio:.1f} > {self.p['ls_ratio_short_threshold']}, contrarian SHORT (V14)"
-            v14_signal = True
+            if dxy_confluence == "boost":
+                # Weak dollar = headwind for shorts
+                reason = f"{symbol}: LS ratio {ls_ratio:.1f} > {self.p['ls_ratio_short_threshold']} but DXY weak ({dxy_10d_roc:+.1f}%) → skip short"
+            else:
+                signal_type = SignalType.SIGNAL_SHORT
+                reason = f"{symbol}: LS ratio {ls_ratio:.1f} > {self.p['ls_ratio_short_threshold']}, contrarian SHORT (V14)"
+                v14_signal = True
         
         # V14: Taker Buy Pressure: taker_vol > threshold + bull200 → Long (experimental)
         elif taker_vol_ratio is not None and taker_vol_ratio > self.p["taker_buy_threshold"]:
             if bull200:
-                signal_type = SignalType.SIGNAL_LONG
-                reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} > {self.p['taker_buy_threshold']}, bull200 → LONG (V14 exp)"
-                v14_signal = True
+                if dxy_confluence == "headwind":
+                    reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                else:
+                    signal_type = SignalType.SIGNAL_LONG
+                    reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} > {self.p['taker_buy_threshold']}, bull200 → LONG (V14 exp)"
+                    v14_signal = True
             else:
                 reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} but bear → skip"
         
         # ── Funding-based signals (V12/V13 validated) ──
         # Only if no V14 signal fired AND we have funding data
-        if not v14_signal:
+        if not v14_signal and signal_type == SignalType.SIGNAL_FLAT:
             if funding_z is None:
+                # If we have a reason (e.g. DXY filtered a V14 signal), return it
+                if reason:
+                    return Signal(
+                        type=SignalType.SIGNAL_FLAT,
+                        symbol=symbol, timestamp=ts, price=current_close,
+                        indicators=indicators,
+                        reason=reason,
+                    )
                 return Signal(
                     type=SignalType.SIGNAL_FLAT,
                     symbol=symbol, timestamp=ts, price=current_close,
@@ -201,14 +241,22 @@ class SignalGeneratorV2:
                 if not bull200:
                     if funding_z < self.p["funding_z_long_threshold"]:
                         if fgi is None or fgi < 40:
-                            signal_type = SignalType.SIGNAL_LONG
-                            reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}→ LONG"
+                            # DXY check for BTC bear longs
+                            if dxy_confluence == "headwind":
+                                reason = f"BTC: z={funding_z:.3f}, bear, FGI={fgi} but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                            else:
+                                signal_type = SignalType.SIGNAL_LONG
+                                dxy_tag = " 📉weakDXY" if dxy_confluence == "boost" else ""
+                                reason = f"BTC: funding_z={funding_z:.3f} < -1, bear, FGI={fgi}{dxy_tag} → LONG"
                         else:
                             reason = f"BTC: z={funding_z:.3f}, bear, but FGI={fgi}≥40 → no signal (need Fear)"
                 else:
                     if -1.0 < funding_z < -0.2:
-                        signal_type = SignalType.SIGNAL_LONG
-                        reason = f"BTC: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
+                        if dxy_confluence == "headwind":
+                            reason = f"BTC: z={funding_z:.3f} pullback but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                        else:
+                            signal_type = SignalType.SIGNAL_LONG
+                            reason = f"BTC: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
                     elif funding_z <= -1.0:
                         reason = f"BTC: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
                     else:
@@ -218,12 +266,18 @@ class SignalGeneratorV2:
             elif symbol == "ETHUSDT":
                 if not bull200:
                     if funding_z < self.p["funding_z_long_threshold"]:
-                        signal_type = SignalType.SIGNAL_LONG
-                        reason = f"ETH: funding_z={funding_z:.3f} < -1, bear regime → LONG"
+                        if dxy_confluence == "headwind":
+                            reason = f"ETH: z={funding_z:.3f}, bear but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                        else:
+                            signal_type = SignalType.SIGNAL_LONG
+                            reason = f"ETH: funding_z={funding_z:.3f} < -1, bear regime → LONG"
                 else:
                     if -1.0 < funding_z < -0.2:
-                        signal_type = SignalType.SIGNAL_LONG
-                        reason = f"ETH: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
+                        if dxy_confluence == "headwind":
+                            reason = f"ETH: z={funding_z:.3f} pullback but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                        else:
+                            signal_type = SignalType.SIGNAL_LONG
+                            reason = f"ETH: funding_z={funding_z:.3f} in [-1,-0.2], bull pullback → LONG"
                     elif funding_z <= -1.0:
                         reason = f"ETH: z={funding_z:.3f}≤-1 in bull → no signal (too extreme for bull)"
                     else:
@@ -232,11 +286,18 @@ class SignalGeneratorV2:
             # SOL: z∈[-0.5, 0) + bull200 (V13b champion)
             elif symbol == "SOLUSDT":
                 if -0.5 <= funding_z < 0 and bull200:
-                    signal_type = SignalType.SIGNAL_LONG
-                    reason = f"SOL: funding_z={funding_z:.3f} ∈ [-0.5, 0), bull200={bull200} → LONG (V13b champion)"
+                    if dxy_confluence == "headwind":
+                        reason = f"SOL: z={funding_z:.3f} ∈ [-0.5,0), bull200 but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                    else:
+                        signal_type = SignalType.SIGNAL_LONG
+                        dxy_tag = " 📉weakDXY" if dxy_confluence == "boost" else ""
+                        reason = f"SOL: funding_z={funding_z:.3f} ∈ [-0.5, 0), bull200{dxy_tag} → LONG (V13b champion)"
                 elif funding_z < -0.5 and bull200:
-                    signal_type = SignalType.SIGNAL_LONG
-                    reason = f"SOL: funding_z={funding_z:.3f} < -0.5, bull200={bull200} → LONG (extended)"
+                    if dxy_confluence == "headwind":
+                        reason = f"SOL: z={funding_z:.3f} < -0.5, bull200 but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                    else:
+                        signal_type = SignalType.SIGNAL_LONG
+                        reason = f"SOL: funding_z={funding_z:.3f} < -0.5, bull200 → LONG (extended)"
                 else:
                     reason = f"SOL: funding_z={funding_z:.3f}, bull200={bull200} → no signal"
 

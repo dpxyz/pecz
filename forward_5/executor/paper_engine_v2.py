@@ -331,6 +331,7 @@ class PaperTradingEngineV2:
             candles, funding_z=funding_z, bull200=bull200, fgi=self.feed.get_fgi(),
             oi_pct_change=oi_pct_change, ls_ratio=ls_ratio,
             taker_vol_ratio=taker_vol_ratio,
+            dxy_10d_roc=self.feed.get_dxy_5d_chg(),  # 5d ROC as proxy for 10d (data limitation)
         )
 
         # ── Signal Audit: Log EVERY evaluation ──
