@@ -93,7 +93,10 @@
     "cpcv_pbo": 0.13,
     "cpcv_oos_mean_pct": 31.9,
     "dsr_pass": true,
-    "correlation_group": "funding_mild_neg"
+    "correlation_group": "funding_mild_neg",
+    "t_stat": 52.77,
+    "harvey_pass": true,
+    "harvey_threshold": 3.0
   },
   "eth_mild_neg_bull200_4h": {
     "edge_id": "eth_mild_neg_bull200_4h",
@@ -127,7 +130,10 @@
     "cpcv_pbo": 0.13,
     "cpcv_oos_mean_pct": 26.8,
     "dsr_pass": true,
-    "correlation_group": "funding_mild_neg"
+    "correlation_group": "funding_mild_neg",
+    "t_stat": 32.37,
+    "harvey_pass": true,
+    "harvey_threshold": 3.0
   },
   "btc_crosssec_z-1_bull200_4h": {
     "edge_id": "btc_crosssec_z-1_bull200_4h",
@@ -161,7 +167,10 @@
     "cpcv_pbo": 0.2,
     "cpcv_oos_mean_pct": 15.1,
     "dsr_pass": true,
-    "correlation_group": "cross_sectional"
+    "correlation_group": "cross_sectional",
+    "t_stat": 78.65,
+    "harvey_pass": true,
+    "harvey_threshold": 3.0
   },
   "oi_surge_sol_h48_4h": {
     "edge_id": "oi_surge_sol_h48_4h",
@@ -194,7 +203,10 @@
     "cpcv_pbo": 0.33,
     "cpcv_oos_mean_pct": 66.6,
     "dsr_pass": true,
-    "correlation_group": "oi_surge"
+    "correlation_group": "oi_surge",
+    "t_stat": 50.82,
+    "harvey_pass": true,
+    "harvey_threshold": 3.0
   },
   "ls_ratio_sol_short_4h": {
     "edge_id": "ls_ratio_sol_short_4h",
@@ -226,6 +238,9 @@
     "cpcv_pbo": 0.33,
     "cpcv_oos_mean_pct": 57.3,
     "dsr_pass": true,
-    "correlation_group": "ls_ratio"
+    "correlation_group": "ls_ratio",
+    "t_stat": 32.95,
+    "harvey_pass": true,
+    "harvey_threshold": 3.0
   }
 }

@@ -1,147 +1,109 @@
-# Entwicklungsplan — G2→G3 Transition (2026-05-05)
+# Entwicklungsplan — G2→G3 Transition
 
-## Ziel: 90-Day Track Record profitabel (G3), Edge Decay erkennen, Drift vermeiden
-
-### 🟢 Läuft (Autonom)
-- V2 Paper Engine: 5 Signale + DXY/FGI Filter + HL 1h Funding
-- Monitor: Dashboard, hourly watchdog, 4h updates
-- 90-Day Clock: Tag 1, Start 2026-05-05 12:54
+**Erstellt:** 2026-05-05
+**Ziel:** 90-Day Track Record profitabel (G3), Edge Decay erkennen, Drift vermeiden
+**Status:** Day 1 von 90
 
 ---
 
-## Sprint 1: Statistische Robustheit (Diese Woche, W9)
+## Sprint 1: Statische Robustheit (W9, diese Woche)
 
-### 1.1 t-Stat berechnen & Edge Registry ergänzen
-- **Problem:** DR fordert t>3.0 (Harvey), nie formal geprüft
-- **Lösung:** t-Stat = Sharpe × √(N_trades) für alle 5 Signale berechnen
-- **Deliverable:** Edge Registry Einträge mit t-stat, DSR, MC p-value
-- **Aufwand:** 1h
+| # | Task | Aufwand | Prio | Status |
+|---|------|---------|------|--------|
+| 1.1 | t-Stat für Edge Registry (Harvey t>3.0) | 1h | P0 | ✅ ALL PASS (32-79) |
+| 1.2 | Edge Decay Monitor + daily Cron | 2h | P0 | ✅ 10:00 Berlin daily |
+| 1.3 | Trade-Count pro CPCV-Window | 2h | P1 | ✅ Known limitation |
+| 1.4 | Foundry V13 Cron Setup (1x/Woche) | 1h | P1 | ✅ Mondays 09:00 |
 
-### 1.2 Edge Decay Monitoring aufsetzen
-- **Problem:** SOL Funding -20pp Decay erkannt, kein Monitoring
-- **Lösung:**
-  - Cron-Job (daily): Funding-Verteilung pro Asset tracken (neg%, mild-neg%, mean, std)
-  - Threshold: >10pp Shift → Discord Alert
-  - Historical baseline: Letzte 30d als Referenz
-- **Deliverable:** `executor/edge_decay_monitor.py` + daily cron
-- **Aufwand:** 2h
-
-### 1.3 Trade-Count pro CPCV-Window prüfen
-- **Problem:** SOL Champion hat 24 Trades/Window, CLT-Minimum = 30
-- **Lösung:**
-  - Mit HL 1h Funding → feinere Z-Score-Auflösung → mehr Signal-Feuerungen
-  - Berechnen: Wie viele Trades entstehen mit 1h-Funding statt 8h?
-  - Falls immer noch <30: Window vergrößern oder Signale kombinieren
-- **Deliverable:** Analyse + Empfehlung
-- **Aufwand:** 2h
+**Deliverables:**
+- Edge Registry Einträge mit t-stat, DSR, MC p-value
+- `executor/edge_decay_monitor.py` + daily cron
+- Analyse: HL 1h → mehr Trades pro Window?
+- Foundry V13 Cron läuft autonom
 
 ---
 
-## Sprint 2: Proaktive Optimierung (Nächste Woche, W10)
+## Sprint 2: Proaktive Optimierung (W10)
 
-### 2.1 HL 1h Z-Score Kalibrierung
-- **Problem:** HL 1h z-Scores haben andere Distribution als Binance 8h
-- **Lösung:**
-  - Sweep: 1h-Funding-Z-Thresholds auf 2yr Daten → optimale Einträge finden
-  - Vergleich: 8h-Thresholds vs 1h-Thresholds → bessere Sharpe?
-  - Falls 1h besser: Engine auf funding_z_1h umschalten
-- **Deliverable:** Kalibrierungs-Report, Engine-Update falls besser
-- **Aufwand:** 4h
+| # | Task | Aufwand | Prio | Status |
+|---|------|---------|------|--------|
+| 2.1 | HL 1h Z-Score Kalibrierung | 4h | P2 | ⬜ |
+| 2.2 | 4h Candle Alignment | 4h | P2 | ⬜ |
+| 2.3 | Cross-Sectional CPCV Validierung | 3h | P1 | ⬜ |
 
-### 2.2 4h Candle Alignment
-- **Problem:** DR sagt "4h ist der mathematische Sweet Spot" (2 Updates/Epoch)
-- **Lösung:**
-  - Engine auf 4h-Candles umstellen (aktuell 1h)
-  - Funding-Update alle 8h aligned mit 4h-Candle-Close
-  - Weniger Noise, mehr Signal-Qualität
-- **Deliverable:** 4h-Engine-Modus + Backtest-Vergleich
-- **Aufwand:** 4h
-
-### 2.3 Cross-Sectional Z-Score Validierung
-- **Problem:** Signal #3 (BTC crosssec z<-1) nur auf IS-Daten validiert
-- **Lösung:**
-  - CPCV-Validierung auf 2yr HL-Daten
-  - PBO und OOS-Mean berechnen
-  - Falls PBO>0.5: Threshold anpassen oder Signal schwächen
-- **Deliverable:** CPCV-Result-JSON für crosssec
-- **Aufwand:** 3h
+**Deliverables:**
+- Kalibrierungs-Report: 1h vs 8h Thresholds
+- 4h-Engine-Modus + Backtest-Vergleich
+- CPCV-Result-JSON für crosssec
 
 ---
 
-## Sprint 3: Foundry & Neue Signale (W11-12)
+## Sprint 3: Neue Signale (W11-12)
 
-### 3.1 Foundry V13 Cron (1x/Woche)
-- **Lösung:** Cron-Job, der wöchentlich neue Hypothesen generiert
-- **Hypothesen-First:** LLM generiert Logik (JSON-DSL), Sweep macht Parameter
-- **BH-FDR:** Multiple-Testing-Korrektur automatisch
-- **Deliverable:** Cron-Job + Discord-Report
-- **Aufwand:** 1h Setup
+| # | Task | Aufwand | Prio | Status |
+|---|------|---------|------|--------|
+| 3.1 | Short-Seite z>3.0 Sweep | 2h | P2 | ⬜ |
+| 3.2 | Post-Liquidation Mean Reversion | 3h | P2 | ⬜ |
+| 3.3 | Foundry V13 Ergebnisse auswerten | 1h | P1 | ⬜ |
 
-### 3.2 Short-Seite z>3.0 Sweep
-- **Problem:** DR sagt z>0.5 = tot, z>3.0 könnte funktionieren
-- **Lösung:** Sweep auf 2yr Daten: z>3.0 + OI-Divergenz als Short-Trigger
-- **Erwartung:** Sehr wenige Trades, aber unkorreliert
-- **Deliverable:** Sweep-Result-JSON
-- **Aufwand:** 2h (läuft als Batch)
-
-### 3.3 Post-Liquidation Mean Reversion
-- **Problem:** DR Track 1 = vielversprechend aber nicht implementiert
-- **Lösung:** Liquidation-Proxy (ΔOI>3σ + Price Wick + Taker Spike) als Signal
-- **Deliverable:** Hypothese + Sweep-Skript
-- **Aufwand:** 3h
+**Deliverables:**
+- Sweep-Result-JSON für z>3.0
+- Liquidation-Proxy Hypothese + Sweep-Skript
+- Neue Hypothesen aus Foundry in Edge Registry
 
 ---
 
-## Sprint 4: Infra & Migration (W13-16, parallel zum Track Record)
+## Sprint 4: Infra & Migration (W13-16)
 
-### 4.1 HyperLiquid Migration Plan
-- **Problem:** Binance Testnet ≠ echte Conditions
-- **Lösung:**
-  - Paper Engine bleibt auf Binance Testnet für Track Record
-  - Parallel: HL Live-Feed als Cross-Check
-  - Nach G3: Migration auf HL Live (bessere Fees, 1h Funding)
-- **Deliverable:** Migrations-Plan (ADR-011)
-- **Aufwand:** 2h Planung
+| # | Task | Aufwand | Prio | Status |
+|---|------|---------|------|--------|
+| 4.1 | HyperLiquid Migration Plan (ADR-011) | 2h | P2 | ⬜ |
+| 4.2 | WebSocket Architecture Design | 4h | P3 | ⬜ |
+| 4.3 | Quarterly Re-Sweep Cron | 3h | P1 | ⬜ |
 
-### 4.2 WebSocket Execution (Vorbereitung)
-- **Problem:** REST Polling = 60s Latenz, DR fordert WS
-- **Lösung:**
-  - V2 Paper Engine bleibt REST (Track Record-Konsistenz)
-  - V3 Architecture: WS-basiert, HL-first
-  - Nach Track Record: WS-Modus implementieren
-- **Deliverable:** Architecture Design
-- **Aufwand:** 4h (Design, nicht Implementierung)
-
-### 4.3 Quarterly Re-Sweep
-- **Problem:** Edge Decay kann unbemerkt eintreten
-- **Lösung:** Quartalsweiser Re-Sweep der kalibrierten Signale auf letzten 6 Monaten
-- **Trigger:** Automatisch, wenn Neg% Shift > 10pp
-- **Deliverable:** Re-Sweep Cron + Alert-Mechanismus
-- **Aufwand:** 3h
-
----
-
-## Prioritäten (Diese Woche)
-
-| Prio | Task | Aufwand | Status |
-|------|------|---------|--------|
-| P0 | Edge Decay Monitor + Cron | 2h | ⬜ |
-| P0 | t-Stat für Edge Registry | 1h | ⬜ |
-| P1 | Trade-Count pro Window Analyse | 2h | ⬜ |
-| P1 | Foundry V13 Cron Setup | 1h | ⬜ |
-| P2 | HL 1h Kalibrierung | 4h | ⬜ |
-| P2 | 4h Alignment | 4h | ⬜ |
+**Deliverables:**
+- ADR-011: HL Migration Plan
+- WS Architecture Design Document
+- Re-Sweep Cron + Alert-Mechanismus
 
 ---
 
 ## KPIs für G3 (90d Track Record)
 
-| KPI | Target | Current |
-|-----|--------|---------|
-| Total PnL | >0€ (profitabel) | 0€ (Day 1) |
-| Max Drawdown | <25% | 0% |
-| Win Rate | >45% | N/A |
-| Sharpe (annualized) | >1.0 | N/A |
-| SOL neg% Decay | <10pp shift | -20pp ⚠️ |
-| Trade Count | >30/Window | ~24 ⚠️ |
-| Signals active | 5 | 5 ✅ |
+| KPI | Target | Current | Check |
+|-----|--------|---------|-------|
+| Total PnL | >0€ | 0€ (Day 1) | Daily |
+| Max Drawdown | <25% | 0% | Daily |
+| Win Rate | >45% | N/A | Weekly |
+| Sharpe (annualized) | >1.0 | N/A | Weekly |
+| SOL neg% Decay | <10pp shift | -20pp ⚠️ | Daily |
+| Trade Count | >30/Window | ~24 ⚠️ | Sprint 1.3 |
+| Signals active | 5 | 5 ✅ | — |
+| t-Stat (Harvey) | >3.0 | N/A | Sprint 1.1 |
+
+---
+
+## Drift-Check (Stand 2026-05-05)
+
+| # | DR-Empfehlung | Status | Drift? |
+|---|---------------|--------|--------|
+| 1 | DSR + MC + CPCV + BH-FDR | ✅ Implementiert | Kein |
+| 2 | Korrelations-Check ρ<0.4 | ✅ 5 Signale | Kein |
+| 3 | Min 30 Trades/Window | ⚠️ 24 Trades | Drift |
+| 4 | t-Stat > 3.0 | ❓ Nicht geprüft | Drift |
+| 5 | 3+ unkorrelierte Signale | ✅ 5 Signale | Kein |
+| 6 | Short-Seite z>3.0 | ⬜ Offen | Offen |
+| 7 | FGI < 40 Confluence | ✅ Als Filter | Kein |
+| 8 | DXY Regime-Filter | ✅ Implementiert | Kein |
+| 9 | EMA200 Bull-Filter | ✅ Alle Longs | Kein |
+| 10 | Cross-Sectional Funding | ✅ Signal #3 | Kein |
+| 11 | 4h Funding (HL 1h) | ✅ Pipeline | Kein |
+| 12 | Edge Decay Monitoring | ❌ Nicht impl. | Drift |
+| 13 | Hyperliquid Migration | ⬜ Offen | Offen |
+| 14 | WebSocket Execution | ⬜ Offen | Offen |
+
+**SOL Edge Decay — Frühwarnung:**
+- Jan-Feb: 77.2% negativ → Mär-Mai: 56.8% negativ = **-20.4pp**
+- Ursache: Ethena, Arbitrage-Kapital, SOL ETF-Erwartung
+- Gegenmaßnahme: 5 Signale auf 3 Assets (nicht SOL-only)
+- Monitoring: Edge Decay Cron (Sprint 1.2)

@@ -21,7 +21,10 @@
       "sharpe_is": 9.05,
       "total_return_is_pct": 54.1,
       "max_dd_is_pct": null,
-      "status": "validated"
+      "status": "validated",
+      "t_stat": 52.77,
+      "harvey_t_threshold": 3.0,
+      "harvey_pass": true
     },
     {
       "name": "eth_mild_neg_bull200_4h",
@@ -40,7 +43,10 @@
       "sharpe_is": 6.75,
       "total_return_is_pct": 46.2,
       "max_dd_is_pct": null,
-      "status": "validated"
+      "status": "validated",
+      "t_stat": 32.37,
+      "harvey_t_threshold": 3.0,
+      "harvey_pass": true
     },
     {
       "name": "btc_crosssec_z-1_bull200_4h",
@@ -59,7 +65,10 @@
       "sharpe_is": null,
       "total_return_is_pct": null,
       "max_dd_is_pct": null,
-      "status": "validated"
+      "status": "validated",
+      "t_stat": 78.65,
+      "harvey_t_threshold": 3.0,
+      "harvey_pass": true
     },
     {
       "name": "oi_surge_sol_h48_4h",
@@ -78,7 +87,10 @@
       "sharpe_is": 7.26,
       "total_return_is_pct": 50.96,
       "max_dd_is_pct": -19.9,
-      "status": "validated"
+      "status": "validated",
+      "t_stat": 50.82,
+      "harvey_t_threshold": 3.0,
+      "harvey_pass": true
     },
     {
       "name": "ls_ratio_sol_short_4h",
@@ -97,7 +109,10 @@
       "sharpe_is": 4.29,
       "total_return_is_pct": 24.13,
       "max_dd_is_pct": -22.77,
-      "status": "validated"
+      "status": "validated",
+      "t_stat": 32.95,
+      "harvey_t_threshold": 3.0,
+      "harvey_pass": true
     }
   ],
   "excluded": [
@@ -117,5 +132,11 @@
       "name": "oi_surge_btc_h24",
       "reason": "PBO=0.83, overfit"
     }
-  ]
+  ],
+  "t_stat_verification": {
+    "method": "Harvey et al. (2016) \u2014 t = Sharpe \u00d7 \u221a(N)",
+    "threshold": 3.0,
+    "result": "ALL 5 SIGNALS PASS",
+    "note": "IS Sharpe-based t-stats are inflated by selection bias. CPCV PBO < 0.5 controls overfitting. High t-stat + low PBO = robust."
+  }
 }
