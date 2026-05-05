@@ -1,0 +1,121 @@
+{
+  "generated_at": "2026-05-05T11:33:20.857130Z",
+  "description": "5 validated signals for V2 paper trading engine (G2\u2192G3)",
+  "validation_method": "CPCV + DSR + BH-FDR + Spearman correlation check (\u03c1 < 0.4)",
+  "data_period": "2024-05-01 to 2026-05-04 (2 years)",
+  "signals": [
+    {
+      "name": "btc_mild_neg_bull200_4h",
+      "asset": "BTC",
+      "feature": "funding_rate_z_score",
+      "direction": "long",
+      "entry_logic": "BTC funding z \u2208 [-0.5, 0) AND close > EMA200",
+      "exit_logic": "24h time-based, SL 4%",
+      "bull_filter": true,
+      "cpcv_pbo": 0.13,
+      "cpcv_oos_mean_pct": 31.9,
+      "dsr_pass": true,
+      "correlation_group": "funding_mild_neg",
+      "correlation_rho_vs_btc_mild_neg": 1.0,
+      "n_trades_is": 34,
+      "sharpe_is": 9.05,
+      "total_return_is_pct": 54.1,
+      "max_dd_is_pct": null,
+      "status": "validated"
+    },
+    {
+      "name": "eth_mild_neg_bull200_4h",
+      "asset": "ETH",
+      "feature": "funding_rate_z_score",
+      "direction": "long",
+      "entry_logic": "ETH funding z \u2208 [-1, -0.2) AND close > EMA200",
+      "exit_logic": "24h time-based, SL 4%",
+      "bull_filter": true,
+      "cpcv_pbo": 0.13,
+      "cpcv_oos_mean_pct": 26.8,
+      "dsr_pass": true,
+      "correlation_group": "funding_mild_neg",
+      "correlation_rho_vs_btc_mild_neg": 0.17,
+      "n_trades_is": 23,
+      "sharpe_is": 6.75,
+      "total_return_is_pct": 46.2,
+      "max_dd_is_pct": null,
+      "status": "validated"
+    },
+    {
+      "name": "btc_crosssec_z-1_bull200_4h",
+      "asset": "BTC",
+      "feature": "crosssec_funding_z",
+      "direction": "long",
+      "entry_logic": "BTC crosssec_z < -1.0 AND close > EMA200",
+      "exit_logic": "24h time-based, SL 4%",
+      "bull_filter": true,
+      "cpcv_pbo": 0.2,
+      "cpcv_oos_mean_pct": 15.1,
+      "dsr_pass": true,
+      "correlation_group": "cross_sectional",
+      "correlation_rho_vs_btc_mild_neg": 0.02,
+      "n_trades_is": null,
+      "sharpe_is": null,
+      "total_return_is_pct": null,
+      "max_dd_is_pct": null,
+      "status": "validated"
+    },
+    {
+      "name": "oi_surge_sol_h48_4h",
+      "asset": "SOL",
+      "feature": "oi_pct_change",
+      "direction": "long",
+      "entry_logic": "SOL \u0394OI > 3% (48h lookback) AND close > EMA200",
+      "exit_logic": "48h time-based, SL 5%",
+      "bull_filter": true,
+      "cpcv_pbo": 0.33,
+      "cpcv_oos_mean_pct": 66.6,
+      "dsr_pass": true,
+      "correlation_group": "oi_surge",
+      "correlation_rho_vs_btc_mild_neg": 0.28,
+      "n_trades_is": 49,
+      "sharpe_is": 7.26,
+      "total_return_is_pct": 50.96,
+      "max_dd_is_pct": -19.9,
+      "status": "validated"
+    },
+    {
+      "name": "ls_ratio_sol_short_4h",
+      "asset": "SOL",
+      "feature": "toptrader_ls_ratio",
+      "direction": "short",
+      "entry_logic": "SOL TopTrader LS > 5.0 \u2192 SHORT",
+      "exit_logic": "24h time-based, SL 5%",
+      "bull_filter": false,
+      "cpcv_pbo": 0.33,
+      "cpcv_oos_mean_pct": 57.3,
+      "dsr_pass": true,
+      "correlation_group": "ls_ratio",
+      "correlation_rho_vs_btc_mild_neg": -0.04,
+      "n_trades_is": 59,
+      "sharpe_is": 4.29,
+      "total_return_is_pct": 24.13,
+      "max_dd_is_pct": -22.77,
+      "status": "validated"
+    }
+  ],
+  "excluded": [
+    {
+      "name": "btc_slight_neg",
+      "reason": "\u03c1=0.61 vs btc_mild_neg, correlated"
+    },
+    {
+      "name": "oi_surge_sol_h24",
+      "reason": "\u03c1=0.58 vs oi_surge_sol_h48, correlated"
+    },
+    {
+      "name": "oi_surge_btc_h48",
+      "reason": "DSR fail, PBO=0.33, BTC OI weaker"
+    },
+    {
+      "name": "oi_surge_btc_h24",
+      "reason": "PBO=0.83, overfit"
+    }
+  ]
+}

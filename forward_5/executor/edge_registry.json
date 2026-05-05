@@ -26,7 +26,11 @@
     "status": "production",
     "created_at": "",
     "validated_at": "",
-    "notes": "V13b champion, V13c confirmed. R=70 OOS=+4.83%. ONLY validated signal."
+    "notes": "V13b champion, V13c confirmed. R=70 OOS=+4.83%. ONLY validated signal.",
+    "cpcv_pbo": 0.33,
+    "cpcv_oos_mean_pct": 4.83,
+    "dsr_pass": true,
+    "correlation_group": "funding_mild_neg"
   },
   "SOL_mild_neg_funding_narrow": {
     "edge_id": "SOL_mild_neg_funding_narrow",
@@ -85,7 +89,11 @@
     "status": "validated",
     "created_at": "",
     "validated_at": "",
-    "notes": "CPCV PBO=0.13, OOS WR=86.7%"
+    "notes": "CPCV PBO=0.13, OOS WR=86.7%",
+    "cpcv_pbo": 0.13,
+    "cpcv_oos_mean_pct": 31.9,
+    "dsr_pass": true,
+    "correlation_group": "funding_mild_neg"
   },
   "eth_mild_neg_bull200_4h": {
     "edge_id": "eth_mild_neg_bull200_4h",
@@ -115,7 +123,11 @@
     "status": "validated",
     "created_at": "",
     "validated_at": "",
-    "notes": "CPCV PBO=0.13, OOS WR=86.7%"
+    "notes": "CPCV PBO=0.13, OOS WR=86.7%",
+    "cpcv_pbo": 0.13,
+    "cpcv_oos_mean_pct": 26.8,
+    "dsr_pass": true,
+    "correlation_group": "funding_mild_neg"
   },
   "btc_crosssec_z-1_bull200_4h": {
     "edge_id": "btc_crosssec_z-1_bull200_4h",
@@ -145,7 +157,11 @@
     "status": "validated",
     "created_at": "",
     "validated_at": "",
-    "notes": "CPCV PBO=0.20, OOS +15.1%, \u03c1=0.02 vs abs funding (uncorrelated!)"
+    "notes": "CPCV PBO=0.20, OOS +15.1%, \u03c1=0.02 vs abs funding (uncorrelated!)",
+    "cpcv_pbo": 0.2,
+    "cpcv_oos_mean_pct": 15.1,
+    "dsr_pass": true,
+    "correlation_group": "cross_sectional"
   },
   "oi_surge_sol_h48_4h": {
     "edge_id": "oi_surge_sol_h48_4h",
@@ -174,7 +190,11 @@
     "status": "validated",
     "created_at": "",
     "validated_at": "",
-    "notes": "CPCV PBO=0.33, \u03c1=0.06 vs BTC mild_neg (uncorrelated)"
+    "notes": "CPCV PBO=0.33, \u03c1=0.06 vs BTC mild_neg (uncorrelated)",
+    "cpcv_pbo": 0.33,
+    "cpcv_oos_mean_pct": 66.6,
+    "dsr_pass": true,
+    "correlation_group": "oi_surge"
   },
   "ls_ratio_sol_short_4h": {
     "edge_id": "ls_ratio_sol_short_4h",
@@ -202,6 +222,10 @@
     "status": "validated",
     "created_at": "",
     "validated_at": "",
-    "notes": "CPCV PBO=0.33, \u03c1=-0.04 vs BTC mild_neg (negatively correlated = diversifier!)"
+    "notes": "CPCV PBO=0.33, \u03c1=-0.04 vs BTC mild_neg (negatively correlated = diversifier!)",
+    "cpcv_pbo": 0.33,
+    "cpcv_oos_mean_pct": 57.3,
+    "dsr_pass": true,
+    "correlation_group": "ls_ratio"
   }
 }
