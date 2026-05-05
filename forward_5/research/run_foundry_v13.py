@@ -70,8 +70,7 @@ ALLOWED_PRIMARY_DRIVERS = [
     "taker_ratio",            # Buy/sell taker ratio
     "vol_ratio",              # Volume ratio (current / 24h avg)
     "fgi",                    # Fear & Greed Index
-    "defi_utilization",       # DeFi lending utilization
-    "liq_oi_ratio",           # Liquidations / OI
+    "dxy_pct_change",         # US Dollar Index % change
 ]
 
 ALLOWED_SECONDARY_DRIVERS = [
@@ -241,8 +240,7 @@ def build_prompt(existing_edges: list[dict], iteration: int = 1, n_hypotheses: i
 - **taker_ratio**: buy volume / sell volume (< 1 = more selling)
 - **vol_ratio**: current volume / 24h average (> 1 = above average)
 - **fgi**: Fear & Greed Index (0-100, < 40 = fear, > 60 = greed)
-- **defi_utilization**: lending protocol utilization (%)
-- **liq_oi_ratio**: estimated liquidations / open interest
+- **dxy_pct_change**: US Dollar Index % change (strong USD = headwind for crypto)
 
 ## AVAILABLE CONFIRMATION FILTERS
 - **bull200**: price > EMA200 (long-term uptrend)
@@ -261,19 +259,24 @@ def build_prompt(existing_edges: list[dict], iteration: int = 1, n_hypotheses: i
 7. Focus on UNDEREXPLORED signal classes (OI, taker, DeFi, liquidations)
 8. 4h timeframe only (mathematically aligned with 8h funding epoch)
 
-## PROVEN INSIGHTS (use for intuition, not replication)
-- Mild negative funding z ∈ [-0.5, 0) + bull200 = robust edge (BTC, ETH)
-- Cross-sectional funding z < -1.0 + bull200 = uncorrelated edge (BTC only)
-- Bull200 filter doubles Sharpe across all signals
-- Shorts with z > 0.5 are dead (funding is structurally positive)
-- AVAX/DOGE/ADA have no alpha from funding alone
+## PROVEN INSIGHTS (use for intuition, NOT replication)
+- Mild negative funding with bull regime is a robust edge
+- Cross-sectional relative funding can provide uncorrelated signals
+- Bull200 filter significantly improves most signals
+- Extreme short-side funding signals (z > 0.5) are structurally dead
+- Alt-coin funding alpha is weak compared to BTC/ETH/SOL
+
+## ANTI-OVERFITTING RULES (CRITICAL)
+9. For each hypothesis, also describe WHY it might FAIL (conflation with trend, data-mining, regime-dependence)
+10. Do NOT use specific numerical thresholds from proven insights — the sweep engine optimizes those
+11. Prefer hypotheses that would work across MULTIPLE assets, not just one
 
 ## OUTPUT FORMAT
 Output ONLY a JSON array. Each object:
 {{
   "name": "short_snake_case_name",
   "intuition": "2-3 sentence economic story",
-  "primary_driver": "one of: funding_z, crosssec_funding_z, oi_pct_change, taker_ratio, vol_ratio, fgi, defi_utilization, liq_oi_ratio",
+  "primary_driver": "one of: funding_z, crosssec_funding_z, oi_pct_change, taker_ratio, vol_ratio, fgi, dxy_pct_change",
   "secondary_driver": "one of: bull200, bull50, fgi_extreme, vol_surge, oi_surge, or null",
   "assets": ["BTC", "ETH", "SOL"],
   "direction": "long",
@@ -388,13 +391,9 @@ def expand_to_signal_hypotheses(hyp: FoundryHypothesis) -> list[SignalHypothesis
             (0, 40, "fgi_fear"),            # fear → go long
             (25, 45, "fgi_moderate_fear"),  # moderate fear
         ],
-        "defi_utilization": [
-            (80, 100, "defi_overheat"),     # > 80% utilization
-            (0, 30, "defi_cold"),          # < 30% utilization
-        ],
-        "liq_oi_ratio": [
-            (0.01, 0.05, "liq_mild"),       # mild liquidations
-            (0.05, 0.2, "liq_heavy"),       # heavy liquidations
+        "dxy_pct_change": [
+            (-3.0, -1.0, "dxy_weak"),       # weak dollar → crypto bullish
+            (1.0, 3.0, "dxy_strong"),       # strong dollar → headwind
         ],
     }
     
