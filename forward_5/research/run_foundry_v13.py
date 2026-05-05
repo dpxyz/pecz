@@ -222,7 +222,7 @@ def _run_fgibased_backtest(data, sig: SignalHypothesis,
 # LLM Prompt
 # ═══════════════════════════════════════════════════════════
 
-def build_prompt(existing_edges: list[dict], iteration: int = 1) -> str:
+def build_prompt(existing_edges: list[dict], iteration: int = 1, n_hypotheses: int = 8) -> str:
     """Build the LLM prompt with anti-anchoring and existing edge context."""
     
     edges_str = ""
@@ -280,7 +280,7 @@ Output ONLY a JSON array. Each object:
   "anti_correlation": "how this differs from existing edges"
 }}
 
-Generate exactly 8 hypotheses. Make them DIVERSE — different primary drivers, different mechanisms.
+Generate exactly {n_hypotheses} hypotheses. Make them DIVERSE — different primary drivers, different mechanisms.
 """
     
     if iteration > 1:
@@ -452,7 +452,7 @@ def call_llm(prompt: str, retries: int = 3) -> str:
                     "model": MODEL,
                     "messages": [{"role": "user", "content": prompt}],
                     "temperature": 0.7,
-                    "max_tokens": 4000,
+                    "max_tokens": 8000,
                 },
                 timeout=600,
             )
@@ -506,11 +506,15 @@ def extract_json_array(text: str) -> list[dict]:
     start = text.find('[')
     end = text.rfind(']')
     if start != -1 and end != -1 and end > start:
+        snippet = text[start:end+1]
         try:
-            result = json.loads(text[start:end+1])
+            result = json.loads(snippet)
             if isinstance(result, list):
                 return result
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            log.warning(f"JSON parse failed for [..] slice: {e}")
+            log.debug(f"Slice starts: {snippet[:100]}")
+            log.debug(f"Slice ends: {snippet[-100:]}")
             pass
     
     log.error("Could not extract JSON array from LLM response")
@@ -558,7 +562,7 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
         log.info(f"{'='*60}")
         
         # Step 1: Generate hypotheses
-        prompt = build_prompt(edges_for_prompt, iteration)
+        prompt = build_prompt(edges_for_prompt, iteration, n_hypotheses)
         log.info("\nStep 1: Calling LLM for hypotheses...")
         
         raw_text = call_llm(prompt)
@@ -783,4 +787,4 @@ def run_foundry_v13(iterations: int = 1, n_hypotheses: int = 8):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(name)s | %(levelname)s | %(message)s")
-    run_foundry_v13(iterations=1)
+    run_foundry_v13(iterations=3, n_hypotheses=15)
