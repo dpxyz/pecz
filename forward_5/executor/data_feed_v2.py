@@ -18,6 +18,8 @@ from pathlib import Path
 
 import requests
 
+import numpy as np
+
 from data_feed import DataFeed, SYMBOL_MAP, PAPER_MODE, API_URL, API_URL_TESTNET
 
 log = logging.getLogger("data_feed_v2")
@@ -62,6 +64,8 @@ class DataFeedV2(DataFeed):
         self._ls_ratio: dict[str, float] = {}        # TopTrader long/short ratio
         self._taker_vol_ratio: dict[str, float] = {}  # Buy taker vol / Sell taker vol
         self._oi_pct_change: dict[str, float] = {}    # OI % change (4h lookback)
+        self._crosssec_z: dict[str, Optional[float]] = {}  # Cross-sectional funding z-score
+        self._crosssec_history: dict[str, list[float]] = {}  # Rolling window for z-score calc
 
         self._init_funding_db()
 
@@ -183,6 +187,61 @@ class DataFeedV2(DataFeed):
     def get_oi_pct_change(self, symbol: str) -> Optional[float]:
         return self._oi_pct_change.get(symbol)
 
+    def get_crosssec_z(self, symbol: str) -> Optional[float]:
+        """Get cross-sectional funding z-score for an asset.
+        
+        Measures how unusual this asset's funding is relative to other assets.
+        z < -1 = asset is unusually shorted relative to peers → long candidate.
+        z > +1 = asset is unusually longed relative to peers → short candidate.
+        """
+        return self._crosssec_z.get(symbol)
+
+    def _update_crosssec_z(self):
+        """Recompute cross-sectional funding z-scores from current funding rates.
+        
+        Called after funding poll updates. Uses a 60-bar rolling window of
+        relative funding (asset_funding - mean_funding_across_assets) to compute z.
+        """
+        # Collect current funding rates for all assets
+        current_funding = {}
+        for sym in self.assets:
+            fr_list = self._funding_data.get(sym, [])
+            if fr_list:
+                current_funding[sym] = fr_list[-1].get("funding_rate", None)
+        
+        if len(current_funding) < 3:  # Need at least 3 assets for meaningful cross-section
+            return
+        
+        # Mean funding across assets
+        valid_rates = [v for v in current_funding.values() if v is not None and not (v != v)]
+        if len(valid_rates) < 3:
+            return
+        mean_funding = np.mean(valid_rates)
+        
+        # Update history and compute z-scores
+        for sym, fr in current_funding.items():
+            if fr is None or fr != fr:  # NaN check
+                continue
+            relative = fr - mean_funding
+            
+            if sym not in self._crosssec_history:
+                self._crosssec_history[sym] = []
+            self._crosssec_history[sym].append(relative)
+            
+            # Keep 60-bar window
+            if len(self._crosssec_history[sym]) > 60:
+                self._crosssec_history[sym] = self._crosssec_history[sym][-60:]
+            
+            # Compute z-score
+            hist = self._crosssec_history[sym]
+            if len(hist) >= 20:
+                mean_h = np.mean(hist)
+                std_h = np.std(hist)
+                if std_h > 1e-8:
+                    z = np.clip((relative - mean_h) / std_h, -5, 5)
+                    self._crosssec_z[sym] = round(float(z), 4)
+                    log.debug(f"  {sym}: crosssec_z={z:.2f} (rel_fund={relative*100:.4f}%)")
+
     # ── Candle Polling (inherited from V1) ──
 
     async def _poll_loop(self):
@@ -290,6 +349,7 @@ class DataFeedV2(DataFeed):
                 z = (rates[-1] - mean_rate) / std_rate
                 self._funding_z[symbol] = round(z, 4)
             log.info(f"  {symbol}: z={self._funding_z[symbol]:.4f} (rate={rates[-1]:.6f}, mean={mean_rate:.6f}, std={std_rate:.6f}, n={len(rows)})")
+        self._update_crosssec_z()
 
     # ── Open Interest ──
 

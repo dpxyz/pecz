@@ -325,6 +325,7 @@ class PaperTradingEngineV2:
         oi_pct_change = self.feed.get_oi_pct_change(symbol)
         ls_ratio = self.feed.get_ls_ratio(symbol)
         taker_vol_ratio = self.feed.get_taker_vol_ratio(symbol)
+        crosssec_z = self.feed.get_crosssec_z(symbol)
 
         # Evaluate signal with all data
         signal = self.signal.evaluate(
@@ -332,6 +333,7 @@ class PaperTradingEngineV2:
             oi_pct_change=oi_pct_change, ls_ratio=ls_ratio,
             taker_vol_ratio=taker_vol_ratio,
             dxy_10d_roc=self.feed.get_dxy_5d_chg(),  # 5d ROC as proxy for 10d (data limitation)
+            crosssec_z=crosssec_z,
         )
 
         # ── Signal Audit: Log EVERY evaluation ──
@@ -343,6 +345,8 @@ class PaperTradingEngineV2:
             "oi_pct_change": oi_pct_change,
             "ls_ratio": ls_ratio,
             "taker_vol_ratio": taker_vol_ratio,
+            "crosssec_z": crosssec_z,
+            "dxy_5d_chg": self.feed.get_dxy_5d_chg(),
             "signal_type": signal.type.value if signal else "NONE",
             "signal_reason": signal.reason if signal else "no signal",
             "timestamp": current_candle.get("timestamp", 0),

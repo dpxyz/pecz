@@ -103,7 +103,8 @@ class SignalGeneratorV2:
                  oi_pct_change: Optional[float] = None,
                  ls_ratio: Optional[float] = None,
                  taker_vol_ratio: Optional[float] = None,
-                 dxy_10d_roc: Optional[float] = None) -> Optional[Signal]:
+                 dxy_10d_roc: Optional[float] = None,
+                 crosssec_z: Optional[float] = None) -> Optional[Signal]:
         """
         Evaluate the latest candle against the funding-first strategy.
 
@@ -149,6 +150,7 @@ class SignalGeneratorV2:
             "ls_ratio": round(ls_ratio, 2) if ls_ratio is not None else None,
             "taker_vol_ratio": round(taker_vol_ratio, 2) if taker_vol_ratio is not None else None,
             "dxy_10d_roc": round(dxy_10d_roc, 2) if dxy_10d_roc is not None else None,
+            "crosssec_z": round(crosssec_z, 3) if crosssec_z is not None else None,
         }
 
         # ── Signal Logic ──
@@ -216,6 +218,20 @@ class SignalGeneratorV2:
                     v14_signal = True
             else:
                 reason = f"{symbol}: Taker buy {taker_vol_ratio:.1f} but bear → skip"
+        
+        # V13: Cross-sectional Funding z<-1.0 + bull200 → Long (PBO=0.20, ρ=0.02)
+        # Asset is unusually shorted relative to peers → contrarian long
+        elif crosssec_z is not None and crosssec_z < -1.0:
+            v14_signal = True  # Mark as V14 so funding path is skipped
+            if bull200:
+                if dxy_confluence == "headwind":
+                    reason = f"{symbol}: crosssec_z={crosssec_z:.2f} < -1, bull200 but DXY strong ({dxy_10d_roc:+.1f}%) → skip"
+                else:
+                    signal_type = SignalType.SIGNAL_LONG
+                    dxy_tag = " 📉weakDXY" if dxy_confluence == "boost" else ""
+                    reason = f"{symbol}: crosssec_z={crosssec_z:.2f} < -1, bull200{dxy_tag} → LONG (crosssec)"
+            else:
+                reason = f"{symbol}: crosssec_z={crosssec_z:.2f} < -1 but bear → skip"
         
         # ── Funding-based signals (V12/V13 validated) ──
         # Only if no V14 signal fired AND we have funding data
